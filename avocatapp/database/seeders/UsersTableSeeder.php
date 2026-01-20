@@ -19,28 +19,35 @@ class UsersTableSeeder extends Seeder
                 'name' => 'عبدالحميد عسكر',
                 'email' => 'a@a.com',
                 'password' => 'Ask@123456', // Store the plain password here
+                'role' => 'admin',
             ],
             [
                 'name' => 'User 2',
                 'email' => 'user2@example.com',
                 'password' => 'password', // Store the plain password here
+                'role' => 'user',
             ],
             // Add more users here
         ];
-
         $clientRepository = app(ClientRepository::class);
-        $tokenRepository = app(TokenRepository::class);
+        $validRoles = ['admin', 'user'];
 
+     
         foreach ($users as $userData) {
             DB::beginTransaction();
             try {
+                if (!in_array($userData['role'], $validRoles, true)) {
+                    throw new \InvalidArgumentException("Invalid role value: {$userData['role']}");
+                }
+
                 $user = new User([
                     'name' => $userData['name'],
                     'email' => $userData['email'],
                     'password' => Hash::make($userData['password']),
+                    'role' => $userData['role'],
                 ]);
                 $user->save();
-
+                
                 // Create a Passport client for the user
                 $client = $clientRepository->createPersonalAccessClient(
                     $user->id,

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 cd /var/www/html
+
 # Ensure runtime env file exists (always recreate from .env.docker inside container)
 if [ -f .env ]; then
   echo "Removing existing .env..."
@@ -15,11 +16,9 @@ elif [ -f .env.example ]; then
   echo "Creating .env from .env.example"
   cp .env.example .env
 fi
- 
 
 # Install PHP dependencies on first run
 if [ ! -f vendor/autoload.php ]; then
-
   composer update --no-interaction --prefer-dist --no-progress
   composer install --no-interaction --prefer-dist --no-progress
 fi
@@ -37,10 +36,30 @@ if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)"
   php artisan key:generate --force --ansi
 fi
 
+# Install Passport (if not already installed)
+if ! composer show laravel/passport > /dev/null 2>&1; then
+  echo "Installing Laravel Passport..."
+  composer require laravel/passport
+  php artisan migrate
+  php artisan passport:install
+fi
+
 # Run database migrations
 php artisan migrate --force --seed || true
 
-# Start queue worker in background if database/redis ready
+# Run Passport commands for setting up Personal Access Client
+if ! php artisan passport:client --personal > /dev/null 2>&1; then
+  echo "Creating Passport Personal Access Client..."
+  php artisan passport:client --personal
+fi
+
+# Run Passport commands for setting up Password Grant Client
+if ! php artisan passport:client --password > /dev/null 2>&1; then
+  echo "Creating Passport Password Grant Client..."
+  php artisan passport:client --password
+fi
+
+# Start queue worker in background if database/redis is ready
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-database}
 if [ "$QUEUE_CONNECTION" != "sync" ]; then
   php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
