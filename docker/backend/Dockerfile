@@ -10,7 +10,4 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 COPY avocatapp/ /var/www/
 
-RUN composer install --no-interaction --prefer-dist || true
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache || true
-
 CMD ["php-fpm"]

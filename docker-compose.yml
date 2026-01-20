@@ -5,9 +5,6 @@ services:
       dockerfile: docker/backend/Dockerfile
     volumes:
       - ./avocatapp:/var/www
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
     depends_on:
       - db
 
@@ -52,9 +49,10 @@ services:
       MYSQL_PASSWORD: avocat_pass
       MYSQL_ROOT_PASSWORD: root_pass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
 
 volumes:
   dbdata:
