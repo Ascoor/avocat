@@ -1,88 +1,82 @@
-################################
-# GLOBAL
-################################
-*.log
-logs/
-tmp/
-.cache/
-
-################################
-# ENV / SECRETS (CRITICAL)
-################################
+########################################
+# GLOBAL (Project root)
+########################################
+# Secrets / env
 .env
 .env.*
 .env.backup
 *.key
 *.pem
 secrets.*
-config.production.*
-config.js
 
-################################
-# NODE / FRONTEND (avocat-frontend)
-################################
-node_modules/
-**/node_modules/
-dist/
-build/
-dist-ssr/
-*.local
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Logs
+*.log
+logs/
+tmp/
+.cache/
 
-################################
-# PYTHON (search-api)
-################################
-__pycache__/
-**/__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.db
-*.sqlite
-
-# Virtual Environments (ignore ALL paths)
-venv/
-.venv/
-env/
-myenv/
-**/venv/
-**/.venv/
-**/env/
-**/myenv/
-.pytest_cache/
-.mypy_cache/
-
-################################
-# PHP / LARAVEL (avocatapp)
-################################
-/vendor/
-**/vendor/
-.phpunit.result.cache
-/public/hot
-/public/storage
-/storage/*.key
-Homestead.json
-Homestead.yaml
-
-################################
-# PUBLIC / DEPLOY OUTPUT
-################################
-public_html/
-**/public_html/
-
-################################
-# EDITORS / OS
-################################
-.vscode/*
-!.vscode/extensions.json
-.idea/
+# OS / Editors
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+########################################
+# Frontend: avocat-frontend
+########################################
+avocat-frontend/node_modules/
+avocat-frontend/**/node_modules/
+avocat-frontend/dist/
+avocat-frontend/build/
+avocat-frontend/dist-ssr/
+avocat-frontend/*.local
+avocat-frontend/npm-debug.log*
+avocat-frontend/yarn-debug.log*
+avocat-frontend/yarn-error.log*
+avocat-frontend/pnpm-debug.log*
+avocat-frontend/lerna-debug.log*
+avocat-frontend/.vscode/*
+avocat-frontend/.idea/
+
+# if config.js belongs to frontend tooling
+avocat-frontend/config.js
+
+########################################
+# Backend: avocatapp (Laravel/PHP)
+########################################
+avocatapp/vendor/
+avocatapp/**/vendor/
+avocatapp/public/hot
+avocatapp/public/storage
+avocatapp/storage/*.key
+avocatapp/.phpunit.result.cache
+avocatapp/Homestead.json
+avocatapp/Homestead.yaml
+
+########################################
+# Search API: search-api (Python)
+########################################
+search-api/__pycache__/
+search-api/**/__pycache__/
+search-api/*.pyc
+search-api/*.pyo
+search-api/*.pyd
+search-api/*.db
+search-api/*.sqlite
+search-api/.pytest_cache/
+search-api/.mypy_cache/
+search-api/myenv/
+search-api/venv/
+search-api/.venv/
+search-api/env/
+
+########################################
+# Production output (if you don't want it on GitHub)
+########################################
+public_html/
