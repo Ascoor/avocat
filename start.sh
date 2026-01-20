@@ -9,7 +9,7 @@ usage() {
   cat <<'USAGE'
 Usage: ./start.sh [up|rebuild|down|logs|init|migrate|ps]
   up       Start stack (detached)
-  rebuild  Rebuild images then start
+  rebuild  Full rebuild from zero (down -v + no-cache build + up)
   down     Stop stack and remove volumes
   logs     Follow logs
   init     One-time Laravel setup (env + key + perms + caches + composer)
@@ -22,6 +22,46 @@ compose() { docker compose -f "$COMPOSE" "$@"; }
 
 require() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
 
+ensure_env_docker_file() {
+  local env_docker="$BACKEND_DIR/.env.docker"
+  local env_example="$BACKEND_DIR/.env.docker.example"
+
+  if [ ! -f "$env_docker" ]; then
+    if [ -f "$env_example" ]; then
+      cp "$env_example" "$env_docker"
+    else
+      cat > "$env_docker" <<'ENVDOCKER'
+APP_NAME=Avocat
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
+
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=app
+DB_USERNAME=app
+DB_PASSWORD=app_password
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+ENVDOCKER
+    fi
+  fi
+}
+
 prepare_env_docker() {
   # Create .env if missing from .env.example (local only)
   if [ ! -f "$BACKEND_DIR/.env" ]; then
@@ -33,45 +73,48 @@ APP_NAME=Avocat
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://localhost:8000
-DB_CONNECTION=mysql
+DB_CONNECTION=pgsql
 DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=avocat
-DB_USERNAME=avocat
-DB_PASSWORD=avocat_pass
+DB_PORT=5432
+DB_DATABASE=app
+DB_USERNAME=app
+DB_PASSWORD=app_password
 ENVFILE
     fi
   fi
 
   # Ensure DB settings (docker network)
-  sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' "$BACKEND_DIR/.env" || true
   sed -i 's/^DB_HOST=.*/DB_HOST=db/' "$BACKEND_DIR/.env" || true
-  sed -i 's/^DB_PORT=.*/DB_PORT=3306/' "$BACKEND_DIR/.env" || true
-  sed -i 's/^DB_DATABASE=.*/DB_DATABASE=avocat/' "$BACKEND_DIR/.env" || true
-  sed -i 's/^DB_USERNAME=.*/DB_USERNAME=avocat/' "$BACKEND_DIR/.env" || true
-  sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=avocat_pass/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_PORT=.*/DB_PORT=5432/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_DATABASE=.*/DB_DATABASE=app/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_USERNAME=.*/DB_USERNAME=app/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=app_password/' "$BACKEND_DIR/.env" || true
 }
 
 wait_db() {
-  echo "Waiting for MySQL (db:3306)..."
+  echo "Waiting for Postgres (db:5432)..."
   for i in $(seq 1 180); do
-    php -r '$fp=@fsockopen("db",3306,$e,$s,1); if($fp){fclose($fp); exit(0);} exit(1);' && break
+    php -r '$fp=@fsockopen("db",5432,$e,$s,1); if($fp){fclose($fp); exit(0);} exit(1);' && break
     sleep 1
   done
-  echo "MySQL is up ✅"
+  echo "Postgres is up ✅"
 }
 
 case "${1:-up}" in
   up)
     require docker
+    ensure_env_docker_file
     compose up -d
     echo "Backend:  http://localhost:8000"
-    echo "Frontend: http://localhost:5173"
-    echo "Search:   http://localhost:8001/docs"
+    echo "Frontend: http://localhost:8088"
     ;;
   rebuild)
     require docker
-    compose up -d --build
+    ensure_env_docker_file
+    compose down -v --remove-orphans
+    compose build --no-cache
+    compose up -d
     ;;
   down)
     require docker
@@ -87,6 +130,7 @@ case "${1:-up}" in
     ;;
   init)
     require docker
+    ensure_env_docker_file
     prepare_env_docker
     compose up -d
     # install composer deps into mounted volume
