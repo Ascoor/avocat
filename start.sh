@@ -1,120 +1,111 @@
 #!/bin/bash
-# ==========================================================
-# Avocat Full-Stack Orchestrator (Docker-first)
-# Laravel + Nginx + Vite + FastAPI(Uvicorn) + MySQL
-# ==========================================================
-
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
-COMPOSE_FILE="$PROJECT_ROOT/docker-compose.yml"
-
-BACKEND_DIR="$PROJECT_ROOT/avocatapp"
-BACKEND_ENV_DOCKER="$BACKEND_DIR/.env.docker"
-BACKEND_ENV_EXAMPLE="$BACKEND_DIR/.env.example"
-
-print_section() { echo -e "\n\e[1;36m$1\e[0m"; }
-
-require_command() {
-  local cmd="$1"
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "❌ Missing required command: $cmd"
-    exit 1
-  fi
-}
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+COMPOSE="$ROOT/docker-compose.yml"
+BACKEND_DIR="$ROOT/avocatapp"
 
 usage() {
   cat <<'USAGE'
-Usage: ./start.sh [up|down|logs|rebuild]
-  up      - Start stack (detached)
-  down    - Stop stack and remove volumes
-  logs    - Follow logs
-  rebuild - Rebuild images then start
+Usage: ./start.sh [up|rebuild|down|logs|init|migrate|ps]
+  up       Start stack (detached)
+  rebuild  Rebuild images then start
+  down     Stop stack and remove volumes
+  logs     Follow logs
+  init     One-time Laravel setup (env + key + perms + caches + composer)
+  migrate  Wait for DB then run migrate:fresh --seed
+  ps       Show services status
 USAGE
 }
 
-prepare_backend_env() {
-  # لا ننشئ .env الحقيقي — فقط ملف docker
-  if [ ! -d "$BACKEND_DIR" ]; then
-    echo "⚠️  Backend folder not found: $BACKEND_DIR"
-    return
-  fi
+compose() { docker compose -f "$COMPOSE" "$@"; }
 
-  if [ -f "$BACKEND_ENV_DOCKER" ]; then
-    return
-  fi
+require() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
 
-  print_section "🧩 Preparing Laravel .env.docker"
-  require_command openssl
-
-  if [ -f "$BACKEND_ENV_EXAMPLE" ]; then
-    cp "$BACKEND_ENV_EXAMPLE" "$BACKEND_ENV_DOCKER"
-  else
-    cat > "$BACKEND_ENV_DOCKER" <<'ENVEOF'
+prepare_env_docker() {
+  # Create .env if missing from .env.example (local only)
+  if [ ! -f "$BACKEND_DIR/.env" ]; then
+    if [ -f "$BACKEND_DIR/.env.example" ]; then
+      cp "$BACKEND_DIR/.env.example" "$BACKEND_DIR/.env"
+    else
+      cat > "$BACKEND_DIR/.env" <<'ENVFILE'
 APP_NAME=Avocat
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://localhost:8080
-ENVEOF
-  fi
-
-  local generated_key="base64:$(openssl rand -base64 32)"
-  if grep -qE '^APP_KEY=' "$BACKEND_ENV_DOCKER"; then
-    sed -i "s|^APP_KEY=.*$|APP_KEY=$generated_key|" "$BACKEND_ENV_DOCKER"
-  else
-    echo "APP_KEY=$generated_key" >> "$BACKEND_ENV_DOCKER"
-  fi
-
-  # Docker DB settings
-  cat <<'ENVEOF' >> "$BACKEND_ENV_DOCKER"
-
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
 DB_DATABASE=avocat
 DB_USERNAME=avocat
 DB_PASSWORD=avocat_pass
-ENVEOF
-}
-
-docker_up() {
-  local build_flag="$1"
-  local compose_cmd=(docker compose -f "$COMPOSE_FILE")
-
-  print_section "🐳 Starting Docker stack"
-  if [ "$build_flag" = "--build" ]; then
-    "${compose_cmd[@]}" up -d --build
-  else
-    "${compose_cmd[@]}" up -d
+ENVFILE
+    fi
   fi
 
-  print_section "✅ URLs"
-  echo "Backend (Laravel via Nginx): http://localhost:8080"
-  echo "Frontend (Vite dev):        http://localhost:5173"
-  echo "Search API (FastAPI):       http://localhost:8001/docs"
-  echo "MySQL:                      localhost:3306"
+  # Ensure DB settings (docker network)
+  sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_HOST=.*/DB_HOST=db/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_PORT=.*/DB_PORT=3306/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_DATABASE=.*/DB_DATABASE=avocat/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_USERNAME=.*/DB_USERNAME=avocat/' "$BACKEND_DIR/.env" || true
+  sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=avocat_pass/' "$BACKEND_DIR/.env" || true
+}
+
+wait_db() {
+  echo "Waiting for MySQL (db:3306)..."
+  for i in $(seq 1 180); do
+    php -r '$fp=@fsockopen("db",3306,$e,$s,1); if($fp){fclose($fp); exit(0);} exit(1);' && break
+    sleep 1
+  done
+  echo "MySQL is up ✅"
 }
 
 case "${1:-up}" in
   up)
-    require_command docker
-    prepare_backend_env
-    docker_up ""
+    require docker
+    compose up -d
+    echo "Backend:  http://localhost:8080"
+    echo "Frontend: http://localhost:5173"
+    echo "Search:   http://localhost:8001/docs"
     ;;
   rebuild)
-    require_command docker
-    prepare_backend_env
-    docker_up "--build"
+    require docker
+    compose up -d --build
     ;;
   down)
-    require_command docker
-    print_section "🛑 Stopping containers"
-    docker compose -f "$COMPOSE_FILE" down -v
+    require docker
+    compose down -v
     ;;
   logs)
-    require_command docker
-    print_section "📜 Logs"
-    docker compose -f "$COMPOSE_FILE" logs -f
+    require docker
+    compose logs -f
+    ;;
+  ps)
+    require docker
+    compose ps
+    ;;
+  init)
+    require docker
+    prepare_env_docker
+    compose up -d
+    # install composer deps into mounted volume
+    compose exec backend sh -lc "composer install || true"
+    # generate key if missing + clear caches
+    compose exec backend sh -lc "php artisan key:generate || true; php artisan config:clear || true; php artisan cache:clear || true"
+    # fix permissions
+    compose exec backend sh -lc "chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache || true"
+    echo "Init done ✅"
+    ;;
+  migrate)
+    require docker
+    compose exec backend sh -lc '
+      '"$(declare -f wait_db)"'
+      wait_db
+      php artisan config:clear || true
+      php artisan cache:clear || true
+      php artisan migrate:fresh --seed
+    '
     ;;
   *)
     usage
