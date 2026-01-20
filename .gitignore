@@ -1,0 +1,88 @@
+################################
+# GLOBAL
+################################
+*.log
+logs/
+tmp/
+.cache/
+
+################################
+# ENV / SECRETS (CRITICAL)
+################################
+.env
+.env.*
+.env.backup
+*.key
+*.pem
+secrets.*
+config.production.*
+config.js
+
+################################
+# NODE / FRONTEND (avocat-frontend)
+################################
+node_modules/
+**/node_modules/
+dist/
+build/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+################################
+# PYTHON (search-api)
+################################
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite
+
+# Virtual Environments (ignore ALL paths)
+venv/
+.venv/
+env/
+myenv/
+**/venv/
+**/.venv/
+**/env/
+**/myenv/
+.pytest_cache/
+.mypy_cache/
+
+################################
+# PHP / LARAVEL (avocatapp)
+################################
+/vendor/
+**/vendor/
+.phpunit.result.cache
+/public/hot
+/public/storage
+/storage/*.key
+Homestead.json
+Homestead.yaml
+
+################################
+# PUBLIC / DEPLOY OUTPUT
+################################
+public_html/
+**/public_html/
+
+################################
+# EDITORS / OS
+################################
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
