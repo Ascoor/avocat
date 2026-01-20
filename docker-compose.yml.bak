@@ -1,16 +1,16 @@
-version: "3.9"
+name: "3.9"
 
 services:
-  pg:
+  db:
     image: postgres:16-alpine
-    container_name: avc-pg
+    container_name: e360-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: app
       POSTGRES_USER: app
       POSTGRES_PASSWORD: app_password
     volumes:
-      - avc-pg-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     ports:
       - "55432:5432"
     healthcheck:
@@ -19,44 +19,44 @@ services:
       timeout: 5s
       retries: 30
 
-  cache:
+  redis:
     image: redis:7-alpine
-    container_name: avc-cache
+    container_name: e360-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
 
-  api:
+  backend:
     build:
       context: ./avocatapp
       dockerfile: Dockerfile
-    container_name: avc-api
+    container_name: e360-avocatapp
     restart: unless-stopped
     env_file:
       - ./avocatapp/.env.docker
     volumes:
       - ./avocatapp:/var/www/html
-      - avc-api-vendor:/var/www/html/vendor
+      - avocatapp-vendor:/var/www/html/vendor
     depends_on:
-      pg:
+      db:
         condition: service_healthy
-      cache:
+      redis:
         condition: service_started
     ports:
       - "8000:8000"
 
-  web:
+  avocat-frontend:
     image: node:20-alpine
-    container_name: avc-web
+    container_name: e360-avocat-frontend
     working_dir: /usr/src/app
     volumes:
       - ./avocat-frontend:/usr/src/app
-      - avc-web-node-modules:/usr/src/app/node_modules
+      - avocat-frontend-node-modules:/usr/src/app/node_modules
     ports:
       - "8088:8080"
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port=8080"
 
 volumes:
-  avc-pg-data:
-  avc-api-vendor:
-  avc-web-node-modules:
+  db-data:
+  avocatapp-vendor:
+  avocat-frontend-node-modules:
