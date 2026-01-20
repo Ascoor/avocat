@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Tailwind CSS -->
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto my-12 px-4 md:px-0">
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <div class="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/3">
+                <div class="bg-purple-600 text-white text-lg font-semibold rounded-t-lg px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-semibold">بحث عن دعوى</h2>
+                </div>
+                <form action="https://formbold.com/s/FORM_ID" method="POST" class="p-6">
+                    <div class="mb-4">
+                        <label for="degree" class="block text-sm font-medium text-gray-700">الدرجة:</label>
+                        <select id="degree" name="degree" onchange="handleDegreeChange()" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                            <option value="">--اختر--</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4 hidden" id="courtGroup">
+                        <label for="court" class="block mb-2 font-medium text-gray-700">المحكمة:</label>
+                        <select id="court" name="court" onchange="handleCourtChange()" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                            <option value="">--اختر--</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4 hidden" id="caseTypeGroup">
+                        <label for="caseType" class="block mb-2 font-medium text-gray-700">نوع الدعوى:</label>
+                        <select id="caseType" name="caseType" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                            <option value="">--اختر--</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="caseYear" class="block mb-2 font-medium text-gray-700">سنة الدعوى:</label>
+                        <input type="text" id="caseYear" name="caseYear" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="caseNumber" class="block mb-2 font-medium text-gray-700">رقم الدعوى:</label>
+                        <input type="number" id="caseNumber" name="caseNumber" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5" />
+                    </div>
+
+                    <button type="button" onclick="handleSubmit()" class="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Search</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="flex items-center justify-center mt-4">
+            <div id="countdownContainer" class="hidden">
+                <div id="countdown" class="relative w-24 h-24 flex items-center justify-center bg-purple-600 rounded-full text-white font-semibold text-2xl">
+                    5
+                </div>
+            </div>
+        </div>
+    </div> 
+        <div id="result" class="mt-4 mx-auto max-w-xl">
+            <div id="searchResults">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+
+
+<script>
+        let allData = {};
+
+        async function fetchData() {
+            try {
+                const response = await axios.get('https://avocat.ask-ar.net/avocatapp/api/search-court');
+                allData = response.data;
+                setDropdownOptions();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function setDropdownOptions() {
+            setOptions('degree', 'search_degrees', 'degree_value', 'degree_name');
+            setFilteredOptions('court', 'search_courts', 'court_value', 'court_name', 'degree_value');
+            setFilteredOptions('caseType', 'search_case_types', 'case_type_value', 'case_type_name',
+            'degree_value',
+            'court_value');
+        }
+
+        function setOptions(selectId, dataKey, valueKey, textKey) {
+            const select = document.getElementById(selectId);
+            select.innerHTML =  '<option value="">--اختر--</option>';
+
+            allData[dataKey].forEach(item => {
+                const option = document.createElement('option');
+                option.value = item[valueKey];
+                option.textContent = item[textKey];
+                select.appendChild(option);
+            });
+        }
+
+        function setFilteredOptions(selectId, dataKey, valueKey, textKey, filterKey) {
+            const select = document.getElementById(selectId);
+            select.innerHTML =  '<option value="">--اختر--</option>';
+
+            const selectedDegree = document.getElementById('degree').value;
+
+            // Filter options based on the selected degree_value
+            const filteredOptions = allData[dataKey].filter(item => item[filterKey] === selectedDegree);
+
+            // Display or hide the corresponding form group based on filtered options
+            const formGroup = document.getElementById(`${selectId}Group`);
+            if (filteredOptions.length > 0) {
+                formGroup.style.display = 'block';
+            } else {
+                formGroup.style.display = 'none';
+            }
+
+            filteredOptions.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item[valueKey];
+                option.textContent = item[textKey];
+                select.appendChild(option);
+            });
+        }
+        function handleDegreeChange() {
+        const selectedDegree = document.getElementById('degree').value;
+        setFilteredOptions('court', 'search_courts', 'court_value', 'court_name', selectedDegree);
+        // قم بإخفاء وتفريغ قائمة أنواع القضايا لأن المحكمة تغيرت
+        const caseTypeGroup = document.getElementById('caseTypeGroup');
+        caseTypeGroup.style.display = 'none';
+        document.getElementById('caseType').innerHTML = '<option value="">--اختر--</option>';
+    }
+
+    function setFilteredOptions(selectId, dataKey, valueKey, textKey, filterValue) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">--اختر--</option>';
+
+        const filteredOptions = allData[dataKey].filter(item => item['degree_value'] === filterValue);
+
+        filteredOptions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item[valueKey];
+            option.textContent = item[textKey];
+            select.appendChild(option);
+        });
+
+        // إظهار القائمة المنسدلة إذا كانت هناك خيارات متاحة
+        const formGroup = document.getElementById(`${selectId}Group`);
+        formGroup.style.display = filteredOptions.length > 0 ? 'block' : 'none';
+    }
+    function handleCourtChange() {
+        const selectedDegree = document.getElementById('degree').value;
+        const selectedCourt = document.getElementById('court').value;
+
+        // الخطوة الأولى: فلترة بناءً على قيمة الدرجة
+        let degreeFilteredCaseTypes = allData['search_case_types'].filter(item =>
+            item['degree_value'] === selectedDegree
+        );
+
+        // الخطوة الثانية: فلترة إضافية بناءً على قيمة المحكمة
+        let courtFilteredCaseTypes = degreeFilteredCaseTypes.filter(item =>
+            item['court_value'] === selectedCourt
+        );
+
+        updateCaseTypeOptions(courtFilteredCaseTypes);
+    }
+
+    function updateCaseTypeOptions(filteredCaseTypes) {
+        const caseTypeSelect = document.getElementById('caseType');
+        caseTypeSelect.innerHTML = '<option value="">--اختر--</option>';
+
+        filteredCaseTypes.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item['case_type_value'];
+            option.textContent = item['case_type_name'];
+            caseTypeSelect.appendChild(option);
+        });
+
+        const caseTypeGroup = document.getElementById('caseTypeGroup');
+        caseTypeGroup.style.display = filteredCaseTypes.length > 0 ? 'block' : 'none';
+    }
+
+    function handleSubmit() {
+        // إظهار العداد
+        const countdownContainer = document.getElementById('countdownContainer');
+        countdownContainer.classList.remove('hidden');
+    
+        let countdownValue = 5;
+        const countdownElement = document.getElementById('countdown');
+        countdownElement.textContent = countdownValue;
+    
+        const interval = setInterval(() => {
+            countdownValue--;
+            countdownElement.textContent = countdownValue;
+            if (countdownValue <= 0) {
+                clearInterval(interval);
+                countdownContainer.classList.add('hidden');
+                // الآن يمكن تنفيذ البحث أو عرض رسالة
+                performSearch();
+            }
+        }, 1000);
+    }
+    
+    function performSearch() {
+        // هنا تأتي منطقية تنفيذ البحث وعرض النتائج
+        // يمكنك وضع كود البحث الخاص بك هنا
+
+            const formData = {
+            degree: document.getElementById('degree').value,
+            court: document.getElementById('court').value,
+            caseType: document.getElementById('caseType').value,
+            caseYear: document.getElementById('caseYear').value,
+            caseNumber: document.getElementById('caseNumber').value
+        };
+
+        // Validate that all required fields have values
+        if (!formData.degree || !formData.court || !formData.caseType || !formData.caseYear || !formData.caseNumber) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        const url = '/search';
+        axios.post(url, formData)
+        .then(response => {
+            const resultDiv = document.getElementById('result');
+            // Assuming the response for no results is a JSON object with a message field
+            if (!response.data || Object.keys(response.data).length === 0) {
+                resultDiv.innerHTML = `
+                <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">نتائج البحث</h1>
+              <p class="text-gray-700 bg-red-100 border-l-4 border-red-500 p-4">الدعوى غير مقيدة</p>
+                    </div>
+                `;
+            } else {
+                // هنا يمكنك تعديل طريقة عرض النتائج بناءً على هيكل `response.data`
+                resultDiv.innerHTML = ` <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">نتائج البحث</h1>
+        </div>
+        ${response.data}`;
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="text-center mt-4">
+                    <h2 class="text-xl font-semibold mb-4">نتيجة البحث</h2>
+                    <p class="text-gray-700 bg-red-100 border-l-4 border-red-500 p-4">حدث خطأ أثناء البحث، يرجى المحاولة مرة أخرى.</p>
+                </div>
+            `;
+        });
+    
+        console.log("تم البحث");
+    }
+    
+        fetchData();
+    </script>
+    
+    </body>
+    </html>

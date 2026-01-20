@@ -1,0 +1,35 @@
+name: Laravel CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2' # Use PHP 8.2
+          extensions: mbstring, zip, pdo, pdo_mysql, bcmath # Add necessary PHP extensions
+
+      - name: Upgrade Composer and Dumpautoload
+        run: |
+          composer upgrade
+          composer dumpautoload 
+
+
+      - name: Optimize Application
+        run: php artisan optimize
+
+      - name: Deploy to Hostinger
+        run: |
+          ssh -p 65002 u973484608@82.180.175.77 "cd domains/avocat.live/avocat-api && git pull && composer2 install && php artisan migrate:fresh --seed && php artisan optimize"
+        env:
+          DEPLOY_KEY: ${{secrets.DEPLOY_KEY_API}}

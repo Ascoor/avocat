@@ -1,0 +1,51 @@
+.EditorWord {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.TopTools,
+.SideTools,
+.EditorTools {
+  margin-bottom: 1rem;
+}
+
+.workspace {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: calc(100vh - 120px);
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.editor {
+  width: 100%;
+  min-height: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
+
+.editor:focus {
+  outline: none;
+  border: 1px solid #007bff;
+}
+
+/* Custom styles for bold, italic, etc. */
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.underline {
+  text-decoration: underline;
+}

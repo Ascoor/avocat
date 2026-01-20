@@ -1,0 +1,4 @@
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/static/
+RewriteRule ^(.*)$ http://127.0.0.1:9100/$1 [P]

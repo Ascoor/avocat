@@ -1,0 +1,28 @@
+.editor-area {
+  border: 1px solid #ccc;
+  margin: 20px;
+  padding: 20px;
+}
+
+/* Toolbar styles */
+.ql-toolbar {
+  border: none;
+  background-color: #f1f1f1;
+}
+
+/* Editor styles */
+.ql-container {
+  height: 500px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+/* You can add more styling here */
+/* RTL related styles */
+
+.ql-align-right {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Add more styles as needed */

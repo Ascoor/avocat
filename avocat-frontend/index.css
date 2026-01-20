@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+@import './assets/css/additional-styles/utility-patterns.css';
+@import './assets/css/additional-styles/flatpickr.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .centered-container {
+    @apply flex flex-col items-center justify-center;
+  }
+  .responsive-max-width {
+    @apply w-full max-w-4xl mx-auto;
+  }
+  .nav-container nav {
+    @apply space-x-2; /* Adds horizontal spacing between inline or inline-block elements */
+  }
+}

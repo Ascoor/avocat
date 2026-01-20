@@ -1,0 +1,34 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.text-tools,
+.alignment-tools,
+.color-tools,
+.file-tools {
+  margin-right: 20px;
+}
+
+.tool-button {
+  margin: 5px;
+}
+
+.tool-button:hover {
+  background-color: #f2f2f2;
+}
+
+.workspace {
+  display: flex;
+  padding: 20px;
+}
+
+.editor {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.top-tools .active {
+  background-color: #ccc;
+}

@@ -1,0 +1,172 @@
+<div id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_upMain">
+        <div class="container custom-form">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_h2Title">الاستعلام عن موقف دعوى</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblDegree">الدرجة</span>
+                    <select name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$ddlDegree" onchange="javascript:setTimeout('__doPostBack(\'ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$ddlDegree\',\'\')', 0)" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_ddlDegree">
+	<option value="">--اختر--</option>
+	<option value="2">استئناف                                                                                             </option>
+	<option selected="selected" value="3">ابتدائى                                                                                             </option>
+	<option value="4">جزئى                                                                                                </option>
+
+</select>
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblCourt">المحكمة</span>
+                    <select name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$ddlCourt" onchange="javascript:setTimeout('__doPostBack(\'ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$ddlCourt\',\'\')', 0)" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_ddlCourt">
+	<option value="">--اختر--</option>
+	<option value="1">محكمة شمال القاهرة الابتدائية</option>
+	<option value="2">محكمة جنوب القاهرة الابتدائية</option>
+	<option value="3">محكمة شمال الجيزة الابتدائية</option>
+	<option value="4">محكمة شرق اسكندرية الابتدائية</option>
+	<option value="5">محكمة شمال دمنهور الابتدائية</option>
+	<option value="6">محكمة غرب طنطا الابتدائية</option>
+	<option value="7">محكمة الاسماعيلية الابتدائية</option>
+	<option value="8">محكمة جنوب الزقازيق الابتدائية</option>
+	<option selected="selected" value="9">محكمة جنوب المنصورة الابتدائية</option>
+	<option value="10">محكمة السويس الابتدائية</option>
+	<option value="11">محكمة كفر الشيخ الابتدائية</option>
+	<option value="12">محكمة شمال بنها الأبتدائية</option>
+	<option value="13">محكمة شبين الكوم الابتدائية</option>
+	<option value="14">محكمة الفيوم الابتدائية</option>
+	<option value="15">محكمة بنى سويف الابتدائية</option>
+	<option value="16">محكمة المنيا الابتدائية</option>
+	<option value="18">محكمة سوهاج الابتدائية</option>
+	<option value="19">محكمة قنا الابتدائية</option>
+	<option value="22">محكمة شمال سيناء الابتدائية</option>
+	<option value="23">محكمة جنوب سيناء الابتدائية</option>
+	<option value="24">محكمة حلوان الابتدائية</option>
+	<option value="25">محكمة القاهرة الجديدة الابتدائية</option>
+	<option value="26">محكمه جنوب الجيزة الابتدائيه</option>
+	<option value="27">محكمة جنوب بنها الأبتدائية</option>
+	<option value="29">محكمة شمال الزقازيق الابتدائية</option>
+	<option value="30">محكمة غرب اسكندرية الابتدائية</option>
+	<option value="31">محكمة مرسى مطروح الابتدائية</option>
+	<option value="33">محكمة شرق طنطا الأبتدائية</option>
+	<option value="34">محكمة بورسعيد الابتدائية</option>
+	<option value="36">محكمة البحر الاحمر الابتدائية</option>
+	<option value="38">محكمة الوادى الجديد الابتدائية</option>
+
+</select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblCaseType">نوع الدعوى</span>
+                    <select name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$ddlCaseType" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_ddlCaseType">
+	<option value="">--اختر--</option>
+	<option value="1">مدنى كلى</option>
+	<option value="2">مدنى حكومة</option>
+	<option value="3">ايجارات</option>
+	<option value="4">تعويضات</option>
+	<option value="5">مدنى مستأنف</option>
+	<option value="6">مستأنف مستعجل</option>
+	<option value="7">ضرائب</option>
+	<option value="8">تجارى كلى</option>
+	<option value="10">عمال كلى</option>
+	<option value="13">استثمار</option>
+	<option value="15">صحة توقيع كلى</option>
+	<option value="16">افلاس</option>
+	<option value="18">محكمة عمالية</option>
+	<option value="19">لجنة تقدير اتعاب</option>
+	<option value="22">تعيين قيم</option>
+	<option value="25">ايجارات قانون قديم</option>
+	<option value="26">قانون ايجارات جديد</option>
+	<option selected="selected" value="27">مستعجل</option>
+	<option value="30">طعون ايجارات</option>
+	<option value="31">احوال اجانب</option>
+	<option value="32">تظلمات</option>
+	<option value="33">رد اعتبار</option>
+
+</select>
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblCaseYear">السنة</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtCaseYear" value="2023" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtCaseYear" type="number" style="border-radius: 3px; width: 84%; margin: 5px !important; padding: 0px !important;">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_ctl01" style="color:Red;visibility:hidden;">*</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblCaseNumber">رقم الدعوى</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtCaseNumber" type="text" value="279" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtCaseNumber">
+                </div>
+                <div class="col-md-6">
+                    <input type="submit" name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$btnSearch" value="بحث" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$btnSearch&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_btnSearch" class="float-left">
+                </div>
+            </div>
+            <div id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_dvCaseDetails" class="row">
+                <div class="col-md-12">
+                    <h4 id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_hCaseDetails">بيانات الدعوى</h4>
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultCaseNumber">رقم الدعوى</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultCaseNumber" type="text" value="279" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultCaseNumber">
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultCaseYear">السنة</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultCaseYear" type="text" value="2023" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultCaseYear">
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultCaseType">نوع الدعوى</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultCaseType" type="text" value="مستعجل" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultCaseType">
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultCaseDate">تاريخ القيد</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultCaseDate" type="text" value="2023/11/11" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultCaseDate">
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultPerson1">اسم المدعى</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultPerson1" type="text" value="سامى خلف الله ابراهيم-" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultPerson1">
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultPerson2">اسم المدعى عليه</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultPerson2" type="text" value="غاده محمد جابر ثابت محمد-" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultPerson2">
+                </div>
+                <div class="col-md-12">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultSubject">الموضوع</span>
+                    <textarea name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultSubject" rows="2" cols="20" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultSubject" style="height:200px;width:93%;">الحكم : بصفه مستعجلة بفسخ عقد البيع المورخ 2019/11/23 لتحقيق الشرط الفاسخ الصريح طبقا للبند الرابع من عقد البيع سند الدعوى مع ما يترتب على ذلك من اثار مع الزام المعلن اليها بالمصروفات ومقاتبل اتعاب المحاماه </textarea>
+                </div>
+                <div class="col-md-6">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultLastSessionDate">تاريخ آخر جلسة</span>
+                    <input name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultLastSessionDate" type="text" value="2024/02/25" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultLastSessionDate">
+                </div>
+                <div class="col-md-12" style="margin-bottom: 10px">
+                    <span id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_lblResultLastSessionDecision">قرار آخر جلسة</span>
+                    <textarea name="ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$txtResultLastSessionDecision" rows="2" cols="20" readonly="readonly" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_txtResultLastSessionDecision" style="height:200px;width:93%;">{{ فلهــــذه الأسبــــــاب }}
+حكمــت المحكمـــة :-
+ بوقف الدعوى جزاءً لمدة شهر وابقت الفصل فى المصروفات . 
+</textarea>
+                </div>
+                <div class="col-md-12">
+                    <div>
+	<table class="grid-view" cellspacing="0" rules="all" border="1" id="ctl00_ctl58_g_7dd5062a_d3d6_4e62_aca8_27975ce28424_grdRolls" style="width:100%;border-collapse:collapse;">
+		<tbody><tr class="grid-view-header">
+			<th scope="col"><a href="javascript:__doPostBack('ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$grdRolls','Sort$SessionDate')">تاريخ الجلسة</a></th><th scope="col">قرار الجلسة</th><th scope="col"><a href="javascript:__doPostBack('ctl00$ctl58$g_7dd5062a_d3d6_4e62_aca8_27975ce28424$grdRolls','Sort$NextSessionDate')">تاريخ الجلسة القادمة</a></th>
+		</tr><tr class="grid-view-row">
+			<td>2023/11/26</td><td>جلسة 2023/12/17 للاعلان باصل الصحيفة </td><td>2023/12/17</td>
+		</tr><tr class="grid-view-alt-row">
+			<td>2023/12/17</td><td>جلسة 2023/12/31 للسابق</td><td>2023/12/31</td>
+		</tr><tr class="grid-view-row">
+			<td>2023/12/31</td><td>جلسة 2024/1/21 للالان باصل الصحيفة بالارشاد</td><td>2024/01/21</td>
+		</tr><tr class="grid-view-alt-row">
+			<td>2024/01/21</td><td>2024/2/25
+الحكم </td><td>2024/02/25</td>
+		</tr><tr class="grid-view-row">
+			<td>2024/02/25</td><td>{{ فلهــــذه الأسبــــــاب }}
+حكمــت المحكمـــة :-
+ بوقف الدعوى جزاءً لمدة شهر وابقت الفصل فى المصروفات . 
+</td><td>&nbsp;</td>
+		</tr>
+	</tbody></table>
+</div>
+                </div>
+            </div>
+        </div>
+    </div>

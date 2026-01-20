@@ -1,0 +1,120 @@
+
+
+
+  <!doctype html>
+  <html lang="ar" dir="rtl">
+  <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <!-- Tailwind CSS -->
+      <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+
+
+
+      <!doctype html>
+      <html lang="ar" dir="rtl">
+      <head>
+          <!-- Required meta tags -->
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+          <!-- Tailwind CSS -->
+          <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+      
+      
+          <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-4">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-4 py-5 bg-gray-200">
+                <h2 class="text-xl font-semibold">تفاصيل الدعوى</h2>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+              
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">رقم الدعوى:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['CaseNumber'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">السنة:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['CaseYear'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">نوع الدعوى:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['CaseType'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">تاريخ القيد:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['DateCreation'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">اسم المدعى:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['PlaintiffName'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">اسم المدعى عليه:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['DefendantName'] }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">الموضوع:</dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['CaseSubject'] }}</dd>
+              </div>
+          </dl>
+          
+          </div>
+          <div class="bg-white border-t border-gray-200">
+      <dl>
+          <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">تاريخ آخر جلسة:</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['DateLastSession'] }}</dd>
+          </div>
+          <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">قرار آخر جلسة:</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ search_results['LastSessionDecision'] }}</dd>
+          </div>
+      </dl>
+  </div>
+
+      </div>
+      <div class="mt-6 bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="px-4 py-5 bg-gray-200">
+            <h2 class="text-xl font-semibold">جلسات القضية</h2>
+        </div>
+        <div class="border-t border-gray-100">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-blue -500 uppercase tracking-wider">
+                              تاريخ الجلسة
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-blue -500 uppercase tracking-wider">
+                              قرار الجلسة
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-blue -500 uppercase tracking-wider">
+                              تاريخ الجلسة القادمة
+                          </th>
+                    
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white">
+                      <!-- Dynamically repeat this structure for each session -->
+                      {% for session in search_results['Case Sessions'] %}
+                      <tr>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue  -500">{{ session['DateSession'] }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue  -500">{{ session['Session Decision'] }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-blue  -500">{{ session['Next Session Date'] }}</td>
+                      </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </body>
+  </html>
