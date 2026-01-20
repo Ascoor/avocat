@@ -1,5 +1,5 @@
 const API_CONFIG = {
- baseURL: 'http://localhost:8080',
+ baseURL: 'http://localhost:8000',
  //   baseURL:'https://avocat.ask-ar.net/avocatapp',
 };
 

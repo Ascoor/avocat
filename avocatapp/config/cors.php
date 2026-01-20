@@ -1,10 +1,11 @@
 <?php
+
 return [
 
     /*
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     |
     | Here you may configure your settings for cross-origin resource sharing
     | or "CORS". This determines what cross-origin operations may execute
@@ -12,21 +13,26 @@ return [
     |
     | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     |
-    */ 
-        'paths' => ['api/*', 'sanctum/csrf-cookie'],
-        'allowed_origins' => [
-            'http://localhost:5173',
-            'http://localhost:5173',
-            'http://127.0.0.1:3000',
-            'http://127.0.0.1:3000',
-            'http://127.0.0.1:7000',
-            'http://localhost:7000',
-            'https://www.avocat.live',
-        ],
-        'allowed_origins_patterns' => [],
-        'allowed_headers' => ['*'],
-        'allowed_methods' => ['*'],
-        'exposed_headers' => [],
-        'max_age' => 0,
-        'supports_credentials' => true,
-    ];
+    */
+
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    
+    'allowed_origins' => [
+        'http://localhost:8088',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:7000',
+        'https://www.avocat.live',
+    ],
+    
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+    
+    'allowed_methods' => ['*'],
+    
+    'exposed_headers' => [],
+    
+    'max_age' => 86400, // يمكنك تعيينها إلى 86400 ثانية (24 ساعة) لزيادة الأداء.
+    
+    'supports_credentials' => true,
+];
