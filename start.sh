@@ -32,7 +32,7 @@ prepare_env_docker() {
 APP_NAME=Avocat
 APP_ENV=local
 APP_DEBUG=true
-APP_URL=http://localhost:8080
+APP_URL=http://localhost:8000
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -65,7 +65,7 @@ case "${1:-up}" in
   up)
     require docker
     compose up -d
-    echo "Backend:  http://localhost:8080"
+    echo "Backend:  http://localhost:8000"
     echo "Frontend: http://localhost:5173"
     echo "Search:   http://localhost:8001/docs"
     ;;
