@@ -82,3 +82,6 @@ search-api/env/
 # Production output (if you don't want it on GitHub)
 ########################################
 public_html/
+
+# Laravel cache
+avocatapp/bootstrap/cache/*.php
