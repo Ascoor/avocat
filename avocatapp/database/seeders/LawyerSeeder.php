@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Passport\ClientRepository;
-use Laravel\Passport\TokenRepository;
+use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\DB;
 use App\Models\Lawyer;
 use App\Models\User;
@@ -160,59 +158,44 @@ class LawyerSeeder extends Seeder
                 'address' => 'القاهرة',
                 'religion' => 'مسلم',
             ]
-
         ];
 
-        $clientRepository = app(ClientRepository::class);
-        $tokenRepository = app(TokenRepository::class);
-
         foreach ($lawyers as $lawyerData) {
-            DB::beginTransaction();
-            try {
-                // Create a user for the lawyer
-                $user = new User([
-                    'name' => $lawyerData['name'],
-                    'email' => $lawyerData['email'],
-                    'password' => Hash::make('Ask@12345'), // Set a default password
-                    'role' => '2', // Set the role to '2' for lawyers
-                ]);
-                $user->save();
+            DB::transaction(function () use ($lawyerData) {
 
-                // Create a Passport client for the lawyer
-                $client = $clientRepository->createPersonalAccessClient(
-                    $user->id,
-                    $user->name,
-                    ''
+                // 1) User: نفس المستخدم لو موجود (بالـ email)
+                $user = User::updateOrCreate(
+                    ['email' => $lawyerData['email']],
+                    [
+                        'name' => $lawyerData['name'],
+                        'password' => Hash::make('Ask@12345'),
+                        'role' => '2', // lawyer
+                    ]
                 );
 
-                // Create a new personal access token for the lawyer
-                $token = $user->createToken($user->name);
+                // 2) Lawyer: نفس المحامي لو موجود (بالـ identity_number)
+                Lawyer::updateOrCreate(
+                    ['identity_number' => $lawyerData['identity_number']],
+                    [
+                        'name' => $lawyerData['name'],
+                        'birthdate' => $lawyerData['birthdate'],
+                        'law_reg_num' => $lawyerData['law_reg_num'],
+                        'lawyer_class' => $lawyerData['lawyer_class'],
+                        'email' => $lawyerData['email'],
+                        'phone_number' => $lawyerData['phone_number'],
+                        'gender' => $lawyerData['gender'],
+                        'address' => $lawyerData['address'] ?? null,
+                        'religion' => $lawyerData['religion'],
+                        'user_id' => $user->id,
+                    ]
+                );
 
-                // Store the client ID and secret in the user model
-                $user->client_id = $client->id;
-                $user->client_secret = $client->secret;
-                $user->save();
-
-                // Create a lawyer with the associated user_id
-                $lawyer = new Lawyer([
-                    'name' => $lawyerData['name'],
-                    'birthdate' => $lawyerData['birthdate'],
-                    'identity_number' => $lawyerData['identity_number'],
-                    'law_reg_num' => $lawyerData['law_reg_num'],
-                    'email' => $lawyerData['email'],
-                    'gender' => $lawyerData['gender'],
-                    'religion' => $lawyerData['religion'],
-                    'phone_number' => $lawyerData['phone_number'],
-                    'lawyer_class' => $lawyerData['lawyer_class'],
-                    'user_id' => $user->id, // Associate the user_id with the lawyer
-                ]);
-                $lawyer->save();
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();
-                throw $e;
-            }
+                // 3) Token (اختياري للاختبار فقط)
+                // مهم: Passport لازم يكون متثبت بـ passport:install
+                // لو مش محتاج توكنات أثناء seed، سيب السطور دي معلّقة
+                // $token = $user->createToken('seed-token')->accessToken;
+                // dump($user->email, $token);
+            });
         }
     }
 }
