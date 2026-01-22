@@ -11,10 +11,12 @@ class CorsMiddleware
         $allowedOrigins = [
             'http://localhost:3000',
             'http://localhost:5000',
+            'http://localhost:8088',
             'https://search-api.ask-ar.net',
             'http://search-api.ask-ar.net',
             'http://127.0.0.1:5000',
             'http://127.0.0.1:3000',
+            'http://127.0.0.1:8088',
             'https://avocat.ask-ar.net',
             'https://www.avocat.ask-ar.net'
         ];
