@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */   protected $middleware = [
-        \App\Http\Middleware\CorsMiddleware::class,  // Add this line
+
 
 
       //  \App\Http\Middleware\TrustProxies::class,
@@ -46,7 +46,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'cors',  // Add this line
+          
             EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
 
@@ -62,8 +62,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-
-    'cors' => \App\Http\Middleware\CorsMiddleware::class,
+ 
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
-
+ 
   api:
     build:
       context: ./avocatapp
@@ -34,9 +34,13 @@ services:
     restart: unless-stopped
     env_file:
       - ./avocatapp/.env.docker
+    environment:
+      COMPOSER_CACHE_DIR: /tmp/composer-cache
+      COMPOSER_ALLOW_SUPERUSER: "1"
     volumes:
       - ./avocatapp:/var/www/html
       - avc-api-vendor:/var/www/html/vendor
+      - avc-composer-cache:/tmp/composer-cache
     depends_on:
       pg:
         condition: service_healthy
@@ -44,6 +48,8 @@ services:
         condition: service_started
     ports:
       - "8000:8000"
+
+
 
   web:
     image: node:20-alpine
@@ -55,8 +61,8 @@ services:
     ports:
       - "8088:8080"
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port=8080"
-
 volumes:
   avc-pg-data:
   avc-api-vendor:
+  avc-composer-cache:
   avc-web-node-modules:
