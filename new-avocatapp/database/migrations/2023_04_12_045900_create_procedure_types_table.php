@@ -8,17 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('courts', function (Blueprint $table) {
+        Schema::create('procedure_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('court_type_id')->constrained('court_types');
-            $table->foreignId('court_level_id')->constrained('court_levels');
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('courts');
+        Schema::dropIfExists('procedure_types');
     }
 };
