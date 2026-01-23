@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -10,12 +9,22 @@ class InvoicesSeeder extends Seeder
 {
     public function run(): void
     {
-        $now = Carbon::now();
+        $now = now();
+
+        // Safe with FK
+        DB::table('invoices')->delete();
+
+        $caseId = DB::table('leg_cases')->value('id');
+        $serviceId = DB::table('services')->value('id'); // لازم خدمة موجودة لو العمود مش nullable
+
+        if (!$caseId || !$serviceId) {
+            return;
+        }
 
         DB::table('invoices')->insert([
             [
-                'leg_case_id' => 1,
-                'service_id' => null,
+                'leg_case_id' => $caseId,
+                'service_id' => $serviceId,
                 'invoice_number' => 'INV-0001',
                 'status' => 'Sent',
                 'issue_date' => $now->toDateString(),

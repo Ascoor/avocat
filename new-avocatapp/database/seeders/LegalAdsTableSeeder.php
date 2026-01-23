@@ -5,59 +5,67 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
-use App\Models\Lawyer;
-use App\Models\LegalAdType;
-use App\Models\Court;
-use App\Models\User;
 
 class LegalAdsTableSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Truncate the table to remove any existing records
-        DB::table('legal_ads')->truncate();
+        // Safer than truncate when FK exists
+        DB::table('legal_ads')->delete();
 
-        $faker = Faker::create('ar_JO'); // Arabic Faker instance
+        $faker = Faker::create('ar_JO');
 
-        // Get all distinct leg_case_ids
-        $legCases = \App\Models\LegCase::pluck('id')->toArray();
+        $legCaseIds = DB::table('leg_cases')->pluck('id')->all();
+        if (empty($legCaseIds)) {
+            return;
+        }
 
-        // Pre-fetch random models for optimization
-        $lawyers = Lawyer::inRandomOrder()->take(2)->get(); // Get 2 random lawyers
-        $legalAdTypes = LegalAdType::inRandomOrder()->take(2)->get(); // Get 2 random legal ad types
-        $courts = Court::inRandomOrder()->take(2)->get(); // Get 2 random courts
-        $users = User::inRandomOrder()->take(2)->get(); // Get 2 random users
+        $lawyerIds = DB::table('lawyers')->pluck('id')->all();
+        $legalAdTypeIds = DB::table('legal_ad_types')->pluck('id')->all();
+        $courtIds = DB::table('courts')->pluck('id')->all();
+        $userIds = DB::table('users')->pluck('id')->all();
 
-        foreach ($legCases as $legCaseId) {
-            // Generate 2 legal ads for each leg_case_id
+        // لو أي جدول فاضي، نوقف seeder بدل ما يعلّق/يضرب errors
+        if (empty($lawyerIds) || empty($legalAdTypeIds) || empty($courtIds) || empty($userIds)) {
+            return;
+        }
+
+        $rows = [];
+        foreach ($legCaseIds as $legCaseId) {
             for ($i = 0; $i < 2; $i++) {
-                // Generate receive_date only within the last 2 years, or null
                 $receiveDate = $faker->optional()->dateTimeBetween('-2 years', 'now');
-                
-                // Insert the legal ad data
-                DB::table('legal_ads')->insert([
-                    'description' => $faker->sentence(), // Description of the legal ad
-                    'results' => null, // Default case result (empty)
-                    'send_date' => $faker->dateTimeBetween('-30 years', 'now')->format('Y-m-d'), // Send date
 
-                    // Format receive_date if available
-                    'receive_date' => $receiveDate ? $receiveDate->format('Y-m-d') : null, 
+                $rows[] = [
+                    'description' => $faker->sentence(),
+                    'results' => null,
+                    'send_date' => $faker->dateTimeBetween('-30 years', 'now')->format('Y-m-d'),
+                    'receive_date' => $receiveDate ? $receiveDate->format('Y-m-d') : null,
 
-                    'lawyer_send_id' => $lawyers[$i % 2]->id, // Random lawyer to send (alternate between two)
-                    'legal_ad_type_id' => $legalAdTypes[$i % 2]->id, // Random ad type (alternate between two)
-                    'lawyer_receive_id' => $lawyers[($i + 1) % 2]->id, // Alternate lawyer for receive
-                    'status' => 'تم التسليم', // Default status
-                    'leg_case_id' => $legCaseId, // LegCase ID
-                    'court_id' => $courts[$i % 2]->id, // Random court (alternate between two)
-                    'cost1' => $faker->randomFloat(2, 1000, 10000), // Cost 1
-                    'cost2' => $faker->randomFloat(2, 1000, 10000), // Cost 2
-                    'cost3' => $faker->randomFloat(2, 1000, 10000), // Cost 3
-                    'created_by' => $users[$i % 2]->id, // Creator user (alternate)
-                    'updated_by' => $users[($i + 1) % 2]->id, // Updater user (alternate)
+                    'lawyer_send_id' => $lawyerIds[array_rand($lawyerIds)],
+                    'lawyer_receive_id' => $lawyerIds[array_rand($lawyerIds)],
+                    'legal_ad_type_id' => $legalAdTypeIds[array_rand($legalAdTypeIds)],
+                    'court_id' => $courtIds[array_rand($courtIds)],
+
+                    'status' => 'تم التسليم',
+                    'leg_case_id' => $legCaseId,
+
+                    'cost1' => $faker->randomFloat(2, 1000, 10000),
+                    'cost2' => $faker->randomFloat(2, 1000, 10000),
+                    'cost3' => $faker->randomFloat(2, 1000, 10000),
+
+                    'created_by' => $userIds[array_rand($userIds)],
+                    'updated_by' => $userIds[array_rand($userIds)],
+
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]);
+                ];
             }
+        }
+
+        // إدخال دفعات بدل insert داخل loop (أسرع جدًا)
+        $chunkSize = 500;
+        foreach (array_chunk($rows, $chunkSize) as $chunk) {
+            DB::table('legal_ads')->insert($chunk);
         }
     }
 }
