@@ -21,7 +21,7 @@ const ExpenseIndex = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_CONFIG.baseURL}/api/expense_categories`)
+      .get(`${API_CONFIG.baseURL}/api/v1/expense_categories`)
       .then((response) => {
         setExpenseCategories(response.data || []);
       })
@@ -46,7 +46,7 @@ const ExpenseIndex = () => {
       };
 
       const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/expenses/search`,
+        `${API_CONFIG.baseURL}/api/v1/expenses/search`,
         { params: searchCriteria },
       );
       setExpenses(response.data.filtered_expenses || []);

@@ -35,7 +35,7 @@ export default function useAuth() {
   const login = async (email, password) => {
     try {
       const response = await axios.post(
-        `${API_CONFIG.baseURL}/api/login`,
+        `${API_CONFIG.baseURL}/api/v1/login`,
         { email, password },
         {
           headers: {

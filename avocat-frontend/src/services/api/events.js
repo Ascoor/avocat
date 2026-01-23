@@ -1,5 +1,5 @@
-// src/api/events.js
+// src/api/v1/events.js
 import api from './axiosConfig';
 
-export const getEvents = () => api.get('/events');
-export const createEvent = (data) => api.post('/event', data);
+export const getEvents = () => api.get('/api/v1/events');
+export const createEvent = (data) => api.post('/api/v1/event', data);

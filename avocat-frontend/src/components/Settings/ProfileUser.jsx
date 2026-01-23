@@ -16,7 +16,7 @@ const ProfileUser = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_CONFIG.baseURL}/api/user/${userId}`)
+      .get(`${API_CONFIG.baseURL}/api/v1/user/${userId}`)
       .then((response) => {
         const userData = response.data;
         setName(userData.name);
@@ -40,7 +40,7 @@ const ProfileUser = () => {
     }
 
     axios
-      .put(`${API_CONFIG.baseURL}/api/user/${userId}`, updatedData)
+      .put(`${API_CONFIG.baseURL}/api/v1/user/${userId}`, updatedData)
       .then(() => {
         setAlertMessage('تم التحديث بنجاح');
         setAlertVariant('success');

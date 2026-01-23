@@ -33,10 +33,10 @@ const CaseType = () => {
         caseSubTypesResponse,
         legalAdTypesResponse,
       ] = await Promise.all([
-        axios.get(`${API_CONFIG.baseURL}/api/procedure_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/case_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/case_sub_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/legal_ad_types/`),
+        axios.get(`${API_CONFIG.baseURL}/api/v1/procedure_types/`),
+        axios.get(`${API_CONFIG.baseURL}/api/v1/case_types/`),
+        axios.get(`${API_CONFIG.baseURL}/api/v1/case_sub_types/`),
+        axios.get(`${API_CONFIG.baseURL}/api/v1/legal_ad_types/`),
       ]);
 
       setProcedureTypes(procedureTypesResponse.data);
@@ -50,7 +50,7 @@ const CaseType = () => {
 
   const handleAddProcedureType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/procedure_types/`, {
+      await axios.post(`${API_CONFIG.baseURL}/api/v1/procedure_types/`, {
         name: newProcedureTypeName,
       });
       setShowAddProcedureTypeModal(false);
@@ -63,7 +63,7 @@ const CaseType = () => {
 
   const handleAddCaseType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/case_types/`, {
+      await axios.post(`${API_CONFIG.baseURL}/api/v1/case_types/`, {
         name: newCaseTypeName,
       });
       setShowAddCaseTypeModal(false);
@@ -76,7 +76,7 @@ const CaseType = () => {
 
   const handleAddCaseSubType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/case_sub_types/`, {
+      await axios.post(`${API_CONFIG.baseURL}/api/v1/case_sub_types/`, {
         case_type_id: newCaseTypeId,
         name: newCaseSubTypeName,
       });
@@ -91,7 +91,7 @@ const CaseType = () => {
 
   const handleAddAdType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/legal_ad_types`, {
+      await axios.post(`${API_CONFIG.baseURL}/api/v1/legal_ad_types`, {
         name: newAdType,
       });
       setShowAddLegalAdModal(false);

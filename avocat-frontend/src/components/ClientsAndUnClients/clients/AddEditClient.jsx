@@ -50,9 +50,9 @@ const AddEditClient = ({ client = {}, isOpen, onClose, onSaved }) => {
 
     try {
       if (client.id) {
-        await api.put(`/api/clients/${client.id}`, clientData);
+        await api.put(`/api/v1/clients/${client.id}`, clientData);
       } else {
-        await api.post(`/api/clients`, clientData);
+        await api.post(`/api/v1/clients`, clientData);
       }
       onSaved();
       triggerAlert('success', 'تم حفظ العميل بنجاح');

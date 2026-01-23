@@ -44,7 +44,7 @@ const Home = () => {
 
   const fetchOfficeCount = async () => {
     try {
-      const response = await api.get('/api/all_count_office');
+      const response = await api.get('/api/v1/all_count_office');
       setCounts({
         clientCount: response.data.client_count || 0,
         legCaseCount: response.data.leg_case_count || 0,

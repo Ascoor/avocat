@@ -22,9 +22,9 @@ const ProcedureSearch = () => {
     const fetchData = async () => {
       try {
         const [procedureTypesRes, lawyersRes, courtsRes] = await Promise.all([
-          axios.get(`${API_CONFIG.baseURL}/api/procedure_types`),
-          axios.get(`${API_CONFIG.baseURL}/api/lawyers`),
-          axios.get(`${API_CONFIG.baseURL}/api/courts`),
+          axios.get(`${API_CONFIG.baseURL}/api/v1/procedure_types`),
+          axios.get(`${API_CONFIG.baseURL}/api/v1/lawyers`),
+          axios.get(`${API_CONFIG.baseURL}/api/v1/courts`),
         ]);
         setProcedureTypes(procedureTypesRes.data);
         setLawyers(lawyersRes.data);
@@ -63,7 +63,7 @@ const ProcedureSearch = () => {
     if (selectedStatus) queryParams.status = selectedStatus;
 
     axios
-      .get(`${API_CONFIG.baseURL}/api/procedures-search`, {
+      .get(`${API_CONFIG.baseURL}/api/v1/procedures-search`, {
         params: queryParams,
       })
       .then((response) => {

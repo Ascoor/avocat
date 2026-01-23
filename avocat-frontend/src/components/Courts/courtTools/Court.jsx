@@ -24,14 +24,14 @@ const Court = ({ show, handleClose }) => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchData('/api/court_types/', setCourtTypes);
-    fetchData('/api/court_levels/', setCourtLevels);
-    fetchData('/api/courts/', setCourts);
+    fetchData('/api/v1/court_types/', setCourtTypes);
+    fetchData('/api/v1/court_levels/', setCourtLevels);
+    fetchData('/api/v1/courts/', setCourts);
   }, []);
 
   useEffect(() => {
     if (newCourt.typeId) {
-      fetchData(`/api/court-types/${newCourt.typeId}`, setCourtSubTypes);
+      fetchData(`/api/v1/court-types/${newCourt.typeId}`, setCourtSubTypes);
     } else {
       setCourtSubTypes([]);
     }
@@ -64,7 +64,7 @@ const Court = ({ show, handleClose }) => {
     }
 
     try {
-      const response = await axios.post(`${API_CONFIG.baseURL}/api/courts/`, {
+      const response = await axios.post(`${API_CONFIG.baseURL}/api/v1/courts/`, {
         court_type_id: newCourt.typeId,
         court_sub_type_id: newCourt.subTypeId,
         court_level_id: newCourt.levelId,
@@ -89,7 +89,7 @@ const Court = ({ show, handleClose }) => {
 
   const handleDeleteCourt = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/courts/${id}`);
+      await axios.delete(`${API_CONFIG.baseURL}/api/v1/courts/${id}`);
       setCourts(courts.filter((court) => court.id !== id));
       setAlert({
         show: true,
