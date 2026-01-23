@@ -4,47 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRevenuesTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    public function up(): void
+    {
+        Schema::create('revenues', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('leg_case_id')->nullable()->constrained('leg_cases')->nullOnDelete();
+            $table->foreignId('revenue_category_id')->constrained('revenue_categories')->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('related_from')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+    }
 
-
-
-    public function up()
-{
-    Schema::create('revenue_categories', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->timestamps();
-    });
-    Schema::create('revenues', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('client_id')->nullable();
-        $table->unsignedBigInteger('service_id')->nullable();
-        $table->unsignedBigInteger('leg_case_id')->nullable();
-        $table->float('amount');
-        $table->boolean('from_client')->default(true);
-        $table->boolean('from_unclients')->default(false);
-
-        $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-        $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
-        $table->foreign('leg_case_id')->references('id')->on('leg_cases')->onDelete('cascade');
-        $table->timestamps();
-    });
-}
-
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('revenues');
     }
-}
+};
