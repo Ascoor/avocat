@@ -31,7 +31,7 @@ const CourtLevel = ({ show, handleClose }) => {
   const fetchCourtLevels = async () => {
     try {
       const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/court_levels`,
+        `${API_CONFIG.baseURL}/api/v1/court_levels`,
       );
       setCourtLevels(response.data);
     } catch (e) {
@@ -54,7 +54,7 @@ const CourtLevel = ({ show, handleClose }) => {
     }
     try {
       const response = await axios.post(
-        `${API_CONFIG.baseURL}/api/court_levels`,
+        `${API_CONFIG.baseURL}/api/v1/court_levels`,
         {
           name: newCourtLevelName,
         },
@@ -74,7 +74,7 @@ const CourtLevel = ({ show, handleClose }) => {
 
   const handleDeleteCourtLevel = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/court_levels/${id}`);
+      await axios.delete(`${API_CONFIG.baseURL}/api/v1/court_levels/${id}`);
       setCourtLevels(courtLevels.filter((courtLevel) => courtLevel.id !== id));
       setAlert({ show: true, message: 'تم الحذف بنجاح', type: 'success' });
     } catch (e) {

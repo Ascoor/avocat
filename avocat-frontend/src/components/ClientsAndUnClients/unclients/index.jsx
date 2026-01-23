@@ -18,7 +18,7 @@ function UnClientList() {
   const [unclientToDelete, setUnclientToDelete] = useState(null);
   const fetchUnunclients = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_CONFIG.baseURL}/api/unclients`);
+      const response = await axios.get(`${API_CONFIG.baseURL}/api/v1/unclients`);
       setUnunclients(response.data.unclients || []);
     } catch (error) {
       console.error('Error fetching unclients:', error);
@@ -33,7 +33,7 @@ function UnClientList() {
     if (!unclientToDelete) return;
 
     try {
-      await api.delete(`/api/unclients/${unclientToDelete.id}`);
+      await api.delete(`/api/v1/unclients/${unclientToDelete.id}`);
       fetchUnunclients();
       setDeleteModalOpen(false);
     } catch (error) {
@@ -45,7 +45,7 @@ function UnClientList() {
     try {
       const unclient = unclients.find((c) => c.id === id);
       const newStatus = unclient.status === 'active' ? 'inactive' : 'active';
-      await axios.put(`${API_CONFIG.baseURL}/api/unclients/${id}`, {
+      await axios.put(`${API_CONFIG.baseURL}/api/v1/unclients/${id}`, {
         status: newStatus,
       });
       fetchUnunclients();

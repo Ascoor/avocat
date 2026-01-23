@@ -20,7 +20,7 @@ function ClientList() {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/clients/${id}`);
+      await api.delete(`/api/v1/clients/${id}`);
       fetchClients();
     } catch (error) {
       triggerAlert: 'error', 'حدث خطاء';

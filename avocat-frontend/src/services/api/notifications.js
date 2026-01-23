@@ -1,7 +1,8 @@
-// src/api/notifications.js
+// src/api/v1/notifications.js
 import api from './axiosConfig';
 
-export const getNotifications = (userId) => api.get(`/notifications/${userId}`);
+export const getNotifications = (userId) =>
+  api.get(`/api/v1/notifications/${userId}`);
 export const markNotificationAsRead = (notificationId) =>
-  api.post(`/notifications/${notificationId}/read`);
-export const createNotification = (data) => api.post('/notification', data);
+  api.post(`/api/v1/notifications/${notificationId}/read`);
+export const createNotification = (data) => api.post('/api/v1/notification', data);

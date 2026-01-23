@@ -17,7 +17,7 @@ const SearchCourt = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_CONFIG.baseURL}/api/search-court`)
+      .get(`${API_CONFIG.baseURL}/api/v1/search-court`)
       .then((response) => {
         setAllData(response.data);
       })

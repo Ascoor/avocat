@@ -22,7 +22,7 @@ export default function LegCaseDetails() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/legal-cases/${id}`,
+        `${API_CONFIG.baseURL}/api/v1/legal-cases/${id}`,
       );
       setLegCase(response.data.leg_case);
       setLegcaseClients(response.data.leg_case.clients);

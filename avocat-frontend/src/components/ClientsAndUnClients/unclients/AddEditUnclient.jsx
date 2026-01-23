@@ -91,8 +91,8 @@ const AddEditUnclient = ({ unclient = {}, isOpen, onClose, onSaved }) => {
 
     try {
       const response = isEditMode
-        ? await api.put(`/api/unclients/${unclient.id}`, formattedData)
-        : await api.post(`/api/unclients`, formattedData);
+        ? await api.put(`/api/v1/unclients/${unclient.id}`, formattedData)
+        : await api.post(`/api/v1/unclients`, formattedData);
 
       onSaved();
 

@@ -38,7 +38,7 @@ const Home = () => {
   const fetchOfficeCount = async () => {
     try {
       const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/all_count_office`,
+        `${API_CONFIG.baseURL}/api/v1/all_count_office`,
       );
       setClientCount(response.data.client_count || 0);
       setLegCaseCount(response.data.leg_case_count || 0);
