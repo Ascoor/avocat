@@ -26,21 +26,6 @@ services:
     ports:
       - "6379:6379"
 
-  # -------------------------------------------------------------------
-  # NOTE (OLD BACKEND - avocatapp):
-  # api_old:
-  #   build:
-  #     context: ./avocatapp
-  #     dockerfile: Dockerfile
-  #   container_name: avc-api-old
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./avocatapp/.env.docker
-  #   volumes:
-  #     - ./avocatapp:/var/www/html
-  #     - avc-api-old-vendor:/var/www/html/vendor
-  # -------------------------------------------------------------------
-
   # NEW BACKEND (Laravel 11) - new-avocatapp
   api:
     build:
@@ -55,7 +40,6 @@ services:
       COMPOSER_ALLOW_SUPERUSER: "1"
     volumes:
       - ./new-avocatapp:/var/www/html
-      - avc-api-vendor:/var/www/html/vendor
       - avc-composer-cache:/tmp/composer-cache
     depends_on:
       pg:
@@ -64,8 +48,7 @@ services:
         condition: service_started
     ports:
       - "8000:8000"
-    # لو Dockerfile/entrypoint مش بيشغّل السيرفر تلقائيًا، فعّل السطر ده:
-    command: sh -c "php artisan optimize:clear && php artisan serve --host 0.0.0.0 --port=8000"
+    command: sh -c "php artisan serve --host 0.0.0.0 --port=8000"
 
   web:
     image: node:20-alpine
@@ -80,8 +63,5 @@ services:
 
 volumes:
   avc-pg-data:
-  avc-api-vendor:
   avc-composer-cache:
   avc-web-node-modules:
-  # (Optional) لو فعلت old backend أعلاه:
-  # avc-api-old-vendor:
