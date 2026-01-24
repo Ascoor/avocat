@@ -1,10 +1,9 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import GlobalSpinner from '../common/Spinners/GlobalSpinner';
-import axios from 'axios';
-import API_CONFIG from '../../config/config';
 import { motion } from 'framer-motion';
 import { CaseDetails } from '../../assets/icons';
+import api from '../../services/api/axiosConfig';
 
 const Procedure = lazy(() => import('./LegalCaseTools/LegalCaseProcedures'));
 const LegalSession = lazy(() => import('./LegalCaseTools/LegalCaseSessions'));
@@ -21,9 +20,7 @@ export default function LegCaseDetails() {
   const fetchLegCase = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/legal-cases/${id}`,
-      );
+      const response = await api.get(`/legal-cases/${id}`);
       setLegCase(response.data.leg_case);
       setLegcaseClients(response.data.leg_case.clients);
     } catch (error) {

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../../config/config';
+import api from '../../../services/api/axiosConfig';
 
 const Court = ({ show, handleClose }) => {
   const [courtTypes, setCourtTypes] = useState([]);
@@ -24,14 +23,14 @@ const Court = ({ show, handleClose }) => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchData('/api/court_types/', setCourtTypes);
-    fetchData('/api/court_levels/', setCourtLevels);
-    fetchData('/api/courts/', setCourts);
+    fetchData('/court_types/', setCourtTypes);
+    fetchData('/court_levels/', setCourtLevels);
+    fetchData('/courts/', setCourts);
   }, []);
 
   useEffect(() => {
     if (newCourt.typeId) {
-      fetchData(`/api/court-types/${newCourt.typeId}`, setCourtSubTypes);
+      fetchData(`/court-types/${newCourt.typeId}`, setCourtSubTypes);
     } else {
       setCourtSubTypes([]);
     }
@@ -40,7 +39,7 @@ const Court = ({ show, handleClose }) => {
   const fetchData = async (url, setState) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_CONFIG.baseURL}${url}`);
+      const response = await api.get(url);
       setState(response.data);
     } catch (error) {
       setAlert({
@@ -64,7 +63,7 @@ const Court = ({ show, handleClose }) => {
     }
 
     try {
-      const response = await axios.post(`${API_CONFIG.baseURL}/api/courts/`, {
+      const response = await api.post('/courts/', {
         court_type_id: newCourt.typeId,
         court_sub_type_id: newCourt.subTypeId,
         court_level_id: newCourt.levelId,
@@ -89,7 +88,7 @@ const Court = ({ show, handleClose }) => {
 
   const handleDeleteCourt = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/courts/${id}`);
+      await api.delete(`/courts/${id}`);
       setCourts(courts.filter((court) => court.id !== id));
       setAlert({
         show: true,

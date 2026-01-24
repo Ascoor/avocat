@@ -1,4 +1,4 @@
-// src/api/notifications.js
+// src/notifications.js
 import api from './axiosConfig';
 
 export const getNotifications = (userId) => api.get(`/notifications/${userId}`);

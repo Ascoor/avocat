@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import { AlertProvider } from './context/AlertContext';
+import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import GlobalAlert from './components/common/GlobalAlert';
 import { Suspense } from 'react';
@@ -23,9 +24,11 @@ root.render(
     <AlertProvider>
       <GlobalAlert />
       <Provider store={store}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
+        <AuthProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </AuthProvider>
       </Provider>
     </AlertProvider>
   </React.StrictMode>,

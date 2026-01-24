@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../../config/config';
+import api from '../../../services/api/axiosConfig';
 
 export default function CourtType({ show, handleClose }) {
   const [newCourtTypeName, setNewCourtTypeName] = useState('');
@@ -25,7 +24,7 @@ export default function CourtType({ show, handleClose }) {
 
   const fetchCourtTypes = async () => {
     try {
-      const response = await axios.get(`${API_CONFIG.baseURL}/api/court_types`);
+      const response = await api.get('/court_types');
       setCourtTypes(response.data);
     } catch (err) {
       setAlertMessage({ type: 'error', text: 'فشل في جلب البيانات' });
@@ -42,10 +41,9 @@ export default function CourtType({ show, handleClose }) {
     }
 
     try {
-      const response = await axios.post(
-        `${API_CONFIG.baseURL}/api/court_types`,
-        { name: newCourtTypeName },
-      );
+      const response = await api.post('/court_types', {
+        name: newCourtTypeName,
+      });
       setCourtTypes([...courtTypes, response.data]);
       setAlertMessage({ type: 'success', text: 'تم إضافة نوع المحكمة بنجاح' });
       setNewCourtTypeName('');
@@ -60,7 +58,7 @@ export default function CourtType({ show, handleClose }) {
 
   const handleDeleteCourtType = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/court_types/${id}`);
+      await api.delete(`/court_types/${id}`);
       setCourtTypes(courtTypes.filter((courtType) => courtType.id !== id));
       setAlertMessage({ type: 'success', text: 'تم حذف نوع المحكمة بنجاح' });
     } catch (err) {

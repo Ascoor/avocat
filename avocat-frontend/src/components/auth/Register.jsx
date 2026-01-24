@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import useAuth from './AuthUser';
 
 const Register = ({ toggleLoginForm, handleFormClose }) => {
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,9 +16,13 @@ const Register = ({ toggleLoginForm, handleFormClose }) => {
       return;
     }
     try {
-      setTimeout(() => {
+      const success = await register(name, email, password, confirmPassword);
+      if (!success) {
+        setError('حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.');
+      } else {
         setError('');
-      }, 2000);
+        handleFormClose();
+      }
     } catch {
       setError('حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.');
     }

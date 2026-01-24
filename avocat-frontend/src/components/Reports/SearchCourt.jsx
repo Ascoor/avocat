@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import API_CONFIG from '../../config/config'; 
+import api from '../../services/api/axiosConfig';
 
 const SearchCourt = () => {
   const [allData, setAllData] = useState({
@@ -16,8 +16,8 @@ const SearchCourt = () => {
   const [searchResults, setSearchResults] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`${API_CONFIG.baseURL}/api/search-court`)
+    api
+      .get('/search-court')
       .then((response) => {
         setAllData(response.data);
       })

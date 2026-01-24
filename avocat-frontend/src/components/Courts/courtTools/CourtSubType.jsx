@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../../config/config';
+import api from '../../../services/api/axiosConfig';
 
 const CourtSubType = ({ show, handleClose }) => {
   const [newCourtSubType, setNewCourtSubType] = useState({
@@ -22,7 +21,7 @@ const CourtSubType = ({ show, handleClose }) => {
   useEffect(() => {
     const fetchCourtData = async (endpoint, setter) => {
       try {
-        const response = await axios.get(`${API_CONFIG.baseURL}${endpoint}`);
+        const response = await api.get(endpoint);
         setter(response.data);
       } catch (error) {
         setAlert({
@@ -34,9 +33,9 @@ const CourtSubType = ({ show, handleClose }) => {
     };
 
     if (show) {
-      fetchCourtData('/api/court_types', setCourtTypes);
+      fetchCourtData('/court_types', setCourtTypes);
     }
-    fetchCourtData('/api/court_sub_types', setCourtSubTypes);
+    fetchCourtData('/court_sub_types', setCourtSubTypes);
   }, [show]);
 
   useEffect(() => {
@@ -64,10 +63,7 @@ const CourtSubType = ({ show, handleClose }) => {
     }
 
     try {
-      const response = await axios.post(
-        `${API_CONFIG.baseURL}/api/court_sub_types`,
-        newCourtSubType,
-      );
+      const response = await api.post('/court_sub_types', newCourtSubType);
       setCourtSubTypes([...courtSubTypes, response.data]);
       setAlert({
         show: true,
@@ -83,7 +79,7 @@ const CourtSubType = ({ show, handleClose }) => {
 
   const handleDeleteCourtSubType = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/court_sub_types/${id}`);
+      await api.delete(`/court_sub_types/${id}`);
       setCourtSubTypes(
         courtSubTypes.filter((courtSubType) => courtSubType.id !== id),
       );

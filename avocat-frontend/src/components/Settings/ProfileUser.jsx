@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../config/config';
 import { useParams } from 'react-router-dom';
+import api from '../../services/api/axiosConfig';
 
 const ProfileUser = () => {
   const [name, setName] = useState('');
@@ -15,8 +14,8 @@ const ProfileUser = () => {
   const [alertVariant, setAlertVariant] = useState('success');
 
   useEffect(() => {
-    axios
-      .get(`${API_CONFIG.baseURL}/api/user/${userId}`)
+    api
+      .get(`/user/${userId}`)
       .then((response) => {
         const userData = response.data;
         setName(userData.name);
@@ -39,8 +38,8 @@ const ProfileUser = () => {
       updatedData.password = password;
     }
 
-    axios
-      .put(`${API_CONFIG.baseURL}/api/user/${userId}`, updatedData)
+    api
+      .put(`/user/${userId}`, updatedData)
       .then(() => {
         setAlertMessage('تم التحديث بنجاح');
         setAlertVariant('success');

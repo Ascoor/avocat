@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import axios from 'axios';
 import { useSprings, animated } from '@react-spring/web';
 import { Link } from 'react-router-dom';
-import API_CONFIG from '../config/config';
 import SectionHeader from '../components/common/SectionHeader';
 import TableComponent from '../components/common/TableComponent';
 import { AiFillCheckCircle, AiFillEye } from 'react-icons/ai';

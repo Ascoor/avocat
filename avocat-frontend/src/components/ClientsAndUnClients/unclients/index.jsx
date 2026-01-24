@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
-import API_CONFIG from '../../../config/config';
 
 import { UnclientSectionIcon } from '../../../assets/icons/index';
 import SectionHeader from '../../common/SectionHeader';
@@ -18,7 +16,7 @@ function UnClientList() {
   const [unclientToDelete, setUnclientToDelete] = useState(null);
   const fetchUnunclients = useCallback(async () => {
     try {
-      const response = await axios.get(`${API_CONFIG.baseURL}/api/unclients`);
+      const response = await api.get('/unclients');
       setUnunclients(response.data.unclients || []);
     } catch (error) {
       console.error('Error fetching unclients:', error);
@@ -33,7 +31,7 @@ function UnClientList() {
     if (!unclientToDelete) return;
 
     try {
-      await api.delete(`/api/unclients/${unclientToDelete.id}`);
+      await api.delete(`/unclients/${unclientToDelete.id}`);
       fetchUnunclients();
       setDeleteModalOpen(false);
     } catch (error) {
@@ -45,7 +43,7 @@ function UnClientList() {
     try {
       const unclient = unclients.find((c) => c.id === id);
       const newStatus = unclient.status === 'active' ? 'inactive' : 'active';
-      await axios.put(`${API_CONFIG.baseURL}/api/unclients/${id}`, {
+      await api.put(`/unclients/${id}`, {
         status: newStatus,
       });
       fetchUnunclients();
