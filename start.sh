@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 COMPOSE="$ROOT/docker-compose.yml"
-BACKEND_DIR="$ROOT/avocatapp"
+BACKEND_DIR="$ROOT/new-avocatapp"
 
 usage() {
   cat <<'USAGE'
