@@ -9,9 +9,8 @@ import {
   AdIcon,
   ServiceIcon,
 } from '../../assets/icons/index';
-import axios from 'axios';
 
-import API_CONFIG from '../../config/config';
+import api from '../../services/api/axiosConfig';
 import moment from 'moment';
 import { useMediaQuery } from 'react-responsive';
 import MainCard from '../common/MainCard';
@@ -37,9 +36,7 @@ const Home = () => {
 
   const fetchOfficeCount = async () => {
     try {
-      const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/all_count_office`,
-      );
+      const response = await api.get('/all_count_office');
       setClientCount(response.data.client_count || 0);
       setLegCaseCount(response.data.leg_case_count || 0);
       setProcedureCount(response.data.procedure_count || 0);

@@ -1,4 +1,4 @@
-// src/api/expenses.js
+// src/expenses.js
 import api from './axiosConfig';
 
 export const searchExpenses = () => api.get('/expenses/search');

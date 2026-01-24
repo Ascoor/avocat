@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../config/config';
 import { JudgeIcon } from '../../assets/icons';
+import api from '../../services/api/axiosConfig';
 
 const CaseType = () => {
   const [procedureTypes, setProcedureTypes] = useState([]);
@@ -33,10 +32,10 @@ const CaseType = () => {
         caseSubTypesResponse,
         legalAdTypesResponse,
       ] = await Promise.all([
-        axios.get(`${API_CONFIG.baseURL}/api/procedure_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/case_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/case_sub_types/`),
-        axios.get(`${API_CONFIG.baseURL}/api/legal_ad_types/`),
+        api.get('/procedure_types/'),
+        api.get('/case_types/'),
+        api.get('/case_sub_types/'),
+        api.get('/legal_ad_types/'),
       ]);
 
       setProcedureTypes(procedureTypesResponse.data);
@@ -50,7 +49,7 @@ const CaseType = () => {
 
   const handleAddProcedureType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/procedure_types/`, {
+      await api.post('/procedure_types/', {
         name: newProcedureTypeName,
       });
       setShowAddProcedureTypeModal(false);
@@ -63,7 +62,7 @@ const CaseType = () => {
 
   const handleAddCaseType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/case_types/`, {
+      await api.post('/case_types/', {
         name: newCaseTypeName,
       });
       setShowAddCaseTypeModal(false);
@@ -76,7 +75,7 @@ const CaseType = () => {
 
   const handleAddCaseSubType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/case_sub_types/`, {
+      await api.post('/case_sub_types/', {
         case_type_id: newCaseTypeId,
         name: newCaseSubTypeName,
       });
@@ -91,7 +90,7 @@ const CaseType = () => {
 
   const handleAddAdType = async () => {
     try {
-      await axios.post(`${API_CONFIG.baseURL}/api/legal_ad_types`, {
+      await api.post('/legal_ad_types', {
         name: newAdType,
       });
       setShowAddLegalAdModal(false);

@@ -9,13 +9,21 @@ import { SpinnerProvider } from './context/SpinnerContext';
 import './App.css';
 
 const App = () => {
-  const { getToken } = useAuth();
+  const { isAuthenticated, isInitializing } = useAuth();
+
+  if (isInitializing) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-600">
+        جاري التحقق من الجلسة...
+      </div>
+    );
+  }
 
   return (
     <ThemeProvider>
       <SpinnerProvider>
         <SidebarProvider>
-          {getToken() ? <AuthWrapper /> : <HomePage />}
+          {isAuthenticated ? <AuthWrapper /> : <HomePage />}
         </SidebarProvider>
       </SpinnerProvider>
     </ThemeProvider>

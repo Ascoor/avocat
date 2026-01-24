@@ -1,4 +1,4 @@
-// src/api/events.js
+// src/events.js
 import api from './axiosConfig';
 
 export const getEvents = () => api.get('/events');

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../config/config';
 import DatePicker from 'react-datepicker';
 import SectionHeader from '../common/SectionHeader';
 import { SearchSectionIcon } from '../../assets/icons';
+import api from '../../services/api/axiosConfig';
 
 const ProcedureSearch = () => {
   const [procedureTypes, setProcedureTypes] = useState([]);
@@ -22,9 +21,9 @@ const ProcedureSearch = () => {
     const fetchData = async () => {
       try {
         const [procedureTypesRes, lawyersRes, courtsRes] = await Promise.all([
-          axios.get(`${API_CONFIG.baseURL}/api/procedure_types`),
-          axios.get(`${API_CONFIG.baseURL}/api/lawyers`),
-          axios.get(`${API_CONFIG.baseURL}/api/courts`),
+          api.get('/procedure_types'),
+          api.get('/lawyers'),
+          api.get('/courts'),
         ]);
         setProcedureTypes(procedureTypesRes.data);
         setLawyers(lawyersRes.data);
@@ -62,10 +61,8 @@ const ProcedureSearch = () => {
       queryParams.procedure_type_id = selectedProcedureType;
     if (selectedStatus) queryParams.status = selectedStatus;
 
-    axios
-      .get(`${API_CONFIG.baseURL}/api/procedures-search`, {
-        params: queryParams,
-      })
+    api
+      .get('/procedures-search', { params: queryParams })
       .then((response) => {
         setFilteredProcedures(response.data);
         setSearchError('');

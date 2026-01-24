@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { BiSearchAlt } from 'react-icons/bi';
 import DatePicker from 'react-datepicker';
-import API_CONFIG from '../../../config/config';
+import api from '../../../services/api/axiosConfig';
 
 const ExpenseIndex = () => {
   const [expenses, setExpenses] = useState([]);
@@ -20,8 +19,8 @@ const ExpenseIndex = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${API_CONFIG.baseURL}/api/expense_categories`)
+    api
+      .get('/expense_categories')
       .then((response) => {
         setExpenseCategories(response.data || []);
       })
@@ -45,10 +44,9 @@ const ExpenseIndex = () => {
         endDate: endDate ? endDate.toISOString() : null,
       };
 
-      const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/expenses/search`,
-        { params: searchCriteria },
-      );
+      const response = await api.get('/expenses/search', {
+        params: searchCriteria,
+      });
       setExpenses(response.data.filtered_expenses || []);
       setError('');
     } catch (error) {

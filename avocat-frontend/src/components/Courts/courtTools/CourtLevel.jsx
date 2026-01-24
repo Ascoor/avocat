@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_CONFIG from '../../../config/config';
+import api from '../../../services/api/axiosConfig';
 
 const CourtLevel = ({ show, handleClose }) => {
   const [newCourtLevelName, setNewCourtLevelName] = useState('');
@@ -30,9 +29,7 @@ const CourtLevel = ({ show, handleClose }) => {
 
   const fetchCourtLevels = async () => {
     try {
-      const response = await axios.get(
-        `${API_CONFIG.baseURL}/api/court_levels`,
-      );
+      const response = await api.get('/court_levels');
       setCourtLevels(response.data);
     } catch (e) {
       setAlert({
@@ -53,12 +50,9 @@ const CourtLevel = ({ show, handleClose }) => {
       return;
     }
     try {
-      const response = await axios.post(
-        `${API_CONFIG.baseURL}/api/court_levels`,
-        {
-          name: newCourtLevelName,
-        },
-      );
+      const response = await api.post('/court_levels', {
+        name: newCourtLevelName,
+      });
       setCourtLevels([...courtLevels, response.data]);
       setAlert({ show: true, message: 'تمت الإضافة بنجاح', type: 'success' });
       setNewCourtLevelName('');
@@ -74,7 +68,7 @@ const CourtLevel = ({ show, handleClose }) => {
 
   const handleDeleteCourtLevel = async (id) => {
     try {
-      await axios.delete(`${API_CONFIG.baseURL}/api/court_levels/${id}`);
+      await api.delete(`/court_levels/${id}`);
       setCourtLevels(courtLevels.filter((courtLevel) => courtLevel.id !== id));
       setAlert({ show: true, message: 'تم الحذف بنجاح', type: 'success' });
     } catch (e) {
