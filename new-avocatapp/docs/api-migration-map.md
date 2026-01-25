@@ -133,4 +133,4 @@ All legacy resource routes map directly to `Route::apiResource` under `/api/v1`.
 ## Notes
 
 * Controllers currently respond with a `501 Not Implemented` payload until logic is ported.
-* Authentication middleware is wired to the `auth` guard; update to Sanctum/Passport as needed.
+* Authentication middleware is wired to the `auth:sanctum` guard for SPA cookie auth.
