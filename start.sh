@@ -101,6 +101,14 @@ wait_db() {
   done
   echo "Postgres is up ✅"
 }
+verify_pgsql_driver() {
+  echo "Checking PHP drivers inside api..."
+  compose exec api php -m | grep -iE "PDO|pdo_pgsql|pgsql" || {
+    echo "❌ pdo_pgsql not found inside api. Rebuild image is required."
+    exit 1
+  }
+  echo "✅ pdo_pgsql is installed."
+}
 
 case "${1:-up}" in
   up)
@@ -114,13 +122,26 @@ case "${1:-up}" in
     ;;
   rebuild)
     require docker
-    echo "Rebuilding stack (pg, cache, api, web)..."
+    echo "Rebuilding stack (pg, cache, api, web) from zero..."
     ensure_env_docker_file
+
+    # Stop + remove volumes/orphans
     compose down -v --remove-orphans
-    compose build --no-cache
+
+    # Remove old images to avoid stale builds (important!)
+    docker image rm -f 39-api 2>/dev/null || true
+    docker image prune -f >/dev/null 2>&1 || true
+
+    # Build api explicitly without cache, then start
+    compose build --no-cache --pull api
     compose up -d
+
+    # Verify pgsql driver exists
+    verify_pgsql_driver
+
     echo "Rebuild complete ✅"
     ;;
+
   down)
     require docker
     echo "Stopping stack (pg, cache, api, web)..."
@@ -146,23 +167,24 @@ case "${1:-up}" in
     # install composer deps into mounted volume
     compose exec api sh -lc "composer install || true"
     # generate key if missing + clear caches
-    compose exec api sh -lc "php artisan key:generate || true; php artisan config:clear || true; php artisan cache:clear || true"
-    # fix permissions
+    compose exec api sh -lc "php artisan key:generate --force || true; php artisan config:clear || true"
+   # fix permissions
     compose exec api sh -lc "chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache || true"
     echo "Init done ✅"
     ;;
   migrate)
     require docker
     echo "Running migrations on api with pg..."
+    verify_pgsql_driver
     compose exec api sh -lc '
       '"$(declare -f wait_db)"'
       wait_db
       php artisan config:clear || true
-      php artisan cache:clear || true
       php artisan migrate:fresh --seed
     '
     echo "Migrations done ✅"
     ;;
+
   *)
     usage
     exit 1

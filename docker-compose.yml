@@ -32,7 +32,8 @@ services:
       context: ./new-avocatapp
       dockerfile: Dockerfile
     container_name: avc-api
-    restart: unless-stopped
+    restart: "no"
+    command: sh -lc "sleep infinity"
     env_file:
       - ./new-avocatapp/.env.docker
     environment:
@@ -48,7 +49,7 @@ services:
         condition: service_started
     ports:
       - "8000:8000"
-    command: sh -c "php artisan serve --host 0.0.0.0 --port=8000"
+      
 
   web:
     image: node:20-alpine

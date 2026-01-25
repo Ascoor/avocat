@@ -7,7 +7,8 @@ return [
 
     'allowed_origins' => explode(',', env(
         'FRONTEND_URLS',
-        'http://localhost:5173,http://localhost:3000'
+        'http://localhost:5173,http://localhost:3000',
+        'http://localhost:8088'
     )),
 
     'allowed_origins_patterns' => [],
