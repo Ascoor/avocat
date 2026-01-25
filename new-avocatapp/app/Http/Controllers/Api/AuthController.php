@@ -19,6 +19,8 @@ class AuthController extends BaseApiController
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'device_name' => ['sometimes', 'string', 'max:255'],
+            'token' => ['sometimes', 'boolean'],
         ]);
 
         if ($validator->fails()) {
@@ -35,13 +37,12 @@ class AuthController extends BaseApiController
 
         $user->sendEmailVerificationNotification();
 
-        $token = $user->createToken('api')->plainTextToken;
+        Auth::login($user);
+        $request->session()->regenerate();
 
-        return $this->successResponse([
-            'user' => $user,
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ], 'Registration successful.', 201);
+        $token = $this->maybeCreateToken($request, $user);
+
+        return $this->successResponse($this->formatAuthResponse($user, $token), 'Registration successful.', 201);
     }
 
     public function login(Request $request)
@@ -49,6 +50,8 @@ class AuthController extends BaseApiController
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+            'device_name' => ['sometimes', 'string', 'max:255'],
+            'token' => ['sometimes', 'boolean'],
         ]);
 
         if ($validator->fails()) {
@@ -63,13 +66,12 @@ class AuthController extends BaseApiController
 
         /** @var User $user */
         $user = Auth::user();
-        $token = $user->createToken('api')->plainTextToken;
 
-        return $this->successResponse([
-            'user' => $user,
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ], 'Login successful.');
+        $request->session()->regenerate();
+
+        $token = $this->maybeCreateToken($request, $user);
+
+        return $this->successResponse($this->formatAuthResponse($user, $token), 'Login successful.');
     }
 
     public function forgotPassword(Request $request)
@@ -130,8 +132,13 @@ class AuthController extends BaseApiController
 
         if ($token) {
             $token->delete();
-        } else {
-            $user->tokens()->delete();
+        }
+
+        Auth::guard('web')->logout();
+
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
         }
 
         return $this->successResponse(null, 'Logout successful.');
@@ -196,5 +203,31 @@ class AuthController extends BaseApiController
         }
 
         return $this->successResponse($user, 'User profile.');
+    }
+
+    private function maybeCreateToken(Request $request, User $user): ?string
+    {
+        if ($request->boolean('token') || $request->filled('device_name')) {
+            $tokenName = $request->input('device_name', 'api');
+
+            return $user->createToken($tokenName)->plainTextToken;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatAuthResponse(User $user, ?string $token): array
+    {
+        $payload = ['user' => $user];
+
+        if ($token) {
+            $payload['token'] = $token;
+            $payload['token_type'] = 'Bearer';
+        }
+
+        return $payload;
     }
 }

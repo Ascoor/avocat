@@ -191,9 +191,8 @@ class LawyerSeeder extends Seeder
                 );
 
                 // 3) Token (اختياري للاختبار فقط)
-                // مهم: Passport لازم يكون متثبت بـ passport:install
                 // لو مش محتاج توكنات أثناء seed، سيب السطور دي معلّقة
-                // $token = $user->createToken('seed-token')->accessToken;
+                // $token = $user->createToken('seed-token')->plainTextToken;
                 // dump($user->email, $token);
             });
         }

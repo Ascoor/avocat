@@ -8,7 +8,24 @@
 
 ## Authentication Strategy
 
-This API uses Sanctum personal access tokens. Tokens are returned on login/registration and must be sent with every request:
+This API uses Laravel Sanctum for SPA cookie-based authentication by default. The frontend authenticates via the session cookie and CSRF token, and requests are authorized with `auth:sanctum`.
+
+Optional: If you need personal access tokens for non-browser clients, you can request a token during login/registration.
+
+### SPA cookie auth (default)
+
+1. Fetch the CSRF cookie:
+
+```
+GET /sanctum/csrf-cookie
+```
+
+2. Login with credentials (cookies + XSRF header enabled in your HTTP client).
+3. Subsequent API calls include the session cookie automatically.
+
+### Personal access tokens (optional)
+
+Tokens are returned only when `token=true` (or `device_name` is provided) on login/registration.
 
 ```
 Authorization: Bearer <token>
@@ -23,8 +40,8 @@ Tokens are revoked on logout, and protected endpoints require `auth:sanctum`.
 
 | Method | Path | Description |
 | --- | --- | --- |
-| POST | `/register` | Create account |
-| POST | `/login` | Login and receive token |
+| POST | `/register` | Create account (session login) |
+| POST | `/login` | Login (session) |
 | POST | `/forgot-password` | Send reset email |
 | POST | `/reset-password` | Reset password |
 
@@ -33,8 +50,8 @@ Tokens are revoked on logout, and protected endpoints require `auth:sanctum`.
 | Method | Path | Description |
 | --- | --- | --- |
 | GET | `/me` | Current user profile |
-| POST | `/logout` | Revoke current token |
-| POST | `/token/refresh` | Rotate token |
+| POST | `/logout` | Logout (session + token) |
+| POST | `/token/refresh` | Rotate token (token auth only) |
 | GET | `/email/verify/{id}/{hash}` | Verify email (signed) |
 | POST | `/email/verify/resend` | Resend verification email |
 
@@ -42,12 +59,13 @@ All other API resources are protected by `auth:sanctum`.
 
 ## Example Requests
 
-### Register
+### Register (session auth)
 
 ```bash
 curl -X POST "<API_BASE_URL>/api/v1/register" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
+  -b cookies.txt -c cookies.txt \
   -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
@@ -56,7 +74,32 @@ curl -X POST "<API_BASE_URL>/api/v1/register" \
   }'
 ```
 
-### Login
+### Login (session auth)
+
+```bash
+curl -X GET "<API_BASE_URL>/sanctum/csrf-cookie" -c cookies.txt
+
+curl -X POST "<API_BASE_URL>/api/v1/login" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "X-XSRF-TOKEN: <value-from-cookie>" \
+  -b cookies.txt -c cookies.txt \
+  -d '{
+    "email": "jane@example.com",
+    "password": "secret123"
+  }'
+```
+
+### Authenticated request (session auth)
+
+```bash
+curl -X GET "<API_BASE_URL>/api/v1/me" \
+  -H "Accept: application/json" \
+  -H "X-XSRF-TOKEN: <value-from-cookie>" \
+  -b cookies.txt -c cookies.txt
+```
+
+### Login with token (non-SPA client)
 
 ```bash
 curl -X POST "<API_BASE_URL>/api/v1/login" \
@@ -64,11 +107,13 @@ curl -X POST "<API_BASE_URL>/api/v1/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "jane@example.com",
-    "password": "secret123"
+    "password": "secret123",
+    "token": true,
+    "device_name": "cli"
   }'
 ```
 
-### Authenticated request
+### Authenticated request (token auth)
 
 ```bash
 curl -X GET "<API_BASE_URL>/api/v1/me" \
@@ -114,7 +159,16 @@ Authentication errors:
 
 ## Frontend Integration Notes
 
-- Store the token in memory and persist a fallback copy in `localStorage`.
-- Always send `Authorization: Bearer <token>` from the API client.
+- Configure `withCredentials: true` in your SPA HTTP client so cookies are sent.
+- Call `/sanctum/csrf-cookie` once before login to get the CSRF cookie.
+- Send the `X-XSRF-TOKEN` header for state-changing requests.
 - On 401/419, clear auth state and redirect back to the login screen.
 - Use `/me` on page refresh to rehydrate the user profile.
+- If you need tokens for non-browser clients, pass `token=true` or `device_name` when logging in.
+
+## Sanctum + Session Configuration Checklist
+
+- `SANCTUM_STATEFUL_DOMAINS` includes your SPA host (e.g. `localhost:8088`).
+- `SESSION_DOMAIN` is set so the session cookie is sent to your SPA domain.
+- `SESSION_DRIVER` supports your deployment (e.g. `redis` for API servers).
+- `SESSION_SECURE_COOKIE` is `true` in production (HTTPS).

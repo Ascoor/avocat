@@ -41,12 +41,7 @@ fi
 # --- Migrate ---
 php artisan migrate --force --seed || true
 
-# # --- Passport install (مرة واحدة فقط) ---
-# # إذا ملفات الـ keys مش موجودة، اعمل install
-# if [ ! -f storage/oauth-private.key ] || [ ! -f storage/oauth-public.key ]; then
-#   echo "🔑 Installing Passport..."
-#   php artisan passport:install --force
-# fi
+# Sanctum (session cookie auth) does not require OAuth key installation.
 
 # --- Queue (optional) ---
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
