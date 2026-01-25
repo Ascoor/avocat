@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     container_name: avc-api
     restart: "no"
-    command: sh -lc "sleep infinity"
+ 
     env_file:
       - ./new-avocatapp/.env.docker
     environment:
