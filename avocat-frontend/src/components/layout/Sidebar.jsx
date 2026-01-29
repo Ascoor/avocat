@@ -24,29 +24,29 @@ const Sidebar = () => {
   };
 
   const mainItems = [
-    { icon: LayoutDashboard, label: t('dashboard'), path: '/dashboard' },
-    { icon: Briefcase, label: t('cases'), path: '/cases' },
+    { icon: LayoutDashboard, label: t('navigation.dashboard'), path: '/dashboard' },
+    { icon: Briefcase, label: t('navigation.cases'), path: '/cases' },
   ];
 
   const serviceGroups = [
-    { id: 'workFollow', icon: Folder, label: t('workFollowUp'), items: [
-      { icon: Calendar, label: t('sessions'), path: '/sessions' },
-      { icon: FileText, label: t('procedures'), path: '/procedures' }
+    { id: 'workFollow', icon: Folder, label: t('navigation.workFollowUp'), items: [
+      { icon: Calendar, label: t('navigation.sessions'), path: '/sessions' },
+      { icon: FileText, label: t('navigation.procedures'), path: '/procedures' }
     ]},
-    { id: 'customerService', icon: Headphones, label: t('customerService'), items: [
-      { icon: Users, label: t('clients'), path: '/clients' },
-      { icon: UserX, label: t('clientsNoAgency'), path: '/clients-no-agency' },
-      { icon: Archive, label: t('archive'), path: '/archive' },
-      { icon: Search, label: t('courtSearch'), path: '/court-search' }
+    { id: 'customerService', icon: Headphones, label: t('navigation.customerService'), items: [
+      { icon: Users, label: t('navigation.clients'), path: '/clients' },
+      { icon: UserX, label: t('navigation.clientsNoAgency'), path: '/clients-no-agency' },
+      { icon: Archive, label: t('navigation.archive'), path: '/archive' },
+      { icon: Search, label: t('navigation.courtSearch'), path: '/court-search' }
     ]}
   ];
 
   const systemItems = [
-    { icon: SettingsIcon, label: t('settings'), path: '/settings' },
-    { icon: Building2, label: t('officeSettings'), path: '/office-settings' },
-    { icon: Scale, label: t('courtSettings'), path: '/court-settings' },
-    { icon: UserCog, label: t('lawyers'), path: '/lawyers' },
-    { icon: ShieldCheck, label: t('usersPermissions'), path: '/users-permissions' }
+    { icon: SettingsIcon, label: t('navigation.settings'), path: '/settings' },
+    { icon: Building2, label: t('navigation.officeSettings'), path: '/office-settings' },
+    { icon: Scale, label: t('navigation.courtSettings'), path: '/court-settings' },
+    { icon: UserCog, label: t('navigation.lawyers'), path: '/lawyers' },
+    { icon: ShieldCheck, label: t('navigation.usersPermissions'), path: '/users-permissions' }
   ];
 
   const renderMenuItem = (item, isSubItem = false) => (
