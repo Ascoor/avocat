@@ -6,16 +6,24 @@ const ThemeContext = createContext({
 });
 
 export default function ThemeProvider({ children }) {
-  const persistedTheme = localStorage.getItem('theme');
-  const [theme, setTheme] = useState(persistedTheme || 'light');
+  const getInitialTheme = () => {
+    if (typeof window === 'undefined') {
+      return 'light';
+    }
+    return localStorage.getItem('theme') || 'light';
+  };
+  const [theme, setTheme] = useState(getInitialTheme);
 
   const changeCurrentTheme = (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
   };
 
   useEffect(() => {
     document.documentElement.classList.add('[&_*]:!transition-none');
+    document.documentElement.setAttribute('data-theme', theme);
     if (theme === 'light') {
       document.documentElement.classList.remove('dark');
       document.documentElement.style.colorScheme = 'light';

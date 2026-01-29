@@ -56,13 +56,28 @@ const Sidebar = () => {
     { to: '/search-courts-api', icon: <FaSearch />, label: 'بحث محاكم' },
   ];
 
+  const handleNavClick = () => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  };
+
   return (
-    <motion.div
-      variants={sidebarVariants}
-      initial="closed"
-      animate={isSidebarOpen ? 'open' : 'closed'}
-      className="fixed top-0 right-0 h-full bg-gradient-to-b from-avocat-indigo-dark via-avocat-indigo to-avocat-blue-light dark:bg-gradient-to-b dark:from-avocat-blue-darker dark:via-gradient-night dark:to-avocat-blue shadow-lg z-30 flex flex-col transition-all ease-in-out"
-    >
+    <>
+      {isMobile && isSidebarOpen ? (
+        <button
+          type="button"
+          aria-label="إغلاق القائمة الجانبية"
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+        />
+      ) : null}
+      <motion.div
+        variants={sidebarVariants}
+        initial="closed"
+        animate={isSidebarOpen ? 'open' : 'closed'}
+        className="sidebar fixed top-0 right-0 h-full bg-gradient-to-b from-avocat-indigo-dark via-avocat-indigo to-avocat-blue-light dark:bg-gradient-to-b dark:from-avocat-blue-darker dark:via-gradient-night dark:to-avocat-blue shadow-lg z-30 flex flex-col transition-all ease-in-out"
+      >
       {}
       <div
         className={` flex items-center justify-center h-16 ${isMobile ? 'mt-6' : 'mt-0'}`}
@@ -82,6 +97,7 @@ const Sidebar = () => {
           <li key={index} className="group relative">
             <NavLink
               to={item.to}
+              onClick={handleNavClick}
               className={`flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out
                 ${isSidebarOpen ? 'space-x-4 text-gray-100 hover:bg-avocat-blue-light hover:text-avocat-orange dark:hover:bg-avocat-yellow-light dark:hover:text-yellow-400' : 'justify-center'}
                 group-hover:scale-105`}
@@ -110,7 +126,8 @@ const Sidebar = () => {
           <FaBars className="text-2xl" />
         )}
       </button>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 
