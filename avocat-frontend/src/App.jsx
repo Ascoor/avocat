@@ -5,9 +5,9 @@ import AuthWrapper from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
 import useAuth from './components/auth/AuthUser';
 
-import { SpinnerProvider } from './context/SpinnerContext';
-import './App.css';
+import { SpinnerProvider } from './context/SpinnerContext'; 
 
+import './index.css';
 const App = () => {
   const { isAuthenticated, isInitializing } = useAuth();
 

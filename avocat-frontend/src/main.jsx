@@ -8,7 +8,6 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import GlobalAlert from './components/common/GlobalAlert';
 import { Suspense } from 'react';
-import './index.css';
 
 const router = createBrowserRouter([
   {

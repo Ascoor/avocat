@@ -1,4 +1,4 @@
-version: "3.9"
+name: "3.9"  # يمكن إزالته في حال كنت تستخدم Docker Compose v2.x
 
 services:
   pg:
@@ -27,8 +27,11 @@ services:
       - "6379:6379"
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 3
 
-  # NEW BACKEND (Laravel 11) - new-avocatapp
   api:
     image: avocat-backend:latest
     build:
@@ -78,8 +81,11 @@ services:
 
 volumes:
   avc-pg-data:
+    driver: local
   avc-composer-cache:
+    driver: local
   avc-web-node-modules:
+    driver: local
 
 networks:
   backend:

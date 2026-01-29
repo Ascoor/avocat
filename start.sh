@@ -140,7 +140,6 @@ case "${1:-up}" in
 
     echo "Rebuild complete ✅"
     ;;
-
   down)
     require docker
     echo "Stopping stack (pg, cache, api, web)..."
@@ -177,7 +176,6 @@ case "${1:-up}" in
     compose exec api sh -lc '
       '"$(declare -f wait_db)"'
       wait_db
-      php artisan config:clear || true
       php artisan migrate:fresh --seed
     '
     echo "Migrations done ✅"

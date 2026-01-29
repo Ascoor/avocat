@@ -21,7 +21,6 @@ mkdir -p "$COMPOSER_CACHE_DIR"
 # --- Install vendor if missing (vendor is a volume) ---
 if [ ! -f vendor/autoload.php ]; then
   echo "📦 Installing composer dependencies..."
-  composer update --no-interaction --prefer-dist --no-progress
   composer install --no-interaction --prefer-dist --no-progress
 fi
 
@@ -39,10 +38,13 @@ if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)"
   php artisan key:generate --force --ansi
 fi
 
-# --- Migrate ---
-php artisan migrate --force --seed || true
-
-# Sanctum (session cookie auth) does not require OAuth key installation.
+# --- Migrate & Seed (only if not done before) ---
+if ! php artisan migrate:status | grep -q 'No migrations'; then
+  echo "⏳ Running migrations and seeding..."
+  php artisan migrate --force --seed
+else
+  echo "✅ Migrations already applied."
+fi
 
 # --- Queue (optional) ---
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
