@@ -48,7 +48,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (email, password) => {
     try {
-      const response = await api.post('/login', { email, password });
+      const response = await api.post('/login', {
+        email,
+        password,
+        device_name: 'web',
+        token: true,
+      });
       const payload = response.data?.data ?? response.data;
       if (payload?.token && payload?.user) {
         syncAuth(payload.user, payload.token);
@@ -68,6 +73,8 @@ export const AuthProvider = ({ children }) => {
           email,
           password,
           password_confirmation: passwordConfirmation,
+          device_name: 'web',
+          token: true,
         });
         const payload = response.data?.data ?? response.data;
         if (payload?.token && payload?.user) {
