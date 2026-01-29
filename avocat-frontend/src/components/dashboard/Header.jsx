@@ -5,8 +5,8 @@ import ThemeToggle from '../common/ThemeToggle';
 import HeaderToggle from '../common/HeaderToggle';
 import { useSidebar } from '../../utils/SidebarContext';
 import { motion } from 'framer-motion';
-const Header = () => {
-  const { isSidebarOpen } = useSidebar();
+const Header = ({ sidebarOffset }) => {
+  const { isMobile } = useSidebar();
   const headerVariants = {
     hidden: { y: '-100%', opacity: 0 },
     visible: {
@@ -21,11 +21,10 @@ const Header = () => {
       variants={headerVariants}
       initial="hidden"
       animate="visible"
-      className={`app-header fixed top-0 right-0 left-0 z-20 transition-all duration-300 ${
-       isSidebarOpen   ? 'md:mr-64' : 'md:mr-16'
-      }`}
+      style={{ marginRight: isMobile ? '0' : sidebarOffset }}
+      className="app-header fixed top-0 right-0 left-0 z-20 transition-all duration-300"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-14 sm:h-16">
         <div className="flex items-center gap-3">
           <HeaderToggle />
           <div className="hidden sm:flex flex-col text-white">

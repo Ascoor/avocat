@@ -10,15 +10,15 @@ const AuthWrapper = () => {
 
   const sidebarWidth = isMobile
     ? isSidebarOpen
-      ? '100%'  // الموبايل: افتح على كامل الشاشة
+      ? '100%' // الموبايل: افتح على كامل الشاشة
       : '0'
     : isTablet
       ? isSidebarOpen
         ? '14rem' // التابلت: افتح إلى حجم متوسط
-        : '5rem'
+        : '4rem'
       : isSidebarOpen
         ? '18rem' // سطح المكتب: الحجم الكامل
-        : '5rem';
+        : '4rem';
 
   return (
     <motion.div
@@ -55,7 +55,7 @@ const AuthWrapper = () => {
           animate={{ y: '0%' }}
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
         >
-          <Header />
+          <Header sidebarOffset={isMobile ? '0' : sidebarWidth} />
         </motion.div>
 
         {/* AuthRoutes Content */}
