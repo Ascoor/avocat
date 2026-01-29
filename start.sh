@@ -8,9 +8,12 @@ BACKEND_DIR="$ROOT/new-avocatapp"
 usage() {
   cat <<'USAGE'
 Usage: ./start.sh [up|rebuild|down|logs|init|migrate|ps]
-  up       Start stack (detached)
+Core workflow (root script):
+  up       Start stack (detached) using the NEW backend (new-avocatapp)
   rebuild  Full rebuild from zero (down -v + no-cache build + up)
   down     Stop stack and remove volumes
+
+Extras:
   logs     Follow logs
   init     One-time Laravel setup (env + key + perms + caches + composer)
   migrate  Wait for DB then run migrate:fresh --seed
@@ -120,7 +123,7 @@ case "${1:-up}" in
     echo "Backend:  http://localhost:8000"
     echo "Frontend: http://localhost:8088"
     ;;
-  rebuild)
+  rebuild|build)
     require docker
     echo "Rebuilding stack (pg, cache, api, web) from zero..."
     ensure_env_docker_file

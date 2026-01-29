@@ -9,7 +9,6 @@
 *.pem
 secrets.*
 !.env.docker.example
-!avocatapp/.env.docker.example
 
 # Logs
 *.log
