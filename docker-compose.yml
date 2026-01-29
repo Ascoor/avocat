@@ -1,20 +1,20 @@
-name: "3.9"
+version: "3.9"
 
 services:
   pg:
     image: postgres:16-alpine
     container_name: avc-pg
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: app
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: app_password
+    env_file:
+      - ./database.env
     volumes:
       - avc-pg-data:/var/lib/postgresql/data
     ports:
       - "55432:5432"
+    networks:
+      - database
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U app -d app" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
       interval: 10s
       timeout: 5s
       retries: 30
@@ -25,22 +25,26 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    networks:
+      - backend
 
   # NEW BACKEND (Laravel 11) - new-avocatapp
   api:
+    image: avocat-backend:latest
     build:
       context: ./new-avocatapp
       dockerfile: Dockerfile
     container_name: avc-api
-    restart: "no"
- 
+    restart: unless-stopped
+    entrypoint: ["bash", "/var/www/html/docker-entrypoint.sh"]
     env_file:
-      - ./new-avocatapp/.env.docker
+      - ./backend.env
     environment:
       COMPOSER_CACHE_DIR: /tmp/composer-cache
       COMPOSER_ALLOW_SUPERUSER: "1"
     volumes:
       - ./new-avocatapp:/var/www/html
+      - ./backend.env:/var/www/html/.env.docker:ro
       - avc-composer-cache:/tmp/composer-cache
     depends_on:
       pg:
@@ -49,20 +53,35 @@ services:
         condition: service_started
     ports:
       - "8000:8000"
-      
+    networks:
+      - backend
+      - database
 
   web:
     image: node:20-alpine
     container_name: avc-web
+    restart: unless-stopped
     working_dir: /usr/src/app
+    env_file:
+      - ./frontend.env
     volumes:
       - ./avocat-frontend:/usr/src/app
       - avc-web-node-modules:/usr/src/app/node_modules
     ports:
-      - "8088:8080"
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port=8080"
+      - "8080:8080"
+    entrypoint: ["sh", "-c", "npm install && npm run dev -- --host 0.0.0.0 --port=8080"]
+    depends_on:
+      - api
+    networks:
+      - frontend
+      - backend
 
 volumes:
   avc-pg-data:
   avc-composer-cache:
   avc-web-node-modules:
+
+networks:
+  backend:
+  frontend:
+  database:
