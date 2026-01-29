@@ -6,7 +6,7 @@ function HeaderToggle() {
 
   return (
     <button
-      className="text-white mr-2 hover:text-green-400 dark:text-cyan-200 dark:hover:text-orange-400 transition-colors duration-300 ease-in-out"
+      className="group relative flex items-center justify-center w-11 h-11 rounded-xl border border-white/20 bg-white/10 text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
       onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       aria-controls="sidebar"
       aria-expanded={isSidebarOpen}
@@ -15,7 +15,7 @@ function HeaderToggle() {
         {isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
       </span>
       <svg
-        className="w-6 h-6 fill-current"
+        className="w-6 h-6 fill-current transition-transform duration-300 group-hover:scale-110"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >

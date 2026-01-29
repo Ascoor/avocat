@@ -9,11 +9,11 @@ export default function ThemeToggle({ size = 'md' }) {
       onClick={() =>
         changeCurrentTheme(currentTheme === 'light' ? 'dark' : 'light')
       }
-      className={`flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 
+      className={`flex items-center justify-center w-12 h-12 rounded-full border border-white/30 shadow-lg transition-all duration-300 
                  ${
                    currentTheme === 'light'
-                     ? 'bg-avocat-orange-light text-white hover:bg-avocat-orange'
-                     : 'bg-gray-300 dark:bg-avocat-indigo text-yellow-400  hover:bg-avocat-orange  dark:hover:bg-avocat-indigo-light'
+                     ? 'bg-white/80 text-[var(--app-accent-strong)] hover:bg-white'
+                     : 'bg-white/10 text-[var(--app-accent)] hover:bg-white/20'
                  }`}
     >
       {currentTheme === 'light' ? (

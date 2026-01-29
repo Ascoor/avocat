@@ -44,16 +44,32 @@ const Sidebar = () => {
     },
   };
 
-  const menuItems = [
-    { to: '/', icon: <FaHome />, label: 'الرئيسية' },
-    { to: '/legcases', icon: <FaFolder />, label: 'القضايا' },
-    { to: '/clients', icon: <FaUsers />, label: 'العملاء' },
-    { to: '/legcase-services', icon: <FaCogs />, label: 'الخدمات' },
-    { to: '/invoices', icon: <FaFileInvoice />, label: 'الفواتير' },
-    { to: '/consultations', icon: <FaBalanceScale />, label: 'الاستشارات' },
-    { to: '/expenses', icon: <FaMoneyBillWave />, label: 'المصروفات' },
-    { to: '/contracts', icon: <FaBriefcase />, label: 'العقود' },
-    { to: '/search-courts-api', icon: <FaSearch />, label: 'بحث محاكم' },
+  const menuSections = [
+    {
+      title: 'الرئيسية',
+      items: [{ to: '/', icon: <FaHome />, label: 'لوحة المتابعة' }],
+    },
+    {
+      title: 'إدارة القضايا',
+      items: [
+        { to: '/legcases', icon: <FaFolder />, label: 'القضايا' },
+        { to: '/legcase-services', icon: <FaCogs />, label: 'الخدمات' },
+        { to: '/consultations', icon: <FaBalanceScale />, label: 'الاستشارات' },
+        { to: '/contracts', icon: <FaBriefcase />, label: 'العقود' },
+      ],
+    },
+    {
+      title: 'العملاء والمالية',
+      items: [
+        { to: '/clients', icon: <FaUsers />, label: 'العملاء' },
+        { to: '/invoices', icon: <FaFileInvoice />, label: 'الفواتير' },
+        { to: '/expenses', icon: <FaMoneyBillWave />, label: 'المصروفات' },
+      ],
+    },
+    {
+      title: 'الأدوات',
+      items: [{ to: '/search-courts-api', icon: <FaSearch />, label: 'بحث محاكم' }],
+    },
   ];
 
   const handleNavClick = () => {
@@ -76,7 +92,8 @@ const Sidebar = () => {
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? 'open' : 'closed'}
-        className="sidebar fixed top-0 right-0 h-full bg-gradient-to-b from-avocat-indigo-dark via-avocat-indigo to-avocat-blue-light dark:bg-gradient-to-b dark:from-avocat-blue-darker dark:via-gradient-night dark:to-avocat-blue shadow-lg z-30 flex flex-col transition-all ease-in-out"
+        className="sidebar app-sidebar fixed top-0 right-0 h-full z-30 flex flex-col transition-all ease-in-out text-white/90 backdrop-blur-xl"
+        id="sidebar"
       >
       {}
       <div
@@ -90,35 +107,53 @@ const Sidebar = () => {
       </div>
 
       {}
-      <ul
-        className={`mt-4 flex-1 transition-opacity ${isSidebarOpen ? 'opacity-100 mt-14' : 'opacity-0 md:opacity-100'}`}
+      <div
+        className={`mt-4 flex-1 overflow-y-auto px-3 transition-opacity ${isSidebarOpen ? 'opacity-100 mt-10' : 'opacity-0 md:opacity-100'}`}
       >
-        {menuItems.map((item, index) => (
-          <li key={index} className="group relative">
-            <NavLink
-              to={item.to}
-              onClick={handleNavClick}
-              className={`flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out
-                ${isSidebarOpen ? 'space-x-4 text-gray-100 hover:bg-avocat-blue-light hover:text-avocat-orange dark:hover:bg-avocat-yellow-light dark:hover:text-yellow-400' : 'justify-center'}
-                group-hover:scale-105`}
-            >
-              <span className="text-xl text-gray-300 group-hover:text-avocat-yellow dark:group-hover:text-avocat-orange-light transition-colors">
-                {item.icon}
-              </span>
-              {isSidebarOpen && (
-                <span className="flex-1 text-gray-100 text-center font-bold group-hover:text-avocat-yellow dark:group-hover:text-avocat-blue-dark tracking-wide">
-                  {item.label}
-                </span>
-              )}
-            </NavLink>
-          </li>
+        {menuSections.map((section) => (
+          <div key={section.title} className="mb-6">
+            {isSidebarOpen && (
+              <p className="px-3 text-xs uppercase tracking-[0.25em] text-white/60 mb-3">
+                {section.title}
+              </p>
+            )}
+            <ul className="space-y-2">
+              {section.items.map((item) => (
+                <li key={item.to} className="group relative">
+                  <NavLink
+                    to={item.to}
+                    onClick={handleNavClick}
+                    title={!isSidebarOpen ? item.label : undefined}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-300 ease-in-out ${
+                        isSidebarOpen ? 'justify-start' : 'justify-center'
+                      } ${
+                        isActive
+                          ? 'bg-white/20 text-white shadow-lg'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                      } group-hover:translate-x-1`
+                    }
+                  >
+                    <span className="text-xl opacity-80 group-hover:opacity-100 transition-opacity">
+                      {item.icon}
+                    </span>
+                    {isSidebarOpen && (
+                      <span className="flex-1 text-sm font-semibold tracking-wide">
+                        {item.label}
+                      </span>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
 
       {}
       <button
         onClick={toggleSidebar}
-        className="absolute bottom-6 right-4 p-2 bg-indigo-700 dark:bg-purple-500/50 text-white rounded-full hover:bg-indigo-500 dark:hover:bg-yellow-500 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110"
+        className="absolute bottom-6 right-4 p-2 bg-white/15 text-white rounded-full hover:bg-white/30 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110"
       >
         {isSidebarOpen ? (
           <IoMdClose className="text-2xl" />
