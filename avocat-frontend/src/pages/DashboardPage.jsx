@@ -8,17 +8,18 @@ import { motion } from 'framer-motion';
 const AuthWrapper = () => {
   const { isSidebarOpen, isMobile, isTablet } = useSidebar();
 
+  // تحديد عرض الشريط الجانبي بناءً على حجم الجهاز
   const sidebarWidth = isMobile
     ? isSidebarOpen
-      ? '100%'  // الموبايل: افتح على كامل الشاشة
-      : '0'
+      ? '100%'  // الموبايل: الشريط الجانبي يعرض كامل الشاشة
+      : '0'      // الموبايل: الشريط الجانبي مخفي
     : isTablet
       ? isSidebarOpen
-        ? '14rem' // التابلت: افتح إلى حجم متوسط
-        : '5rem'
+        ? '14rem'  // التابلت: عرض متوسط للشريط الجانبي
+        : '5rem'   // التابلت: شريط جانبي صغير عند الإخفاء
       : isSidebarOpen
-        ? '18rem' // سطح المكتب: الحجم الكامل
-        : '5rem';
+        ? '16rem'   // سطح المكتب: الشريط الجانبي كامل
+        : '5rem';   // سطح المكتب: الشريط الجانبي صغير عند الإخفاء
 
   return (
     <motion.div
@@ -34,7 +35,7 @@ const AuthWrapper = () => {
         className="transition-all duration-500 ease-in-out"
         initial={{ x: '-100%' }}
         animate={{ x: '0%' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 60 }}
       >
         <Sidebar />
       </motion.div>
@@ -72,3 +73,4 @@ const AuthWrapper = () => {
 };
 
 export default AuthWrapper;
+  
