@@ -37,9 +37,6 @@ class AuthController extends BaseApiController
 
         $user->sendEmailVerificationNotification();
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
         $token = $this->maybeCreateToken($request, $user);
 
         return $this->successResponse($this->formatAuthResponse($user, $token), 'Registration successful.', 201);
@@ -59,15 +56,19 @@ class AuthController extends BaseApiController
         }
 
         $credentials = $validator->validated();
+        $authCredentials = [
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+        ];
 
-        if (! Auth::attempt($credentials)) {
+        if (! Auth::guard('web')->validate($authCredentials)) {
             return $this->errorResponse('Invalid credentials.', 401);
         }
 
-        /** @var User $user */
-        $user = Auth::user();
-
-        $request->session()->regenerate();
+        $user = User::where('email', $credentials['email'])->first();
+        if (! $user) {
+            return $this->errorResponse('Invalid credentials.', 401);
+        }
 
         $token = $this->maybeCreateToken($request, $user);
 
@@ -207,7 +208,8 @@ class AuthController extends BaseApiController
 
     private function maybeCreateToken(Request $request, User $user): ?string
     {
-        if ($request->boolean('token') || $request->filled('device_name')) {
+        $shouldIssueToken = $request->has('token') ? $request->boolean('token') : true;
+        if ($shouldIssueToken || $request->filled('device_name')) {
             $tokenName = $request->input('device_name', 'api');
 
             return $user->createToken($tokenName)->plainTextToken;
