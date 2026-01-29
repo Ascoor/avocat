@@ -78,10 +78,10 @@ const Home = () => {
     <div className="p-4 mt-16 xl:max-w-7xl xl:mx-auto w-full">
       {}
       <div className="flex justify-center mb-6">
-        <div className="flex w-full max-w-2xl bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+        <div className="flex w-full max-w-2xl bg-white/90 dark:bg-gray-900/60 p-4 rounded-2xl shadow-lg border border-border animate-fade-in-up">
           <button
             onClick={() => handleSearch(searchTerm)}
-            className="px-4 py-2 bg-green-500 text-white rounded-r-lg hover:bg-green-600"
+            className="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             بحث
           </button>
@@ -90,7 +90,7 @@ const Home = () => {
             placeholder="بحث بالإسم، رقم الهاتف، رقم الموكل"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 rounded-l-lg text-center bg-gray-200 border-2 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-400/50"
+            className="w-full p-2 rounded-l-lg text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
           />
         </div>
       </div>
@@ -105,7 +105,7 @@ const Home = () => {
       ) : (
         <>
           {}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pb-4 animate-fade-in-up">
             <MainCard
               count={counts.legalSessionCount}
               icon={MainSessions}
@@ -130,7 +130,7 @@ const Home = () => {
           </div>
 
           {}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 pb-4 animate-fade-in-up">
             <DashboardCard01 isDarkMode={isDarkMode} />
             <DashboardCard02 isDarkMode={isDarkMode} />
             <DashboardCard03 isDarkMode={isDarkMode} />
