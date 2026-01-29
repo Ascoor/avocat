@@ -21,6 +21,7 @@ mkdir -p "$COMPOSER_CACHE_DIR"
 # --- Install vendor if missing (vendor is a volume) ---
 if [ ! -f vendor/autoload.php ]; then
   echo "📦 Installing composer dependencies..."
+  composer update --no-interaction --prefer-dist --no-progress
   composer install --no-interaction --prefer-dist --no-progress
 fi
 
