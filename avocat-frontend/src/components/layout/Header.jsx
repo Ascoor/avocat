@@ -15,6 +15,10 @@ const Header = ({ title, className, showSidebarToggle = true }) => {
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
   const toggleLang = () => setLanguage(language === "ar" ? "en" : "ar");
+  const toggleLabel =
+    language === "ar"
+      ? t("language.switchToEnglish")
+      : t("language.switchToArabic");
 
   return (
     <header className={cn(
@@ -75,7 +79,7 @@ const Header = ({ title, className, showSidebarToggle = true }) => {
             size="sm"
             className="rounded-full border border-border/70 px-3 py-2 text-sm font-medium transition duration-base ease-comfort hover:-translate-y-0.5 hover:bg-brand-primary/10 hover:text-brand-primary hover:shadow-soft"
           >
-            {language === "ar" ? "EN" : "عربي"}
+            {toggleLabel}
           </Button>
 
           {user && (
@@ -91,16 +95,16 @@ const Header = ({ title, className, showSidebarToggle = true }) => {
                   </div>
                   <div className="hidden flex-col items-start md:flex">
                     <span className="text-sm font-medium">
-                      {user.name || "Demo User"}
+                      {user.name || t("common.demoUser")}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {language === "ar"
-                        ? user.role === "admin"
-                          ? "مدير"
-                          : user.role === "lawyer"
-                          ? "محامٍ"
-                          : "عميل"
-                        : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      {user?.role
+                        ? t(`roles.${user.role}`, {
+                            fallback:
+                              user.role.charAt(0).toUpperCase() +
+                              user.role.slice(1),
+                          })
+                        : t("roles.default")}
                     </span>
                   </div>
                 </Button>
@@ -110,26 +114,26 @@ const Header = ({ title, className, showSidebarToggle = true }) => {
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium">
-                      {user.name || "Demo User"}
+                      {user.name || t("common.demoUser")}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {user?.email || "demo@avocat.law"}
+                      {user?.email || t("common.demoEmail")}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
-                  {language === "ar" ? "الملف الشخصي" : "Profile"}
+                  {t("common.profile")}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
-                  {language === "ar" ? "الإعدادات" : "Settings"}
+                  {t("common.settings")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
-                  {language === "ar" ? "تسجيل الخروج" : "Sign Out"}
+                  {t("common.signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

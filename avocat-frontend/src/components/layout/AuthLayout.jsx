@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
-  const { direction, isRTL, language } = useLanguage();
+  const { direction, isRTL, t } = useLanguage();
   const shouldReverse = isRTL ? heroSide === "right" : heroSide === "left";
 
   const fadeInUp = {
@@ -100,10 +100,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
     <Lock className="w-5 h-5 text-gold" />
     <div className="text-xs text-white/70">
-      {language === 'ar' 
-        ? 'بوابة آمنة ومشفرة بأعلى معايير الحماية' 
-        : 'Secure encrypted portal with enterprise-grade protection'
-      }
+      {t('auth.securePortal')}
     </div>
   </div>
 </motion.div>
@@ -138,7 +135,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                 'text-xl font-bold text-foreground',
                 isRTL ? 'font-arabic' : ''
               )}>
-                {language === 'ar' ? 'LexPrime للمحاماة' : 'LexPrime Legal'}
+                {t('auth.brandName')}
               </h2>
             </div>
 
@@ -174,11 +171,11 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
             <div className="lg:hidden flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Shield className="w-3.5 h-3.5 text-legal-success" />
-                <span>{language === 'ar' ? 'آمن' : 'Secure'}</span>
+                <span>{t('auth.trust.secure')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Lock className="w-3.5 h-3.5 text-legal-success" />
-                <span>{language === 'ar' ? 'مشفر' : 'Encrypted'}</span>
+                <span>{t('auth.trust.encrypted')}</span>
               </div>
             </div>
           </motion.div>

@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import { AlertProvider } from './context/AlertContext';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import App from './App';
 import GlobalAlert from './components/common/GlobalAlert';
 import { Suspense } from 'react';
@@ -20,15 +21,17 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <AlertProvider>
-      <GlobalAlert />
-      <Provider store={store}>
-        <AuthProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <RouterProvider router={router} />
-          </Suspense>
-        </AuthProvider>
-      </Provider>
-    </AlertProvider>
+    <LanguageProvider>
+      <AlertProvider>
+        <GlobalAlert />
+        <Provider store={store}>
+          <AuthProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+              <RouterProvider router={router} />
+            </Suspense>
+          </AuthProvider>
+        </Provider>
+      </AlertProvider>
+    </LanguageProvider>
   </React.StrictMode>,
 );
