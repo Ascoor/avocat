@@ -78,10 +78,10 @@ const Home = () => {
     <div className="p-4 mt-16 xl:max-w-7xl xl:mx-auto w-full">
       {}
       <div className="flex justify-center mb-6">
-        <div className="flex w-full max-w-2xl bg-white/90 dark:bg-gray-900/60 p-4 rounded-2xl shadow-lg border border-border animate-fade-in-up">
+        <div className="flex w-full max-w-2xl app-panel p-4 animate-fade-in-up">
           <button
             onClick={() => handleSearch(searchTerm)}
-            className="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="px-4 py-2 bg-primary text-white rounded-r-xl hover:bg-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             بحث
           </button>
@@ -90,7 +90,7 @@ const Home = () => {
             placeholder="بحث بالإسم، رقم الهاتف، رقم الموكل"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 rounded-l-lg text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
+            className="w-full p-2 rounded-l-xl text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
           />
         </div>
       </div>

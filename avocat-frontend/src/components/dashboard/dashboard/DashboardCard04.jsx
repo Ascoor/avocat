@@ -121,15 +121,18 @@ function DashboardCard04({ isDarkMode }) {
   };
 
   return (
-    <div className="bg-gray-100 dark:bg-gradient-night dark:text-white text-gray-800 shadow rounded-lg p-2 col-span-full sm:col-span-6 xl:col-span-1 flex flex-col">
+    <div className="dashboard-card p-2 col-span-full sm:col-span-6 xl:col-span-1 flex flex-col">
       {}
-      <header className="px-5 py-4 border-b border-gray-300 dark:border-gray-700 flex items-center">
+      <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">👨‍⚖️ أداء المحامين في المكتب</h2>
+        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(234,179,8,0.18)] text-[var(--app-warning)]">
+          كفاءة
+        </span>
       </header>
 
       {}
       <div className="mt-4">
-        <p className="text-sm text-gray-500 dark:text-gray-300">
+        <p className="text-sm text-[var(--app-muted)]">
           يعرض هذا المخطط عدد القضايا التي تعامل معها كل محامٍ، بالإضافة إلى
           نسبة النجاح في القضايا المغلقة.
         </p>
