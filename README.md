@@ -25,11 +25,34 @@
 ./start.sh ps
 ```
 
-## ملفات البيئة (التطوير)
-- الباك إند الجديد:
-  - القالب: `new-avocatapp/.env.docker.example`
-  - الملف الفعلي أثناء التشغيل (يُنشئه `start.sh` تلقائيًا): `new-avocatapp/.env.docker`
-- الواجهة الأمامية:
-  - القالب: `avocat-frontend/.env.example`
+### تفعيل الأوامر المختصرة (Aliases)
+لتمكين الأوامر المختصرة في نفس الطرفية:
+```bash
+source ./start.sh
+```
+سيتم تفعيل Aliases مثل:
+- `build-backend`
+- `build-frontend`
+- `start-stack`
+- `stop-stack`
 
-> **ملاحظة:** ملفات Docker الخاصة بالباك إند القديم تمت إزالتها للحد من التكرار والالتباس. تشغيل Docker يستهدف الباك إند الجديد فقط.
+## ملفات البيئة (التطوير)
+تم توحيد إعدادات البيئة عبر ملفات مستقلة لكل خدمة في الجذر:
+- `backend.env` → إعدادات الباك إند (Laravel).
+- `frontend.env` → إعدادات الواجهة الأمامية.
+- `database.env` → إعدادات PostgreSQL.
+
+يتم ربط ملف `backend.env` تلقائيًا بـ `new-avocatapp/.env.docker` داخل الحاوية عند التشغيل.
+
+> **ملاحظة:** تمت إزالة الملفات القديمة مثل `.env.docker.example` لضمان عدم تكرار الإعدادات.
+
+## تشغيل Docker يدويًا
+يمكن تشغيل الخدمات مباشرة عبر `docker compose`:
+```bash
+docker compose up -d
+```
+
+## ملاحظات مهمة
+- الشبكات في `docker-compose.yml` تفصل بين backend/frontend/database لتسهيل الاتصال المنظم.
+- تم تحديث صورة الباك إند الجديدة وربطها بـ `docker-entrypoint.sh` لضمان التشغيل التلقائي.
+- يُفضل استخدام الأوامر الموجودة في `start.sh` لضمان إعداد البيئة تلقائيًا.
