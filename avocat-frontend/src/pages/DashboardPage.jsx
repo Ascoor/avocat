@@ -56,7 +56,7 @@ const AuthWrapper = () => {
           animate={{ y: '0%' }}
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
         >
-          <Header />
+          <Header sidebarOffset={isMobile ? '0' : sidebarWidth} />
         </motion.div>
 
         {/* AuthRoutes Content */}

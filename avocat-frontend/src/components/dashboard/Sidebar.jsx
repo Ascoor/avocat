@@ -18,12 +18,12 @@ import {
 import { IoMdClose } from 'react-icons/io';
 
 const Sidebar = () => {
-  const { isSidebarOpen, setIsSidebarOpen, isMobile } = useSidebar();
+  const { isSidebarOpen, setIsSidebarOpen, isMobile, isTablet } = useSidebar();
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const sidebarVariants = {
     open: {
-      width: isMobile ? '100%' : '18rem',
+      width: isMobile ? '100%' : isTablet ? '14rem' : '18rem',
       opacity: 1,
       x: 0,
       transition: {

@@ -17,9 +17,9 @@
   --app-success: #22c55e;
   --app-warning: #f59e0b;
   --app-danger: #ef4444;
-  --app-header-from: #3b82f6;
-  --app-header-mid: #6366f1;
-  --app-header-to: #8b5cf6;
+  --app-header-from: #0ea5e9;
+  --app-header-mid: #38bdf8;
+  --app-header-to: #6366f1;
   --app-sidebar-from: #1e3a8a;
   --app-sidebar-mid: #312e81;
   --app-sidebar-to: #0f172a;
@@ -66,7 +66,7 @@
   --app-danger: #f87171;
   --app-header-from: #0ea5e9;
   --app-header-mid: #22d3ee;
-  --app-header-to: #6366f1;
+  --app-header-to: #4f46e5;
   --app-sidebar-from: #0f172a;
   --app-sidebar-mid: #1e1b4b;
   --app-sidebar-to: #0b1120;
@@ -124,6 +124,9 @@ body {
 .app-header {
   background: linear-gradient(120deg, var(--app-header-from), var(--app-header-mid), var(--app-header-to));
   box-shadow: var(--day-header-shadow);
+  color: #f8fafc;
+  min-height: 3.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--app-border) 60%, transparent);
 }
 
 .app-sidebar {
@@ -364,7 +367,6 @@ html {
 .dot:nth-child(13) {
   --uib-scale: 0.82;
 }
-
 
 
 
