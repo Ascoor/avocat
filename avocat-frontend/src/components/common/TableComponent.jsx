@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { MdEdit, MdVisibility } from 'react-icons/md';
 import { FaTrashAlt, FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import { useSpring, animated } from '@react-spring/web';
@@ -96,30 +96,23 @@ const TableComponent = ({
   renderAddButton,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [sortKey, setSortKey] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
 
-  useEffect(() => {
-    const filterData = () => {
-      const keywords = searchQuery.trim().toLowerCase().split(/\s+/);
+  const filteredData = useMemo(() => {
+    const keywords = searchQuery.trim().toLowerCase().split(/\s+/);
 
-      const filtered = data.filter((item) => {
-        return keywords.every((keyword) => {
-          return headers.some(
-            (header) =>
-              header.key !== 'actions' &&
-              item[header.key]?.toString().toLowerCase().includes(keyword),
-          );
-        });
+    return data.filter((item) => {
+      return keywords.every((keyword) => {
+        return headers.some(
+          (header) =>
+            header.key !== 'actions' &&
+            item[header.key]?.toString().toLowerCase().includes(keyword),
+        );
       });
-
-      setFilteredData(filtered);
-    };
-
-    filterData();
+    });
   }, [searchQuery, data, headers]);
 
   const sortedData = useMemo(() => {
