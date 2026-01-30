@@ -7,7 +7,7 @@ import {
 import { getCourts } from '../../../../services/api/legalCases';
 import { getLawyers } from '../../../../services/api/lawyers';
 import useAuth from '../../../auth/AuthUser';
-import { useAlert } from '../../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 const SessionModal = ({
   isOpen,
