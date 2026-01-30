@@ -2,22 +2,46 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
-class NotificationController extends BaseApiController
+class NotificationController extends Controller
 {
-    public function index(Request $request, int $userId)
+    // NotificationController.php
+    public function index($userId)
     {
-        return $this->notImplementedResponse('Notifications index endpoint not implemented yet.');
+        // Fetch notifications for the given user ID
+        $notifications = Notification::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Return as JSON response
+        return response()->json($notifications);
+    }
+
+    public function markAsRead($notificationId)
+    {
+        $notification = Notification::find($notificationId);
+
+        if ($notification) {
+            $notification->read = true; // Assuming `read` is a boolean field in your Notification model
+            $notification->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Notification marked as read']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Notification not found'], 404);
+    }
+
+    public function markRead($notificationId)
+    {
+        return $this->markAsRead($notificationId);
     }
 
     public function store(Request $request)
     {
-        return $this->notImplementedResponse('Notifications store endpoint not implemented yet.');
-    }
-
-    public function markRead(Request $request, int $notificationId)
-    {
-        return $this->notImplementedResponse('Notifications read endpoint not implemented yet.');
+        // Logic to create a new notification
     }
 }

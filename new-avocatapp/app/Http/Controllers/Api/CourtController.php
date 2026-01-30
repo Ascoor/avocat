@@ -2,32 +2,58 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Models\Court;
 use Illuminate\Http\Request;
 
-class CourtController extends BaseApiController
+class CourtController extends Controller
 {
-    public function index(Request )
+    public function index()
     {
-        return ->notImplementedResponse('Court index endpoint not implemented yet.');
+        $courts = Court::with('court_type', 'court_level')->get();
+        return response()->json($courts);
+    }
+    // إنشاء محكمة جديدة
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+
+        ]);
+
+        $court = new Court();
+        $court->name = $request->input('name');
+        $court->court_type_id = $request->input('courtTypeId');
+        $court->court_level_id = $request->input('courtLevelId');
+        $court->save();
+
+        return response()->json($court, 201);
     }
 
-    public function store(Request )
+
+
+
+    // تحديث بيانات محكمة
+    public function update(Request $request, $id)
     {
-        return ->notImplementedResponse('Court store endpoint not implemented yet.');
+        $court = Court::find($id);
+        // تحديث بيانات المحكمة
+        $court->name = $request->input('name');
+        $court->address = $request->input('courtTypeId');
+        $court->address = $request->input('courtLevelId');
+        // ... تعيين البيانات الأخرى ...
+        $court->save();
+
+        return response()->json($court);
     }
 
-    public function show(Request , int )
+    // حذف محكمة
+    public function destroy($id)
     {
-        return ->notImplementedResponse('Court show endpoint not implemented yet.');
-    }
+        $court = Court::find($id);
+        $court->delete();
 
-    public function update(Request , int )
-    {
-        return ->notImplementedResponse('Court update endpoint not implemented yet.');
-    }
-
-    public function destroy(Request , int )
-    {
-        return ->notImplementedResponse('Court destroy endpoint not implemented yet.');
+        return response()->json(['message' => 'Court deleted successfully']);
     }
 }

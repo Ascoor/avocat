@@ -2,32 +2,76 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Models\ProcedurePlaceType;
 use Illuminate\Http\Request;
 
-class ProcedurePlaceTypeController extends BaseApiController
+class ProcedurePlaceTypeController extends Controller
 {
-    public function index(Request )
+    // Get all procedure types
+    public function index()
     {
-        return ->notImplementedResponse('ProcedurePlaceType index endpoint not implemented yet.');
+        $procedurePlaceTypes = ProcedurePlaceType::all();
+
+        return response()->json($procedurePlaceTypes);
     }
 
-    public function store(Request )
+    // Get a specific procedure type
+    public function show($id)
     {
-        return ->notImplementedResponse('ProcedurePlaceType store endpoint not implemented yet.');
+        $procedurePlaceType = ProcedurePlaceType::find($id);
+        if (! $procedurePlaceType) {
+            return response()->json(['message' => 'Procedure place type not found'], 404);
+        }
+
+        return response()->json($procedurePlaceType);
     }
 
-    public function show(Request , int )
+    // Create a new procedure type
+    public function store(Request $request)
     {
-        return ->notImplementedResponse('ProcedurePlaceType show endpoint not implemented yet.');
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $procedurePlaceType = new ProcedurePlaceType();
+        $procedurePlaceType->name = $request->input('name');
+        $procedurePlaceType->save();
+
+        return response()->json($procedurePlaceType, 201);
     }
 
-    public function update(Request , int )
+    // Update a procedure type
+    public function update(Request $request, $id)
     {
-        return ->notImplementedResponse('ProcedurePlaceType update endpoint not implemented yet.');
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $procedurePlaceType = ProcedurePlaceType::find($id);
+        if (! $procedurePlaceType) {
+            return response()->json(['message' => 'Procedure place type not found'], 404);
+        }
+
+        $procedurePlaceType->name = $request->input('name');
+        $procedurePlaceType->save();
+
+        return response()->json($procedurePlaceType);
     }
 
-    public function destroy(Request , int )
+    // Delete a procedure type
+    public function destroy($id)
     {
-        return ->notImplementedResponse('ProcedurePlaceType destroy endpoint not implemented yet.');
+        $procedurePlaceType = procedurePlaceType::find($id);
+    
+        if (!$procedurePlaceType) {
+            return response()->json(['message' => 'Case Sub Type not found'], 404);
+        }
+    
+        $procedurePlaceType->delete();
+    
+        return response()->json(null, 204);
     }
+    
 }

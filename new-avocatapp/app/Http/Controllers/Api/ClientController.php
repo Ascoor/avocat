@@ -2,32 +2,87 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Models\Client;
+use App\Services\ClientService;
 use Illuminate\Http\Request;
 
-class ClientController extends BaseApiController
+class ClientController extends Controller
 {
-    public function index(Request )
+    protected $clientService;
+
+    public function __construct(ClientService $clientService)
     {
-        return ->notImplementedResponse('Client index endpoint not implemented yet.');
+        $this->clientService = $clientService;
     }
 
-    public function store(Request )
+    
+    public function index()
     {
-        return ->notImplementedResponse('Client store endpoint not implemented yet.');
+       
+        $clients = Client::with([
+            'legCases.caseType',           // تضمين نوع القضية المرتبط بكل قضية
+            'legCases.caseSubType',        // تضمين نوع القضية الفرعي المرتبط بكل قضية 
+            'legCases.courts',            
+            'services',                  // تضمين الخدمات المرتبطة بالعميل
+            'services.serviceType',      // تضمين نوع الخدمة
+        ])->get();
+
+        return response()->json(['clients' => $clients]);
+    }        
+
+    public function store(Request $request)
+    {
+        $validatedData = $this->validateClientRequest($request);
+
+        $client = $this->clientService->createClient($validatedData);
+
+        return response()->json(['message' => 'Client created successfully!', 'client' => $client], 201);
     }
 
-    public function show(Request , int )
+    public function update(Request $request, $id)
     {
-        return ->notImplementedResponse('Client show endpoint not implemented yet.');
+        $validatedData = $this->validateClientRequest($request, $id);
+
+        $client = $this->clientService->updateClient($id, $validatedData);
+
+        if ($request->has('status') && $client->status !== $request->status) {
+            $client->status = $request->status;
+            $client->save();
+
+            return response()->json(['message' => 'تم تعديل حالة العميل بنجاح']);
+        }
+
+        return response()->json(['message' => 'تم تحديث حالة العميل بنجاح']);
     }
 
-    public function update(Request , int )
+    public function show($id)
     {
-        return ->notImplementedResponse('Client update endpoint not implemented yet.');
+        $client = $this->clientService->getClientById($id);
+        return response()->json(['client' => $client]);
     }
 
-    public function destroy(Request , int )
+    public function destroy($id)
     {
-        return ->notImplementedResponse('Client destroy endpoint not implemented yet.');
+        $this->clientService->deleteClient($id);
+        return response()->json(['message' => 'Client deleted successfully']);
+    }
+
+    protected function validateClientRequest(Request $request, $clientId = null)
+    {
+        return $request->validate([
+            'slug' => 'unique:clients,slug,' . $clientId,
+            'name' => 'required',
+            'email' => 'nullable|unique:clients,email,' . $clientId,
+            'phone_number' => 'nullable',
+            'address' => 'nullable',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'required|in:ذكر,أنثى',
+            'religion' => 'required|in:مسلم,مسيحي',
+            'identity_number' => 'nullable|unique:clients,identity_number,' . $clientId . '|size:14',
+            'work' => 'nullable',
+            'emergency_number' => 'nullable',
+        ]);
     }
 }

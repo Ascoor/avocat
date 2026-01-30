@@ -1,28 +1,22 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class CourtSearchController extends BaseApiController
-{
-    public function index(Request $request)
-    {
-        return $this->notImplementedResponse('Court search index endpoint not implemented yet.');
-    }
+use Illuminate\Support\Facades\DB;
 
-    public function getDegrees(Request $request)
+class CourtSearchController extends Controller
+{public function index()
     {
-        return $this->notImplementedResponse('Court degrees endpoint not implemented yet.');
+        $searchDegrees = DB::table('search_degrees')->get();
+        $searchCourts = DB::table('search_courts')->get();
+        $searchCaseTypes = DB::table('search_case_types')->get();
+    
+        return response()->json([
+            'search_degrees' => $searchDegrees,
+            'search_courts' => $searchCourts,
+            'search_case_types' => $searchCaseTypes
+        ]);
     }
-
-    public function getCourts(Request $request)
-    {
-        return $this->notImplementedResponse('Court list endpoint not implemented yet.');
-    }
-
-    public function getCaseTypes(Request $request)
-    {
-        return $this->notImplementedResponse('Court case types endpoint not implemented yet.');
-    }
+    
 }
