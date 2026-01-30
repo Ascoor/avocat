@@ -2,17 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
-class EventController extends BaseApiController
+class EventController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return $this->notImplementedResponse('Events index endpoint not implemented yet.');
+        $events = Event::all();
+
+        return response()->json($events);
     }
 
-    public function store(Request $request)
+
+
+// EventController.php
+public function store(Request $request) {
+    // Logic to create a new event
+}
+    public function update(Request $request, Event $event)
     {
-        return $this->notImplementedResponse('Events store endpoint not implemented yet.');
+        $event->update($request->all());
+
+        return response()->json($event, 200);
+    }
+
+    public function delete(Event $event)
+    {
+        $event->delete();
+
+        return response()->json(null, 204);
     }
 }

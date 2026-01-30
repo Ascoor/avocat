@@ -2,42 +2,39 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
-class CaseStatusController extends BaseApiController
+class CaseStatusController extends Controller
 {
-    public function index(Request $request)
-    {
-        return $this->notImplementedResponse('Case status index endpoint not implemented yet.');
-    }
-
     public function fetchCaseStatus(Request $request)
     {
-        return $this->notImplementedResponse('Case status fetch endpoint not implemented yet.');
-    }
+        // Create a new Goutte client
+        $client = new Client();
 
-    public function fetchDegrees(Request $request)
-    {
-        return $this->notImplementedResponse('Case status degrees endpoint not implemented yet.');
-    }
+        // Send a GET request to the website URL
+        $crawler = $client->request('GET', 'https://moj.gov.eg/ar/Pages/Services/CaseCurrentStatus.aspx');
 
-    public function getCourtOptions(Request $request)
-    {
-        return $this->notImplementedResponse('Court options endpoint not implemented yet.');
-    }
+        // Extract the required data from the website
+        $lblDegree = $crawler->filter('#lblDegree')->text();
+        $ddlCourtOptions = $crawler->filter('#ddlCourt option')->each(function ($option) {
+            return $option->text();
+        });
+        $caseTypeOptions = $crawler->filter('#CaseType option')->each(function ($option) {
+            return $option->text();
+        });
+        $yearOptions = $crawler->filter('#year option')->each(function ($option) {
+            return $option->text();
+        });
 
-    public function getCaseTypeOptions(Request $request)
-    {
-        return $this->notImplementedResponse('Case type options endpoint not implemented yet.');
-    }
-
-    public function getCaseYearOptions(Request $request)
-    {
-        return $this->notImplementedResponse('Case year options endpoint not implemented yet.');
-    }
-
-    public function getCaseDetails(Request $request)
-    {
-        return $this->notImplementedResponse('Case details endpoint not implemented yet.');
+        // Return the extracted data as JSON response
+        return response()->json([
+            'lblDegree' => $lblDegree,
+            'ddlCourtOptions' => $ddlCourtOptions,
+            'caseTypeOptions' => $caseTypeOptions,
+            'yearOptions' => $yearOptions,
+        ]);
     }
 }

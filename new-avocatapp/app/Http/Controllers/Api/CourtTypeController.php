@@ -2,37 +2,87 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Models\CourtSubType;
+use App\Models\CourtType;
 use Illuminate\Http\Request;
 
-class CourtTypeController extends BaseApiController
+class CourtTypeController extends Controller
 {
-    public function index(Request $request)
+    // Get all court types
+    public function index()
     {
-        return $this->notImplementedResponse('Court type index endpoint not implemented yet.');
+        $courtTypes = CourtType::all();
+
+        return response()->json($courtTypes);
     }
 
+    // Get a specific court type
+    public function show($id)
+    {
+        $courtType = CourtType::find($id);
+        if (! $courtType) {
+            return response()->json(['message' => 'Court type not found'], 404);
+        }
+
+        return response()->json($courtType);
+    }
+
+    // Create a new court type
     public function store(Request $request)
     {
-        return $this->notImplementedResponse('Court type store endpoint not implemented yet.');
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $courtType = new CourtType();
+        $courtType->name = $request->input('name');
+        $courtType->save();
+
+        return response()->json($courtType, 201);
     }
 
-    public function show(Request $request, int $id)
+    // Update a court type
+    public function update(Request $request, $id)
     {
-        return $this->notImplementedResponse('Court type show endpoint not implemented yet.');
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $courtType = CourtType::find($id);
+        if (! $courtType) {
+            return response()->json(['message' => 'Court type not found'], 404);
+        }
+
+        $courtType->name = $request->input('name');
+        $courtType->save();
+
+        return response()->json($courtType);
     }
 
-    public function update(Request $request, int $id)
+    // Delete a court type
+    public function destroy($id)
     {
-        return $this->notImplementedResponse('Court type update endpoint not implemented yet.');
-    }
 
-    public function destroy(Request $request, int $id)
-    {
-        return $this->notImplementedResponse('Court type destroy endpoint not implemented yet.');
-    }
+            // Find the Court model by ID
+            $court_type = CourtType::findOrFail($id);
 
-    public function getCourtTypesWithSubTypes(Request $request, int $courtTypeId)
-    {
-        return $this->notImplementedResponse('Court type sub types endpoint not implemented yet.');
-    }
+            // Delete the Court
+            $court_type->delete();
+
+            return response()->json(['message' => 'Court deleted']);
+        }
+        public function getCourtTypesWithSubTypes(Request $request)
+        {
+            $courtTypeId = $request->route('courtTypeId');
+            
+            if ($courtTypeId) {
+                $courtSubTypes = CourtSubType::where('court_type_id', $courtTypeId)->get(['id', 'name', 'court_type_id']);
+                return response()->json($courtSubTypes);
+            }
+            
+            return response()->json(['error' => 'Invalid court type ID'], 400);
+        }
+        
 }
