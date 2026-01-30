@@ -22,6 +22,8 @@ export const useTheme = () => {
   return ctx;
 };
 
+export const useThemeProvider = useTheme;
+
 export const ThemeProvider = ({ children }) => {
   const [state, setState] = useState(() => getPreferredTheme());
 
