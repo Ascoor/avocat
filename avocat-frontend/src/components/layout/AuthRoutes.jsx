@@ -30,32 +30,30 @@ const AuthRoutes = () => {
   useEffect(() => {
     showSpinner();
     hideSpinner();
-  }, [location]);
+  }, [location, showSpinner, hideSpinner]);
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4 min-h-screen relative overflow-hidden">
-      {}
+    <div className="relative mx-auto min-h-screen max-w-screen-lg overflow-hidden p-4">
       {loading && <GlobalSpinner />}
 
       <Suspense fallback={<GlobalSpinner />}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/clients" element={<ClientsAndUnClients />} />
-          <Route path="/legcase-services" element={<LegalServiceList />} />
-          <Route path="/court-search" element={<CourtSearch />} />
-          <Route path="/cases_setting" element={<CaseTypeSet />} />
-          <Route path="/legcases/show/:id" element={<LegCaseDetails />} />
-          <Route path="/profile/:userId" element={<ProfileUser />} />
-          <Route path="/legcases" element={<LegalCasesIndex />} />
-          <Route path="/legal-sessions" element={<LegalSessions />} />
-          <Route path="/search-courts-api" element={<SearchCourtsApi />} />
+          <Route index element={<Home />} />
+          <Route path="clients" element={<ClientsAndUnClients />} />
+          <Route path="legcase-services" element={<LegalServiceList />} />
+          <Route path="court-search" element={<CourtSearch />} />
+          <Route path="cases_setting" element={<CaseTypeSet />} />
+          <Route path="legcases/show/:id" element={<LegCaseDetails />} />
+          <Route path="profile/:userId" element={<ProfileUser />} />
+          <Route path="legcases" element={<LegalCasesIndex />} />
+          <Route path="legal-sessions" element={<LegalSessions />} />
+          <Route path="search-courts-api" element={<SearchCourtsApi />} />
           <Route
-            path="/managment-settings/procedures"
+            path="managment-settings/procedures"
             element={<Procedures />}
           />
-          <Route path="/financial-dashboard" element={<FinancialDashboard />} />
+          <Route path="financial-dashboard" element={<FinancialDashboard />} />
 
-          {}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
