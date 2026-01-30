@@ -11,7 +11,6 @@ import useAuth from './components/auth/AuthUser';
 import { useLanguage } from './contexts/LanguageContext';
 import { SpinnerProvider } from './context/SpinnerContext';
 
-import './index.css';
 
 const App = () => {
   const { isAuthenticated, isInitializing } = useAuth();
