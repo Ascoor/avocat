@@ -37,14 +37,12 @@ fi
 if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)" ]; then
   php artisan key:generate --force --ansi
 fi
+# --- Migrate & Seed (seed only once using marker) ---
+echo "⏳ Running migrations..."
+  php artisan db:wipe
+  php artisan migrate:fresh  --seed 
 
-# --- Migrate & Seed (only if not done before) ---
-if ! php artisan migrate:status | grep -q 'No migrations'; then
-  echo "⏳ Running migrations and seeding..."
-  php artisan migrate --force --seed
-else
-  echo "✅ Migrations already applied."
-fi
+
 
 # --- Queue (optional) ---
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
