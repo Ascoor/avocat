@@ -1,21 +1,47 @@
 /* AVOCAT Design Tokens: All values are HSL-only */
 :root {
-  /* Base surfaces */
-  --background: 220 33% 98%;
-  --foreground: 224 36% 16%;
+  /* Core */
+  --bg: 220 33% 98%;
   --surface: 0 0% 100%;
+  --card: 0 0% 100%;
+  --border: 220 24% 90%;
+
+  --text: 224 36% 16%;
+  --muted: 220 16% 45%;
+
+  --primary: 224 62% 22%;
+  --primary-2: 224 72% 34%;
+  --accent: 42 80% 55%;
+
+  --success: 150 64% 40%;
+  --warning: 42 80% 55%;
+  --danger: 0 72% 54%;
+
+  /* Sidebar / Header */
+  --sidebar-bg: 224 34% 10%;
+  --sidebar-border: 224 30% 20%;
+  --sidebar-text: 210 40% 96%;
+  --sidebar-muted: 220 18% 75%;
+  --sidebar-active: 224 70% 58%;
+
+  /* Effects */
+  --shadow: 0 16px 30px -18px hsl(224 36% 16% / 0.22);
+  --shadow-soft: 0 10px 20px -14px hsl(224 36% 16% / 0.18);
+  --radius-xl: 18px;
+
+  /* Base surfaces */
+  --background: var(--bg);
+  --foreground: var(--text);
   --surface-raised: 220 33% 99%;
   --surface-overlay: 220 33% 97%;
 
   /* Cards & popovers */
-  --card: 0 0% 100%;
-  --card-foreground: 224 36% 16%;
+  --card-foreground: var(--text);
   --card-elevated: 220 33% 98%;
   --popover: 0 0% 100%;
-  --popover-foreground: 224 36% 16%;
+  --popover-foreground: var(--text);
 
   /* Borders & inputs */
-  --border: 220 24% 90%;
   --input: 220 24% 92%;
   --ring: 42 80% 55%;
 
@@ -29,11 +55,10 @@
   --accent-mint: 164 65% 42%;
   --accent-amber: 42 80% 55%;
 
-  --muted: 220 25% 94%;
-  --muted-foreground: 220 16% 45%;
+  --muted-foreground: var(--muted);
 
   --secondary: 220 24% 92%;
-  --secondary-foreground: 224 36% 20%;
+  --secondary-foreground: var(--text);
 
   --destructive: 0 72% 54%;
   --destructive-foreground: 0 0% 100%;
@@ -64,8 +89,8 @@
   --legal-primary-700: 224 62% 26%;
   --legal-primary-500: 224 60% 34%;
   --legal-primary-300: 224 55% 48%;
-  --legal-neutral-900: 224 36% 16%;
-  --legal-neutral-700: 220 16% 45%;
+  --legal-neutral-900: var(--text);
+  --legal-neutral-700: var(--muted);
   --legal-neutral-500: 220 14% 58%;
   --legal-neutral-300: 220 20% 80%;
   --legal-neutral-100: 220 30% 96%;
@@ -174,36 +199,55 @@
 }
 
 .dark {
-  --background: 224 45% 6%;
-  --foreground: 210 40% 96%;
+  --bg: 224 45% 6%;
   --surface: 224 40% 8%;
+  --card: 224 40% 10%;
+  --border: 224 30% 18%;
+
+  --text: 210 40% 96%;
+  --muted: 220 18% 75%;
+
+  --primary: 224 70% 58%;
+  --primary-2: 224 70% 66%;
+  --accent: 42 80% 60%;
+
+  --success: 150 64% 46%;
+  --warning: 42 80% 60%;
+  --danger: 0 68% 56%;
+
+  --sidebar-bg: 224 45% 7%;
+  --sidebar-border: 224 30% 18%;
+  --sidebar-text: 210 40% 96%;
+  --sidebar-muted: 220 18% 75%;
+  --sidebar-active: 224 70% 66%;
+
+  --shadow: 0 18px 36px -18px hsl(224 50% 4% / 0.7);
+  --shadow-soft: 0 14px 26px -18px hsl(224 50% 4% / 0.55);
+
+  --background: var(--bg);
+  --foreground: var(--text);
   --surface-raised: 224 40% 10%;
   --surface-overlay: 224 40% 12%;
 
-  --card: 224 40% 10%;
-  --card-foreground: 210 40% 96%;
+  --card-foreground: var(--text);
   --card-elevated: 224 40% 12%;
   --popover: 224 40% 10%;
-  --popover-foreground: 210 40% 96%;
+  --popover-foreground: var(--text);
 
-  --border: 224 30% 18%;
   --input: 224 30% 20%;
   --ring: 42 80% 60%;
 
-  --primary: 224 70% 58%;
   --primary-foreground: 224 45% 8%;
   --primary-glow: 224 70% 66%;
 
-  --accent: 42 80% 60%;
   --accent-foreground: 224 45% 8%;
   --accent-mint: 164 65% 48%;
   --accent-amber: 42 80% 60%;
 
-  --muted: 224 30% 14%;
-  --muted-foreground: 220 18% 70%;
+  --muted-foreground: var(--muted);
 
   --secondary: 224 30% 14%;
-  --secondary-foreground: 210 40% 92%;
+  --secondary-foreground: var(--text);
 
   --destructive: 0 68% 56%;
   --destructive-foreground: 210 40% 96%;
@@ -232,8 +276,8 @@
   --legal-primary-700: 224 70% 66%;
   --legal-primary-500: 224 60% 56%;
   --legal-primary-300: 224 45% 36%;
-  --legal-neutral-900: 210 40% 96%;
-  --legal-neutral-700: 220 18% 70%;
+  --legal-neutral-900: var(--text);
+  --legal-neutral-700: var(--muted);
   --legal-neutral-500: 220 16% 54%;
   --legal-neutral-300: 224 30% 22%;
   --legal-neutral-100: 224 30% 14%;

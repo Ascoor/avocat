@@ -21,6 +21,12 @@ const config: Config = {
     },
     extend: {
       colors: {
+        bg: "hsl(var(--bg))",
+        text: "hsl(var(--text))",
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        danger: "hsl(var(--danger))",
+        "primary-2": "hsl(var(--primary-2))",
         /* BASE SEMANTIC TOKENS */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -159,6 +165,10 @@ const config: Config = {
           "item-active": "hsl(var(--sidebar-item-active-bg))",
           "subitem-hover": "hsl(var(--sidebar-subitem-hover-bg))",
           "subitem-active": "hsl(var(--sidebar-subitem-active-bg))",
+          bg: "hsl(var(--sidebar-bg))",
+          text: "hsl(var(--sidebar-text))",
+          muted: "hsl(var(--sidebar-muted))",
+          active: "hsl(var(--sidebar-active))",
         },
 
         /* NAVY (Static scale) */
@@ -193,6 +203,8 @@ const config: Config = {
         "3xl": "var(--spacing-3xl)",
       },
       boxShadow: {
+        base: "var(--shadow)",
+        soft: "var(--shadow-soft)",
         "custom-sm": "var(--shadow-sm)",
         "custom-md": "var(--shadow-md)",
         "custom-lg": "var(--shadow-lg)",

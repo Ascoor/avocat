@@ -7,6 +7,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer base {
   :root {
     --font-sans: 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
@@ -19,7 +30,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-bg text-text;
     font-family: var(--font-sans);
   }
 

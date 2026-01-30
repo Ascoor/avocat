@@ -1,163 +1,100 @@
 import React, { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-
-import { NavLink } from "./NavLink";
-import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useSidebar } from "@/contexts/SidebarContext";
-import { sidebarGroups } from "@/config/sidebar";
-import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
-  const { t, isRTL } = useLanguage();
-  const { isCollapsed, toggleCollapsed } = useSidebar();
-  const [openGroups, setOpenGroups] = useState(["work_follow", "customer_service", "settings"]);
+  const { isRTL } = useLanguage();
+  const [open, setOpen] = useState(false);
 
-  const isOpen = !isCollapsed;
+  const items = useMemo(
+    () => [
+      { to: "/dashboard", label: "الرئيسية" },
+      { to: "/dashboard/cases", label: "القضايا" },
+      { to: "/dashboard/clients", label: "العملاء" },
+      { to: "/dashboard/courts", label: "المحاكم" },
+      { to: "/dashboard/settings", label: "الإعدادات" },
+    ],
+    [],
+  );
 
-  const groups = useMemo(() => sidebarGroups, []);
-
-  const toggleGroup = (groupKey) => {
-    setOpenGroups((prev) =>
-      prev.includes(groupKey) ? prev.filter((key) => key !== groupKey) : [...prev, groupKey],
-    );
-  };
+  const toggleSideClass = isRTL ? "right-4" : "left-4";
+  const panelSideClass = isRTL ? "right-0" : "left-0";
+  const borderSideClass = isRTL ? "border-l" : "border-r";
+  const closedTranslateClass = isRTL
+    ? "translate-x-full md:translate-x-0"
+    : "-translate-x-full md:translate-x-0";
 
   return (
-    <aside
-      className={cn(
-        "sidebar-shell fixed top-16 z-30 h-[calc(100vh-4rem)] border-sidebar-border bg-[hsl(var(--sidebar-background))] text-sidebar-foreground transition-all duration-300 md:static",
-        isRTL ? "right-0 border-l" : "left-0 border-r",
-        !isOpen && "md:w-[4.5rem]",
-      )}
-    >
-      <div className="flex h-full flex-col">
-        <div className="sidebar-brand flex items-center justify-between gap-3 p-4">
-          <div className={cn("flex items-center gap-3", !isOpen && "justify-center")}> 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-primary))]">
-              <span className="text-lg font-bold">A</span>
-            </div>
-            {isOpen && (
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold">Avocat</span>
-                <span className="text-xs text-sidebar-text-muted">{t("common.dashboard")}</span>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className={`md:hidden fixed bottom-4 ${toggleSideClass} z-50 rounded-2xl bg-primary px-4 py-3 text-white shadow-base transition active:scale-[0.99]`}
+      >
+        القائمة
+      </button>
+
+      <div
+        onClick={() => setOpen(false)}
+        className={`md:hidden fixed inset-0 z-40 bg-black/40 transition-opacity ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      />
+
+      <aside
+        className={[
+          "fixed md:sticky top-0 z-50 md:z-auto h-screen w-[280px] shrink-0",
+          panelSideClass,
+          borderSideClass,
+          "border-sidebar-border bg-sidebar-bg text-sidebar-text",
+          "transition-transform duration-300",
+          open ? "translate-x-0" : closedTranslateClass,
+        ].join(" ")}
+      >
+        <div className="flex h-full flex-col">
+          <div className="border-b border-sidebar-border/80 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-extrabold">Avocat</div>
+                <div className="text-sm text-sidebar-muted">Dashboard</div>
               </div>
-            )}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="md:hidden rounded-xl border border-sidebar-border px-3 py-2 text-sidebar-text"
+              >
+                إغلاق
+              </button>
+            </div>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleCollapsed}
-            className={cn("hidden h-8 w-8 md:flex", !isOpen && "rotate-180")}
-            aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
-          >
-            {isRTL ? (
-              isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />
-            ) : isOpen ? (
-              <ChevronLeft className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </Button>
+          <nav className="space-y-1 overflow-auto p-3">
+            {items.map((it) => (
+              <NavLink
+                key={it.to}
+                to={it.to}
+                end={it.to === "/dashboard"}
+                className={({ isActive }) =>
+                  [
+                    "flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold",
+                    "transition duration-200",
+                    isActive
+                      ? "bg-sidebar-active/20 text-sidebar-text ring-1 ring-sidebar-active/30"
+                      : "text-sidebar-muted hover:bg-sidebar-active/10 hover:text-sidebar-text",
+                  ].join(" ")
+                }
+                onClick={() => setOpen(false)}
+              >
+                <span className="h-2 w-2 rounded-full bg-sidebar-active shadow-soft" />
+                {it.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="mt-auto border-t border-sidebar-border/80 p-4 text-sm text-sidebar-muted">
+            © Avocat
+          </div>
         </div>
-
-        <nav className="sidebar-scroll flex-1 space-y-6 overflow-y-auto p-4">
-          {groups.map((group) => (
-            <div key={group.key} className="space-y-3">
-              {isOpen && (
-                <p className="sidebar-group-label text-[0.65rem]">{t(`sidebar.sections.${group.key}`)}</p>
-              )}
-
-              <div className="space-y-2">
-                {group.items.map((item) => {
-                  const hasChildren = Boolean(item.children?.length);
-                  if (!hasChildren) {
-                    const Icon = item.icon;
-                    return (
-                      <NavLink
-                        key={item.key}
-                        to={item.path}
-                        className={cn(
-                          "sidebar-nav-item group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all",
-                          !isOpen && "justify-center",
-                        )}
-                        activeClassName="bg-[hsl(var(--sidebar-item-active-bg))] text-[hsl(var(--sidebar-primary))] shadow-sidebar-item"
-                      >
-                        <Icon className="h-5 w-5" />
-                        {isOpen && <span className="truncate">{t(item.labelKey)}</span>}
-                      </NavLink>
-                    );
-                  }
-
-                  const isExpanded = isOpen && openGroups.includes(item.key);
-                  const Icon = item.icon;
-
-                  return (
-                    <div key={item.key} className="space-y-2">
-                      <button
-                        type="button"
-                        onClick={() => isOpen && toggleGroup(item.key)}
-                        className={cn(
-                          "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-sidebar-text-muted transition-all hover:text-sidebar-foreground",
-                          !isOpen && "justify-center",
-                        )}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {isOpen && (
-                          <>
-                            <span className="flex-1 truncate text-start">{t(item.labelKey)}</span>
-                            <ChevronDown className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")} />
-                          </>
-                        )}
-                      </button>
-
-                      <AnimatePresence initial={false}>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className={cn("space-y-1 overflow-hidden", isRTL ? "pr-3" : "pl-3")}
-                          >
-                            {item.children.map((child) => {
-                              const ChildIcon = child.icon;
-                              return (
-                                <NavLink
-                                  key={child.key}
-                                  to={child.path}
-                                  className={cn(
-                                    "sidebar-subitem flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium",
-                                  )}
-                                  activeClassName="is-active"
-                                >
-                                  <ChildIcon className="h-4 w-4" />
-                                  <span className="truncate">{t(child.labelKey)}</span>
-                                </NavLink>
-                              );
-                            })}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </nav>
-
-        {isOpen && (
-          <div className="sidebar-footer p-4">
-            <div className="rounded-xl border border-sidebar-border bg-[hsl(var(--sidebar-accent))] p-3 text-xs text-sidebar-foreground">
-              {t("common.supportNote")}
-            </div>
-          </div>
-        )}
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 
