@@ -6,7 +6,7 @@ import {
 } from '../../../services/api/procedures';
 import ProcedureModal from './Modals/ProcedureModal';
 import GlobalConfirmDeleteModal from '../../common/GlobalConfirmDeleteModal';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '../../../contexts/AlertContext';
 import { motion } from 'framer-motion';
 
 const LegalCaseProcedures = ({ legCaseId }) => {

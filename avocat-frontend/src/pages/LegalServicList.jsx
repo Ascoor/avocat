@@ -5,7 +5,7 @@ import { ServiceSection } from '../assets/icons/index';
 import TableComponent from '../components/common/TableComponent';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import GlobalConfirmDeleteModal from '../components/common/GlobalConfirmDeleteModal';
-import { useAlert } from '../context/AlertContext';
+import { useAlert } from '../contexts/AlertContext';
 
 const AddEditServiceModal = lazy(
   () => import('../components/LegalServices/AddEditServiceModal'),

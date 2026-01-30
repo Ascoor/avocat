@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchClients } from '../../store/clientsSlice';
-import { useThemeProvider } from '../../utils/ThemeContext';
+import { useThemeProvider } from '@/contexts/ThemeContext';
 import api from '../../services/api/axiosConfig';
 import DashboardSearch from './DashboardSearch';
 import MainCard from '../common/MainCard';
