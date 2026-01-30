@@ -6,7 +6,7 @@ import {
 } from '../../../services/api/services';
 import GlobalModal from '../../common/GlobalModal';
 import useAuth from '../../auth/AuthUser';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import { getLawyers } from '../../../services/api/lawyers';
 import { getProcedurePlaceTypes } from '../../../services/api/procedures';
 

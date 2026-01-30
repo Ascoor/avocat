@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getAllSessions } from '../../services/api/sessions.js';
-import { useSpinner } from '../../context/SpinnerContext';
+import { useSpinner } from '@/contexts/SpinnerContext';
 import SectionHeader from '../common/SectionHeader.jsx';
 import { SearchIcon, SearchSectionIcon } from '../../assets/icons/index.js';
 import DatePicker from 'react-datepicker';

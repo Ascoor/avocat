@@ -6,7 +6,7 @@ import {
 } from '../../../services/api/sessions';
 import SessionModal from './Modals/SessionModal';
 import GlobalConfirmDeleteModal from '../../common/GlobalConfirmDeleteModal';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import SessionDetailsModal from './Modals/SessionDetailsModal';
 import { motion } from 'framer-motion';
 const LegalCaseSessions = ({ legCaseId }) => {

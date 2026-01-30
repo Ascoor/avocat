@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAlert } from '../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import {
   getLegcaseTypes,
   getLegcaseSubTypes,

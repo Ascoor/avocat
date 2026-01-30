@@ -7,7 +7,7 @@ import {
 } from '../../services/api/services';
 import { getClients, getUnClients } from '../../services/api/clients';
 import useAuth from '../auth/AuthUser';
-import { useAlert } from '../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 const AddEditServiceModal = ({
   show,

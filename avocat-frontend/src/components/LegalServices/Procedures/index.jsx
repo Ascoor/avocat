@@ -3,7 +3,7 @@ import {
   deleteServiceProcedure,
   getServiceProceduresByServiceId,
 } from '../../../services/api/services';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import { BiPlusCircle, BiPencil, BiTrash } from 'react-icons/bi';
 import GlobalConfirmDeleteModal from '../../common/GlobalConfirmDeleteModal';
 import AddEditServiceProcedureModal from './AddEditServiceProcedureModal';

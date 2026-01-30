@@ -8,7 +8,7 @@ import {
 import { ExpenseIcon } from '../../assets/icons';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import SectionHeader from '../common/SectionHeader';
-import { useAlert } from '../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 import GlobalConfirmDeleteModal from '../common/GlobalConfirmDeleteModal';
 const ExpenseCategorys = () => {
