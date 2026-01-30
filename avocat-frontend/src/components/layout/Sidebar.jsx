@@ -6,6 +6,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {Button} from '@/components/ui/button'
 
 const COLLAPSED_WIDTH = 72;
 const EXPANDED_WIDTH = 272;

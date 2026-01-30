@@ -8,7 +8,7 @@ import ThemeToggle from '@/components/ui/theme-toggle';
 import LanguageToggle from '@/components/ui/language-toggle';
 import { cn } from '@/lib/utils';
 import useAuth from '@/components/auth/AuthUser';
-import { useAlert } from '@/context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 const Signup = () => {
   const { register, isAuthenticated } = useAuth();

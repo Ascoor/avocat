@@ -9,7 +9,7 @@ import DashboardPage from './pages/DashboardPage';
 import AuthRoutes from './components/layout/AuthRoutes';
 import useAuth from './components/auth/AuthUser';
 import { useLanguage } from './contexts/LanguageContext';
-import { SpinnerProvider } from './context/SpinnerContext';
+import { SpinnerProvider } from './contexts/SpinnerContext';
 
 
 const App = () => {

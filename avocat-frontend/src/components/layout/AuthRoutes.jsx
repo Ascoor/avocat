@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useSpinner } from '../../context/SpinnerContext';
+import { useSpinner } from '../../contexts/SpinnerContext';
 import GlobalSpinner from '../common/Spinners/GlobalSpinner';
 import { lazy } from 'react';
 
