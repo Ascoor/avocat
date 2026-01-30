@@ -16,6 +16,7 @@ const LegalCasesIndex = lazy(() => import('../../pages/LegalCaseList'));
 const LegCaseDetails = lazy(() => import('../LegalCases/LegalCaseDetails'));
 const ProfileUser = lazy(() => import('../Settings/ProfileUser'));
 const Procedures = lazy(() => import('../../pages/ProceduresList'));
+const LawyerList = lazy(() => import('../../pages/LawyerList'));
 const SearchCourtsApi = lazy(() => import('../../pages/SearchCourtsApi.jsx'));
 const LegalSessions = lazy(() => import('../Sessions/index.jsx'));
 
@@ -33,7 +34,7 @@ const AuthRoutes = () => {
   }, [location, showSpinner, hideSpinner]);
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-screen-lg overflow-hidden p-4">
+    <>
       {loading && <GlobalSpinner />}
 
       <Suspense fallback={<GlobalSpinner />}>
@@ -43,6 +44,7 @@ const AuthRoutes = () => {
           <Route path="legcase-services" element={<LegalServiceList />} />
           <Route path="court-search" element={<CourtSearch />} />
           <Route path="cases_setting" element={<CaseTypeSet />} />
+          <Route path="lawyers" element={<LawyerList />} />
           <Route path="legcases/show/:id" element={<LegCaseDetails />} />
           <Route path="profile/:userId" element={<ProfileUser />} />
           <Route path="legcases" element={<LegalCasesIndex />} />
@@ -57,7 +59,7 @@ const AuthRoutes = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-    </div>
+    </>
   );
 };
 

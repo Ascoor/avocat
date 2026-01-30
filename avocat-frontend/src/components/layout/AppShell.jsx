@@ -23,12 +23,9 @@ const AppShell = ({ children, title, className, showSidebarToggle = true }) => {
       <Header title={title} showSidebarToggle={showSidebarToggle} />
 
       <div className="dashboard-layout">
-        <aside
-          className="hidden md:block"
-          style={{ width: `${sidebarWidth}px` }}
-        >
-          <Sidebar />
-        </aside>
+          <Sidebar /> 
+ 
+        
 
         <div className="dashboard-content">
           <main className="dashboard-scroll">
