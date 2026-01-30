@@ -1,36 +1,76 @@
-import React, { useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import ThemeToggle from '@/components/ui/theme-toggle';
-import LanguageToggle from '@/components/ui/language-toggle';
-import { cn } from '@/lib/utils';
-import useAuth from '@/components/auth/AuthUser';
-import { useAlert } from '@/contexts/AlertContext';
+import React, { useMemo, useState } from "react";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import ThemeToggle from "@/components/ui/theme-toggle";
+import LanguageToggle from "@/components/ui/language-toggle";
+import { cn } from "@/lib/utils";
+import useAuth from "@/components/auth/AuthUser";
+import { useAlert } from "@/contexts/AlertContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import AuthLayout from "@/components/layout/AuthLayout";
 
 const Signup = () => {
   const { register, isAuthenticated } = useAuth();
   const { triggerAlert } = useAlert();
+  const { t, isRTL } = useLanguage();
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [searchParams] = useSearchParams();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+
+  const heroCopy = useMemo(() => {
+    if (isRTL) {
+      return {
+        badge: "ابدأ رحلتك القانونية",
+        headline: "انضم إلى منصة أفوكات الآن",
+        subheadline: "أنشئ حسابك للوصول إلى فريقك القانوني وإدارة ملفاتك بسرعة وأمان.",
+        highlights: [
+          { icon: ShieldCheck, text: "تهيئة فورية لملفاتك وقضاياك" },
+          { icon: UserPlus, text: "دعم مباشر من فريق الاستشارات" },
+        ],
+        stats: [
+          { value: "+١٥", label: "عام خبرة" },
+          { value: "%٩٨", label: "رضا العملاء" },
+        ],
+      };
+    }
+
+    return {
+      badge: "Start your legal journey",
+      headline: "Join Avocat in minutes",
+      subheadline: "Create your account to access your legal team and manage your files with clarity.",
+      highlights: [
+        { icon: ShieldCheck, text: "Instant workspace setup for your cases" },
+        { icon: UserPlus, text: "Concierge support from our legal advisors" },
+      ],
+      stats: [
+        { value: "15+", label: "Years of Practice" },
+        { value: "98%", label: "Client Satisfaction" },
+      ],
+    };
+  }, [isRTL]);
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    const nextUrl = searchParams.get("next") || "/dashboard";
+    return <Navigate to={nextUrl} replace />;
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
+    setError("");
 
     if (password !== confirmPassword) {
-      setError('كلمتا المرور غير متطابقتين.');
+      setError(t("auth.signup.password_mismatch"));
       return;
     }
 
@@ -39,121 +79,132 @@ const Signup = () => {
     setIsSubmitting(false);
 
     if (success) {
-      triggerAlert('success', 'تم إنشاء الحساب بنجاح!');
-      navigate('/dashboard', { replace: true });
+      triggerAlert("success", t("auth.signup.success"));
+      const nextUrl = searchParams.get("next") || "/dashboard";
+      navigate(nextUrl, { replace: true });
       return;
     }
 
-    setError('حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.');
-    triggerAlert('error', 'حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.');
+    setError(t("auth.signup.error"));
+    triggerAlert("error", t("auth.signup.error"));
   };
 
+  const toolbar = (
+    <>
+      <ThemeToggle tone="light" />
+      <LanguageToggle />
+    </>
+  );
+
   return (
-    <div className="relative min-h-screen bg-gradient-night text-white">
-      <div className="absolute inset-0 bg-black/60" />
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-16">
-        <div className="flex w-full max-w-4xl items-center justify-between gap-4">
-          <Link
-            to="/"
-            className={cn(
-              'text-sm font-medium text-white/80 transition hover:text-white',
-            )}
-          >
-            Back to home
-          </Link>
-          <div className="flex items-center gap-2">
-            <LanguageToggle />
-            <ThemeToggle tone="hero" />
+    <AuthLayout
+      heroSide="right"
+      toolbar={toolbar}
+      hero={{
+        badge: (
+          <>
+            <Sparkles className="h-4 w-4" />
+            <span>{heroCopy.badge}</span>
+          </>
+        ),
+        title: heroCopy.headline,
+        description: heroCopy.subheadline,
+        highlights: heroCopy.highlights.map((highlight, idx) => ({
+          icon: <highlight.icon key={`hi-${idx}`} className="h-5 w-5" />,
+          text: highlight.text,
+        })),
+        stats: heroCopy.stats,
+      }}
+      card={{
+        icon: (
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
+            <UserPlus className="h-6 w-6 text-[hsl(var(--primary))]" />
           </div>
-        </div>
+        ),
+        title: t("auth.signup.title"),
+        description: t("auth.signup.subtitle"),
+        content: (
+          <div className="space-y-5">
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-lg border border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 px-4 py-3 text-sm text-[hsl(var(--destructive))]"
+              >
+                {error}
+              </motion.div>
+            )}
 
-        <div className="mt-10 w-full max-w-md rounded-3xl border border-white/10 bg-slate-950/70 p-8 shadow-xl backdrop-blur">
-          <h1 className="text-center text-3xl font-bold text-white">
-            إنشاء حساب
-          </h1>
-          <p className="mt-2 text-center text-sm text-white/70">
-            أنشئ حسابك للوصول إلى لوحة التحكم.
-          </p>
-
-          {error && (
-            <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-            <div className="space-y-2 text-right">
-              <Label htmlFor="full-name">الاسم الكامل</Label>
-              <Input
-                id="full-name"
-                type="text"
-                placeholder="الاسم بالكامل"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                required
-                className="bg-white/5 text-white placeholder:text-white/50"
-              />
-            </div>
-            <div className="space-y-2 text-right">
-              <Label htmlFor="signup-email">البريد الإلكتروني</Label>
-              <Input
-                id="signup-email"
-                type="email"
-                placeholder="name@email.com"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                required
-                className="bg-white/5 text-white placeholder:text-white/50"
-              />
-            </div>
-            <div className="space-y-2 text-right">
-              <Label htmlFor="signup-password">كلمة المرور</Label>
-              <Input
-                id="signup-password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-                className="bg-white/5 text-white placeholder:text-white/50"
-              />
-            </div>
-            <div className="space-y-2 text-right">
-              <Label htmlFor="confirm-password">تأكيد كلمة المرور</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                required
-                className="bg-white/5 text-white placeholder:text-white/50"
-              />
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <Checkbox id="terms" />
-                <Label htmlFor="terms" className="text-white/80">
-                  أوافق على الشروط
-                </Label>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="full-name">{t("auth.signup.name")}</Label>
+                <Input
+                  id="full-name"
+                  type="text"
+                  placeholder={t("auth.signup.name_placeholder")}
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  required
+                />
               </div>
-              <Link to="/login" className="text-white/80 hover:text-white">
-                لديك حساب؟ تسجيل الدخول
+              <div className="space-y-2">
+                <Label htmlFor="signup-email">{t("auth.signup.email")}</Label>
+                <Input
+                  id="signup-email"
+                  type="email"
+                  placeholder={t("auth.signup.email_placeholder")}
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signup-password">{t("auth.signup.password")}</Label>
+                <Input
+                  id="signup-password"
+                  type="password"
+                  placeholder={t("auth.signup.password_placeholder")}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">{t("auth.signup.confirm_password")}</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  placeholder={t("auth.signup.confirm_password_placeholder")}
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <Checkbox id="terms" />
+                  <Label htmlFor="terms" className="text-muted-foreground">
+                    {t("auth.signup.terms")}
+                  </Label>
+                </div>
+                <Link to="/login" className="text-primary hover:underline">
+                  {t("auth.signup.have_account")}
+                </Link>
+              </div>
+              <Button type="submit" variant="premium" size="lg" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? t("auth.signup.loading") : t("auth.signup.submit")}
+                <ArrowRight className={cn("ml-2 h-4 w-4", isRTL && "rotate-180 mr-2 ml-0")} />
+              </Button>
+            </form>
+            <div className="text-center text-sm text-muted-foreground">
+              <Link to="/" className="hover:text-foreground">
+                {isRTL ? `← ${t("common.backToHome")}` : `← ${t("common.backToHome")}`}
               </Link>
             </div>
-            <Button
-              type="submit"
-              variant="premium"
-              size="lg"
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'جارٍ إنشاء الحساب...' : 'إنشاء حساب'}
-            </Button>
-          </form>
-        </div>
-      </div>
-    </div>
+          </div>
+        ),
+      }}
+    />
   );
 };
 

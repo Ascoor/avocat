@@ -31,25 +31,24 @@ import { cn } from "@/lib/utils";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [mirrored, setMirrored] = useState(false);
   const [formError, setFormError] = useState(null);
 
-  const { login, isAuthenticated, loading: authLoading } = useAuth();
-  const { t, isRTL, language } = useLanguage();
+  const { login, isAuthenticated, isInitializing } = useAuth();
+  const { t, isRTL } = useLanguage();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      navigate("/dashboard", { replace: true });
+    if (!isInitializing && isAuthenticated) {
+      const nextUrl = searchParams.get("next") || "/dashboard";
+      navigate(nextUrl, { replace: true });
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, isInitializing, navigate, searchParams]);
 
   useEffect(() => {
     if (searchParams.get("registered") === "1") {
@@ -71,8 +70,7 @@ const Login = () => {
       return {
         badge: "بوابة العملاء الآمنة",
         headline: "مرحباً بعودتك إلى بوابتك القانونية",
-        subheadline:
-          "ادخل إلى لوحة التحكم لمتابعة قضاياك والتواصل مع فريقنا القانوني المتخصص.",
+        subheadline: "ادخل إلى لوحة التحكم لمتابعة قضاياك والتواصل مع فريقنا القانوني المتخصص.",
         highlights: [
           { icon: ShieldCheck, text: "حماية بيانات مشفرة بأعلى المعايير الدولية" },
           { icon: Users, text: "تواصل مباشر مع المحامين والمستشارين" },
@@ -88,8 +86,7 @@ const Login = () => {
     return {
       badge: "Secure Client Portal",
       headline: "Welcome Back to Your Legal Hub",
-      subheadline:
-        "Access your dashboard to track cases, communicate with our legal team, and manage your matters.",
+      subheadline: "Access your dashboard to track cases, communicate with our legal team, and manage your matters.",
       highlights: [
         { icon: ShieldCheck, text: "Enterprise-grade encryption protecting your sensitive data" },
         { icon: Users, text: "Direct communication with attorneys and legal advisors" },
@@ -104,7 +101,6 @@ const Login = () => {
 
   const shouldReverse = useMemo(() => (isRTL ? !mirrored : mirrored), [isRTL, mirrored]);
 
-  // ✅ no AuthHighlight types in JSX; just provide the shape AuthLayout needs
   const heroHighlights = useMemo(() => {
     return heroCopy.highlights.map(({ icon: Icon, text }, idx) => ({
       icon: <Icon key={`hi-icon-${idx}`} className="h-5 w-5" />,
@@ -124,7 +120,10 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const success = await login(email, password);
+      if (!success) {
+        throw new Error(t("auth.login.error"));
+      }
 
       toast({
         title: t("auth.login.success_title") || t("common.success"),
@@ -134,13 +133,8 @@ const Login = () => {
       const nextUrl = searchParams.get("next") || "/dashboard";
       navigate(nextUrl, { replace: true });
     } catch (error) {
-      const message =
-        error && typeof error === "object" && "message" in error
-          ? error.message
-          : t("auth.login.error");
-
+      const message = error?.message || t("auth.login.error");
       setFormError(message);
-
       toast({
         title: t("common.error"),
         description: message,
@@ -157,7 +151,7 @@ const Login = () => {
         type="button"
         variant="outline"
         size="sm"
-        className="border-border/50 bg-background/70 text-xs font-medium backdrop-blur hidden sm:flex"
+        className="hidden text-xs sm:flex"
         onClick={() => setMirrored((prev) => !prev)}
         aria-pressed={mirrored}
         aria-label={t("auth.login.swap_layout_aria")}
@@ -171,7 +165,7 @@ const Login = () => {
     </>
   );
 
-  if (authLoading) {
+  if (isInitializing) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -199,8 +193,8 @@ const Login = () => {
       }}
       card={{
         icon: (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-            <UserCheck className="h-6 w-6 text-primary" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
+            <UserCheck className="h-6 w-6 text-[hsl(var(--primary))]" />
           </div>
         ),
         title: t("auth.login.title"),
@@ -211,7 +205,7 @@ const Login = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-destructive/10 border border-destructive/30 text-destructive"
+                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 px-3 py-2 text-sm text-[hsl(var(--destructive))]"
               >
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 <span>{formError}</span>
@@ -219,7 +213,6 @@ const Login = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
                   {t("auth.login.email")}
@@ -229,7 +222,7 @@ const Login = () => {
                   <Mail
                     className={cn(
                       "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
-                      isRTL ? "right-3" : "left-3"
+                      isRTL ? "right-3" : "left-3",
                     )}
                   />
                   <Input
@@ -245,7 +238,6 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Password */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-sm font-medium">
@@ -261,7 +253,7 @@ const Login = () => {
                   <Lock
                     className={cn(
                       "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
-                      isRTL ? "right-3" : "left-3"
+                      isRTL ? "right-3" : "left-3",
                     )}
                   />
 
@@ -279,15 +271,13 @@ const Login = () => {
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
+                    size="icon"
                     className={cn(
-                      "absolute top-1/2 -translate-y-1/2 h-8 w-8 p-0",
-                      isRTL ? "left-1" : "right-1"
+                      "absolute top-1/2 -translate-y-1/2 h-8 w-8",
+                      isRTL ? "left-1" : "right-1",
                     )}
                     onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={
-                      showPassword ? t("auth.login.hide_password") : t("auth.login.show_password")
-                    }
+                    aria-label={showPassword ? t("auth.login.hide_password") : t("auth.login.show_password")}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -298,20 +288,14 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Remember */}
               <div className="flex items-center gap-2">
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked === true)}
-                />
-                <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                  {language === "ar" ? "تذكرني" : "Remember me"}
+                <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(checked === true)} />
+                <Label htmlFor="remember" className="cursor-pointer text-sm text-muted-foreground">
+                  {t("auth.login.remember")}
                 </Label>
               </div>
 
-              {/* Submit */}
-              <Button type="submit" className="w-full h-11 font-semibold" disabled={loading}>
+              <Button type="submit" className="h-11 w-full font-semibold" disabled={loading}>
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
@@ -320,60 +304,49 @@ const Login = () => {
                 ) : (
                   <>
                     {t("auth.login.submit")}
-                    <ArrowRight className={cn("ml-2 h-4 w-4", isRTL && "rotate-180")} />
+                    <ArrowRight className={cn("ml-2 h-4 w-4", isRTL && "rotate-180 mr-2 ml-0")} />
                   </>
                 )}
               </Button>
             </form>
 
-            {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  {language === "ar" ? "أو" : "or"}
-                </span>
+                <span className="bg-[hsl(var(--card))] px-2 text-muted-foreground">{t("common.or")}</span>
               </div>
             </div>
 
-            {/* Links */}
             <div className="space-y-3 text-center text-sm">
               <p className="text-muted-foreground">
-                {t("auth.login.no_account")}{" "}
+                {t("auth.login.no_account")} {" "}
                 <Link to="/signup" className="font-medium text-primary hover:underline">
                   {t("auth.signup.submit")}
                 </Link>
               </p>
 
               <p>
-                <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-                  {language === "ar" ? "← العودة للصفحة الرئيسية" : "← Back to home"}
+                <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
+                  {isRTL ? `← ${t("common.backToHome")}` : `← ${t("common.backToHome")}`}
                 </Link>
               </p>
             </div>
 
-            {/* Security Notice */}
             <div
               className={cn(
-                "flex items-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-3 mt-4",
-                isRTL ? "flex-row-reverse text-right" : ""
+                "mt-4 flex items-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-3",
+                isRTL ? "flex-row-reverse text-right" : "",
               )}
             >
-              <div className="flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
 
-              <div className="text-xs space-y-0.5">
-                <p className="font-semibold text-foreground">
-                  {language === "ar" ? "بوابة آمنة" : "Secure Portal"}
-                </p>
-                <p className="text-muted-foreground">
-                  {language === "ar"
-                    ? "بياناتك محمية بتشفير SSL 256-bit"
-                    : "Your data is protected with 256-bit SSL encryption"}
-                </p>
+              <div className="space-y-0.5 text-xs">
+                <p className="font-semibold text-foreground">{t("auth.security.title")}</p>
+                <p className="text-muted-foreground">{t("auth.security.subtitle")}</p>
               </div>
             </div>
           </div>
