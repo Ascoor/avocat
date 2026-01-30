@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import GlobalModal from '../../common/GlobalModal';
 import api from '../../../services/api/axiosConfig';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 const AddEditClient = ({ client = {}, isOpen, onClose, onSaved }) => {
   const [formData, setFormData] = useState({

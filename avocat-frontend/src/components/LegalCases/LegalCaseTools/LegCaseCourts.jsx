@@ -5,7 +5,7 @@ import {
   getCourts,
   removeLegalCaseCourt,
 } from '../../../services/api/legalCases';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import GlobalConfirmDeleteModal from '../../common/GlobalConfirmDeleteModal';
 import CourtModal from './Modals/CourtModal';
 import CourtList from './Modals/CourtList';

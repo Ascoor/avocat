@@ -5,7 +5,7 @@ import {
   removeLegalCaseClient,
 } from '../../../services/api/legalCases';
 import { getClients } from '../../../services/api/clients';
-import { useAlert } from '../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import GlobalConfirmDeleteModal from '../../common/GlobalConfirmDeleteModal';
 
 export default function LegalCaseClients({
