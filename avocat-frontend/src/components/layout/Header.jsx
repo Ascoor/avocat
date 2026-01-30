@@ -6,8 +6,7 @@ import ThemeToggle from "@/components/ui/theme-toggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSidebar } from "@/contexts/SidebarContext";
-import { cn } from "@/lib/utils";
-import BrandLogo from "../common/BrandLogo";
+import { cn } from "@/lib/utils"; 
 
 const Header = ({ title, className, showSidebarToggle = true }) => {
   const { language, setLanguage, t, isRTL } = useLanguage();
@@ -59,14 +58,14 @@ const Header = ({ title, className, showSidebarToggle = true }) => {
             </Button>
           )}
 
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <BrandLogo variant="icon" className="h-8 w-8 md:hidden" />
             {title && (
               <h1 className="hidden text-lg font-semibold text-foreground sm:block">
                 {title}
               </h1>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* يمين الهيدر */}

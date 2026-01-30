@@ -1,0 +1,20 @@
+{
+  "batch": [
+    {
+      "id": "case-outline_24",
+      "name": "Case File",
+      "style": "outline",
+      "prompt_en": "Create a simple, professional vector SVG icon of a case file folder for a legal case-management web app. Style: minimal outline, 24x24 viewBox, stroke weight equivalent to 1.5px at 24px, rounded corners (2px), single-color stroke, optimized SVG path only.",
+      "prompt_ar": "صمم أيقونة متجهة بسيطة ومهنية لملف قضية لتطبيق إدارة القضايا القانونية. نمط خطي، مساحة 24×24، سماكة خط 1.5px، زوايا مدوّرة، مخرجات SVG محسنة فقط.",
+      "output_format": "svg"
+    },
+    {
+      "id": "gavel-hero_2048",
+      "name": "Gavel Hero",
+      "style": "3d",
+      "prompt_en": "Create a high-quality 3D-styled icon of a judge's gavel for a legal product hero image. Subtle extrusion, matte metallic material, top-left soft lighting, soft shadow (blur 20px), transparent background, color base Deep Indigo (#2C3E9F). Output PNG 2048x2048.",
+      "prompt_ar": "أنشئ أيقونة ثلاثية الأبعاد عالية الجودة لمطرقة القاضي للاستخدام في واجهات hero. بروز خفيف، مادة شبه معدنية، إضاءة من أعلى اليسار، ظل ناعم، خلفية شفافة، اللون الأساسي أزرق نيلي (#2C3E9F). الناتج PNG بدقة 2048×2048.",
+      "output_format": "png"
+    }
+  ]
+}

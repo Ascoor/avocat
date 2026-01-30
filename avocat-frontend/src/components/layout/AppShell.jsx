@@ -1,7 +1,7 @@
 import React from "react";
-import { Sidebar } from "./Sidebar";
+import  Sidebar  from "./Sidebar";
 import MobileDrawer from "./MobileDrawer";
-import { Header } from "./Header";
+import  Header  from "./Header";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { cn } from "@/lib/utils";

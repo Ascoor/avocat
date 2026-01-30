@@ -1,0 +1,55 @@
+{
+  "$schema": "https://example.com/schemas/icon-manifest.json",
+  "version": "1.0.0",
+  "generatedAt": "2024-05-07T00:00:00Z",
+  "icons": [
+    {
+      "id": "case-outline",
+      "name": "Case File",
+      "category": "cases",
+      "style": "outline",
+      "sizes": [16, 20, 24, 32],
+      "stroke": 1.5,
+      "file": "icons/svg/outline/case-outline_24.svg",
+      "tags": ["case", "file", "folder"],
+      "rtl_mirror": false,
+      "accessible": true
+    },
+    {
+      "id": "gavel-outline",
+      "name": "Judge Gavel",
+      "category": "legal",
+      "style": "outline",
+      "sizes": [16, 20, 24, 32],
+      "stroke": 1.5,
+      "file": "icons/svg/outline/gavel-outline_24.svg",
+      "tags": ["gavel", "judge", "decision"],
+      "rtl_mirror": false,
+      "accessible": true
+    },
+    {
+      "id": "scales-outline",
+      "name": "Scales of Justice",
+      "category": "legal",
+      "style": "outline",
+      "sizes": [16, 20, 24, 32],
+      "stroke": 1.5,
+      "file": "icons/svg/outline/scales-outline_24.svg",
+      "tags": ["justice", "balance", "law"],
+      "rtl_mirror": false,
+      "accessible": true
+    },
+    {
+      "id": "courthouse-outline",
+      "name": "Courthouse",
+      "category": "legal",
+      "style": "outline",
+      "sizes": [16, 20, 24, 32],
+      "stroke": 1.5,
+      "file": "icons/svg/outline/courthouse-outline_24.svg",
+      "tags": ["courthouse", "court", "building"],
+      "rtl_mirror": false,
+      "accessible": true
+    }
+  ]
+}
