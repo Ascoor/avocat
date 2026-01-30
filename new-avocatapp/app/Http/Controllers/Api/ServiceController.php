@@ -20,7 +20,7 @@ class ServiceController extends Controller
             'unclients',
             'createdBy',
             'updatedBy',
-            'procedures',
+            'serviceProcedures',
             'serviceType'
 
 

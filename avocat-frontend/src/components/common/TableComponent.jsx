@@ -1,262 +1,371 @@
-import React, { useState, useMemo } from 'react';
-import { MdEdit, MdVisibility } from 'react-icons/md';
-import { FaTrashAlt, FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-import { useSpring, animated } from '@react-spring/web';
-import API_CONFIG from '../../config/config';
+import React, { useEffect, useMemo, useState } from "react";
+import { MdEdit, MdVisibility } from "react-icons/md";
+import { FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 
-const AnimatedRow = ({
-  row,
-  rowIndex,
-  onEdit,
-  onDelete,
-  onView,
-  headers,
-  customRenderers,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const springProps = useSpring({
-    scale: isHovered ? 1.02 : 1,
-    boxShadow: isHovered ? '0 4px 8px rgba(0,0,0,0.1)' : '0 0 0 rgba(0,0,0,0)',
-    config: { duration: 200 },
-  });
+/**
+ * TableComponent
+ * - Search input ONLY (search across ALL columns)
+ * - ✅ no scope select
+ * - ✅ searches all headers (except searchable:false)
+ * - ✅ optional default "إضافة قضية جديدة" button (via onAdd / addLabel)
+ *
+ * Header shape:
+ * {
+ *   key: string,
+ *   text: string,
+ *   searchable?: boolean,   // default true
+ *   sortable?: boolean,     // default true
+ *   getValue?: (row) => any // used for sorting + search (fallback row[key])
+ *   tdClassName?: string,
+ *   thClassName?: string,
+ * }
+ */
+const normalize = (v) => {
+  if (v === null || v === undefined) return "";
 
-  const rowClass = `text-gray-800 dark:text-gray-200 hover:bg-gradient-orange-light dark:hover:bg-gradient-blue-dark   dark:hover:bg-gray-700 transition  duration-300 border-b border-gray-200 dark:border-gray-600 ${isHovered ? 'bg-gray-50 dark:bg-gray-700' : ''}`;
+  let s = String(v);
 
-  return (
-    <animated.tr
-      style={{
-        ...springProps,
-        transform: springProps.scale.to((s) => `scale(${s})`),
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={rowClass}
-    >
-      {onView && (
-        <td className="px-4 py-2 text-center">
-          <button
-            onClick={() => onView(row.id)}
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
-          >
-            <MdVisibility />
-          </button>
-        </td>
-      )}
-      {headers.map((header) => (
-        <td
-          key={`${rowIndex}-${header.key}`}
-          className="px-4 py-2 text-center text-sm md:text-base lg:text-lg"
-        >
-          {header.key === 'image' ? (
-            row.image ? (
-              <img
-                src={`${API_CONFIG.baseURL}${row.image}`}
-                className="rounded-full w-12 h-12 md:w-16 md:h-16 mx-auto shadow"
-                alt="Row image"
-              />
-            ) : (
-              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto bg-gray-600 rounded-full flex items-center justify-center text-gray-300">
-                N/A
-              </div>
-            )
-          ) : customRenderers && customRenderers[header.key] ? (
-            customRenderers[header.key](row)
-          ) : (
-            row[header.key]
-          )}
-        </td>
-      ))}
-      <td className="px-4 py-2 text-center">
-        <button
-          onClick={() => onEdit(row.id)}
-          className="text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 transition-colors duration-300"
-        >
-          <MdEdit />
-        </button>
-      </td>
-      <td className="px-4 py-2 text-center">
-        <button
-          onClick={() => onDelete(row)}
-          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300"
-        >
-          <FaTrashAlt />
-        </button>
-      </td>
-    </animated.tr>
-  );
+  // لو Object بالغلط
+  if (typeof v === "object") {
+    try { s = JSON.stringify(v); } catch { s = String(v); }
+  }
+
+  return s
+    .toLowerCase()
+    // إزالة التشكيل + تطويل
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+    // توحيد أشكال الألف والهمزات
+    .replace(/[إأآٱ]/g, "ا")
+    // توحيد الياء/الألف المقصورة
+    .replace(/[ى]/g, "ي")
+    // توحيد الهاء/التاء المربوطة (اختياري)
+    .replace(/[ة]/g, "ه")
+    // مسافات زائدة
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+const defaultGetValue = (row, header) => {
+  if (!row || !header) return "";
+  if (typeof header.getValue === "function") return header.getValue(row);
+  return row?.[header.key];
+};
+
+const toComparable = (v) => {
+  if (v === null || v === undefined) return "";
+  // If it's a number or numeric string
+  const n = typeof v === "number" ? v : Number(String(v).replace(/,/g, ""));
+  if (!Number.isNaN(n) && String(v).trim() !== "") return n;
+  return String(v);
+};
+
+const collator = new Intl.Collator("ar", { numeric: true, sensitivity: "base" });
+
+const compareValues = (a, b) => {
+  const av = toComparable(a);
+  const bv = toComparable(b);
+
+  if (typeof av === "number" && typeof bv === "number") return av - bv;
+  return collator.compare(String(av), String(bv));
 };
 
 const TableComponent = ({
-  data,
-  headers,
-  customRenderers,
-  onDelete,
-  onEdit,
+  data = [],
+  headers = [],
+  customRenderers = {},
+
   onView,
+  onEdit,
+  onDelete,
+
+  // optional default add button
+  onAdd,
+  addLabel = "إضافة قضية جديدة",
+  addButtonClassName = "",
+
+  // optional custom add button renderer (if you want full control)
   renderAddButton,
+
+  // pagination
+  itemsPerPage = 10,
+
+  // labels
+  searchPlaceholder = "ابحث",
+  emptyLabel = "لا يوجد بيانات",
+
+  // optional row key
+  rowKey = "id",
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+
   const [sortKey, setSortKey] = useState(null);
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortDirection, setSortDirection] = useState("asc");
+
+  const searchableHeaders = useMemo(() => {
+    return headers.filter((h) => h?.key && h.searchable !== false && h.key !== "actions");
+  }, [headers]);
+
+  // Reset page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const filteredData = useMemo(() => {
-    const keywords = searchQuery.trim().toLowerCase().split(/\s+/);
+    const q = normalize(searchQuery);
+    if (!q) return data;
 
-    return data.filter((item) => {
-      return keywords.every((keyword) => {
-        return headers.some(
-          (header) =>
-            header.key !== 'actions' &&
-            item[header.key]?.toString().toLowerCase().includes(keyword),
-        );
+    const keywords = q.split(" ").filter(Boolean);
+
+    return data.filter((row) => {
+      // AND across keywords, each keyword must appear in ANY searchable column
+      return keywords.every((kw) => {
+        return searchableHeaders.some((header) => {
+          const raw = defaultGetValue(row, header);
+          const text = normalize(raw);
+          return text.includes(kw);
+        });
       });
     });
-  }, [searchQuery, data, headers]);
+  }, [data, searchQuery, searchableHeaders]);
 
   const sortedData = useMemo(() => {
-    const sorted = [...filteredData].sort((a, b) => {
-      const aValue = a[sortKey] || '';
-      const bValue = b[sortKey] || '';
+    if (!sortKey) return filteredData;
 
-      if (sortDirection === 'asc') {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
-      }
-    });
-    return sorted;
-  }, [filteredData, sortKey, sortDirection]);
+    const headers = [
+      {
+        key: "fullName",
+        text: "الاسم",
+        getValue: (row) => row.fullName, // أو row.person?.fullName
+        searchable: true,
+      },
+      { key: "caseNumber", text: "رقم القضية" },
+      { key: "role", text: "الصفة" },
+      { key: "type", text: "النوع" },
+      { key: "court", text: "المحكمة" },
+      { key: "status", text: "الحالة" },
+    ];
+    
+    const dir = sortDirection === "asc" ? 1 : -1;
+
+    // stable-ish sort by keeping original index
+    return filteredData
+      .map((row, idx) => ({ row, idx }))
+      .sort((a, b) => {
+        const aVal = defaultGetValue(a.row, header);
+        const bVal = defaultGetValue(b.row, header);
+        const cmp = compareValues(aVal, bVal);
+        if (cmp !== 0) return cmp * dir;
+        return a.idx - b.idx;
+      })
+      .map((x) => x.row);
+  }, [filteredData, headers, sortKey, sortDirection]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedData.length / itemsPerPage));
 
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return sortedData.slice(startIndex, startIndex + itemsPerPage);
-  }, [currentPage, sortedData, itemsPerPage]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const safePage = Math.min(Math.max(1, currentPage), totalPages);
+    const start = (safePage - 1) * itemsPerPage;
+    return sortedData.slice(start, start + itemsPerPage);
+  }, [sortedData, currentPage, totalPages, itemsPerPage]);
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
+    if (newPage < 1 || newPage > totalPages) return;
+    setCurrentPage(newPage);
   };
 
   const handleSort = (key) => {
+    const header = headers.find((h) => h.key === key);
+    if (!header || header.sortable === false) return;
+
     if (key === sortKey) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
+
+  const renderAdd = () => {
+    if (typeof renderAddButton === "function") return renderAddButton();
+    if (!onAdd) return null;
+
+    return (
+      <button
+        type="button"
+        onClick={onAdd}
+        className={[
+          "px-4 py-2 rounded-lg font-semibold",
+          "bg-violet-600 hover:bg-violet-700 text-white",
+          "transition duration-200 active:scale-[0.99]",
+          addButtonClassName,
+        ].join(" ")}
+      >
+        {addLabel}
+      </button>
+    );
+  };
+
+  const showView = typeof onView === "function";
+  const showEdit = typeof onEdit === "function";
+  const showDelete = typeof onDelete === "function";
+
   return (
-    <section className="container mx-auto p-6  dark:bg-gray-800 rounded-lg shadow-md font-['tajawal']">
-      <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center">
-        {renderAddButton && (
-          <div className="mb-4 md:mb-0">{renderAddButton()}</div>
-        )}
-        <div className="w-full md:w-auto">
+    <section className="container mx-auto p-6 dark:bg-gray-800 rounded-lg shadow-md font-['tajawal']">
+      <div className="w-full mb-6 flex flex-col md:flex-row gap-3 md:gap-4 md:justify-between md:items-center">
+        <div className="w-full md:w-auto">{renderAdd()}</div>
+
+        <div className="w-full md:w-[360px]">
           <input
             type="text"
-            placeholder="ابحث"
-            className="border rounded-lg px-4 py-2 w-full focus:ring focus:ring-violet-400 dark:bg-gray-700 dark:text-gray-300"
+            value={searchQuery}
+            placeholder={searchPlaceholder}
+            className="border rounded-lg px-4 py-2 w-full focus:ring focus:ring-violet-400 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
+
       {filteredData.length > 0 ? (
         <div className="w-full overflow-x-auto">
           <table className="w-full table-auto shadow-md">
             <thead className="text-sm font-semibold tracking-wide text-center text-gray-100 bg-blue-500 dark:bg-gradient-night dark:text-avocat-orange-light uppercase border-b border-gray-600">
               <tr>
-                {onView && <th className="px-4 py-3">عرض</th>}
-                {headers.map((header) => (
-                  <th
-                    key={header.key}
-                    className="px-4 py-3 cursor-pointer"
-                    onClick={() => handleSort(header.key)}
-                  >
-                    {header.text}
-                    {sortKey === header.key &&
-                      (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-                  </th>
-                ))}
-                <th className="px-4 py-3">تعديل</th>
-                <th className="px-4 py-3">حذف</th>
+                {showView && <th className="px-4 py-3 whitespace-nowrap">عرض</th>}
+
+                {headers.map((header) => {
+                  const isSortable = header.sortable !== false;
+                  const isActive = sortKey === header.key;
+
+                  return (
+                    <th
+                      key={header.key}
+                      className={[
+                        "px-4 py-3 whitespace-nowrap",
+                        isSortable ? "cursor-pointer select-none" : "cursor-default opacity-90",
+                        header.thClassName || "",
+                      ].join(" ")}
+                      onClick={() => isSortable && handleSort(header.key)}
+                      title={isSortable ? "ترتيب" : undefined}
+                    >
+                      <span className="inline-flex items-center justify-center gap-2">
+                        {header.text}
+                        {isActive && (
+                          <>
+                            {sortDirection === "asc" ? (
+                              <FaSortUp className="inline-block" />
+                            ) : (
+                              <FaSortDown className="inline-block" />
+                            )}
+                          </>
+                        )}
+                      </span>
+                    </th>
+                  );
+                })}
+
+                {showEdit && <th className="px-4 py-3 whitespace-nowrap">تعديل</th>}
+                {showDelete && <th className="px-4 py-3 whitespace-nowrap">حذف</th>}
               </tr>
             </thead>
+
             <tbody>
-              {paginatedData.map((row, index) => (
-                <tr
-                  key={row.id}
-                  className="text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 border-b border-gray-200 dark:border-gray-600"
-                >
-                  {onView && (
-                    <td className="px-4 py-2 text-center">
-                      <button
-                        onClick={() => onView(row.id)}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
+              {paginatedData.map((row, index) => {
+                const key = row?.[rowKey] ?? `${index}`;
+
+                return (
+                  <tr
+                    key={key}
+                    className="text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 border-b border-gray-200 dark:border-gray-600"
+                  >
+                    {showView && (
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => onView(row?.[rowKey] ?? row?.id ?? key)}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
+                          aria-label="عرض"
+                        >
+                          <MdVisibility />
+                        </button>
+                      </td>
+                    )}
+
+                    {headers.map((header) => (
+                      <td
+                        key={`${key}-${header.key}`}
+                        className={[
+                          "px-4 py-2 text-center text-sm md:text-base lg:text-lg",
+                          header.tdClassName || "",
+                        ].join(" ")}
                       >
-                        <MdVisibility />
-                      </button>
-                    </td>
-                  )}
-                  {headers.map((header) => (
-                    <td
-                      key={`${row.id}-${header.key}`}
-                      className="px-4 py-2 text-center text-sm md:text-base lg:text-lg"
-                    >
-                      {customRenderers[header.key]
-                        ? customRenderers[header.key](row)
-                        : row[header.key]}
-                    </td>
-                  ))}
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      onClick={() => onEdit(row.id)}
-                      className="text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 transition-colors duration-300"
-                    >
-                      <MdEdit />
-                    </button>
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      onClick={() => onDelete(row)}
-                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300"
-                    >
-                      <FaTrashAlt />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                        {typeof customRenderers?.[header.key] === "function"
+                          ? customRenderers[header.key](row)
+                          : defaultGetValue(row, header) ?? ""}
+                      </td>
+                    ))}
+
+                    {showEdit && (
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => onEdit(row?.[rowKey] ?? row?.id ?? key)}
+                          className="text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 transition-colors duration-300"
+                          aria-label="تعديل"
+                        >
+                          <MdEdit />
+                        </button>
+                      </td>
+                    )}
+
+                    {showDelete && (
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => onDelete(row)}
+                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300"
+                          aria-label="حذف"
+                        >
+                          <FaTrashAlt />
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       ) : (
-        <p className="text-gray-800 dark:text-gray-200">لا يوجد بيانات</p>
+        <p className="text-gray-800 dark:text-gray-200">{emptyLabel}</p>
       )}
 
-      <div className="flex justify-between items-center mt-4">
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4 gap-3">
         <button
+          type="button"
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-full transition duration-300
-            ${currentPage === 1 ? 'opacity-50 cursor-default' : ''}
-            bg-gray-200 hover:bg-gray-300 text-gray-700 hover:scale-105   *:
-          `}
+          disabled={currentPage <= 1}
+          className={[
+            "px-4 py-2 rounded-full transition duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700",
+            currentPage <= 1 ? "opacity-50 cursor-default hover:bg-gray-200" : "hover:scale-105",
+          ].join(" ")}
         >
           سابق
         </button>
-        <span className="text-gray-200 dark:text-gray-600">
-          الصفحة {currentPage} من {totalPages}
+
+        <span className="text-gray-700 dark:text-gray-300">
+          الصفحة {Math.min(currentPage, totalPages)} من {totalPages}
         </span>
+
         <button
+          type="button"
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-full transition duration-300
-            ${currentPage === totalPages ? 'opacity-50 cursor-default' : ''}
-            bg-gray-200 hover:bg-gray-300 text-gray-700 hover:scale-105           `}
+          disabled={currentPage >= totalPages}
+          className={[
+            "px-4 py-2 rounded-full transition duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700",
+            currentPage >= totalPages ? "opacity-50 cursor-default hover:bg-gray-200" : "hover:scale-105",
+          ].join(" ")}
         >
           التالي
         </button>
