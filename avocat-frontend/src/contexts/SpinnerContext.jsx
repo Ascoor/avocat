@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import GlobalSpinner from '../components/common/Spinners/GlobalSpinner';
 
 const SpinnerContext = createContext();
@@ -17,12 +17,21 @@ const spinnerReducer = (state, action) => {
 export const SpinnerProvider = ({ children }) => {
   const [state, dispatch] = useReducer(spinnerReducer, { loadingCount: 0 });
 
-  const showSpinner = () => dispatch({ type: 'SHOW_SPINNER' });
-  const hideSpinner = () => dispatch({ type: 'HIDE_SPINNER' });
+  const showSpinner = useCallback(() => dispatch({ type: 'SHOW_SPINNER' }), []);
+  const hideSpinner = useCallback(() => dispatch({ type: 'HIDE_SPINNER' }), []);
+  const loading = state.loadingCount > 0;
+  const value = useMemo(
+    () => ({
+      showSpinner,
+      hideSpinner,
+      loading,
+    }),
+    [hideSpinner, loading, showSpinner],
+  );
 
   return (
-    <SpinnerContext.Provider value={{ showSpinner, hideSpinner }}>
-      {state.loadingCount > 0 && <GlobalSpinner />}
+    <SpinnerContext.Provider value={value}>
+      {loading && <GlobalSpinner />}
       {children}
     </SpinnerContext.Provider>
   );
