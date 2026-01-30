@@ -30,7 +30,7 @@ class LegCaseController extends Controller
         ->orderBy('created_at', 'desc')  // أولوية لتاريخ الإنشاء
         ->orderBy('updated_at', 'desc')  // ثم تاريخ التحديث
     ->whereIn('status', ['قيد التجهيز', 'متداولة'])
-    ->orderByRaw("FIELD(status, 'قيد التجهيز', 'متداولة') DESC")
+    ->orderByRaw("CASE status WHEN 'قيد التجهيز' THEN 2 WHEN 'متداولة' THEN 1 ELSE 0 END DESC")
     ->get();
     
     return response()->json($legCases);

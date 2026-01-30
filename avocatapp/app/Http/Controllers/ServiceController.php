@@ -26,7 +26,7 @@ class ServiceController extends Controller
         )
         ->orderBy('created_at', 'desc')  // أولوية لتاريخ الإنشاء
         ->orderBy('updated_at', 'desc')  // ثم تاريخ التحديث
-        ->orderByRaw("FIELD(status, 'منتهية', 'استيفاء', 'لم ينفذ', 'متداولة', 'قيد التنفيذ', 'جارى التنفيذ') DESC")
+        ->orderByRaw("CASE status WHEN 'منتهية' THEN 6 WHEN 'استيفاء' THEN 5 WHEN 'لم ينفذ' THEN 4 WHEN 'متداولة' THEN 3 WHEN 'قيد التنفيذ' THEN 2 WHEN 'جارى التنفيذ' THEN 1 ELSE 0 END DESC")
             
 
     ->get();
