@@ -1,19 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { useSpring, animated } from '@react-spring/web';
-import Login from '../components/auth/Login';
-import Register from '../components/auth/Register';
-import { TeamWorkImage, LogoPatren, WelcomeImage } from '../assets/images';
-import { useAlert } from '../context/AlertContext';
 import { motion } from 'framer-motion';
-import AuthSpinner from '../components/common/Spinners/AuthSpinner';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { TeamWorkImage, LogoPatren, WelcomeImage } from '../assets/images';
+
 const HomePage = () => {
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { triggerAlert } = useAlert();
-
-  const isModalOpen = showLoginForm || showRegisterForm || isLoading;
-
+  const navigate = useNavigate();
   const teamImageAnimation = useSpring({
     from: { opacity: 0, transform: 'scale(0.5) translateY(50px)' },
     to: { opacity: 1, transform: 'scale(1) translateY(0px)' },
@@ -21,11 +14,11 @@ const HomePage = () => {
   });
 
   return (
-    <div className="relative w-full h-screen bg-gradient-night overflow-hidden flex flex-col items-center justify-center">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-night">
       <motion.img
         src={WelcomeImage}
         alt="Cover"
-        className="absolute w-full h-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
         animate={{ scale: [1, 1.2, 1] }}
         transition={{
           duration: 30,
@@ -33,104 +26,54 @@ const HomePage = () => {
           ease: 'easeInOut',
         }}
       />
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="absolute inset-0 bg-black/50" />
 
-      {}
-
-      {}
-      {!isModalOpen && (
+      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center gap-8 px-6 py-16 text-center">
         <animated.div
           style={teamImageAnimation}
-          className="absolute top-1/4 left-2/2 transform -translate-x-/2 -translate-y-1/2 max-w-[506px] aspect-[661/377] flex items-center justify-center"
+          className="w-full max-w-[520px] sm:max-w-[560px] md:max-w-[620px]"
         >
-          <img
-            src={TeamWorkImage}
-            alt="Team Work"
-            className="object-cover w-full h-full rounded-lg  shadow-lg"
-            style={{
-              maskImage:
-                'linear-gradient(to bottom, black 60%, rgba(0,0,0,0.6) 70%, transparent 100%)',
-              WebkitMaskImage:
-                'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.6) 40%, transparent 100%)',
-            }}
-          />
-        </animated.div>
-      )}
-
-      {}
-      {!isModalOpen && (
-        <div className="z-50 text-center mt-24 text-white p-4 flex  flex-col items-center">
-          <div className="relative flex- tems-center justify-center">
+          <div className="overflow-hidden rounded-2xl shadow-lg">
             <img
-              src={LogoPatren}
-              alt="الشعار"
-              className="w-[220px] sm:w-[250px] md:w-[288px] max-w-full h-auto"
+              src={TeamWorkImage}
+              alt="Team Work"
+              className="h-full w-full object-cover"
+              style={{
+                maskImage:
+                  'linear-gradient(to bottom, black 60%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.6) 40%, transparent 100%)',
+              }}
             />
           </div>
+        </animated.div>
 
-          <div className="relative flex-1 items-center justify-center">
-            <div className="flex flex-row gap-4 justify-center items-cente">
-              <button
-                onClick={() => setShowLoginForm(true)}
-                className="px-6 py-2 text-lg font-bold bg-gradient-blue-button text-white rounded-lg"
-              >
-                تسجيل الدخول
-              </button>
-              <button
-                onClick={() => setShowRegisterForm(true)}
-                className="px-6 py-2 text-lg font-bold bg-green-500 text-white rounded-lg"
-                disabled={isLoading}
-              >
-                الاشتراك
-              </button>
-            </div>
+        <div className="flex w-full flex-col items-center gap-6">
+          <img
+            src={LogoPatren}
+            alt="الشعار"
+            className="w-[200px] max-w-full sm:w-[240px] md:w-[288px]"
+          />
+          <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button
+              size="xl"
+              variant="premium"
+              onClick={() => navigate('/login')}
+              className="w-full sm:w-auto"
+            >
+              تسجيل الدخول
+            </Button>
+            <Button
+              size="xl"
+              variant="glass"
+              onClick={() => navigate('/signup')}
+              className="w-full sm:w-auto"
+            >
+              الاشتراك
+            </Button>
           </div>
         </div>
-      )}
-
-      {}
-      {isLoading && <AuthSpinner />}
-
-      {}
-      {showLoginForm && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <Login
-            onAuthStart={() => setIsLoading(true)}
-            handleFormClose={() => setShowLoginForm(false)}
-            onAuthComplete={(success, message) => {
-              setTimeout(() => {
-                setIsLoading(false);
-                if (success) {
-                  setShowLoginForm(false);
-                  triggerAlert('success', message);
-                } else {
-                  triggerAlert('error', message);
-                }
-              }, 2000);
-            }}
-          />
-        </div>
-      )}
-
-      {showRegisterForm && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <Register
-            onAuthStart={() => setIsLoading(true)}
-            handleFormClose={() => setShowRegisterForm(false)}
-            onAuthComplete={(success, message) => {
-              setTimeout(() => {
-                setIsLoading(false);
-                if (success) {
-                  setShowLoginForm(false);
-                  triggerAlert('success', message);
-                } else {
-                  triggerAlert('error', message);
-                }
-              }, 2000);
-            }}
-          />
-        </div>
-      )}
+      </div>
     </div>
   );
 };
