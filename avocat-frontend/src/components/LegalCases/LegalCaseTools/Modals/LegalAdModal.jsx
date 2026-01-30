@@ -7,7 +7,7 @@ import {
   getLegalAdTypes,
 } from '../../../../services/api/legalCases';
 import useAuth from '../../../auth/AuthUser';
-import { useAlert } from '../../../../context/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 import { motion } from 'framer-motion';
 
 const LegalAdModal = ({
