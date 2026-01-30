@@ -8,6 +8,7 @@
 @import "./styles/theme-tokens.css";
 @import "./styles/radix-vars.css";
 @import "./styles/dashboard-shell.css";
+@import "./styles/icon-tokens.css";
 
 /* ✅ tailwind بعد imports */
 @tailwind base;
