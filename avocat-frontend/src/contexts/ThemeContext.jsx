@@ -1,33 +1,10 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-type Theme = "light" | "dark";
-
-interface ThemeState {
-  theme: Theme;
-  manual: boolean;
-}
-
-interface ThemeContextType {
-  theme: Theme;
-  resolvedTheme: Theme;
-  isDark: boolean;
-  setTheme: (theme: Theme) => void;
-  toggleTheme: () => void;
-  syncWithSystem: () => void;
-}
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const STORAGE_KEY = "avocat_theme";
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext(undefined);
 
-const getPreferredTheme = (): ThemeState => {
+const getPreferredTheme = () => {
   const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
   if (stored === "light" || stored === "dark") return { theme: stored, manual: true };
 
@@ -39,14 +16,14 @@ const getPreferredTheme = (): ThemeState => {
   return { theme: prefersDark ? "dark" : "light", manual: false };
 };
 
-export const useTheme = (): ThemeContextType => {
+export const useTheme = () => {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error("useTheme must be used within a ThemeProvider");
   return ctx;
 };
 
-export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [state, setState] = useState<ThemeState>(() => getPreferredTheme());
+export const ThemeProvider = ({ children }) => {
+  const [state, setState] = useState(() => getPreferredTheme());
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -64,7 +41,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     if (typeof window === "undefined") return;
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (event: MediaQueryListEvent) => {
+    const handler = (event) => {
       setState((prev) => (prev.manual ? prev : { theme: event.matches ? "dark" : "light", manual: false }));
     };
 
@@ -72,7 +49,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  const setTheme = useCallback((theme: Theme) => setState({ theme, manual: true }), []);
+  const setTheme = useCallback((theme) => setState({ theme, manual: true }), []);
   const toggleTheme = useCallback(
     () => setState((prev) => ({ theme: prev.theme === "dark" ? "light" : "dark", manual: true })),
     [],
@@ -83,7 +60,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     setState({ theme: prefersDark ? "dark" : "light", manual: false });
   }, []);
 
-  const value = useMemo<ThemeContextType>(
+  const value = useMemo(
     () => ({
       theme: state.theme,
       resolvedTheme: state.theme,

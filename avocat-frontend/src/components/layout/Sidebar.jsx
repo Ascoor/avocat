@@ -1,142 +1,163 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink } from './NavLink'; // استخدمنا NavLink المخصص
-import { LayoutDashboard, Briefcase, Calendar, FileText, Users, UserX, Archive, Search, FileEdit, UsersRound, Trophy, Settings as SettingsIcon, Building2, Scale, UserCog, ShieldCheck, ChevronLeft, ChevronRight, ChevronDown, Folder, Headphones, Globe } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useSidebar } from '@/contexts/SidebarContext';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import {Button} from '@/components/ui/button'
+import React, { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
-const COLLAPSED_WIDTH = 72;
-const EXPANDED_WIDTH = 272;
+import { NavLink } from "./NavLink";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useSidebar } from "@/contexts/SidebarContext";
+import { sidebarGroups } from "@/config/sidebar";
+import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
-  const { t, direction } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const { isCollapsed, toggleCollapsed } = useSidebar();
-  const [openGroups, setOpenGroups] = useState(['services', 'system']);
+  const [openGroups, setOpenGroups] = useState(["work_follow", "customer_service", "settings"]);
 
   const isOpen = !isCollapsed;
 
-  const toggleGroup = (groupId) => {
-    setOpenGroups(prev => prev.includes(groupId) 
-      ? prev.filter(id => id !== groupId)
-      : [...prev, groupId]);
+  const groups = useMemo(() => sidebarGroups, []);
+
+  const toggleGroup = (groupKey) => {
+    setOpenGroups((prev) =>
+      prev.includes(groupKey) ? prev.filter((key) => key !== groupKey) : [...prev, groupKey],
+    );
   };
 
-  const mainItems = [
-    { icon: LayoutDashboard, label: t('navigation.dashboard'), path: '/dashboard' },
-    { icon: Briefcase, label: t('navigation.cases'), path: '/cases' },
-  ];
-
-  const serviceGroups = [
-    { id: 'workFollow', icon: Folder, label: t('navigation.workFollowUp'), items: [
-      { icon: Calendar, label: t('navigation.sessions'), path: '/sessions' },
-      { icon: FileText, label: t('navigation.procedures'), path: '/procedures' }
-    ]},
-    { id: 'customerService', icon: Headphones, label: t('navigation.customerService'), items: [
-      { icon: Users, label: t('navigation.clients'), path: '/clients' },
-      { icon: UserX, label: t('navigation.clientsNoAgency'), path: '/clients-no-agency' },
-      { icon: Archive, label: t('navigation.archive'), path: '/archive' },
-      { icon: Search, label: t('navigation.courtSearch'), path: '/court-search' }
-    ]}
-  ];
-
-  const systemItems = [
-    { icon: SettingsIcon, label: t('navigation.settings'), path: '/settings' },
-    { icon: Building2, label: t('navigation.officeSettings'), path: '/office-settings' },
-    { icon: Scale, label: t('navigation.courtSettings'), path: '/court-settings' },
-    { icon: UserCog, label: t('navigation.lawyers'), path: '/lawyers' },
-    { icon: ShieldCheck, label: t('navigation.usersPermissions'), path: '/users-permissions' }
-  ];
-
-  const renderMenuItem = (item, isSubItem = false) => (
-    <NavLink key={item.path} to={item.path} className={cn(
-      'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-      'text-sidebar-foreground hover:bg-sidebar-item-hover-bg',
-      isSubItem && 'py-2 text-xs',
-      !isOpen && 'justify-center px-2'
-    )}>
-      <item.icon className={cn('flex-shrink-0', isSubItem ? 'h-4 w-4' : 'h-5 w-5')} />
-      <AnimatePresence mode="wait">
-        {isOpen && (
-          <motion.span
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: 'auto' }}
-            exit={{ opacity: 0, width: 0 }}
-            transition={{ duration: 0.2 }}
-            className="truncate"
-          >
-            {item.label}
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </NavLink>
-  );
-
-  const renderSubGroup = (group) => (
-    <Collapsible key={group.id} open={isOpen && openGroups.includes(group.id)} onOpenChange={() => isOpen && toggleGroup(group.id)}>
-      <CollapsibleTrigger asChild>
-        <button className={cn('flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all', 'text-sidebar-text-muted hover:bg-sidebar-subitem-hover-bg hover:text-sidebar-hover-foreground', !isOpen && 'justify-center px-2')}>
-          <group.icon className="h-4 w-4 flex-shrink-0" />
-          <AnimatePresence mode="wait">
-            {isOpen && (
-              <>
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 truncate text-start">
-                  {group.label}
-                </motion.span>
-                <motion.div initial={{ rotate: 0 }} animate={{ rotate: openGroups.includes(group.id) ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown className="h-4 w-4" />
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </button>
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className={cn('space-y-0.5', direction === 'rtl' ? 'pr-4' : 'pl-4')}>
-          {group.items.map(item => renderMenuItem(item, true))}
-        </motion.div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-
   return (
-    <>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={toggleCollapsed} className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden" />
-        )}
-      </AnimatePresence>
-
-      <motion.aside
-        initial={false}
-        animate={{ width: isOpen ? '17rem' : '4.5rem', x: 0 }}
-        className={cn(
-          'fixed top-16 z-50 h-[calc(100vh-4rem)] border-border/40 bg-sidebar shadow-custom-lg transition-all duration-300',
-          'lg:static lg:translate-x-0',
-          !isOpen && 'max-lg:-translate-x-full',
-          direction === 'rtl' ? 'right-0 border-l' : 'left-0 border-r'
-        )}
-      >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-end border-b border-sidebar-border p-3">
-            <Button variant="ghost" size="icon" onClick={toggleCollapsed} className="h-8 w-8 text-sidebar-foreground hover:bg-sidebar-accent">
-              {direction === 'rtl' ? isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" /> : isOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-            </Button>
+    <aside
+      className={cn(
+        "sidebar-shell fixed top-16 z-30 h-[calc(100vh-4rem)] border-sidebar-border bg-[hsl(var(--sidebar-background))] text-sidebar-foreground transition-all duration-300 md:static",
+        isRTL ? "right-0 border-l" : "left-0 border-r",
+        !isOpen && "md:w-[4.5rem]",
+      )}
+    >
+      <div className="flex h-full flex-col">
+        <div className="sidebar-brand flex items-center justify-between gap-3 p-4">
+          <div className={cn("flex items-center gap-3", !isOpen && "justify-center")}> 
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-primary))]">
+              <span className="text-lg font-bold">A</span>
+            </div>
+            {isOpen && (
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Avocat</span>
+                <span className="text-xs text-sidebar-text-muted">{t("common.dashboard")}</span>
+              </div>
+            )}
           </div>
 
-          <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-            <div className="space-y-1">
-              {mainItems.map(item => renderMenuItem(item))}
-            </div>
-
-            {serviceGroups.map(group => renderSubGroup(group))}
-            {systemItems.map(item => renderMenuItem(item))}
-          </nav>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleCollapsed}
+            className={cn("hidden h-8 w-8 md:flex", !isOpen && "rotate-180")}
+            aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
+          >
+            {isRTL ? (
+              isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />
+            ) : isOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-      </motion.aside>
-    </>
+
+        <nav className="sidebar-scroll flex-1 space-y-6 overflow-y-auto p-4">
+          {groups.map((group) => (
+            <div key={group.key} className="space-y-3">
+              {isOpen && (
+                <p className="sidebar-group-label text-[0.65rem]">{t(`sidebar.sections.${group.key}`)}</p>
+              )}
+
+              <div className="space-y-2">
+                {group.items.map((item) => {
+                  const hasChildren = Boolean(item.children?.length);
+                  if (!hasChildren) {
+                    const Icon = item.icon;
+                    return (
+                      <NavLink
+                        key={item.key}
+                        to={item.path}
+                        className={cn(
+                          "sidebar-nav-item group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all",
+                          !isOpen && "justify-center",
+                        )}
+                        activeClassName="bg-[hsl(var(--sidebar-item-active-bg))] text-[hsl(var(--sidebar-primary))] shadow-sidebar-item"
+                      >
+                        <Icon className="h-5 w-5" />
+                        {isOpen && <span className="truncate">{t(item.labelKey)}</span>}
+                      </NavLink>
+                    );
+                  }
+
+                  const isExpanded = isOpen && openGroups.includes(item.key);
+                  const Icon = item.icon;
+
+                  return (
+                    <div key={item.key} className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => isOpen && toggleGroup(item.key)}
+                        className={cn(
+                          "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-sidebar-text-muted transition-all hover:text-sidebar-foreground",
+                          !isOpen && "justify-center",
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {isOpen && (
+                          <>
+                            <span className="flex-1 truncate text-start">{t(item.labelKey)}</span>
+                            <ChevronDown className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")} />
+                          </>
+                        )}
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className={cn("space-y-1 overflow-hidden", isRTL ? "pr-3" : "pl-3")}
+                          >
+                            {item.children.map((child) => {
+                              const ChildIcon = child.icon;
+                              return (
+                                <NavLink
+                                  key={child.key}
+                                  to={child.path}
+                                  className={cn(
+                                    "sidebar-subitem flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium",
+                                  )}
+                                  activeClassName="is-active"
+                                >
+                                  <ChildIcon className="h-4 w-4" />
+                                  <span className="truncate">{t(child.labelKey)}</span>
+                                </NavLink>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
+
+        {isOpen && (
+          <div className="sidebar-footer p-4">
+            <div className="rounded-xl border border-sidebar-border bg-[hsl(var(--sidebar-accent))] p-3 text-xs text-sidebar-foreground">
+              {t("common.supportNote")}
+            </div>
+          </div>
+        )}
+      </div>
+    </aside>
   );
 };
 
