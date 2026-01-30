@@ -10,12 +10,19 @@ import App from './App';
 import GlobalAlert from './components/common/GlobalAlert';
 import { Suspense } from 'react';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/*',
+      element: <App />,
+    },
+  ],
   {
-    path: '/*',
-    element: <App />,
+    future: {
+      v7_startTransition: true,
+    },
   },
-]);
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
