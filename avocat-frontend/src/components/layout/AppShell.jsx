@@ -1,4 +1,6 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "./Sidebar";
 import MobileDrawer from "./MobileDrawer";
 import Header from "./Header";
@@ -12,6 +14,7 @@ const EXPANDED_WIDTH = 280;
 const AppShell = ({ children, title, className, showSidebarToggle = true }) => {
   const { direction } = useLanguage();
   const { isCollapsed } = useSidebar();
+  const location = useLocation();
 
   const sidebarWidth = isCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
 
@@ -29,7 +32,18 @@ const AppShell = ({ children, title, className, showSidebarToggle = true }) => {
 
         <div className="dashboard-content">
           <main className="dashboard-scroll">
-            <div className="dashboard-inner">{children}</div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${location.pathname}${location.search}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="dashboard-inner"
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
           </main>
         </div>
       </div>
