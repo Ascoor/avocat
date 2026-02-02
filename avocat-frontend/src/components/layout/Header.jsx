@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, LogOut, Settings, User } from "lucide-react";
+import { Menu, PanelLeft, LogOut, Settings, User, Languages, SunMoon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,10 +19,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { cn } from "@/lib/utils";
 
-const Header = ({ title, className }) => {
+const Header = ({ title, className, showSidebarToggle = false }) => {
   const { language, t, isRTL } = useLanguage();
   const { user, logout } = useAuth();
-  const { isMobileOpen, toggleMobile } = useSidebar();
+  const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
   const toggleLabel = language === "ar" ? t("language.switchToEnglish") : t("language.switchToArabic");
 
@@ -30,7 +30,7 @@ const Header = ({ title, className }) => {
     <header className={cn("header-shell sticky top-0 z-40", className)}>
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* LEFT */}
-        <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
+        <div className={cn("flex items-center gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
           {/* Mobile drawer toggle */}
           <Button
             variant="outline"
@@ -42,11 +42,23 @@ const Header = ({ title, className }) => {
             <Menu className="h-5 w-5" />
           </Button>
 
+          {showSidebarToggle && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleCollapsed}
+              className="hidden md:flex"
+              aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
+            >
+              <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && (isRTL ? "-rotate-180" : "rotate-180"))} />
+            </Button>
+          )}
+
           {/* Title */}
           {title && (
-            <div className="hidden sm:block">
+            <div className={cn("hidden sm:block min-w-0", isRTL ? "text-right" : "text-left")}>
               <p className="text-sm text-muted-foreground">{t("common.workspace")}</p>
-              <h1 className="text-lg font-semibold text-foreground">{title}</h1>
+              <h1 className="text-lg font-semibold text-foreground truncate">{title}</h1>
             </div>
           )}
         </div>
@@ -57,13 +69,24 @@ const Header = ({ title, className }) => {
         </div>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <ThemeToggle />
-          <LanguageToggle />
+        <div className={cn("flex items-center gap-2 sm:gap-3", isRTL && "flex-row-reverse")}>
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="tab-pill px-2 py-1">
+              <ThemeToggle />
+            </div>
+            <div className="tab-pill px-2 py-1">
+              <LanguageToggle />
+            </div>
+          </div>
 
-          <Button variant="outline" size="sm" className="hidden sm:inline-flex" aria-label={toggleLabel}>
-            {toggleLabel}
-          </Button>
+          <div className="sm:hidden flex items-center gap-2">
+            <Button variant="outline" size="icon" aria-label="Theme">
+              <SunMoon className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" aria-label={toggleLabel}>
+              <Languages className="h-4 w-4" />
+            </Button>
+          </div>
 
           {user && (
             <DropdownMenu>
@@ -116,6 +139,10 @@ const Header = ({ title, className }) => {
             </DropdownMenu>
           )}
         </div>
+      </div>
+
+      <div className="lg:hidden hidden md:block px-4 sm:px-6 pb-2">
+        <HeaderTabs />
       </div>
     </header>
   );

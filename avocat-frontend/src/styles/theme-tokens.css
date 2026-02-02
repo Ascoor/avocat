@@ -126,7 +126,22 @@
     /* keep borders as real HSL triplets so you can do: hsl(var(--x) / a) */
     --header-glass-background: 0 0% 100% / 0.78;
     --header-glass-border: 220 24% 88% / 0.6;
-    --header-glass-shadow: 0 12px 30px -20px hsl(var(--foreground) / 0.16);
+    --header-glass-shadow: 0 12px 30px -20px hsl(224 36% 16% / 0.16);
+  
+    /* Tabs */
+    --tabs-pill-bg: 220 33% 98% / 0.55;
+    --tabs-pill-border: 220 24% 90% / 0.85;
+    --tabs-pill-hover: 42 80% 55% / 0.12;
+  
+    --tabs-active-bg: 42 80% 55% / 0.18;
+    --tabs-active-border: 42 80% 55% / 0.35;
+    --tabs-active-text: 224 36% 16%;
+  
+    --tabs-muted-text: 220 16% 45%;
+    --tabs-shadow: 0 12px 24px -18px hsl(224 36% 16% / 0.2);
+  
+    /* Subtle shine line */
+    --header-shine: 42 80% 55% / 0.28;
   
     /* -----------------------------
        Gradients
@@ -299,7 +314,20 @@
   
     --header-glass-background: 224 35% 10% / 0.78;
     --header-glass-border: 224 30% 20% / 0.55;
-    --header-glass-shadow: 0 12px 30px -20px hsl(224 50% 4% / 0.72);
+    --header-glass-shadow: 0 16px 40px -26px hsl(224 50% 4% / 0.75);
+  
+    --tabs-pill-bg: 224 35% 10% / 0.55;
+    --tabs-pill-border: 224 30% 20% / 0.65;
+    --tabs-pill-hover: 42 80% 60% / 0.1;
+  
+    --tabs-active-bg: 42 80% 60% / 0.16;
+    --tabs-active-border: 42 80% 60% / 0.35;
+    --tabs-active-text: 210 40% 96%;
+  
+    --tabs-muted-text: 220 18% 70%;
+    --tabs-shadow: 0 18px 48px -34px hsl(224 50% 4% / 0.78);
+  
+    --header-shine: 42 80% 60% / 0.22;
   
     /* Gradients */
     --gradient-hero: linear-gradient(
