@@ -46,6 +46,42 @@
   
     --destructive: 0 72% 54%;
     --destructive-foreground: 0 0% 100%;
+
+    /* App semantic tokens */
+    --app-accent: hsl(var(--primary));
+    --app-accent-strong: hsl(var(--accent));
+    --app-muted: hsl(var(--muted-foreground));
+    --app-success: hsl(var(--legal-success-500));
+    --app-warning: hsl(var(--legal-warning-500));
+    --app-danger: hsl(var(--legal-danger-500));
+    --app-info: hsl(var(--primary-glow));
+
+    --app-accent-soft: hsl(var(--accent) / 0.14);
+    --app-success-soft: hsl(var(--legal-success-500) / 0.16);
+    --app-warning-soft: hsl(var(--legal-warning-500) / 0.16);
+    --app-info-soft: hsl(var(--primary) / 0.12);
+
+    /* Chart tokens (full color strings for canvas) */
+    --chart-text: hsl(var(--foreground) / 0.75);
+    --chart-grid: hsl(var(--border) / 0.7);
+    --chart-tooltip-bg: hsl(var(--card));
+    --chart-tooltip-text: hsl(var(--foreground));
+    --chart-tooltip-border: hsl(var(--border));
+
+    --chart-1: hsl(var(--primary));
+    --chart-2: hsl(var(--accent));
+    --chart-3: hsl(var(--exclusive));
+    --chart-4: hsl(var(--neon));
+    --chart-5: hsl(var(--gold));
+    --chart-6: hsl(var(--legal-success-500));
+
+    /* Editor tokens */
+    --editor-surface: hsl(var(--card));
+    --editor-muted: hsl(var(--muted));
+    --editor-border: hsl(var(--border));
+    --editor-focus: hsl(var(--primary));
+    --editor-toolbar: hsl(var(--surface));
+    --editor-toolbar-border: hsl(var(--border));
   
     /* Supporting palettes (used by shell/scrollbar/premium) */
     --gold: 42 80% 55%;
@@ -189,6 +225,39 @@
   
     --destructive: 0 68% 56%;
     --destructive-foreground: 210 40% 96%;
+
+    --app-accent: hsl(var(--primary));
+    --app-accent-strong: hsl(var(--accent));
+    --app-muted: hsl(var(--muted-foreground));
+    --app-success: hsl(var(--legal-success-500));
+    --app-warning: hsl(var(--legal-warning-500));
+    --app-danger: hsl(var(--legal-danger-500));
+    --app-info: hsl(var(--primary-glow));
+
+    --app-accent-soft: hsl(var(--accent) / 0.16);
+    --app-success-soft: hsl(var(--legal-success-500) / 0.18);
+    --app-warning-soft: hsl(var(--legal-warning-500) / 0.18);
+    --app-info-soft: hsl(var(--primary) / 0.16);
+
+    --chart-text: hsl(var(--foreground) / 0.82);
+    --chart-grid: hsl(var(--border) / 0.6);
+    --chart-tooltip-bg: hsl(var(--card-elevated));
+    --chart-tooltip-text: hsl(var(--foreground));
+    --chart-tooltip-border: hsl(var(--border));
+
+    --chart-1: hsl(var(--primary));
+    --chart-2: hsl(var(--accent));
+    --chart-3: hsl(var(--exclusive));
+    --chart-4: hsl(var(--neon));
+    --chart-5: hsl(var(--gold));
+    --chart-6: hsl(var(--legal-success-500));
+
+    --editor-surface: hsl(var(--card));
+    --editor-muted: hsl(var(--muted));
+    --editor-border: hsl(var(--border));
+    --editor-focus: hsl(var(--primary));
+    --editor-toolbar: hsl(var(--surface));
+    --editor-toolbar-border: hsl(var(--border));
   
     /* Supporting palettes */
     --gold: 42 80% 60%;

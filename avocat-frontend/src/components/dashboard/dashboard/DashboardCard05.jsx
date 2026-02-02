@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { getChartPalette, getChartTextColor } from '../../../utils/themeColors';
 
 ChartJS.register(
   CategoryScale,
@@ -33,32 +34,28 @@ function DashboardCard05({ isDarkMode }) {
     sessionCounts: [3, 5, 2, 8, 6, 4, 7],
   });
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#EF4444',
+        '#3B82F6',
+        '#F59E0B',
+        '#10B981',
+        '#8B5CF6',
+        '#EAB308',
+        '#22C55E',
+      ]),
+    [isDarkMode],
+  );
+
   const chartData = {
     labels: sessionData.labels,
     datasets: [
       {
         label: 'عدد الجلسات',
         data: sessionData.sessionCounts,
-        backgroundColor: isDarkMode
-          ? [
-              '#F87171',
-              '#60A5FA',
-              '#FBBF24',
-              '#34D399',
-              '#A78BFA',
-              '#EAB308',
-              '#4ADE80',
-            ]
-          : [
-              '#EF4444',
-              '#3B82F6',
-              '#F59E0B',
-              '#10B981',
-              '#8B5CF6',
-              '#EAB308',
-              '#22C55E',
-            ],
-        borderColor: isDarkMode ? '#FFF' : '#333',
+        backgroundColor: chartPalette,
+        borderColor: getChartTextColor(isDarkMode ? '#FFF' : '#333'),
         borderWidth: 1,
         borderRadius: 6,
         barThickness: 40,
@@ -73,7 +70,7 @@ function DashboardCard05({ isDarkMode }) {
       legend: {
         position: 'top',
         labels: {
-          color: isDarkMode ? '#DDD' : '#333',
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
           font: { size: 14 },
         },
       },
@@ -81,10 +78,13 @@ function DashboardCard05({ isDarkMode }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: isDarkMode ? '#DDD' : '#333' },
+        ticks: { color: getChartTextColor(isDarkMode ? '#DDD' : '#333') },
       },
       y: {
-        ticks: { color: isDarkMode ? '#DDD' : '#333', stepSize: 2 },
+        ticks: {
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
+          stepSize: 2,
+        },
       },
     },
   };
@@ -94,7 +94,7 @@ function DashboardCard05({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">📅 عدد الجلسات القادمة</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(14,165,233,0.16)] text-[var(--app-accent)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-info-soft)] text-[var(--app-accent)]">
           الأسبوع
         </span>
       </header>

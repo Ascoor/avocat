@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import BarChart from '../charts/BarChart03';
 import {
   FaBalanceScale,
@@ -8,49 +8,61 @@ import {
   FaClipboardCheck,
 } from 'react-icons/fa';
 
-import { tailwindConfig } from '../../../utils/Utils';
+import { getChartPalette } from '../../../utils/themeColors';
 
 function DashboardCard11({ isDarkMode }) {
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#4F46E5',
+        '#7C3AED',
+        '#DC2626',
+        '#16A34A',
+        '#6B7280',
+      ]),
+    [isDarkMode],
+  );
+
   const chartData = {
     labels: ['الأسباب'],
     datasets: [
       {
         label: '⚖️ وجود صعوبات في استخدام المنتج',
         data: [131],
-        backgroundColor: isDarkMode ? '#7B61FF' : '#4F46E5',
-        hoverBackgroundColor: isDarkMode ? '#5A48D6' : '#4338CA',
+        backgroundColor: chartPalette[0],
+        hoverBackgroundColor: chartPalette[1],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
         label: '📜 نقص في الميزات المطلوبة',
         data: [100],
-        backgroundColor: isDarkMode ? '#9B67FF' : '#7C3AED',
-        hoverBackgroundColor: isDarkMode ? '#754BC6' : '#6D28D9',
+        backgroundColor: chartPalette[1],
+        hoverBackgroundColor: chartPalette[2],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
         label: '❗ عدم الرضا عن جودة المنتج',
         data: [81],
-        backgroundColor: isDarkMode ? '#FF6347' : '#DC2626',
-        hoverBackgroundColor: isDarkMode ? '#CC5040' : '#B91C1C',
+        backgroundColor: chartPalette[2],
+        hoverBackgroundColor: chartPalette[3],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
         label: '📜 المنتج لا يتطابق مع ما تم الإعلان عنه',
         data: [65],
-        backgroundColor: isDarkMode ? '#32CD32' : '#16A34A',
-        hoverBackgroundColor: isDarkMode ? '#28A428' : '#15803D',
+        backgroundColor: chartPalette[3],
+        hoverBackgroundColor: chartPalette[4],
         barPercentage: 1,
         categoryPercentage: 1,
       },
       {
         label: '❔ أخرى',
         data: [72],
-        backgroundColor: isDarkMode ? '#A0AEC0' : '#6B7280',
-        hoverBackgroundColor: isDarkMode ? '#718096' : '#4B5563',
+        backgroundColor: chartPalette[4],
+        hoverBackgroundColor: chartPalette[0],
         barPercentage: 1,
         categoryPercentage: 1,
       },
@@ -58,9 +70,9 @@ function DashboardCard11({ isDarkMode }) {
   };
 
   return (
-    <div className="flex flex-col col-span-full sm:col-span-6 bg-white dark:bg-gray-900 shadow-lg rounded-xl">
-      <header className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-        <h2 className="font-semibold text-lg text-gray-800 dark:text-gray-100 flex items-center">
+    <div className="flex flex-col col-span-full sm:col-span-6 card-legal">
+      <header className="px-5 py-4 border-b border-border flex items-center">
+        <h2 className="font-semibold text-lg text-foreground flex items-center">
           ⚖️ أسباب طلبات الاسترداد
         </h2>
       </header>
@@ -68,17 +80,17 @@ function DashboardCard11({ isDarkMode }) {
       {}
       <div className="px-5 py-3">
         <div className="flex items-center space-x-2">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100">
+          <div className="text-3xl font-bold text-foreground">
             449
           </div>
-          <div className="text-sm font-medium text-red-700 px-2 bg-red-500/20 rounded-full">
+          <div className="text-sm font-medium text-[var(--app-danger)] px-2 bg-[var(--app-info-soft)] rounded-full">
             -22%
           </div>
         </div>
       </div>
 
       {}
-      <div className="flex justify-around text-gray-700 dark:text-gray-300 text-lg my-2">
+      <div className="flex justify-around text-muted-foreground text-lg my-2">
         <span className="flex items-center space-x-1">
           <FaBalanceScale /> <span>صعوبات الاستخدام</span>
         </span>

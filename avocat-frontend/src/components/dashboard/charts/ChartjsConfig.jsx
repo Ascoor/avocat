@@ -1,5 +1,6 @@
 import { Chart, Tooltip } from 'chart.js';
 import { tailwindConfig, hexToRGB } from '../../../utils/Utils';
+import { getCssColor } from '../../../utils/themeColors';
 
 Chart.register(Tooltip);
 
@@ -17,8 +18,7 @@ Chart.defaults.plugins.tooltip.padding = 8;
 Chart.defaults.color = 'var(--chart-text)';
 Chart.defaults.plugins.legend.labels.color = 'var(--chart-text)';
 
-const cssVar = (name, fallback) =>
-  `var(${name}${fallback ? `, ${fallback}` : ''})`;
+const resolveColor = (name, fallback) => getCssColor(name, fallback);
 
 export const chartAreaGradient = (ctx, chartArea, colorStops) => {
   if (!ctx || !chartArea || !colorStops || colorStops.length === 0) {
@@ -36,36 +36,66 @@ export const chartAreaGradient = (ctx, chartArea, colorStops) => {
   return gradient;
 };
 
-export const chartColors = {
+export const getChartColors = () => ({
   textColor: {
-    light: cssVar('--chart-text', tailwindConfig().theme.colors.gray[400]),
-    dark: cssVar('--chart-text', tailwindConfig().theme.colors.gray[500]),
+    light: resolveColor('--chart-text', tailwindConfig().theme.colors.gray[400]),
+    dark: resolveColor('--chart-text', tailwindConfig().theme.colors.gray[500]),
   },
   gridColor: {
-    light: cssVar('--chart-grid', tailwindConfig().theme.colors.gray[100]),
-    dark: cssVar(
+    light: resolveColor('--chart-grid', tailwindConfig().theme.colors.gray[100]),
+    dark: resolveColor(
       '--chart-grid',
       `rgba(${hexToRGB(tailwindConfig().theme.colors.gray[700])}, 0.6)`,
     ),
   },
   backdropColor: {
-    light: cssVar('--chart-tooltip-bg', tailwindConfig().theme.colors.white),
-    dark: cssVar('--chart-tooltip-bg', tailwindConfig().theme.colors.gray[800]),
+    light: resolveColor(
+      '--chart-tooltip-bg',
+      tailwindConfig().theme.colors.white,
+    ),
+    dark: resolveColor(
+      '--chart-tooltip-bg',
+      tailwindConfig().theme.colors.gray[800],
+    ),
   },
   tooltipTitleColor: {
-    light: cssVar('--chart-tooltip-text', tailwindConfig().theme.colors.gray[800]),
-    dark: cssVar('--chart-tooltip-text', tailwindConfig().theme.colors.gray[100]),
+    light: resolveColor(
+      '--chart-tooltip-text',
+      tailwindConfig().theme.colors.gray[800],
+    ),
+    dark: resolveColor(
+      '--chart-tooltip-text',
+      tailwindConfig().theme.colors.gray[100],
+    ),
   },
   tooltipBodyColor: {
-    light: cssVar('--chart-tooltip-text', tailwindConfig().theme.colors.gray[500]),
-    dark: cssVar('--chart-tooltip-text', tailwindConfig().theme.colors.gray[400]),
+    light: resolveColor(
+      '--chart-tooltip-text',
+      tailwindConfig().theme.colors.gray[500],
+    ),
+    dark: resolveColor(
+      '--chart-tooltip-text',
+      tailwindConfig().theme.colors.gray[400],
+    ),
   },
   tooltipBgColor: {
-    light: cssVar('--chart-tooltip-bg', tailwindConfig().theme.colors.white),
-    dark: cssVar('--chart-tooltip-bg', tailwindConfig().theme.colors.gray[700]),
+    light: resolveColor(
+      '--chart-tooltip-bg',
+      tailwindConfig().theme.colors.white,
+    ),
+    dark: resolveColor(
+      '--chart-tooltip-bg',
+      tailwindConfig().theme.colors.gray[700],
+    ),
   },
   tooltipBorderColor: {
-    light: cssVar('--chart-tooltip-border', tailwindConfig().theme.colors.gray[200]),
-    dark: cssVar('--chart-tooltip-border', tailwindConfig().theme.colors.gray[600]),
+    light: resolveColor(
+      '--chart-tooltip-border',
+      tailwindConfig().theme.colors.gray[200],
+    ),
+    dark: resolveColor(
+      '--chart-tooltip-border',
+      tailwindConfig().theme.colors.gray[600],
+    ),
   },
-};
+});

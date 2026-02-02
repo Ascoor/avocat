@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { getChartPalette, getChartTextColor } from '../../../utils/themeColors';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,15 +11,25 @@ function DashboardCard02({ isDarkMode }) {
     counts: [45, 30, 15, 10, 25],
   });
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#EF4444',
+        '#3B82F6',
+        '#F59E0B',
+        '#10B981',
+        '#8B5CF6',
+      ]),
+    [isDarkMode],
+  );
+
   const chartData = {
     labels: caseData.labels,
     datasets: [
       {
         label: 'نسبة توزيع القضايا',
         data: caseData.counts,
-        backgroundColor: isDarkMode
-          ? ['#F87171', '#60A5FA', '#FBBF24', '#34D399', '#A78BFA']
-          : ['#EF4444', '#3B82F6', '#F59E0B', '#10B981', '#8B5CF6'],
+        backgroundColor: chartPalette,
         borderWidth: 1,
       },
     ],
@@ -31,7 +42,7 @@ function DashboardCard02({ isDarkMode }) {
       legend: {
         position: 'bottom',
         labels: {
-          color: isDarkMode ? '#DDD' : '#333',
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
           font: {
             size: 14,
           },
@@ -45,7 +56,7 @@ function DashboardCard02({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">⚖️ توزيع القضايا حسب النوع</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(99,102,241,0.12)] text-[var(--app-accent-strong)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-info-soft)] text-[var(--app-accent-strong)]">
           إحصائيات
         </span>
       </header>

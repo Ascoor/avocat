@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,6 +9,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import {
+  getChartPalette,
+  getChartTextColor,
+  getChartTooltipColors,
+} from '../../../utils/themeColors';
 
 ChartJS.register(
   CategoryScale,
@@ -23,31 +28,46 @@ function DashboardCard04({ isDarkMode }) {
   const chartRef = useRef(null);
   const [gradientColors, setGradientColors] = useState([]);
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#F97316',
+        '#10B981',
+        '#F43F5E',
+        '#3B82F6',
+        '#EAB308',
+      ]),
+    [isDarkMode],
+  );
+
+  const tooltipColors = useMemo(
+    () =>
+      getChartTooltipColors({
+        body: isDarkMode ? '#CCC' : '#444',
+        background: isDarkMode ? '#2B1B50' : '#FFF',
+        border: isDarkMode ? '#3F2A6B' : '#E5E7EB',
+        title: isDarkMode ? '#FFF' : '#000',
+      }),
+    [isDarkMode],
+  );
+
   useEffect(() => {
     if (chartRef.current) {
       const ctx = chartRef.current.ctx;
       const colors = lawyerPerformance.casesHandled.map((_, index) => {
         const gradient = ctx.createLinearGradient(0, 0, 400, 0);
 
-        if (isDarkMode) {
-          gradient.addColorStop(
-            0,
-            ['#E6E6FA', '#C3B1E1', '#9370DB', '#6A5ACD', '#483D8B'][index],
-          );
-          gradient.addColorStop(1, '#2B1B50');
-        } else {
-          gradient.addColorStop(
-            0,
-            ['#FFA500', '#10B981', '#FF5733', '#4682B4', '#FFD700'][index],
-          );
-          gradient.addColorStop(1, '#FFF5E1');
-        }
+        gradient.addColorStop(0, chartPalette[index % chartPalette.length]);
+        gradient.addColorStop(
+          1,
+          isDarkMode ? 'hsl(252 35% 18%)' : 'hsl(45 85% 92%)',
+        );
 
         return gradient;
       });
       setGradientColors(colors);
     }
-  }, [isDarkMode]);
+  }, [chartPalette, isDarkMode]);
 
   const lawyerPerformance = {
     labels: [
@@ -63,9 +83,7 @@ function DashboardCard04({ isDarkMode }) {
 
   const backgroundColors = gradientColors.length
     ? gradientColors
-    : isDarkMode
-      ? ['#E6E6FA', '#C3B1E1', '#9370DB', '#6A5ACD', '#483D8B']
-      : ['#FFA500', '#10B981', '#FF5733', '#4682B4', '#FFD700'];
+    : chartPalette;
   const chartData = {
     labels: lawyerPerformance.labels,
     datasets: [
@@ -73,17 +91,17 @@ function DashboardCard04({ isDarkMode }) {
         label: 'عدد القضايا',
         data: lawyerPerformance.casesHandled,
         backgroundColor: backgroundColors,
-        borderColor: isDarkMode ? '#FFF' : '#333',
+        borderColor: getChartTextColor(isDarkMode ? '#FFF' : '#333'),
         borderWidth: 1,
         borderRadius: 6,
         barThickness: 20,
-        hoverBackgroundColor: isDarkMode ? '#C3B1E1' : '#FFD700',
+        hoverBackgroundColor: chartPalette[4],
       },
       {
         label: 'نسبة النجاح (%)',
         data: lawyerPerformance.successRate,
-        backgroundColor: isDarkMode ? '#A57AFF' : '#1E90FF',
-        borderColor: isDarkMode ? '#7D5FB2' : '#104E8B',
+        backgroundColor: chartPalette[1],
+        borderColor: chartPalette[3],
         borderWidth: 1,
         borderRadius: 6,
         barThickness: 20,
@@ -99,23 +117,26 @@ function DashboardCard04({ isDarkMode }) {
       legend: {
         position: 'top',
         labels: {
-          color: isDarkMode ? '#DDD' : '#333',
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
           font: { size: 14 },
         },
       },
       tooltip: {
-        backgroundColor: isDarkMode ? '#2B1B50' : '#FFF',
-        titleColor: isDarkMode ? '#FFF' : '#000',
-        bodyColor: isDarkMode ? '#CCC' : '#444',
+        backgroundColor: tooltipColors.background,
+        titleColor: tooltipColors.title,
+        bodyColor: tooltipColors.body,
       },
     },
     scales: {
       x: {
-        ticks: { color: isDarkMode ? '#DDD' : '#333', stepSize: 10 },
+        ticks: {
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
+          stepSize: 10,
+        },
       },
       y: {
         grid: { display: false },
-        ticks: { color: isDarkMode ? '#DDD' : '#333' },
+        ticks: { color: getChartTextColor(isDarkMode ? '#DDD' : '#333') },
       },
     },
   };
@@ -125,7 +146,7 @@ function DashboardCard04({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">👨‍⚖️ أداء المحامين في المكتب</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(234,179,8,0.18)] text-[var(--app-warning)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-warning-soft)] text-[var(--app-warning)]">
           كفاءة
         </span>
       </header>

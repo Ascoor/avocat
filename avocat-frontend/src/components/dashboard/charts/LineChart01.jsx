@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useThemeProvider } from '../../../utils/ThemeContext';
 
-import { chartColors } from './ChartjsConfig';
+import { getChartColors } from './ChartjsConfig';
 import {
   Chart,
   LineController,
@@ -31,7 +31,10 @@ function LineChart01({ data, width, height }) {
   const canvas = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors;
+  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = useMemo(
+    () => getChartColors(),
+    [darkMode],
+  );
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -101,7 +104,7 @@ function LineChart01({ data, width, height }) {
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [chart, darkMode, tooltipBodyColor, tooltipBgColor, tooltipBorderColor]);
 
   return <canvas ref={canvas} width={width} height={height}></canvas>;
 }

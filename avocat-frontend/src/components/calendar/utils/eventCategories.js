@@ -3,11 +3,11 @@
 // Define event categories with labels and associated colors for better UI differentiation
 // Each category is assigned a label in Arabic and a distinct color for display purposes
 export const eventCategories = {
-  session: { label: 'جلسة قانونية', color: '#4CAF50' }, // Green color for legal sessions to signify importance
-  procedure: { label: 'إجراء قانوني', color: '#FF9800' }, // Orange color for legal procedures to highlight process
-  ad: { label: 'إعلان قانوني', color: '#2196F3' }, // Blue color for legal ads to distinguish announcements
-  meeting: { label: 'اجتماع', color: '#9C27B0' }, // Purple color for meetings to differentiate discussions
-  alert: { label: 'تنبيه', color: '#F44336' }, // Red color for alerts to indicate urgency
+  session: { label: 'جلسة قانونية', color: 'var(--app-success)' }, // Green color for legal sessions to signify importance
+  procedure: { label: 'إجراء قانوني', color: 'var(--app-warning)' }, // Orange color for legal procedures to highlight process
+  ad: { label: 'إعلان قانوني', color: 'var(--app-info)' }, // Blue color for legal ads to distinguish announcements
+  meeting: { label: 'اجتماع', color: 'var(--chart-3)' }, // Purple color for meetings to differentiate discussions
+  alert: { label: 'تنبيه', color: 'var(--app-danger)' }, // Red color for alerts to indicate urgency
 };
 
 // 📁 utils/dateFormatter.js

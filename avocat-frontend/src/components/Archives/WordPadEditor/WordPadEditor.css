@@ -17,16 +17,16 @@
   align-items: flex-start;
   width: 100%;
   height: calc(100vh - 120px);
-  background-color: #f4f4f4;
-  border: 1px solid #ccc;
+  background-color: var(--editor-muted);
+  border: 1px solid var(--editor-border);
   padding: 1rem;
 }
 
 .editor {
   width: 100%;
   min-height: 100%;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: var(--editor-surface);
+  border: 1px solid var(--editor-border);
   padding: 1rem;
   overflow-y: auto;
   word-wrap: break-word;
@@ -34,7 +34,7 @@
 
 .editor:focus {
   outline: none;
-  border: 1px solid #007bff;
+  border: 1px solid var(--editor-focus);
 }
 
 /* Custom styles for bold, italic, etc. */

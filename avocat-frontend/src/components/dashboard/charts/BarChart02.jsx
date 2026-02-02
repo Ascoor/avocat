@@ -1,6 +1,12 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useThemeProvider } from '../../../utils/ThemeContext';
 import {
+  getChartPalette,
+  getChartTextColor,
+  getChartGridColor,
+  getChartTooltipColors,
+} from '../../../utils/themeColors';
+import {
   Chart,
   BarController,
   BarElement,
@@ -25,18 +31,34 @@ function BarChart01({ data, width, height }) {
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
 
-  const colors = useMemo(
-    () => ({
-      textColor: darkMode ? '#E5E7EB' : '#374151',
-      gridColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-      tooltipBodyColor: darkMode ? '#E5E7EB' : '#374151',
-      tooltipBgColor: darkMode ? '#1F2937' : '#fff',
-      tooltipBorderColor: darkMode ? '#4B5563' : '#D1D5DB',
-      barBackground: darkMode ? '#A78BFA' : '#F97316',
-      barBorder: darkMode ? '#7C3AED' : '#EA580C',
-    }),
-    [darkMode],
-  );
+  const colors = useMemo(() => {
+    const palette = getChartPalette([
+      '#6366F1',
+      '#F97316',
+      '#8B5CF6',
+      '#10B981',
+      '#F59E0B',
+    ]);
+
+    const tooltipColors = getChartTooltipColors({
+      body: darkMode ? '#E5E7EB' : '#374151',
+      background: darkMode ? '#1F2937' : '#fff',
+      border: darkMode ? '#4B5563' : '#D1D5DB',
+      title: darkMode ? '#E5E7EB' : '#374151',
+    });
+
+    return {
+      textColor: getChartTextColor(darkMode ? '#E5E7EB' : '#374151'),
+      gridColor: getChartGridColor(
+        darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+      ),
+      tooltipBodyColor: tooltipColors.body,
+      tooltipBgColor: tooltipColors.background,
+      tooltipBorderColor: tooltipColors.border,
+      barBackground: palette[2],
+      barBorder: palette[0],
+    };
+  }, [darkMode]);
 
   useEffect(() => {
     if (!canvas.current) return;
