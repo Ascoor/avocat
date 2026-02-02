@@ -1,0 +1,323 @@
+/* =========================================
+   Dashboard Shell (CLEAN + STRICT)
+   Uses existing tokens from theme-tokens.css (HSL)
+   ========================================= */
+
+/* ============================
+   1) Shell Gradients & Charts
+   ============================ */
+   :root {
+    /* ---------- Shell backgrounds (Light) ---------- */
+    --shell-day-gradient: linear-gradient(
+      135deg,
+      hsl(var(--background) / 0.98),
+      hsl(var(--card) / 0.98) 55%,
+      hsl(var(--muted) / 0.92)
+    );
+  
+    --shell-day-overlay:
+      radial-gradient(
+        120% 120% at 10% 10%,
+        hsl(var(--primary) / 0.10),
+        transparent 60%
+      ),
+      radial-gradient(
+        140% 140% at 90% 30%,
+        hsl(var(--accent) / 0.10),
+        transparent 70%
+      );
+  
+    --shell-overlay-opacity: 1;
+    --shell-overlay-blend: screen;
+    --shell-ambient-opacity: 0;
+  
+    /* ---------- Shell backgrounds (Dark) ---------- */
+    --shell-night-gradient: linear-gradient(
+      135deg,
+      hsl(var(--background) / 0.96),
+      hsl(var(--card) / 0.94) 45%,
+      hsl(var(--background) / 0.92)
+    );
+  
+    --shell-night-overlay:
+      radial-gradient(
+        120% 120% at 14% 18%,
+        hsl(var(--primary) / 0.20),
+        transparent 62%
+      ),
+      radial-gradient(
+        140% 140% at 86% 18%,
+        hsl(var(--accent) / 0.18),
+        transparent 64%
+      ),
+      radial-gradient(
+        120% 120% at 52% 86%,
+        hsl(var(--primary) / 0.12),
+        transparent 70%
+      );
+  
+    --shell-ambient-glow: radial-gradient(
+      120% 110% at 50% 70%,
+      hsl(var(--accent) / 0.16),
+      transparent 70%
+    );
+  
+    /* Default: Light shell */
+    --shell-background: var(--shell-day-gradient);
+    --shell-overlay: var(--shell-day-overlay);
+  
+    /* ---------- Charts (optional usage) ---------- */
+    --chart-primary: var(--primary);
+    --chart-secondary: var(--accent);
+    --chart-tertiary: var(--accent);
+    --chart-muted: var(--muted-foreground);
+  
+    /* ---------- Header surface ---------- */
+    --header-surface-gradient: var(--header-surface-gradient);
+    --header-shell-blur: var(--header-shell-blur);
+    --header-shell-shadow: var(--header-shell-shadow);
+    --header-shell-border: 1px solid hsl(var(--border) / 0.9);
+  }
+  
+  .dark {
+    --shell-background: var(--shell-night-gradient);
+    --shell-overlay: var(--shell-night-overlay);
+    --shell-overlay-opacity: 0.9;
+    --shell-overlay-blend: lighten;
+    --shell-ambient-opacity: 1;
+  }
+  
+  /* Ambient motion only in dark (luxury feel) */
+  @keyframes ambientFloat {
+    0% {
+      transform: translate3d(-4%, 0, 0) scale(1);
+      opacity: var(--shell-ambient-opacity);
+    }
+    50% {
+      transform: translate3d(4%, 2%, 0) scale(1.02);
+      opacity: calc(var(--shell-ambient-opacity) * 0.9);
+    }
+    100% {
+      transform: translate3d(-4%, 0, 0) scale(1);
+      opacity: var(--shell-ambient-opacity);
+    }
+  }
+  
+  /* ============================
+     2) Dashboard Shell Layout
+     ============================ */
+  .dashboard-shell {
+    position: relative;
+    min-height: 100vh;
+    background: var(--shell-background);
+    color: hsl(var(--foreground));
+    overflow: hidden;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  
+  /* overlay gradients */
+  .dashboard-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--shell-overlay);
+    opacity: var(--shell-overlay-opacity);
+    pointer-events: none;
+    mix-blend-mode: var(--shell-overlay-blend);
+    transition: opacity 200ms ease, mix-blend-mode 200ms ease;
+  }
+  
+  /* ambient glow */
+  .dashboard-shell::after {
+    content: "";
+    position: absolute;
+    inset: -10% -15%;
+    background: var(--shell-ambient-glow);
+    opacity: var(--shell-ambient-opacity);
+    filter: blur(68px);
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 300ms ease;
+  }
+  
+  .dark .dashboard-shell::after {
+    animation: ambientFloat 16s ease-in-out infinite;
+  }
+  
+  .dashboard-layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
+    backdrop-filter: blur(4px);
+  }
+  
+  /* without sidebar: content takes full width */
+  .dashboard-content {
+    flex: 1 1 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dashboard-scroll {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: clamp(1.25rem, 2vw + 0.75rem, 3rem);
+    display: flex;
+    justify-content: center;
+  }
+  
+  .dashboard-inner {
+    width: min(1200px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 1.8vw, 2.5rem);
+  }
+  
+  /* ============================
+     3) Header Shell
+     ============================ */
+  .header-shell {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  
+    background: var(--header-surface-gradient);
+    backdrop-filter: var(--header-shell-blur);
+  
+    box-shadow: var(--header-shell-shadow);
+    border-bottom: 1px solid hsl(var(--header-glass-border));
+    border-bottom-left-radius: clamp(0.75rem, 1vw, 1.25rem);
+    border-bottom-right-radius: clamp(0.75rem, 1vw, 1.25rem);
+  }
+  
+  .header-shell::after {
+    content: "";
+    position: absolute;
+    inset-inline: 1.5rem;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--accent) / 0.35),
+      transparent
+    );
+  }
+  
+  /* ============================
+     4) Header Tabs (Smart Scroll)
+     ============================ */
+  .header-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.25rem 0;
+  
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  
+  .header-tabs::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .header-tabs::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
+  
+  /* ============================
+     5) Premium Cards & Buttons
+     ============================ */
+  .card-premium {
+    position: relative;
+    overflow: hidden;
+    border-radius: clamp(1rem, 1.4vw, 1.5rem);
+    border: 1px solid hsl(var(--border));
+    background: linear-gradient(
+      160deg,
+      hsl(var(--card) / 0.98) 10%,
+      hsl(var(--card) / 0.92) 90%
+    );
+    box-shadow: 0 18px 40px -28px hsl(var(--foreground) / 0.18);
+    transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease;
+  }
+  
+  .dark .card-premium {
+    border-color: hsl(var(--border) / 0.4);
+    box-shadow: 0 22px 54px -36px hsl(var(--foreground) / 0.22);
+  }
+  
+  .card-premium::after {
+    content: "";
+    position: absolute;
+    inset-inline: -50%;
+    top: -40%;
+    height: 60%;
+    background: radial-gradient(
+      ellipse at center,
+      hsl(var(--accent) / 0.14),
+      transparent 70%
+    );
+    transform: rotate(6deg);
+    pointer-events: none;
+  }
+  
+  .card-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 68px -44px hsl(var(--foreground) / 0.24);
+  }
+  
+  .btn-premium {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 60%,
+      hsl(var(--primary)) 100%
+    );
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 18px 50px -34px hsl(var(--accent) / 0.22);
+    border-radius: 1rem;
+    transition: transform 250ms ease, box-shadow 300ms ease, filter 200ms ease;
+  }
+  
+  .btn-premium:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 0 32px hsl(var(--accent) / 0.22);
+  }
+  
+  /* ============================
+     6) Dashboard Grid helper
+     ============================ */
+  .dashboard-bento {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(1rem, 1.4vw, 1.75rem);
+  }
+  
+  .dashboard-section-title {
+    font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+    font-weight: 700;
+  }
+  
+  /* ============================
+     7) Mobile Tweaks
+     ============================ */
+  @media (max-width: 768px) {
+    .header-shell {
+      border-radius: 0;
+    }
+  
+    .dashboard-scroll {
+      padding: 1.25rem;
+    }
+  
+    .dashboard-inner {
+      gap: 1.5rem;
+    }
+  }
+  

@@ -1,0 +1,27 @@
+/* =========================================
+   Radix UI – Behavioural / Layout Variables
+   Keep this file: sizes, widths, heights only
+   ========================================= */
+
+   :root {
+    /* Toast swipe behavior */
+    --radix-toast-swipe-end-x: calc(100% + 24px);
+    --radix-toast-swipe-move-x: calc(100% + 12px);
+  
+    /* Navigation Menu */
+    --radix-navigation-menu-viewport-height: 320px;
+    --radix-navigation-menu-viewport-width: 480px;
+  
+    /* Select */
+    --radix-select-trigger-height: 40px;
+    --radix-select-trigger-width: 240px;
+  }
+  
+  /* Mobile overrides */
+  @media (max-width: 767px) {
+    :root {
+      --radix-navigation-menu-viewport-width: 320px;
+      --radix-select-trigger-width: 100%;
+    }
+  }
+  

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
 @import './styles/theme-tokens.css';
 @import './styles/radix-vars.css';
 @import './styles/dashboard-shell.css';
@@ -7,6 +8,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================
+   Base
+   ============================ */
 @layer base {
   :root {
     --font-sans: 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
@@ -43,6 +47,7 @@
     @apply border-border;
   }
 
+  /* Scrollbars */
   :root,
   body {
     scrollbar-width: thin;
@@ -65,9 +70,7 @@
       hsl(var(--primary) / 0.7)
     );
   }
-  .table-soft-shadow {
-    box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
-  }
+
   html.dark body::-webkit-scrollbar-thumb {
     background-image: linear-gradient(
       180deg,
@@ -75,39 +78,11 @@
       hsl(var(--primary) / 0.6)
     );
   }
-  /* react-datepicker token styling */
-.react-datepicker {
-  border: 1px solid hsl(var(--border)) !important;
-  background: hsl(var(--card)) !important;
-  color: hsl(var(--foreground)) !important;
-  border-radius: 1rem !important;
-  overflow: hidden;
 }
 
-.react-datepicker__header {
-  background: hsl(var(--muted)) !important;
-  border-bottom: 1px solid hsl(var(--border)) !important;
-}
-
-.react-datepicker__day,
-.react-datepicker__day-name {
-  color: hsl(var(--foreground)) !important;
-}
-
-.react-datepicker__day:hover {
-  background: hsl(var(--accent) / 0.14) !important;
-  border-radius: 0.75rem !important;
-}
-
-.react-datepicker__day--selected,
-.react-datepicker__day--keyboard-selected {
-  background: hsl(var(--primary)) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  border-radius: 0.75rem !important;
-}
-
-}
-
+/* ============================
+   Components
+   ============================ */
 @layer components {
   .section-title {
     font-family: var(--font-display);
@@ -137,11 +112,42 @@
     transform: translateY(-3px);
     box-shadow: var(--shadow-2xl);
   }
-  .table-soft-shadow {
-  box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
-}
+
+  /* react-datepicker token styling */
+  .react-datepicker {
+    border: 1px solid hsl(var(--border)) !important;
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--foreground)) !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+  }
+
+  .react-datepicker__header {
+    background: hsl(var(--muted)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+  }
+
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .react-datepicker__day:hover {
+    background: hsl(var(--accent) / 0.14) !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    border-radius: 0.75rem !important;
+  }
 }
 
+/* ============================
+   Utilities
+   ============================ */
 @layer utilities {
   .font-english {
     font-family: 'Inter', 'Cairo', sans-serif;
@@ -149,5 +155,9 @@
 
   .font-arabic {
     font-family: 'Cairo', 'Inter', sans-serif;
+  }
+
+  .table-soft-shadow {
+    box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
   }
 }
