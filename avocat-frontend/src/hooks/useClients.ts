@@ -8,7 +8,7 @@ export const useClients = () => {
     queryKey: ['clients'],
     queryFn: async () => {
       const response = await getClients();
-      return response.data ?? [];
+      return response.data?.data ?? response.data ?? [];
     },
   });
 

@@ -16,8 +16,8 @@ export const useLegalCases = () =>
   useQuery<LegalCase[], Error>({
     queryKey: ['legal-cases'],
     queryFn: async () => {
-      const { data } = await getLegCases();
-      return data;
+      const response = await getLegCases();
+      return response.data?.data ?? response.data ?? [];
     },
   });
 
@@ -26,8 +26,9 @@ export const useLegalCase = (id?: string) =>
     queryKey: ['legal-cases', id],
     queryFn: async () => {
       if (!id) throw new Error('Case ID is required');
-      const { data } = await getLegCaseById(id);
-      return data.leg_case;
+      const response = await getLegCaseById(id);
+      const payload = response.data?.data ?? response.data;
+      return payload?.leg_case ?? payload;
     },
     enabled: !!id,
   });

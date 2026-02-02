@@ -65,7 +65,9 @@
       hsl(var(--primary) / 0.7)
     );
   }
-
+  .table-soft-shadow {
+    box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
+  }
   html.dark body::-webkit-scrollbar-thumb {
     background-image: linear-gradient(
       180deg,
@@ -73,6 +75,37 @@
       hsl(var(--primary) / 0.6)
     );
   }
+  /* react-datepicker token styling */
+.react-datepicker {
+  border: 1px solid hsl(var(--border)) !important;
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-radius: 1rem !important;
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background: hsl(var(--muted)) !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  color: hsl(var(--foreground)) !important;
+}
+
+.react-datepicker__day:hover {
+  background: hsl(var(--accent) / 0.14) !important;
+  border-radius: 0.75rem !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: 0.75rem !important;
+}
+
 }
 
 @layer components {
@@ -104,6 +137,9 @@
     transform: translateY(-3px);
     box-shadow: var(--shadow-2xl);
   }
+  .table-soft-shadow {
+  box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
+}
 }
 
 @layer utilities {

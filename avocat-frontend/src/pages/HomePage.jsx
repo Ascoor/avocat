@@ -197,7 +197,7 @@ const HomePage = () => {
           <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
             <div className={cn("flex items-center gap-3", isRTL && "flex-row-reverse")}> 
               <img src={LogoBlue} alt="Avocat" className="h-10 w-10 rounded-full bg-white/10 p-1" />
-              <span className="text-lg font-semibold">{copy.hero.highlight}</span>
+          
             </div>
             <div className="flex items-center gap-3">
               <ThemeToggle tone="hero" />

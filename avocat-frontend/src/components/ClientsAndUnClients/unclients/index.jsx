@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
-
-import { UnclientSectionIcon } from '../../../assets/icons/index';
-import SectionHeader from '../../common/SectionHeader';
+ 
 import AddEditUnclient from './AddEditUnclient';
 import TableComponent from '../../common/TableComponent';
 import api from '../../../services/api/axiosConfig';
@@ -102,13 +100,7 @@ function UnClientList() {
   return (
     <div className="p-6 mt-12 xl:max-w-7xl xl:mx-auto w-full " dir="rtl">
       {}
-      <SectionHeader
-        buttonName="عميل بدون وكالة"
-        listName="عملاء بدون وكالة"
-        icon={UnclientSectionIcon}
-      />
-
-      {}
+      
       {isModalOpen && (
         <AddEditUnclient
           unclient={selectedUnclient}
