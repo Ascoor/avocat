@@ -6,7 +6,7 @@ import { lazy } from 'react';
 
 const Home = lazy(() => import('../dashboard/Dashboard'));
 const ClientsAndUnClients = lazy(
-  () => import('../../pages/ClientUnClientList.jsx'),
+  () => import('../../pages/ClientUnClientList'),
 );
 const LegalServiceList = lazy(() => import('../../pages/LegalServicList'));
 const CourtSearch = lazy(() => import('../Reports/SearchCourt'));

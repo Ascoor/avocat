@@ -2,8 +2,7 @@ import React, { useState, lazy, Suspense, useMemo } from "react";
 import { FaUserTie, FaUserAltSlash } from "react-icons/fa";
 
 import GlobalSpinner from "../components/common/Spinners/GlobalSpinner";
-import SectionHeader from "../components/common/SectionHeader";
-import SectionTabs from "../components/common/SectionTabs";
+import SectionHeader from "../components/common/SectionHeader"; 
 
 const ClientList = lazy(() => import("../components/ClientsAndUnClients/clients/index.jsx"));
 const UnClientList = lazy(() => import("../components/ClientsAndUnClients/unclients/index.jsx"));
@@ -28,11 +27,7 @@ const ClientUnclientList = () => {
           showBack
           sticky={false}
         />
-
-        <div className="mt-4">
-          <SectionTabs tabs={tabs} value={activeTab} onChange={setActiveTab} />
-        </div>
-
+ 
         <Suspense
           fallback={
             <div className="mt-8 flex justify-center">
