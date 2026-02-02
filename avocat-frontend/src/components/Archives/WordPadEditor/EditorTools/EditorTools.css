@@ -1,5 +1,5 @@
 .editor-area {
-  border: 1px solid #ccc;
+  border: 1px solid var(--editor-border);
   margin: 20px;
   padding: 20px;
 }
@@ -7,13 +7,13 @@
 /* Toolbar styles */
 .ql-toolbar {
   border: none;
-  background-color: #f1f1f1;
+  background-color: var(--editor-toolbar);
 }
 
 /* Editor styles */
 .ql-container {
   height: 500px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--editor-toolbar-border);
   border-top: none;
 }
 

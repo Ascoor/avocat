@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useThemeProvider } from '../../../utils/ThemeContext';
-import { chartColors } from './ChartjsConfig';
+import { getChartColors } from './ChartjsConfig';
 import {
   Chart,
   BarController,
@@ -35,7 +35,7 @@ function BarChart01({ data, width, height }) {
     tooltipBodyColor,
     tooltipBgColor,
     tooltipBorderColor,
-  } = chartColors;
+  } = useMemo(() => getChartColors(), [darkMode]);
 
   useEffect(() => {
     const ctx = canvas.current;

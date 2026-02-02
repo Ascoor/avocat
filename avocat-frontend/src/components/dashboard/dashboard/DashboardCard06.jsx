@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -11,6 +11,7 @@ import {
   Legend,
   PointElement,
 } from 'chart.js';
+import { getChartPalette, getChartTextColor } from '../../../utils/themeColors';
 
 ChartJS.register(
   CategoryScale,
@@ -49,6 +50,18 @@ function DashboardCard06({ isDarkMode }) {
     ],
   });
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#3B82F6',
+        '#10B981',
+        '#F59E0B',
+        '#8B5CF6',
+        '#EF4444',
+      ]),
+    [isDarkMode],
+  );
+
   const chartData = {
     labels: revenueData.labels,
     datasets: [
@@ -56,8 +69,8 @@ function DashboardCard06({ isDarkMode }) {
         type: 'bar',
         label: 'الإيرادات المتوقعة',
         data: revenueData.expectedRevenue,
-        backgroundColor: isDarkMode ? '#60A5FA' : '#3B82F6',
-        borderColor: isDarkMode ? '#2563EB' : '#1E40AF',
+        backgroundColor: chartPalette[0],
+        borderColor: chartPalette[3],
         borderWidth: 1,
         borderRadius: 6,
         barThickness: 40,
@@ -66,11 +79,11 @@ function DashboardCard06({ isDarkMode }) {
         type: 'line',
         label: 'الإيرادات المحققة',
         data: revenueData.actualRevenue,
-        borderColor: isDarkMode ? '#34D399' : '#10B981',
+        borderColor: chartPalette[1],
         backgroundColor: 'transparent',
         borderWidth: 2,
         pointRadius: 5,
-        pointBackgroundColor: isDarkMode ? '#34D399' : '#10B981',
+        pointBackgroundColor: chartPalette[1],
         tension: 0.4,
       },
     ],
@@ -83,7 +96,7 @@ function DashboardCard06({ isDarkMode }) {
       legend: {
         position: 'top',
         labels: {
-          color: isDarkMode ? '#DDD' : '#333',
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
           font: { size: 14 },
         },
       },
@@ -91,10 +104,13 @@ function DashboardCard06({ isDarkMode }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: isDarkMode ? '#DDD' : '#333' },
+        ticks: { color: getChartTextColor(isDarkMode ? '#DDD' : '#333') },
       },
       y: {
-        ticks: { color: isDarkMode ? '#DDD' : '#333', stepSize: 5000 },
+        ticks: {
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
+          stepSize: 5000,
+        },
       },
     },
   };
@@ -104,7 +120,7 @@ function DashboardCard06({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">💰 الدخل المتوقع من القضايا</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(16,185,129,0.16)] text-[var(--app-success)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-success-soft)] text-[var(--app-success)]">
           مالي
         </span>
       </header>

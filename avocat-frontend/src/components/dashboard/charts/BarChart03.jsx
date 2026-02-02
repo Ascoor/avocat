@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useThemeProvider } from '../../../utils/ThemeContext';
 
-import { chartColors } from './ChartjsConfig';
+import { getChartColors } from './ChartjsConfig';
 import {
   Chart,
   BarController,
@@ -30,7 +30,10 @@ function BarChart03({ data, width, height }) {
   const legend = useRef(null);
   const { currentTheme } = useThemeProvider();
   const darkMode = currentTheme === 'dark';
-  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors;
+  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = useMemo(
+    () => getChartColors(),
+    [darkMode],
+  );
 
   useEffect(() => {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -163,7 +166,7 @@ function BarChart03({ data, width, height }) {
       chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light;
     }
     chart.update('none');
-  }, [currentTheme]);
+  }, [chart, darkMode, tooltipBodyColor, tooltipBgColor, tooltipBorderColor]);
 
   return (
     <div className="grow flex flex-col justify-center">

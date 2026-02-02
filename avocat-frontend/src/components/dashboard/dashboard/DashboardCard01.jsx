@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { getChartPalette, getChartTextColor } from '../../../utils/themeColors';
 
 ChartJS.register(
   CategoryScale,
@@ -25,24 +26,31 @@ function DashboardCard01({ isDarkMode }) {
   const chartRef = useRef(null);
   const [gradient, setGradient] = useState(null);
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#4F46E5',
+        '#F97316',
+        '#A855F7',
+        '#22C55E',
+        '#EAB308',
+        '#60A5FA',
+      ]),
+    [isDarkMode],
+  );
+
   useEffect(() => {
     if (chartRef.current) {
       const ctx = chartRef.current.ctx;
       const gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
 
-      if (isDarkMode) {
-        gradientFill.addColorStop(0, '#ad90f5');
-        gradientFill.addColorStop(0.5, '#9d78fc');
-        gradientFill.addColorStop(1, '#ffbb34');
-      } else {
-        gradientFill.addColorStop(0, '#f2a33b');
-        gradientFill.addColorStop(0.5, '#4682B4');
-        gradientFill.addColorStop(1, '#87CEFA');
-      }
+      gradientFill.addColorStop(0, chartPalette[0]);
+      gradientFill.addColorStop(0.5, chartPalette[2]);
+      gradientFill.addColorStop(1, chartPalette[4]);
 
       setGradient(gradientFill);
     }
-  }, [isDarkMode]);
+  }, [chartPalette]);
 
   const caseData = {
     months: [
@@ -62,7 +70,7 @@ function DashboardCard01({ isDarkMode }) {
     cases: [20, 25, 22, 30, 45, 50, 48, 60, 55, 70, 65, 80],
   };
 
-  const textColor = isDarkMode ? '#DDD' : '#333';
+  const textColor = getChartTextColor(isDarkMode ? '#DDD' : '#333');
 
   const chartData = {
     labels: caseData.months,
@@ -70,11 +78,11 @@ function DashboardCard01({ isDarkMode }) {
       {
         label: 'عدد القضايا المفتوحة',
         data: caseData.cases,
-        borderColor: gradient || (isDarkMode ? '#ffbb34' : '#f2a33b'),
+        borderColor: gradient || chartPalette[4],
         backgroundColor: gradient ? gradient : 'rgba(0,0,0,0.1)',
         borderWidth: 3,
         pointRadius: 5,
-        pointBackgroundColor: isDarkMode ? '#9d78fc' : '#f2a33b',
+        pointBackgroundColor: chartPalette[2],
         tension: 0.4,
       },
     ],
@@ -107,7 +115,7 @@ function DashboardCard01({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">📊 تطور عدد القضايا الشهرية</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(59,130,246,0.12)] text-[var(--app-accent)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-info-soft)] text-[var(--app-accent)]">
           تحليلي
         </span>
       </header>

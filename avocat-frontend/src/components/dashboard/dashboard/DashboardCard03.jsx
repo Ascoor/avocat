@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { getChartPalette, getChartTextColor } from '../../../utils/themeColors';
 
 ChartJS.register(
   CategoryScale,
@@ -25,16 +26,26 @@ function DashboardCard03({ isDarkMode }) {
     durations: [180, 120, 90, 60, 45],
   });
 
+  const chartPalette = useMemo(
+    () =>
+      getChartPalette([
+        '#EF4444',
+        '#3B82F6',
+        '#F59E0B',
+        '#10B981',
+        '#8B5CF6',
+      ]),
+    [isDarkMode],
+  );
+
   const chartData = {
     labels: caseDurationData.labels,
     datasets: [
       {
         label: 'متوسط المدة (بالأيام)',
         data: caseDurationData.durations,
-        backgroundColor: isDarkMode
-          ? ['#ffbb34', '#60A5FA', '#FBBF24', '#f2a33b', '#A78BFA']
-          : ['#EF4444', '#3B82F6', '#F59E0B', '#f2a33b', '#8B5CF6'],
-        borderColor: isDarkMode ? '#FFF' : '#333',
+        backgroundColor: chartPalette,
+        borderColor: getChartTextColor(isDarkMode ? '#FFF' : '#333'),
         borderWidth: 1,
         borderRadius: 6,
         barThickness: 50,
@@ -49,7 +60,7 @@ function DashboardCard03({ isDarkMode }) {
       legend: {
         position: 'top',
         labels: {
-          color: isDarkMode ? '#DDD' : '#333',
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
           font: { size: 14 },
         },
       },
@@ -57,10 +68,13 @@ function DashboardCard03({ isDarkMode }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: isDarkMode ? '#DDD' : '#333' },
+        ticks: { color: getChartTextColor(isDarkMode ? '#DDD' : '#333') },
       },
       y: {
-        ticks: { color: isDarkMode ? '#DDD' : '#333', stepSize: 30 },
+        ticks: {
+          color: getChartTextColor(isDarkMode ? '#DDD' : '#333'),
+          stepSize: 30,
+        },
       },
     },
   };
@@ -70,7 +84,7 @@ function DashboardCard03({ isDarkMode }) {
       {}
       <header className="dashboard-card-header px-5 py-4 flex items-center justify-between">
         <h2 className="font-semibold text-md">⏳ متوسط مدة إنهاء القضايا</h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-[rgba(34,197,94,0.12)] text-[var(--app-success)]">
+        <span className="text-xs px-2 py-1 rounded-full bg-[var(--app-success-soft)] text-[var(--app-success)]">
           أداء
         </span>
       </header>

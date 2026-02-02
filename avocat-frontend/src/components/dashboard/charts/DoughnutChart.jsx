@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useThemeProvider } from '../../../utils/ThemeContext';
 
-import { chartColors } from './ChartjsConfig';
+import { getChartColors } from './ChartjsConfig';
+import { getChartTextColor } from '../../../utils/themeColors';
 import {
   Chart,
   DoughnutController,
@@ -25,7 +26,7 @@ function DoughnutChart({ data, width, height }) {
     tooltipBodyColor,
     tooltipBgColor,
     tooltipBorderColor,
-  } = chartColors;
+  } = useMemo(() => getChartColors(), [darkMode]);
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -64,7 +65,7 @@ function DoughnutChart({ data, width, height }) {
             const { width, height, ctx } = chart;
             ctx.save();
             ctx.font = 'bold 18px Cairo, sans-serif';
-            ctx.fillStyle = darkMode ? '#E5E7EB' : '#333';
+            ctx.fillStyle = getChartTextColor(darkMode ? '#E5E7EB' : '#333');
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
