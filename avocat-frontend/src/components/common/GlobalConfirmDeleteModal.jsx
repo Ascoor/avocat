@@ -1,34 +1,63 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 
 const GlobalConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 text-center mb-4">
-          تأكيد الحذف
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
-          هل أنت متأكد أنك تريد حذف{' '}
-          <span className="font-bold text-red-500">{itemName}</span>؟
-        </p>
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={onConfirm}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-          >
-            تأكيد
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 transition"
-          >
-            إلغاء
-          </button>
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-200"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-200"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-150"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center shadow-2xl transition-all dark:bg-gray-800">
+                <Dialog.Title className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                  تأكيد الحذف
+                </Dialog.Title>
+                <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                  هل أنت متأكد أنك تريد حذف{' '}
+                  <span className="font-bold text-red-500">{itemName}</span>؟
+                </p>
+                <div className="mt-6 flex justify-center gap-4">
+                  <button
+                    type="button"
+                    onClick={onConfirm}
+                    className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
+                  >
+                    تأكيد
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    إلغاء
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
         </div>
-      </div>
-    </div>
+      </Dialog>
+    </Transition>
   );
 };
 

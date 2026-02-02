@@ -8,7 +8,6 @@ import { AlertProvider } from './contexts/AlertContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import App from './App';
-import GlobalAlert from './components/common/GlobalAlert';
 
 const router = createBrowserRouter([
   {
@@ -26,7 +25,6 @@ if (rootElement) {
     <React.StrictMode>
       <LanguageProvider>
         <AlertProvider>
-          <GlobalAlert />
           <Provider store={store}>
             <AuthProvider>
               <Suspense fallback={<div>Loading...</div>}>

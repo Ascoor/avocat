@@ -51,6 +51,7 @@ avocat-frontend/config.js
 ########################################
 # Backend: avocatapp (Laravel/PHP)
 ########################################
+avocatapp/node_modules/
 avocatapp/vendor/
 avocatapp/**/vendor/
 avocatapp/public/hot
