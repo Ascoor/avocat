@@ -182,14 +182,11 @@
     position: sticky;
     top: 0;
     z-index: 40;
-  
-    background: var(--header-surface-gradient);
-    backdrop-filter: var(--header-shell-blur);
-  
-    box-shadow: var(--header-shell-shadow);
+
+    background: hsl(var(--header-glass-background));
     border-bottom: 1px solid hsl(var(--header-glass-border));
-    border-bottom-left-radius: clamp(0.75rem, 1vw, 1.25rem);
-    border-bottom-right-radius: clamp(0.75rem, 1vw, 1.25rem);
+    box-shadow: var(--header-glass-shadow);
+    backdrop-filter: blur(18px);
   }
   
   .header-shell::after {
@@ -201,7 +198,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--accent) / 0.35),
+      hsl(var(--header-shine)),
       transparent
     );
   }
@@ -209,13 +206,18 @@
   /* ============================
      4) Header Tabs (Smart Scroll)
      ============================ */
+  .header-tabs-wrap {
+    position: relative;
+    width: 100%;
+  }
+
   .header-tabs {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     overflow-x: auto;
     white-space: nowrap;
-    padding: 0.25rem 0;
+    padding: 0.25rem 0.25rem;
   
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -228,6 +230,76 @@
   .header-tabs::-webkit-scrollbar-thumb {
     background: hsl(var(--border));
     border-radius: 999px;
+  }
+
+  .header-tabs-wrap::before,
+  .header-tabs-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .header-tabs-wrap::before {
+    inset-inline-start: 0;
+    background: linear-gradient(
+      to var(--fade-dir-start, right),
+      hsl(var(--header-glass-background)),
+      transparent
+    );
+  }
+
+  .header-tabs-wrap::after {
+    inset-inline-end: 0;
+    background: linear-gradient(
+      to var(--fade-dir-end, left),
+      hsl(var(--header-glass-background)),
+      transparent
+    );
+  }
+
+  [dir="rtl"] .header-tabs-wrap {
+    --fade-dir-start: left;
+    --fade-dir-end: right;
+  }
+
+  .tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid hsl(var(--tabs-pill-border));
+    background: hsl(var(--tabs-pill-bg));
+    color: hsl(var(--tabs-muted-text));
+    box-shadow: var(--tabs-shadow);
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+  }
+
+  .tab-pill:hover {
+    background: hsl(var(--tabs-pill-hover));
+    transform: translateY(-1px);
+  }
+
+  .tab-pill.is-active {
+    background: hsl(var(--tabs-active-bg));
+    border-color: hsl(var(--tabs-active-border));
+    color: hsl(var(--tabs-active-text));
+  }
+
+  .tab-pill-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+  }
+
+  @media (max-width: 768px) {
+    .tab-pill {
+      padding: 0.5rem 0.75rem;
+    }
   }
   
   /* ============================
