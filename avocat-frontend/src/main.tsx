@@ -2,12 +2,12 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './store/store';
-import './index.css';
-import { AlertProvider } from './contexts/AlertContext';
-import { AuthProvider } from './contexts/AuthContext';
-import { LanguageProvider } from './contexts/LanguageContext';
-import App from './App';
+import store from '@app/store/store';
+import '@styles/index.css';
+import { AlertProvider } from '@shared/contexts/AlertContext';
+import { AuthProvider } from '@shared/contexts/AuthContext';
+import { LanguageProvider } from '@shared/contexts/LanguageContext';
+import App from '@app/App';
 
 const router = createBrowserRouter([
   {

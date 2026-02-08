@@ -20,7 +20,7 @@ import {
   GavelIcon,
   LegalDocumentIcon,
   ShieldIcon,
-} from "@/icons/legal/LegalIcons";
+} from "@shared/icons/legal/LegalIcons";
 
 export type IconKey =
   | "dashboard"
