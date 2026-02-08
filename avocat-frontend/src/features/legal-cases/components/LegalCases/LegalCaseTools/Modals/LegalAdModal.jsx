@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   createLegalAd,
   updateLegalAd,
@@ -8,7 +8,238 @@ import {
 } from '@shared/services/api/legalCases';
 import useAuth from '@features/auth/components/AuthUser';
 import { useAlert } from '@shared/contexts/AlertContext';
-import { motion } from 'framer-motion';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+
+const LegalAdForm = ({
+  formData,
+  onChange,
+  courts,
+  legalAdTypes,
+  lawyers,
+  isEdit,
+  onSubmit,
+  onClose,
+  formError,
+  t,
+}) => (
+  <form onSubmit={onSubmit} className="space-y-4">
+    {formError && (
+      <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+        {formError}
+      </div>
+    )}
+
+    <div className="grid gap-4 md:grid-cols-2">
+      <div>
+        <label className="block text-xs font-semibold text-muted-foreground">
+          {t('legalCaseDetails.ads.form.court')} <span className="text-destructive">*</span>
+        </label>
+        <select
+          name="court_id"
+          value={formData.court_id}
+          onChange={onChange}
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          required
+        >
+          <option value="">{t('legalCaseDetails.ads.form.courtPlaceholder')}</option>
+          {courts.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs font-semibold text-muted-foreground">
+          {t('legalCaseDetails.ads.form.type')} <span className="text-destructive">*</span>
+        </label>
+        <select
+          name="legal_ad_type_id"
+          value={formData.legal_ad_type_id}
+          onChange={onChange}
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          required
+        >
+          <option value="">{t('legalCaseDetails.ads.form.typePlaceholder')}</option>
+          {legalAdTypes.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs font-semibold text-muted-foreground">
+          {t('legalCaseDetails.ads.form.sender')} <span className="text-destructive">*</span>
+        </label>
+        <select
+          name="lawyer_send_id"
+          value={formData.lawyer_send_id}
+          onChange={onChange}
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          required
+        >
+          <option value="">{t('legalCaseDetails.ads.form.senderPlaceholder')}</option>
+          {lawyers.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs font-semibold text-muted-foreground">
+          {t('legalCaseDetails.ads.form.description')} <span className="text-destructive">*</span>
+        </label>
+        <input
+          name="description"
+          type="text"
+          value={formData.description}
+          onChange={onChange}
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          required
+        />
+      </div>
+    </div>
+
+    <div>
+      <label className="block text-xs font-semibold text-muted-foreground">
+        {t('legalCaseDetails.ads.form.sendDate')} <span className="text-destructive">*</span>
+      </label>
+      <input
+        name="send_date"
+        type="date"
+        value={formData.send_date}
+        onChange={onChange}
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        required
+      />
+    </div>
+
+    {isEdit && (
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.ads.form.receiver')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="lawyer_receive_id"
+            value={formData.lawyer_receive_id}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="">{t('legalCaseDetails.ads.form.receiverPlaceholder')}</option>
+            {lawyers.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.ads.form.receiveDate')}
+          </label>
+          <input
+            name="receive_date"
+            type="date"
+            value={formData.receive_date}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+      </div>
+    )}
+
+    {isEdit && (
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.ads.form.results')}
+          </label>
+          <input
+            name="results"
+            type="text"
+            value={formData.results}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.ads.form.status')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="قيد التجهيز">{t('legalCaseDetails.ads.form.statusPreparing')}</option>
+            <option value="تم التسليم">{t('legalCaseDetails.ads.form.statusSent')}</option>
+            <option value="تم الإستلام">{t('legalCaseDetails.ads.form.statusReceived')}</option>
+          </select>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.form.costReceipts')}
+            </label>
+            <input
+              name="cost1"
+              type="number"
+              value={formData.cost1}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.form.costFees')}
+            </label>
+            <input
+              name="cost2"
+              type="number"
+              value={formData.cost2}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.form.costOther')}
+            </label>
+            <input
+              name="cost3"
+              type="number"
+              value={formData.cost3}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div className="flex flex-wrap items-center justify-end gap-3">
+      <button
+        type="button"
+        onClick={onClose}
+        className="pressable rounded-full border border-border px-4 py-2 text-sm"
+      >
+        {t('common.cancel')}
+      </button>
+      <button
+        type="submit"
+        className="pressable rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+      >
+        {isEdit ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
+      </button>
+    </div>
+  </form>
+);
 
 const LegalAdModal = ({
   isOpen,
@@ -17,12 +248,15 @@ const LegalAdModal = ({
   fetchLegalAds,
   initialData = {},
   isEdit = false,
+  onSubmit,
 }) => {
   const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [courts, setCourts] = useState([]);
   const [legalAdTypes, setLegalAdTypes] = useState([]);
   const [lawyers, setLawyers] = useState([]);
+  const [formError, setFormError] = useState('');
 
   const [formData, setFormData] = useState({
     description: '',
@@ -41,6 +275,7 @@ const LegalAdModal = ({
     created_by: user.id,
     updated_by: user.id,
   });
+
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
@@ -51,11 +286,11 @@ const LegalAdModal = ({
         setLegalAdTypes(legalAdTypeResponse.data);
         setLawyers(lawyersResponse.data);
       } catch (error) {
-        triggerAlert('error', 'حدث خطأ أثناء تحميل البيانات.');
+        triggerAlert('error', t('legalCaseDetails.ads.errors.loadForm'));
       }
     };
     fetchDropdownData();
-  }, [legCaseId, user]);
+  }, [legCaseId, user, t, triggerAlert]);
 
   useEffect(() => {
     if (isEdit && initialData) {
@@ -71,21 +306,22 @@ const LegalAdModal = ({
         lawyer_receive_id: initialData.lawyer_receive_id,
         lawyer_send_id: initialData.lawyer_send_id,
         results: initialData.results,
-
         status: initialData.status,
         leg_case_id: initialData.leg_case_id,
         created_by: initialData.created_by,
         updated_by: user.id,
       });
     }
-  }, [isEdit, initialData, legCaseId]);
+  }, [isEdit, initialData, legCaseId, user.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError('');
     try {
       let response;
       if (isEdit) {
@@ -97,202 +333,54 @@ const LegalAdModal = ({
       if (response && response.status === 200) {
         triggerAlert(
           'success',
-          isEdit ? 'تم تحديث الإعلان بنجاح.' : 'تم إضافة الإعلان بنجاح.',
+          isEdit
+            ? t('legalCaseDetails.ads.alerts.updateSuccess')
+            : t('legalCaseDetails.ads.alerts.addSuccess'),
         );
         fetchLegalAds();
+        onSubmit?.(response.data);
         onClose();
       } else {
-        triggerAlert('error', 'حدث خطأ أثناء حفظ الإعلان.');
+        const message = t('legalCaseDetails.ads.alerts.saveError');
+        setFormError(message);
+        triggerAlert('error', message);
       }
     } catch (error) {
-      console.error('Error saving ad:', error);
-      triggerAlert('error', 'حدث خطأ أثناء حفظ الإعلان.');
+      const message = t('legalCaseDetails.ads.alerts.saveError');
+      setFormError(message);
+      triggerAlert('error', message);
     }
   };
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-300">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl p-8 relative transform transition-all overflow-auto max-h-[90vh]">
-        <motion.header
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative mb-4 flex justify-center bg-gray-200 dark:bg-gray-800"
-        >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="w-full max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-xl max-h-[90vh] overflow-auto">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h2 className="text-lg font-semibold">
+            {isEdit ? t('legalCaseDetails.ads.form.editTitle') : t('legalCaseDetails.ads.form.addTitle')}
+          </h2>
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            className="text-muted-foreground hover:text-foreground"
+            aria-label={t('common.close')}
           >
             &#x2715;
           </button>
-          <h2 className="text-2xl font-bold text-center mt-2  dark:text-green-200/90 text-avocat-blue mb-6">
-            {isEdit ? 'تحديث الإعلان القانوني' : 'إضافة إعلان قانوني'}
-          </h2>
-        </motion.header>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {[
-            { label: 'المحكمة', name: 'court_id', options: courts },
-            {
-              label: 'نوع الإعلان',
-              name: 'legal_ad_type_id',
-              options: legalAdTypes,
-            },
-            {
-              label: 'المحامي المرسل',
-              name: 'lawyer_send_id',
-              options: lawyers,
-            },
-          ].map(({ label, name, options }) => (
-            <div key={name}>
-              <label className="block  text-center mb-2 text-sm font-bold text-blue-700 dark:text-gray-200">
-                {label}
-              </label>
-              <select
-                name={name}
-                value={formData[name]}
-                onChange={handleChange}
-                className="w-full px-6  py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option className="text-center" value="">
-                  اختر{' '}
-                </option>
-                {options.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-
-          <div>
-            <label className="block text-center mb-2 text-sm font-bold text-blue-700 dark:text-gray-200">
-              الوصف
-            </label>
-            <input
-              name="description"
-              type="text"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-            <label className="text-sm  text-center mb-2   text-blue-700 font-bold  dark:text-gray-200">
-              تاريخ التسليم
-            </label>
-            <input
-              name="send_date"
-              type="date"
-              value={formData.send_date}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-              required
-            />
-            {isEdit && (
-              <>
-                <div>
-                  <label className="block text-sm  text-center mb-2 font-bold text-blue-700 dark:text-gray-200">
-                    {' '}
-                    المحامي المستلم{' '}
-                  </label>
-                  <select
-                    name="lawyer_receive_id"
-                    value={formData.lawyer_receive_id}
-                    onChange={handleChange}
-                    className="w-full px-6 py-3  rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value=""> اختر المحامي </option>
-                    {lawyers.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <label className="text-sm font-medium  text-center mb-2 text-gray-700 dark:text-gray-200">
-                  تاريخ الإستلام
-                </label>
-                <input
-                  name="receive_date"
-                  type="date"
-                  value={formData.receive_date}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  required
-                />
-              </>
-            )}
-          </div>
-
-          {isEdit && (
-            <>
-              <div>
-                <label className="block text-sm  text-center mb-2 font-bold text-blue-700 dark:text-gray-200">
-                  النتائج
-                </label>
-                <input
-                  name="results"
-                  type="text"
-                  value={formData.results}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold  text-center mb-2 text-blue-700 dark:text-gray-200">
-                  الحالة
-                </label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-6 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  required
-                >
-                  <option value="قيد التجهيز">قيد التجهيز</option>
-                  <option value="تم التسليم">تم التسليم</option>
-                  <option value="تم الإستلام">تم الإستلام</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { label: 'رسوم بإيصالات', name: 'cost1' },
-                  { label: 'أتعاب الجلسة', name: 'cost2' },
-                  { label: 'مصروفات أخرى', name: 'cost3' },
-                ].map(({ label, name }) => (
-                  <div key={name}>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      {label}
-                    </label>
-                    <input
-                      name={name}
-                      type="number"
-                      value={formData[name]}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    />
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          <button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1"
-          >
-            {isEdit ? 'تحديث' : 'إضافة'}
-          </button>
-        </form>
+        <LegalAdForm
+          formData={formData}
+          onChange={handleChange}
+          courts={courts}
+          legalAdTypes={legalAdTypes}
+          lawyers={lawyers}
+          isEdit={isEdit}
+          onSubmit={handleSubmit}
+          onClose={onClose}
+          formError={formError}
+          t={t}
+        />
       </div>
     </div>
   );
