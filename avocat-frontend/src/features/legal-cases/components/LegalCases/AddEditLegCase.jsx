@@ -1,11 +1,238 @@
 import { useState, useEffect } from 'react';
-import { FaRegFile } from 'react-icons/fa';
 import useAuth from '@features/auth/components/AuthUser';
 import {
   createLegCase,
   getLegcaseTypes,
   updateLegCase,
 } from '@shared/services/api/legalCases';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
+
+const LabelInput = ({ iconName, label, required, as = 'input', ...props }) => (
+  <div className="flex flex-col gap-2">
+    <label className="text-xs font-semibold text-muted-foreground">
+      {label} {required && <span className="text-destructive">*</span>}
+    </label>
+    <div className="relative">
+      {iconName && (
+        <span className="absolute inset-y-0 start-3 flex items-center text-muted-foreground">
+          <LexicraftIcon name={iconName} size={16} />
+        </span>
+      )}
+      {as === 'input' ? (
+        <input
+          {...props}
+          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground ps-10"
+        />
+      ) : (
+        <textarea
+          {...props}
+          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground ps-10"
+        />
+      )}
+    </div>
+  </div>
+);
+
+const SelectInput = ({ label, options, required, ...props }) => (
+  <div className="flex flex-col gap-2">
+    <label className="text-xs font-semibold text-muted-foreground">
+      {label} {required && <span className="text-destructive">*</span>}
+    </label>
+    <select
+      {...props}
+      className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+    >
+      <option value="">{label}</option>
+      {options.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
+const clientCapacityOptions = (t) => [
+  { id: 'مدعى عليه', name: t('legalCaseDetails.editForm.clientCapacity.defendant') },
+  { id: 'مجنى عليه', name: t('legalCaseDetails.editForm.clientCapacity.victim') },
+  { id: 'مدعى', name: t('legalCaseDetails.editForm.clientCapacity.claimant') },
+  { id: 'متهم', name: t('legalCaseDetails.editForm.clientCapacity.accused') },
+];
+
+const LegalCaseEditForm = ({
+  caseData,
+  setCaseData,
+  caseTypes,
+  caseSubTypes,
+  onCaseTypeChange,
+  onSubmit,
+  validated,
+  showAlert,
+  alertMessage,
+  onDismissAlert,
+  isEditing,
+  t,
+}) => (
+  <form noValidate validated={validated} onSubmit={onSubmit} className="space-y-4">
+    {showAlert && (
+      <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+        <div>{alertMessage}</div>
+        <button
+          type="button"
+          onClick={onDismissAlert}
+          className="mt-2 text-xs underline"
+        >
+          {t('common.close')}
+        </button>
+      </div>
+    )}
+    <div className="grid gap-4 md:grid-cols-2">
+      <LabelInput
+        iconName="document"
+        label={t('legalCaseDetails.editForm.slug')}
+        name="slug"
+        value={caseData.slug}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        required
+      />
+      <SelectInput
+        label={t('legalCaseDetails.editForm.clientCapacity.label')}
+        name="client_capacity"
+        value={caseData.client_capacity}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        options={clientCapacityOptions(t)}
+        required
+      />
+    </div>
+    <div className="grid gap-4 md:grid-cols-2">
+      <SelectInput
+        label={t('legalCaseDetails.editForm.caseType')}
+        name="case_type_id"
+        value={caseData.case_type_id}
+        onChange={onCaseTypeChange}
+        options={caseTypes.map((type) => ({
+          id: type.id,
+          name: type.name,
+        }))}
+        required
+      />
+      <SelectInput
+        label={t('legalCaseDetails.editForm.caseSubType')}
+        name="case_sub_type_id"
+        value={caseData.case_sub_type_id}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        options={caseSubTypes.map((subType) => ({
+          id: subType.id,
+          name: subType.name,
+        }))}
+        required
+      />
+    </div>
+    <LabelInput
+      label={t('legalCaseDetails.editForm.title')}
+      name="title"
+      value={caseData.title}
+      onChange={(event) =>
+        setCaseData((prevData) => ({
+          ...prevData,
+          [event.target.name]: event.target.value,
+        }))
+      }
+      required
+      iconName="briefcase"
+    />
+    <LabelInput
+      label={t('legalCaseDetails.editForm.description')}
+      name="description"
+      value={caseData.description}
+      onChange={(event) =>
+        setCaseData((prevData) => ({
+          ...prevData,
+          [event.target.name]: event.target.value,
+        }))
+      }
+      required
+      as="textarea"
+      rows={3}
+      iconName="document"
+    />
+    <div className="grid gap-4 md:grid-cols-2">
+      <LabelInput
+        label={t('legalCaseDetails.editForm.litigantName')}
+        name="litigants_name"
+        value={caseData.litigants_name}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+      />
+      <LabelInput
+        label={t('legalCaseDetails.editForm.litigantPhone')}
+        name="litigants_phone"
+        value={caseData.litigants_phone}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        type="tel"
+      />
+    </div>
+    <div className="grid gap-4 md:grid-cols-2">
+      <LabelInput
+        label={t('legalCaseDetails.editForm.lawyerName')}
+        name="litigants_lawyer_name"
+        value={caseData.litigants_lawyer_name}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+      />
+      <LabelInput
+        label={t('legalCaseDetails.editForm.lawyerPhone')}
+        name="litigants_lawyer_phone"
+        value={caseData.litigants_lawyer_phone}
+        onChange={(event) =>
+          setCaseData((prevData) => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        type="tel"
+      />
+    </div>
+
+    <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+      <button
+        type="submit"
+        className="pressable rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+      >
+        {isEditing ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
+      </button>
+    </div>
+  </form>
+);
 
 const AddEditLegCase = ({
   onClose,
@@ -14,6 +241,7 @@ const AddEditLegCase = ({
   editingLegCase,
 }) => {
   const { getUser } = useAuth();
+  const { t } = useLanguage();
   const [caseData, setCaseData] = useState({
     slug: '',
     title: '',
@@ -37,6 +265,7 @@ const AddEditLegCase = ({
   useEffect(() => {
     fetchCaseTypes();
   }, []);
+
   useEffect(() => {
     if (isEditing && editingLegCase) {
       setCaseData(editingLegCase);
@@ -51,8 +280,7 @@ const AddEditLegCase = ({
       const response = await getLegcaseTypes();
       setCaseTypes(response.data);
     } catch (error) {
-      console.error('Error fetching case types:', error);
-      setAlertMessage('خطأ في تحميل أنواع القضايا.');
+      setAlertMessage(t('legalCaseDetails.editForm.errors.loadTypes'));
       setShowAlert(true);
     }
   };
@@ -72,11 +300,6 @@ const AddEditLegCase = ({
       created_by: getUser().id,
     });
     setCaseSubTypes([]);
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setCaseData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleCaseTypeChange = (event) => {
@@ -123,183 +346,43 @@ const AddEditLegCase = ({
       onClose();
       fetchLegCases();
     } catch (error) {
-      setAlertMessage('خطأ: ' + error.message);
+      setAlertMessage(t('legalCaseDetails.editForm.errors.saveFailed', { message: error.message }));
       setShowAlert(true);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg w-full max-w-xl p-6">
-        <div className="flex justify-between items-center p-4 border-b">
-          <h5 className="text-lg font-medium">
-            {isEditing ? 'تعديل بيانات القضية' : 'إضافة قضية'}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h5 className="text-lg font-semibold">
+            {isEditing ? t('legalCaseDetails.editForm.editTitle') : t('legalCaseDetails.editForm.addTitle')}
           </h5>
           <button
             onClick={onClose}
-            className="text-gray-600 hover:text-gray-900 dark:text-gray-200"
+            className="text-muted-foreground hover:text-foreground"
+            aria-label={t('common.close')}
           >
             &times;
           </button>
         </div>
-        <form noValidate validated={validated} onSubmit={handleSubmit}>
-          {showAlert && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-              <span className="block">{alertMessage}</span>
-              <button
-                onClick={() => setShowAlert(false)}
-                className="absolute top-0 bottom-0 right-0 px-4 py-3"
-              >
-                &times;
-              </button>
-            </div>
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <LabelInput
-              icon={FaRegFile}
-              label="رقم الملف"
-              name="slug"
-              value={caseData.slug}
-              onChange={handleInputChange}
-              required
-            />
-            <SelectInput
-              label="صفة الإدعاء"
-              name="client_capacity"
-              value={caseData.client_capacity}
-              onChange={handleInputChange}
-              options={clientCapacityOptions()}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <SelectInput
-              label="نوع القضية"
-              name="case_type_id"
-              value={caseData.case_type_id}
-              onChange={handleCaseTypeChange}
-              options={caseTypes.map((type) => ({
-                id: type.id,
-                name: type.name,
-              }))}
-              required
-            />
-            <SelectInput
-              label="نوع القضية الفرعي"
-              name="case_sub_type_id"
-              value={caseData.case_sub_type_id}
-              onChange={handleInputChange}
-              options={caseSubTypes.map((subType) => ({
-                id: subType.id,
-                name: subType.name,
-              }))}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 mt-3">
-            <LabelInput
-              label="موضوع الدعوى"
-              name="title"
-              value={caseData.title}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 mt-3">
-            <LabelInput
-              label="الوصف"
-              name="description"
-              value={caseData.description}
-              onChange={handleInputChange}
-              required
-              as="textarea"
-              rows={3}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <LabelInput
-              label="الخصم"
-              name="litigants_name"
-              value={caseData.litigants_name}
-              onChange={handleInputChange}
-            />
-            <LabelInput
-              label="رقم هاتف الخصم"
-              name="litigants_phone"
-              value={caseData.litigants_phone}
-              onChange={handleInputChange}
-              type="tel"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <LabelInput
-              label="وكيل الخصم"
-              name="litigants_lawyer_name"
-              value={caseData.litigants_lawyer_name}
-              onChange={handleInputChange}
-            />
-            <LabelInput
-              label="رقم هاتف وكيل الخصم"
-              name="litigants_lawyer_phone"
-              value={caseData.litigants_lawyer_phone}
-              onChange={handleInputChange}
-              type="tel"
-            />
-          </div>
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
-          >
-            {isEditing ? 'تحديث' : 'حفظ'}
-          </button>
-        </form>
+        <LegalCaseEditForm
+          caseData={caseData}
+          setCaseData={setCaseData}
+          caseTypes={caseTypes}
+          caseSubTypes={caseSubTypes}
+          onCaseTypeChange={handleCaseTypeChange}
+          onSubmit={handleSubmit}
+          validated={validated}
+          showAlert={showAlert}
+          alertMessage={alertMessage}
+          onDismissAlert={() => setShowAlert(false)}
+          isEditing={isEditing}
+          t={t}
+        />
       </div>
     </div>
   );
 };
-
-const LabelInput = ({ icon: Icon, label, as = 'input', ...props }) => (
-  <div className="flex flex-col mb-3">
-    <label className="block text-sm font-medium">{label}</label>
-    <div className="relative mt-1">
-      {Icon && <Icon className="absolute left-3 top-2 text-gray-500" />}
-      {as === 'input' ? (
-        <input
-          {...props}
-          className="block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 pl-10 bg-white dark:bg-gray-700 text-black dark:text-white"
-        />
-      ) : (
-        <textarea
-          {...props}
-          className="block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 pl-10 bg-white dark:bg-gray-700 text-black dark:text-white"
-        />
-      )}
-    </div>
-  </div>
-);
-
-const SelectInput = ({ label, options, ...props }) => (
-  <div className="flex flex-col mb-3">
-    <label className="block text-sm font-medium">{label}</label>
-    <select
-      {...props}
-      className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white"
-    >
-      <option value="">اختر {label}</option>
-      {options.map((option) => (
-        <option key={option.id} value={option.id}>
-          {option.name}
-        </option>
-      ))}
-    </select>
-  </div>
-);
-
-const clientCapacityOptions = () => [
-  { id: 'مدعى عليه', name: 'مدعى عليه' },
-  { id: 'مجنى عليه', name: 'مجنى عليه' },
-  { id: 'مدعى', name: 'مدعى' },
-  { id: 'متهم', name: 'متهم' },
-];
 
 export default AddEditLegCase;

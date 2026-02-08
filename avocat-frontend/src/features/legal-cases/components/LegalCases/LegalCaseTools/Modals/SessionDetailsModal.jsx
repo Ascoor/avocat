@@ -1,200 +1,173 @@
-import React from 'react';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const SessionDetailsModal = ({ isOpen, onClose, session }) => {
+  const { t } = useLanguage();
   if (!isOpen || !session) return null;
 
+  const notAvailable = t('legalCaseDetails.sessions.details.notAvailable');
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div
         id="modal-overlay"
         onClick={(e) => e.target.id === 'modal-overlay' && onClose()}
         className="fixed inset-0"
       >
-        <section className="relative w-full max-w-lg max-h-[90vh] p-6 mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-y-auto">
-          {}
+        <section className="relative mx-auto w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl max-h-[90vh] overflow-y-auto">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none"
+            className="absolute top-4 end-4 text-muted-foreground hover:text-foreground"
+            aria-label={t('common.close')}
           >
             &#x2715;
           </button>
 
-          {}
-          <h2 className="text-xl font-bold text-center p-2 rounded-full bg-gradient-night text-white dark:text-avocat-indigo-light mb-4">
-            تفاصيل الجلسة
+          <h2 className="text-lg font-semibold text-center">
+            {t('legalCaseDetails.sessions.details.title')}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {}
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                تاريخ الجلسة
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.date')}
               </label>
               <input
                 type="text"
-                value={session.session_date || 'غير متوفر'}
+                value={session.session_date || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                المحامي
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.lawyer')}
               </label>
               <input
                 type="text"
-                value={session.lawyer?.name || 'غير متوفر'}
+                value={session.lawyer?.name || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                الرول
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.roll')}
               </label>
               <input
                 type="text"
-                value={session.session_roll || 'غير متوفر'}
+                value={session.session_roll || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                المحكمة
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.court')}
               </label>
               <input
                 type="text"
-                value={session.court?.name || 'غير متوفر'}
+                value={session.court?.name || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                نوع الجلسة
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.type')}
               </label>
               <input
                 type="text"
-                value={session.legal_session_type?.name || 'غير متوفر'}
+                value={session.legal_session_type?.name || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="text-avocat-indigo dark:text-avocat-indigo-light">
-                حالة الجلسة
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.status')}
               </label>
-              <div
-                className={`block w-full px-4 py-2 mt-1 text-center rounded-md ${
-                  session.status === 'تمت'
-                    ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                    : session.status === 'لم ينفذ'
-                      ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                }`}
-              >
-                {session.status || 'فارغ'}
+              <div className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm">
+                {session.status || t('legalCaseDetails.sessions.details.empty')}
               </div>
             </div>
 
-            {}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                الطلبات
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.orders')}
               </label>
               <textarea
-                value={session.orders || 'غير متوفر'}
+                value={session.orders || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              ></textarea>
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
+              />
             </div>
 
-            {}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                النتيجة
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.result')}
               </label>
               <textarea
-                value={session.result || 'غير متوفر'}
+                value={session.result || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              ></textarea>
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
+              />
             </div>
 
-            {}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                الملاحظات
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.notes')}
               </label>
               <textarea
-                value={session.notes || 'غير متوفر'}
+                value={session.notes || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              ></textarea>
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {}
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium text-avocat-indigo dark:text-avocat-indigo-light">
-                رسوم رسمية
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.costReceipts')}
               </label>
               <input
                 type="text"
-                value={session.cost1 || 'فارغ'}
+                value={session.cost1 || t('legalCaseDetails.sessions.details.empty')}
                 readOnly
-                className="block w-full px-4 py-2 mt-1 border rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="text-sm font-medium text-avocat-indigo dark:text-avocat-indigo-light">
-                مصاريف إدارية
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.costFees')}
               </label>
               <input
                 type="text"
-                value={session.cost2 || 'فارغ'}
+                value={session.cost2 || t('legalCaseDetails.sessions.details.empty')}
                 readOnly
-                className="block w-full px-4 py-2 mt-1 border rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="text-sm font-medium text-avocat-indigo dark:text-avocat-indigo-light">
-                إكراميات
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.costOther')}
               </label>
               <input
                 type="text"
-                value={session.cost3 || 'فارغ'}
+                value={session.cost3 || t('legalCaseDetails.sessions.details.empty')}
                 readOnly
-                className="block w-full px-4 py-2 mt-1 border rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                المحرر
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.sessions.details.createdBy')}
               </label>
               <input
                 type="text"
-                value={session.created_by?.name || 'غير متوفر'}
+                value={session.created_by?.name || notAvailable}
                 readOnly
-                className="w-full px-4 py-2 mt-1 border rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                className="w-full mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-sm"
               />
             </div>
           </div>

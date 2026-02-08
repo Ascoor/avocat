@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { BiPlusCircle, BiPencil, BiTrash } from 'react-icons/bi';
+import { useEffect, useState } from 'react';
 import {
   getProceduresByLegCaseId,
   deleteProcedure,
@@ -7,17 +6,20 @@ import {
 import ProcedureModal from './Modals/ProcedureModal';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import { useAlert } from '@shared/contexts/AlertContext';
-import { motion } from 'framer-motion';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
 
-const LegalCaseProcedures = ({ legCaseId }) => {
+const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
+  const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const [procedures, setProcedures] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedProcedure, setSelectedProcedure] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [procedureToDelete, setProcedureToDelete] = useState(null);
-  const { triggerAlert } = useAlert();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
 
@@ -31,30 +33,40 @@ const LegalCaseProcedures = ({ legCaseId }) => {
     return data.slice(startIndex, endIndex);
   };
   const proceduresToDisplay = paginateData(procedures);
-  useEffect(() => {
-    fetchProcedures();
-  }, [legCaseId]);
 
   const fetchProcedures = async () => {
+    setLoading(true);
+    setError('');
     try {
       const response = await getProceduresByLegCaseId(legCaseId);
       setProcedures(response.data);
     } catch (error) {
-      triggerAlert('error', 'حدث خطأ أثناء جلب البيانات.');
+      setError(t('legalCaseDetails.procedures.errors.fetch'));
+      triggerAlert('error', t('legalCaseDetails.procedures.errors.fetch'));
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProcedures();
+  }, [legCaseId]);
+
+  useEffect(() => {
+    if (openAddSignal > 0) {
+      handleAddProcedure();
+    }
+  }, [openAddSignal]);
 
   const handleAddProcedure = () => {
     setIsEditMode(false);
     setModalData({});
-    setSelectedProcedure(null);
     setShowModal(true);
   };
 
   const handleEditProcedure = (procedure) => {
     setIsEditMode(true);
     setModalData(procedure);
-    setSelectedProcedure(null);
     setShowModal(true);
   };
 
@@ -67,10 +79,10 @@ const LegalCaseProcedures = ({ legCaseId }) => {
     if (procedureToDelete) {
       try {
         await deleteProcedure(procedureToDelete.id);
-        triggerAlert('success', 'تم حذف الإجراء بنجاح');
+        triggerAlert('success', t('legalCaseDetails.procedures.alerts.deleteSuccess'));
         fetchProcedures();
       } catch (error) {
-        triggerAlert('error', 'حدث خطأ أثناء حذف الإجراء');
+        triggerAlert('error', t('legalCaseDetails.procedures.alerts.deleteError'));
       } finally {
         setShowConfirmDelete(false);
         setProcedureToDelete(null);
@@ -78,121 +90,179 @@ const LegalCaseProcedures = ({ legCaseId }) => {
     }
   };
 
-  const totalPages = Math.ceil(procedures.length / rowsPerPage);
+  const totalPages = Math.ceil(procedures.length / rowsPerPage) || 1;
+  const isEmpty = !loading && procedures.length === 0;
+
   return (
-    <div className="min-h-screen bg-lightBg dark:bg-darkBg text-gray-900 dark:text-gray-100">
-      {}
-      <motion.header
-        className="p-4 bg-gradient-blue-dark dark:bg-avocat-blue-dark flex justify-between items-center rounded-lg shadow-md"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {}
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-muted/40 p-4">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">
+            {t('legalCaseDetails.procedures.title')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t('legalCaseDetails.procedures.subtitle')}
+          </p>
+        </div>
         <button
           onClick={handleAddProcedure}
-          className="px-2 py-2 text-sm rounded-lg font-bold bg-gradient-green-button hover:bg-gradient-green-dark-button text-white shadow-md hover:scale-105 transform transition-all"
+          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
-          <BiPlusCircle className="inline-block ml-2" />
-          إضافة
+          <LexicraftIcon name="document" size={18} />
+          {t('legalCaseDetails.actions.addProcedure')}
         </button>
+      </header>
 
-        {}
-        <h1 className="text-lg font-bold text-white flex-1 text-center">
-          إجراءات القضية
-        </h1>
-      </motion.header>
-
-      {}
-      <motion.button
-        onClick={handleAddProcedure}
-        className="fixed bottom-6 right-6 sm:hidden flex items-center bg-gradient-green-button text-white px-6 py-3 rounded-full shadow-lg transition hover:bg-gradient-green-dark-button"
-        whileHover={{ scale: 1.1 }}
-      >
-        <BiPlusCircle size={24} className="mr-2" />
-        إضافة
-      </motion.button>
-
-      {}
-      {}
-      <div className="p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] table-auto bg-white dark:bg-gradient-blue-dark rounded-lg shadow-lg overflow-hidden">
-            <thead>
-              <tr className="bg-avocat-indigo dark:bg-avocat-blue text-white text-sm sm:text-base">
-                <th className="px-4 py-2">الإجراء</th>
-                <th className="px-4 py-2">المحامي</th>
-                <th className="px-4 py-2">تاريخ الانتهاء</th>
-                <th className="px-4 py-2">المطلوب</th>
-                <th className="px-4 py-2">النتيجة</th>
-                <th className="px-4 py-2">حالة الإجراء</th>
-                <th className="px-4 py-2">التحكم</th>
-              </tr>
-            </thead>
-            <tbody>
-              {proceduresToDisplay.map((procedure) => (
-                <tr
-                  key={procedure.id}
-                  className="border-b bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
-                  onClick={() => setSelectedProcedure(procedure)}
-                >
-                  <td className="px-4 py-2 text-center">
-                    {procedure.procedure_type?.name || '-'}
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    {procedure.lawyer?.name || '-'}
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    {procedure.date_end}
-                  </td>
-                  <td className="px-4 py-2 text-center">{procedure.job}</td>
-                  <td className="px-4 py-2 text-center">{procedure.result}</td>
-                  <td className="px-4 py-2 text-center">{procedure.status}</td>
-                  <td className="px-4 py-2 flex justify-center space-x-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditProcedure(procedure);
-                      }}
-                      className="text-blue-500 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-500 transition"
-                    >
-                      <BiPencil />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteClick(procedure);
-                      }}
-                      className="text-red-500 dark:text-red-300 hover:text-red-700 dark:hover:text-red-500 transition"
-                    >
-                      <BiTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {error && (
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+          {error}
         </div>
-        <div className="flex justify-center mt-4">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-            className="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
-          >
-            السابق
-          </button>
-          <span className="flex items-center">
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-            className="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
-          >
-            التالي
-          </button>
+      )}
+
+      {loading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="h-16 rounded-2xl skeleton-shimmer" />
+          ))}
         </div>
-      </div>
+      ) : (
+        <>
+          {isEmpty ? (
+            <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <LexicraftIcon name="tool" size={20} />
+              </div>
+              <div>{t('legalCaseDetails.procedures.empty')}</div>
+              <button
+                onClick={handleAddProcedure}
+                className="pressable mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+              >
+                <LexicraftIcon name="document" size={16} />
+                {t('legalCaseDetails.actions.addProcedure')}
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="hidden md:block overflow-x-auto rounded-2xl border border-border">
+                <table className="min-w-full text-sm">
+                  <thead className="sticky top-0 bg-muted text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.procedure')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.lawyer')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.endDate')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.request')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.result')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.procedures.table.status')}</th>
+                      <th className="px-4 py-3 text-center">{t('legalCaseDetails.table.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {proceduresToDisplay.map((procedure) => (
+                      <tr
+                        key={procedure.id}
+                        className="border-t border-border hover:bg-muted/40 transition"
+                      >
+                        <td className="px-4 py-3">{procedure.procedure_type?.name || '-'}</td>
+                        <td className="px-4 py-3">{procedure.lawyer?.name || '-'}</td>
+                        <td className="px-4 py-3">{procedure.date_end}</td>
+                        <td className="px-4 py-3">{procedure.job}</td>
+                        <td className="px-4 py-3">{procedure.result}</td>
+                        <td className="px-4 py-3">{procedure.status}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditProcedure(procedure);
+                              }}
+                              className="pressable inline-flex h-9 w-9 items-center justify-center rounded-full border border-border"
+                              aria-label={t('legalCaseDetails.actions.edit')}
+                            >
+                              <LexicraftIcon name="tool" size={18} />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(procedure);
+                              }}
+                              className="pressable inline-flex h-9 w-9 items-center justify-center rounded-full border border-destructive/40 text-destructive"
+                              aria-label={t('legalCaseDetails.actions.delete')}
+                            >
+                              <LexicraftIcon name="shield" size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="space-y-3 md:hidden">
+                {proceduresToDisplay.map((procedure) => (
+                  <div
+                    key={procedure.id}
+                    className="rounded-2xl border border-border p-4 shadow-sm"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="text-sm font-semibold text-foreground">
+                          {procedure.procedure_type?.name || '-'}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {procedure.lawyer?.name || '-'} · {procedure.date_end}
+                        </div>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{procedure.status}</span>
+                    </div>
+                    <div className="mt-3 text-xs text-muted-foreground">
+                      {t('legalCaseDetails.procedures.table.request')}: {procedure.job || '-'}
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        onClick={() => handleEditProcedure(procedure)}
+                        className="pressable inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border px-3 py-2 text-xs"
+                      >
+                        <LexicraftIcon name="tool" size={16} />
+                        {t('legalCaseDetails.actions.edit')}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(procedure)}
+                        className="pressable inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-destructive/40 px-3 py-2 text-xs text-destructive"
+                      >
+                        <LexicraftIcon name="shield" size={16} />
+                        {t('legalCaseDetails.actions.delete')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {totalPages > 1 && (
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
+              >
+                {t('legalCaseDetails.pagination.prev')}
+              </button>
+              <span className="text-sm text-muted-foreground">
+                {t('legalCaseDetails.pagination.page', { current: currentPage, total: totalPages })}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
+              >
+                {t('legalCaseDetails.pagination.next')}
+              </button>
+            </div>
+          )}
+        </>
+      )}
 
       {showModal && (
         <ProcedureModal
@@ -209,7 +279,7 @@ const LegalCaseProcedures = ({ legCaseId }) => {
           isOpen={showConfirmDelete}
           onClose={() => setShowConfirmDelete(false)}
           onConfirm={handleConfirmDelete}
-          itemName={procedureToDelete?.procedure_type?.name || 'الإجراء'}
+          itemName={procedureToDelete?.procedure_type?.name || t('legalCaseDetails.procedures.title')}
         />
       )}
     </div>
