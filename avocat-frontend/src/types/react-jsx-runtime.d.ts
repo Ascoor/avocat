@@ -1,7 +1,5 @@
-import type { ReactNode } from 'react';
-
-declare global {
-  namespace JSX {
+declare module 'react/jsx-runtime' {
+  export namespace JSX {
     interface Element {
       [key: string]: any;
     }
@@ -13,7 +11,7 @@ declare global {
     }
   }
 
-  type Children = ReactNode | ReactNode[];
+  export const jsx: any;
+  export const jsxs: any;
+  export const Fragment: any;
 }
-
-export {};
