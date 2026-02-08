@@ -28,7 +28,8 @@ export const useLegalCase = (id?: string) =>
       if (!id) throw new Error('Case ID is required');
       const response = await getLegCaseById(id);
       const payload = response.data?.data ?? response.data;
-      return payload?.leg_case ?? payload;
+      const raw = payload as { leg_case?: LegalCase; data?: { leg_case?: LegalCase } };
+      return (raw?.leg_case ?? raw?.data?.leg_case ?? payload) as unknown as LegalCase;
     },
     enabled: !!id,
   });

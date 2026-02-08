@@ -11,6 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -21,8 +22,8 @@
       "@assets/*": ["src/assets/*"],
       "@styles/*": ["src/styles/*"]
     },
-    "types": ["vite/client"]
+    "types": []
   },
-  "include": ["src"],
+  "include": ["src", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
