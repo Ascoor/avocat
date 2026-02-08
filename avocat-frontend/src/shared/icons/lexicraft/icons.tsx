@@ -141,6 +141,52 @@ export const ToolIcon = (props: IconBaseProps) => (
   </IconBase>
 );
 
+export const ViewIcon = (props: IconBaseProps) => (
+  <IconBase {...props}>
+    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+    <circle cx="12" cy="12" r="2.5" />
+  </IconBase>
+);
+
+export const EditIcon = (props: IconBaseProps) => (
+  <IconBase {...props}>
+    <path d="M4 16.5V20h3.5L18 9.5 14.5 6 4 16.5Z" />
+    <path d="m12.5 7 3.5 3.5" />
+  </IconBase>
+);
+
+export const TrashIcon = (props: IconBaseProps) => (
+  <IconBase {...props}>
+    <path d="M4 7h16" />
+    <path d="M9 7V5h6v2" />
+    <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+  </IconBase>
+);
+
+export const SortUpIcon = (props: IconBaseProps) => (
+  <IconBase {...props}>
+    <path d="M7 17V7" />
+    <path d="m7 7-3 3" />
+    <path d="m7 7 3 3" />
+    <path d="M13 17h6" />
+    <path d="M13 13h4.5" />
+    <path d="M13 9h3" />
+  </IconBase>
+);
+
+export const SortDownIcon = (props: IconBaseProps) => (
+  <IconBase {...props}>
+    <path d="M7 7v10" />
+    <path d="m7 17-3-3" />
+    <path d="m7 17 3-3" />
+    <path d="M13 7h6" />
+    <path d="M13 11h4.5" />
+    <path d="M13 15h3" />
+  </IconBase>
+);
+
 export const ArrowForwardIcon = (props: IconBaseProps) => (
   <IconBase {...props}>
     <path d="M5 12h13" />

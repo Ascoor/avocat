@@ -260,7 +260,16 @@ export default function LegalCaseClients({
 
       {error && (
         <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <button
+              onClick={fetchData}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
+            >
+              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+          </div>
         </div>
       )}
 

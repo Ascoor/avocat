@@ -1,9 +1,16 @@
-import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
-import api from '@shared/services/api/axiosConfig';
+import {
+  deleteLegCase,
+  getLegCaseById,
+  getLegalAdsByLegCaseId,
+} from '@shared/services/api/legalCases';
+import { getProceduresByLegCaseId } from '@shared/services/api/procedures';
+import { getSessionsByLegCaseId } from '@shared/services/api/sessions';
+import { fetchWithCaseCache, invalidateCaseFetchCache } from '@shared/utils/caseFetchCache';
 
 const Procedure = lazy(() => import('./LegalCaseTools/LegalCaseProcedures'));
 const LegalSession = lazy(() => import('./LegalCaseTools/LegalCaseSessions'));
@@ -39,8 +46,26 @@ export default function LegCaseDetails() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [procedureSignal, setProcedureSignal] = useState(0);
   const [sessionSignal, setSessionSignal] = useState(0);
+  const [sectionsState, setSectionsState] = useState({
+    procedures: { data: [], loading: false, error: '' },
+    sessions: { data: [], loading: false, error: '' },
+    ads: { data: [], loading: false, error: '' },
+  });
 
-  const fetchLegCase = async () => {
+  const logFetch = useCallback((label, payload) => {
+    if (import.meta.env?.DEV) {
+      console.info('[LegalCaseDetails]', label, payload || '');
+    }
+  }, []);
+
+  const updateSectionState = useCallback((key, updater) => {
+    setSectionsState((prev) => ({
+      ...prev,
+      [key]: typeof updater === 'function' ? updater(prev[key]) : updater,
+    }));
+  }, []);
+
+  const fetchLegCase = useCallback(async () => {
     if (!id) {
       setError(t('legalCaseDetails.errors.missingId'));
       setLoading(false);
@@ -49,36 +74,123 @@ export default function LegCaseDetails() {
 
     setLoading(true);
     setError('');
+    setLegCase(null);
     try {
-      const response = await api.get(`/legal-cases/${id}`);
+      logFetch('fetch-case', { id });
+      const response = await fetchWithCaseCache({
+        key: `legal-case:${id}`,
+        fetcher: () => getLegCaseById(id),
+      });
       const legCaseData = response.data?.leg_case;
       if (!legCaseData) {
         throw new Error('Missing case data');
       }
       setLegCase(legCaseData);
       setLegcaseClients(legCaseData.clients || []);
+      updateSectionState('procedures', (prev) => ({ ...prev, error: '' }));
+      updateSectionState('sessions', (prev) => ({ ...prev, error: '' }));
+      updateSectionState('ads', (prev) => ({ ...prev, error: '' }));
     } catch (err) {
       setError(t('legalCaseDetails.errors.fetchFailed'));
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, logFetch, t, updateSectionState]);
+
+  useEffect(() => {
+    setSectionsState({
+      procedures: { data: [], loading: false, error: '' },
+      sessions: { data: [], loading: false, error: '' },
+      ads: { data: [], loading: false, error: '' },
+    });
+  }, [id]);
+
+  const fetchSection = useCallback(
+    async (key, fetcher) => {
+      if (!id) return;
+      updateSectionState(key, (prev) => ({ ...prev, loading: true, error: '' }));
+      try {
+        logFetch('fetch-section', { key, id });
+        const data = await fetchWithCaseCache({
+          key: `legal-case:${id}:${key}`,
+          fetcher,
+        });
+        updateSectionState(key, { data, loading: false, error: '' });
+      } catch (err) {
+        updateSectionState(key, (prev) => ({
+          ...prev,
+          loading: false,
+          error: t(`legalCaseDetails.${key}.errors.fetch`),
+        }));
+      }
+    },
+    [id, logFetch, t, updateSectionState],
+  );
+
+  const fetchProcedures = useCallback(
+    () =>
+      fetchSection('procedures', async () => {
+        const response = await getProceduresByLegCaseId(id);
+        return response.data || [];
+      }),
+    [fetchSection, id],
+  );
+
+  const fetchSessions = useCallback(
+    () =>
+      fetchSection('sessions', async () => {
+        const response = await getSessionsByLegCaseId(id);
+        return response.data?.data || [];
+      }),
+    [fetchSection, id],
+  );
+
+  const fetchAds = useCallback(
+    () =>
+      fetchSection('ads', async () => {
+        const response = await getLegalAdsByLegCaseId(id);
+        return response.data || [];
+      }),
+    [fetchSection, id],
+  );
+
+  const fetchSectionsParallel = useCallback(async () => {
+    if (!id) return;
+    await Promise.allSettled([fetchProcedures(), fetchSessions(), fetchAds()]);
+  }, [fetchProcedures, fetchSessions, fetchAds, id]);
 
   useEffect(() => {
     fetchLegCase();
-  }, [id]);
+  }, [fetchLegCase]);
+
+  useEffect(() => {
+    if (legCase) {
+      fetchSectionsParallel();
+    }
+  }, [legCase, fetchSectionsParallel]);
 
   const handleDeleteCase = async () => {
     if (!id) return;
     const confirmed = window.confirm(t('legalCaseDetails.actions.confirmDelete'));
     if (!confirmed) return;
     try {
-      await api.delete(`/legal-cases/${id}`);
+      await deleteLegCase(id);
       navigate('/dashboard/legcases');
     } catch (err) {
       setError(t('legalCaseDetails.errors.deleteFailed'));
     }
   };
+
+  const refreshSection = useCallback(
+    (key) => {
+      invalidateCaseFetchCache(`legal-case:${id}:${key}`);
+      if (key === 'procedures') return fetchProcedures();
+      if (key === 'sessions') return fetchSessions();
+      if (key === 'ads') return fetchAds();
+      return undefined;
+    },
+    [fetchAds, fetchProcedures, fetchSessions, id],
+  );
 
   const overviewCards = useMemo(
     () => [
@@ -128,8 +240,41 @@ export default function LegCaseDetails() {
           <div className="text-lg font-semibold">{error}</div>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <button
-              onClick={fetchLegCase}
+              onClick={() => {
+                invalidateCaseFetchCache(`legal-case:${id}`);
+                fetchLegCase();
+              }}
               className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-sm font-semibold"
+            >
+              <LexicraftIcon name="arrow-forward" size={18} isDirectional dir={isRTL ? 'rtl' : 'ltr'} />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+            <button
+              onClick={() => navigate('/dashboard/legcases')}
+              className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            >
+              {t('legalCaseDetails.actions.backToCases')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!legCase) {
+    return (
+      <div className="max-w-5xl mx-auto p-6">
+        <div className="rounded-2xl border border-border bg-card p-6 text-center text-muted-foreground">
+          <div className="text-lg font-semibold text-foreground">
+            {t('legalCaseDetails.errors.empty')}
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => {
+                invalidateCaseFetchCache(`legal-case:${id}`);
+                fetchLegCase();
+              }}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold"
             >
               <LexicraftIcon name="arrow-forward" size={18} isDirectional dir={isRTL ? 'rtl' : 'ltr'} />
               {t('legalCaseDetails.actions.retry')}
@@ -285,17 +430,37 @@ export default function LegCaseDetails() {
             </TabsContent>
             <TabsContent value="procedures">
               <Suspense fallback={<div className="p-6 text-center text-muted-foreground">{t('common.loading')}</div>}>
-                <Procedure legCaseId={id} openAddSignal={procedureSignal} />
+                <Procedure
+                  legCaseId={id}
+                  openAddSignal={procedureSignal}
+                  procedures={sectionsState.procedures.data}
+                  loading={sectionsState.procedures.loading}
+                  error={sectionsState.procedures.error}
+                  onRefresh={() => refreshSection('procedures')}
+                />
               </Suspense>
             </TabsContent>
             <TabsContent value="sessions">
               <Suspense fallback={<div className="p-6 text-center text-muted-foreground">{t('common.loading')}</div>}>
-                <LegalSession legCaseId={id} openAddSignal={sessionSignal} />
+                <LegalSession
+                  legCaseId={id}
+                  openAddSignal={sessionSignal}
+                  sessions={sectionsState.sessions.data}
+                  loading={sectionsState.sessions.loading}
+                  error={sectionsState.sessions.error}
+                  onRefresh={() => refreshSection('sessions')}
+                />
               </Suspense>
             </TabsContent>
             <TabsContent value="ads">
               <Suspense fallback={<div className="p-6 text-center text-muted-foreground">{t('common.loading')}</div>}>
-                <LegalCaseAds legCaseId={id} />
+                <LegalCaseAds
+                  legCaseId={id}
+                  legalAds={sectionsState.ads.data}
+                  loading={sectionsState.ads.loading}
+                  error={sectionsState.ads.error}
+                  onRefresh={() => refreshSection('ads')}
+                />
               </Suspense>
             </TabsContent>
           </div>

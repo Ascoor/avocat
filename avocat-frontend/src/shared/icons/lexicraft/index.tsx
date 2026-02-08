@@ -5,14 +5,19 @@ import {
   CalendarIcon,
   CourtIcon,
   DocumentIcon,
+  EditIcon,
   GavelIcon,
   LockIcon,
   ScalesIcon,
   SearchIcon,
   ShieldIcon,
+  SortDownIcon,
+  SortUpIcon,
+  TrashIcon,
   ToolIcon,
   UserIcon,
   UsersIcon,
+  ViewIcon,
 } from "./icons";
 import { lexicraftManifest, type LexicraftIconName } from "./manifest";
 
@@ -31,6 +36,11 @@ export const LEXICRAFT_ICONS = {
   calendar: CalendarIcon,
   search: SearchIcon,
   tool: ToolIcon,
+  view: ViewIcon,
+  edit: EditIcon,
+  trash: TrashIcon,
+  "sort-up": SortUpIcon,
+  "sort-down": SortDownIcon,
   "arrow-forward": ArrowForwardIcon,
 };
 

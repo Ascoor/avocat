@@ -162,6 +162,10 @@
     box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
   }
 
+  [dir='rtl'] .table-actions {
+    flex-direction: row-reverse;
+  }
+
   .rtl-mirror {
     transform: scaleX(-1);
     transform-origin: center;
@@ -186,6 +190,16 @@
 
   .section-enter {
     animation: sectionFade 0.35s ease-out;
+  }
+
+  .modal-surface {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-motion {
+    animation: modalPop 0.25s ease-out;
   }
 
   .skeleton-shimmer {
@@ -219,11 +233,23 @@
     }
   }
 
+  @keyframes modalPop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hover-lift,
     .pressable,
     .section-enter,
-    .skeleton-shimmer {
+    .skeleton-shimmer,
+    .modal-motion {
       animation: none !important;
       transition: none !important;
       transform: none !important;

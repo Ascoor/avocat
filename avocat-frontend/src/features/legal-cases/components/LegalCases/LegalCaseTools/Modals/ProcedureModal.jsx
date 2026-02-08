@@ -9,6 +9,7 @@ import { getLawyers } from '@shared/services/api/lawyers';
 import useAuth from '@features/auth/components/AuthUser';
 import { useAlert } from '@shared/contexts/AlertContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
 
 const ProcedureForm = ({
   formData,
@@ -40,7 +41,7 @@ const ProcedureForm = ({
         name="procedure_type_id"
         value={formData.procedure_type_id}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         required
       >
         <option value="">{t('legalCaseDetails.procedures.form.typePlaceholder')}</option>
@@ -60,7 +61,7 @@ const ProcedureForm = ({
         name="procedure_place_type_id"
         value={formData.procedure_place_type_id}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         required
       >
         <option value="">{t('legalCaseDetails.procedures.form.placeTypePlaceholder')}</option>
@@ -81,7 +82,7 @@ const ProcedureForm = ({
         type="text"
         value={formData.procedure_place_name}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
       />
     </div>
 
@@ -95,7 +96,7 @@ const ProcedureForm = ({
           type="date"
           value={formData.date_start}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
           required
         />
       </div>
@@ -108,7 +109,7 @@ const ProcedureForm = ({
           type="date"
           value={formData.date_end}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
           required
         />
       </div>
@@ -122,7 +123,7 @@ const ProcedureForm = ({
         name="lawyer_id"
         value={formData.lawyer_id}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         required
       >
         <option value="">{t('legalCaseDetails.procedures.form.lawyerPlaceholder')}</option>
@@ -143,7 +144,7 @@ const ProcedureForm = ({
         type="text"
         value={formData.job}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         required
       />
     </div>
@@ -157,7 +158,7 @@ const ProcedureForm = ({
         type="text"
         value={formData.result}
         onChange={onChange}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
       />
     </div>
 
@@ -170,7 +171,7 @@ const ProcedureForm = ({
           name="status"
           value={formData.status}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
           required
         >
           <option value="جاري التنفيذ">{t('legalCaseDetails.procedures.form.statusInProgress')}</option>
@@ -190,7 +191,7 @@ const ProcedureForm = ({
           type="number"
           value={formData.cost}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         />
       </div>
       <div>
@@ -202,7 +203,7 @@ const ProcedureForm = ({
           type="number"
           value={formData.cost2}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         />
       </div>
       <div>
@@ -214,7 +215,7 @@ const ProcedureForm = ({
           type="number"
           value={formData.cost3}
           onChange={onChange}
-          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
         />
       </div>
     </div>
@@ -223,14 +224,16 @@ const ProcedureForm = ({
       <button
         type="button"
         onClick={onClose}
-        className="pressable rounded-full border border-border px-4 py-2 text-sm"
+        className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm"
       >
+        <LexicraftIcon name="arrow-forward" size={16} isDirectional />
         {t('common.cancel')}
       </button>
       <button
         type="submit"
-        className="pressable rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+        className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
       >
+        <LexicraftIcon name="document" size={16} />
         {isEdit ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
       </button>
     </div>
@@ -339,11 +342,21 @@ const ProcedureModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <h2 className="text-lg font-semibold">
-            {isEdit ? t('legalCaseDetails.procedures.form.editTitle') : t('legalCaseDetails.procedures.form.addTitle')}
-          </h2>
+      <div className="modal-surface modal-motion w-full max-w-2xl rounded-2xl p-6 shadow-xl">
+        <div className="flex items-start justify-between border-b border-border pb-3">
+          <div className="flex items-start gap-3">
+            <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <LexicraftIcon name="document" size={20} />
+            </span>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">
+                {isEdit ? t('legalCaseDetails.procedures.form.editTitle') : t('legalCaseDetails.procedures.form.addTitle')}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t('legalCaseDetails.procedures.form.subtitle')}
+              </p>
+            </div>
+          </div>
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground"

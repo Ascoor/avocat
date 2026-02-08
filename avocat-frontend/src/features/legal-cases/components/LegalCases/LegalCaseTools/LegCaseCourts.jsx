@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import {
   addLegalCaseCourts,
   getCourts,
@@ -24,32 +24,32 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
   const [error, setError] = useState('');
   const years = Array.from({ length: 51 }, (_, i) => 2000 + i);
 
-  useEffect(() => {
-    const fetchCourtData = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const response = await getCourts();
-        const fetchedCourts = response.data;
-        setCourts(fetchedCourts);
+  const fetchCourtData = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await getCourts();
+      const fetchedCourts = response.data;
+      setCourts(fetchedCourts);
 
-        const uniqueLevels = fetchedCourts
-          .map((court) => court.court_level)
-          .filter(
-            (level, index, self) =>
-              level && self.findIndex((l) => l.id === level.id) === index,
-          );
+      const uniqueLevels = fetchedCourts
+        .map((court) => court.court_level)
+        .filter(
+          (level, index, self) =>
+            level && self.findIndex((l) => l.id === level.id) === index,
+        );
 
-        setCourtLevels(uniqueLevels);
-      } catch (error) {
-        setError(t('legalCaseDetails.courts.errors.fetch'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourtData();
+      setCourtLevels(uniqueLevels);
+    } catch (error) {
+      setError(t('legalCaseDetails.courts.errors.fetch'));
+    } finally {
+      setLoading(false);
+    }
   }, [t]);
+
+  useEffect(() => {
+    fetchCourtData();
+  }, [fetchCourtData]);
 
   const addNewCourt = () => {
     setLegCaseNewCourts((prev) => [
@@ -143,7 +143,16 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
 
       {error && (
         <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <button
+              onClick={fetchCourtData}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
+            >
+              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+          </div>
         </div>
       )}
 
