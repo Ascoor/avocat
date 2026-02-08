@@ -9,6 +9,7 @@ import {
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import SectionHeader from '@shared/components/common/SectionHeader';
 import { ServiceIcon } from '@assets/icons';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const ServiceTypes = () => {
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -16,6 +17,7 @@ const ServiceTypes = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingServiceType, setEditingServiceType] = useState(null);
   const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const itemsPerPage = 10;
 
   const fetchServiceTypes = useCallback(async () => {
@@ -24,9 +26,9 @@ const ServiceTypes = () => {
       setServiceTypes(response.data || []);
     } catch (error) {
       console.error('Error fetching service types:', error);
-      triggerAlert('error', 'Failed to fetch service types. Please try again.');
+      triggerAlert('error', t('settings.serviceTypes.alerts.fetchError'));
     }
-  }, [triggerAlert]);
+  }, [triggerAlert, t]);
 
   useEffect(() => {
     fetchServiceTypes();
@@ -36,31 +38,28 @@ const ServiceTypes = () => {
     try {
       if (editingServiceType) {
         await updateServiceType(editingServiceType.id, formData);
-        triggerAlert('success', 'Service type updated successfully.');
+        triggerAlert('success', t('settings.serviceTypes.alerts.updateSuccess'));
       } else {
         await createServiceType(formData);
-        triggerAlert('success', 'Service type added successfully.');
+        triggerAlert('success', t('settings.serviceTypes.alerts.addSuccess'));
       }
       fetchServiceTypes();
       setShowModal(false);
     } catch (error) {
       console.error('Error saving service type:', error);
-      triggerAlert('error', 'Failed to save service type. Please try again.');
+      triggerAlert('error', t('settings.serviceTypes.alerts.saveError'));
     }
   };
 
   const handleDeleteServiceType = async (serviceTypeId) => {
-    if (window.confirm('Are you sure you want to delete this service type?')) {
+    if (window.confirm(t('settings.serviceTypes.alerts.deleteConfirm'))) {
       try {
         await deleteServiceType(serviceTypeId);
         fetchServiceTypes();
-        triggerAlert('success', 'Service type deleted successfully.');
+        triggerAlert('success', t('settings.serviceTypes.alerts.deleteSuccess'));
       } catch (error) {
         console.error('Error deleting service type:', error);
-        triggerAlert(
-          'error',
-          'Failed to delete service type. Please try again.',
-        );
+        triggerAlert('error', t('settings.serviceTypes.alerts.deleteError'));
       }
     }
   };
@@ -83,14 +82,14 @@ const ServiceTypes = () => {
 
   return (
     <div className="p-6 mt-12 xl:max-w-7xl xl:mx-auto w-full bg-gray-50 dark:bg-gray-900">
-      <SectionHeader listName="أنواع الخدمات" icon={ServiceIcon} />
+      <SectionHeader listName={t('settings.serviceTypes.title')} icon={ServiceIcon} />
 
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => handleShowModal()}
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md transition"
         >
-          إضافة نوع حدمة
+          {t('settings.serviceTypes.addButton')}
         </button>
       </div>
 
@@ -99,7 +98,7 @@ const ServiceTypes = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg">
             <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-              {editingServiceType ? 'Edit Service Type' : 'Add Service Type'}
+              {editingServiceType ? t('settings.serviceTypes.editTitle') : t('settings.serviceTypes.addTitle')}
             </h3>
             <form
               onSubmit={(e) => {
@@ -114,7 +113,7 @@ const ServiceTypes = () => {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-800 dark:text-gray-300"
                 >
-                  إسم الخدمة
+                  {t('settings.serviceTypes.nameLabel')}
                 </label>
                 <input
                   type="text"
@@ -131,13 +130,13 @@ const ServiceTypes = () => {
                   onClick={() => setShowModal(false)}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
                 >
-                  {editingServiceType ? 'Save Changes' : 'Add Service Type'}
+                  {editingServiceType ? t('settings.serviceTypes.saveChanges') : t('settings.serviceTypes.addAction')}
                 </button>
               </div>
             </form>
@@ -151,10 +150,10 @@ const ServiceTypes = () => {
           <thead className="bg-gray-200 dark:bg-gray-700">
             <tr>
               <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100">
-                الإسم
+                {t('settings.serviceTypes.nameColumn')}
               </th>
               <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100">
-                الإجراءات
+                {t('settings.serviceTypes.actionsColumn')}
               </th>
             </tr>
           </thead>
@@ -196,17 +195,17 @@ const ServiceTypes = () => {
           disabled={currentPage === 1}
           className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
         >
-          السابق
+          {t('settings.serviceTypes.prev')}
         </button>
         <span className="text-gray-800 dark:text-gray-100">
-          الصفحة {currentPage} من {totalPages}
+          {t('settings.serviceTypes.pageStatus', { current: currentPage, total: totalPages })}
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
         >
-          التالي
+          {t('settings.serviceTypes.next')}
         </button>
       </div>
     </div>

@@ -20,7 +20,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
   return (
     <div className="min-h-screen bg-background" dir={direction}>
       {toolbar && (
-        <div className="absolute top-4 right-4 z-50 flex items-center gap-2">{toolbar}</div>
+        <div className="absolute top-4 end-4 z-50 flex items-center gap-2">{toolbar}</div>
       )}
 
       <div className="flex min-h-screen">
@@ -32,8 +32,8 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
         >
           <div className="absolute inset-0 bg-gradient-hero" />
           <div className="absolute inset-0 opacity-30">
-            <div className="absolute -top-16 right-0 h-72 w-72 rounded-full bg-[hsl(var(--gold))] blur-[120px]" />
-            <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[hsl(var(--primary-glow))] blur-[140px]" />
+            <div className="absolute -top-16 end-0 h-72 w-72 rounded-full bg-[hsl(var(--gold))] blur-[120px]" />
+            <div className="absolute bottom-0 start-0 h-72 w-72 rounded-full bg-[hsl(var(--primary-glow))] blur-[140px]" />
           </div>
 
           <div className="relative z-10 flex h-full flex-col justify-center px-12 py-16 xl:px-16">
@@ -104,7 +104,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                 className="flex gap-8 border-t border-white/10 pt-8"
               >
                 {hero.stats.map((stat, index) => (
-                  <div key={index} className={cn("text-center", isRTL && "text-right")}>
+                  <div key={index} className="text-center sm:text-start">
                     <div className="text-2xl font-bold text-[hsl(var(--gold))]">{stat.value}</div>
                     <div className="text-sm text-white/60">{stat.label}</div>
                   </div>
@@ -133,8 +133,8 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
           )}
         >
           <div className="absolute inset-0 lg:hidden">
-            <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-[hsl(var(--primary))]/10 blur-[100px]" />
-            <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-[hsl(var(--gold))]/10 blur-[80px]" />
+            <div className="absolute top-0 end-0 h-64 w-64 rounded-full bg-[hsl(var(--primary))]/10 blur-[100px]" />
+            <div className="absolute bottom-0 start-0 h-48 w-48 rounded-full bg-[hsl(var(--gold))]/10 blur-[80px]" />
           </div>
 
           <motion.div

@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const ClientAccounttIndex = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useLanguage();
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -18,16 +20,16 @@ const ClientAccounttIndex = () => {
       <form onSubmit={handleSearchSubmit}>
         <input
           type="text"
-          placeholder="Search Invoices or Clients..."
+          placeholder={t('finance.searchPlaceholder')}
           value={searchQuery}
           onChange={handleSearchChange}
         />
         <button type="submit" className="search-button">
-          Search
+          {t('common.search')}
         </button>
       </form>
       <button className="add-invoice-button" onClick={handleAddInvoiceClick}>
-        Add Invoice
+        {t('finance.addInvoice')}
       </button>
     </div>
   );

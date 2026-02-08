@@ -56,7 +56,7 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
 
           {/* Title */}
           {title && (
-            <div className={cn("hidden sm:block min-w-0", isRTL ? "text-right" : "text-left")}>
+            <div className="hidden min-w-0 sm:block text-start">
               <p className="text-sm text-muted-foreground">{t("common.workspace")}</p>
               <h1 className="text-lg font-semibold text-foreground truncate">{title}</h1>
             </div>
@@ -80,7 +80,7 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
           </div>
 
           <div className="sm:hidden flex items-center gap-2">
-            <Button variant="outline" size="icon" aria-label="Theme">
+            <Button variant="outline" size="icon" aria-label={t("common.switchToDark")}>
               <SunMoon className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="icon" aria-label={toggleLabel}>

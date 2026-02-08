@@ -65,47 +65,19 @@ const Login = () => {
     }
   }, [searchParams, t]);
 
-  const heroCopy = useMemo(() => {
-    if (isRTL) {
-      return {
-        badge: "بوابة العملاء الآمنة",
-        headline: "مرحباً بعودتك إلى بوابتك القانونية",
-        subheadline: "ادخل إلى لوحة التحكم لمتابعة قضاياك والتواصل مع فريقنا القانوني المتخصص.",
-        highlights: [
-          { icon: ShieldCheck, text: "حماية بيانات مشفرة بأعلى المعايير الدولية" },
-          { icon: Users, text: "تواصل مباشر مع المحامين والمستشارين" },
-          { icon: CheckCircle, text: "متابعة لحظية لتطورات القضايا والجلسات" },
-        ],
-        stats: [
-          { value: "٢٤/٧", label: "دعم متواصل" },
-          { value: "+٥٠٠", label: "عميل نشط" },
-        ],
-      };
-    }
-
-    return {
-      badge: "Secure Client Portal",
-      headline: "Welcome Back to Your Legal Hub",
-      subheadline: "Access your dashboard to track cases, communicate with our legal team, and manage your matters.",
-      highlights: [
-        { icon: ShieldCheck, text: "Enterprise-grade encryption protecting your sensitive data" },
-        { icon: Users, text: "Direct communication with attorneys and legal advisors" },
-        { icon: CheckCircle, text: "Real-time updates on case progress and court sessions" },
-      ],
-      stats: [
-        { value: "24/7", label: "Support Available" },
-        { value: "500+", label: "Active Clients" },
-      ],
-    };
-  }, [isRTL]);
+  const heroCopy = useMemo(() => t("auth.login.hero"), [t]);
 
   const shouldReverse = useMemo(() => mirrored, [mirrored]);
 
   const heroHighlights = useMemo(() => {
-    return heroCopy.highlights.map(({ icon: Icon, text }, idx) => ({
-      icon: <Icon key={`hi-icon-${idx}`} className="h-5 w-5" />,
-      text,
-    }));
+    if (!heroCopy?.highlights) return [];
+    return heroCopy.highlights.map(({ icon, text }, idx) => {
+      const Icon = icon === "shield" ? ShieldCheck : icon === "users" ? Users : CheckCircle;
+      return {
+        icon: <Icon key={`hi-icon-${idx}`} className="h-5 w-5" />,
+        text,
+      };
+    });
   }, [heroCopy]);
 
   const handleSubmit = async (e) => {
@@ -157,7 +129,7 @@ const Login = () => {
         aria-label={t("auth.login.swap_layout_aria")}
       >
         <ArrowLeftRight className="h-4 w-4" />
-        <span className="ml-1">{t("auth.login.swap_layout")}</span>
+        <span className="ms-1">{t("auth.login.swap_layout")}</span>
       </Button>
 
       <ThemeToggle tone="light" />
@@ -176,26 +148,25 @@ const Login = () => {
   if (isAuthenticated) return null;
 
   return (
-    <AuthLayout  isRTL={isRTL}
-    heroSide={shouldReverse ? "left" : "right"}
-
+    <AuthLayout
+      heroSide={shouldReverse ? "left" : "right"}
       toolbar={toolbar}
       hero={{
-        badge: (
+        badge: heroCopy?.badge ? (
           <>
             <Sparkles className="h-4 w-4" />
             <span>{heroCopy.badge}</span>
           </>
-        ),
-        title: heroCopy.headline,
-        description: heroCopy.subheadline,
+        ) : null,
+        title: heroCopy?.headline,
+        description: heroCopy?.subheadline,
         highlights: heroHighlights,
-        stats: heroCopy.stats,
+        stats: heroCopy?.stats,
       }}
       card={{
         icon: (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
-            <UserCheck className="h-6 w-6 text-[hsl(var(--primary))]" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--color-primary))]/10">
+            <UserCheck className="h-6 w-6 text-[hsl(var(--color-primary))]" />
           </div>
         ),
         title: t("auth.login.title"),
@@ -206,7 +177,7 @@ const Login = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 px-3 py-2 text-sm text-[hsl(var(--destructive))]"
+                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--color-danger))]/30 bg-[hsl(var(--color-danger))]/10 px-3 py-2 text-sm text-[hsl(var(--color-danger))]"
               >
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 <span>{formError}</span>
@@ -220,19 +191,14 @@ const Login = () => {
                 </Label>
 
                 <div className="relative">
-                  <Mail
-                    className={cn(
-                      "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
-                      isRTL ? "right-3" : "left-3",
-                    )}
-                  />
+                  <Mail className="absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     placeholder={t("auth.login.email_placeholder")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={cn("h-11", isRTL ? "pr-10" : "pl-10")}
+                    className="h-11 ps-10"
                     required
                     autoComplete="email"
                   />
@@ -251,12 +217,7 @@ const Login = () => {
                 </div>
 
                 <div className="relative">
-                  <Lock
-                    className={cn(
-                      "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
-                      isRTL ? "right-3" : "left-3",
-                    )}
-                  />
+                  <Lock className="absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 
                   <Input
                     id="password"
@@ -264,7 +225,7 @@ const Login = () => {
                     placeholder={t("auth.login.password_placeholder")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={cn("h-11", isRTL ? "pr-10 pl-12" : "pl-10 pr-12")}
+                    className="h-11 ps-10 pe-12"
                     required
                     autoComplete="current-password"
                   />
@@ -275,7 +236,7 @@ const Login = () => {
                     size="icon"
                     className={cn(
                       "absolute top-1/2 -translate-y-1/2 h-8 w-8",
-                      isRTL ? "left-1" : "right-1",
+                      "end-1",
                     )}
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? t("auth.login.hide_password") : t("auth.login.show_password")}
@@ -305,7 +266,7 @@ const Login = () => {
                 ) : (
                   <>
                     {t("auth.login.submit")}
-                    <ArrowRight className={cn("ml-2 h-4 w-4", isRTL && "rotate-180 mr-2 ml-0")} />
+                    <ArrowRight className={cn("ms-2 h-4 w-4", isRTL && "rotate-180 me-2 ms-0")} />
                   </>
                 )}
               </Button>
@@ -316,7 +277,7 @@ const Login = () => {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[hsl(var(--card))] px-2 text-muted-foreground">{t("common.or")}</span>
+                <span className="bg-[hsl(var(--color-surface))] px-2 text-muted-foreground">{t("common.or")}</span>
               </div>
             </div>
 
@@ -337,12 +298,12 @@ const Login = () => {
 
             <div
               className={cn(
-                "mt-4 flex items-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-3",
-                isRTL ? "flex-row-reverse text-right" : "",
+                "mt-4 flex items-center gap-3 rounded-xl border border-dashed border-[hsl(var(--color-primary))]/30 bg-[hsl(var(--color-primary))]/5 p-3 text-start",
+                isRTL ? "flex-row-reverse" : "",
               )}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <ShieldCheck className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[hsl(var(--color-primary))]/10">
+                <ShieldCheck className="h-5 w-5 text-[hsl(var(--color-primary))]" />
               </div>
 
               <div className="space-y-0.5 text-xs">

@@ -64,10 +64,7 @@ const MobileDrawer = () => {
             initial="closed"
             animate="open"
             exit="closed"
-            className={cn(
-              "fixed inset-y-0 z-[9999] flex h-full w-full max-w-[360px] flex-col border border-border bg-[hsl(var(--sidebar-background))] text-sidebar-foreground shadow-custom-xl md:hidden",
-              isRTL ? "right-0" : "left-0",
-            )}
+            className="fixed inset-y-0 start-0 z-[9999] flex h-full w-full max-w-[360px] flex-col border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))] text-[hsl(var(--color-text))] shadow-custom-xl md:hidden"
             dir={isRTL ? "rtl" : "ltr"}
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-4">

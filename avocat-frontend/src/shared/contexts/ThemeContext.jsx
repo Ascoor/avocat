@@ -1,11 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = "avocat_theme";
+const STORAGE_KEY = "theme";
+const LEGACY_STORAGE_KEY = "avocat_theme";
 
 const ThemeContext = createContext(undefined);
 
 const getPreferredTheme = () => {
-  const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
+  const stored =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY)
+      : null;
   if (stored === "light" || stored === "dark") return { theme: stored, manual: true };
 
   const prefersDark =
@@ -33,10 +37,16 @@ export const ThemeProvider = ({ children }) => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(state.theme);
+    root.dataset.theme = state.theme;
     root.style.colorScheme = state.theme;
 
-    if (state.manual) window.localStorage.setItem(STORAGE_KEY, state.theme);
-    else window.localStorage.removeItem(STORAGE_KEY);
+    if (state.manual) {
+      window.localStorage.setItem(STORAGE_KEY, state.theme);
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+    } else {
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+    }
   }, [state.theme, state.manual]);
 
   useEffect(() => {

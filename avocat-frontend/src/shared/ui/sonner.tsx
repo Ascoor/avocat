@@ -1,10 +1,10 @@
-import { useTheme } from "next-themes";
+import { useTheme } from "@shared/contexts/ThemeContext";
 import { Toaster as Sonner, toast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <Sonner
@@ -13,10 +13,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-card",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+            "group toast group-[.toaster]:bg-[hsl(var(--color-surface))] group-[.toaster]:text-[hsl(var(--color-text))] group-[.toaster]:border-[hsl(var(--color-border))] group-[.toaster]:shadow-card",
+          description: "group-[.toast]:text-[hsl(var(--color-muted))]",
+          actionButton:
+            "group-[.toast]:bg-[hsl(var(--color-primary))] group-[.toast]:text-[hsl(var(--color-primary-fg))]",
+          cancelButton:
+            "group-[.toast]:bg-[hsl(var(--color-surface-2))] group-[.toast]:text-[hsl(var(--color-muted))]",
         },
       }}
       {...props}

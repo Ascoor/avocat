@@ -48,7 +48,7 @@ const HeaderTabs = ({ className }) => {
                 <button type="button" className={cn("tab-pill", "shrink-0")}>
                   {Icon && <Icon className="tab-pill-icon" />}
                   <span className="truncate">{label}</span>
-                  <ChevronDown className={cn("h-4 w-4 opacity-80", isRTL ? "mr-1" : "ml-1")} />
+                  <ChevronDown className="ms-1 h-4 w-4 opacity-80" />
                 </button>
               </DropdownMenuTrigger>
 

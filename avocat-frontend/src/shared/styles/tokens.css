@@ -1,0 +1,77 @@
+:root {
+  /* Typography */
+  --font-sans: "Inter", "Cairo", system-ui, -apple-system, sans-serif;
+  --font-ar: "Cairo", "Inter", system-ui, -apple-system, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+
+  /* Light theme colors (HSL values) */
+  --color-bg: 220 33% 98%;
+  --color-surface: 0 0% 100%;
+  --color-surface-2: 220 30% 96%;
+  --color-text: 224 36% 16%;
+  --color-muted: 220 16% 45%;
+  --color-border: 220 24% 90%;
+  --color-overlay: 224 30% 12%;
+  --color-glass: 0 0% 100%;
+  --color-primary: 224 62% 22%;
+  --color-primary-fg: 0 0% 100%;
+  --color-secondary: 220 24% 92%;
+  --color-secondary-fg: 224 36% 20%;
+  --color-accent: 42 80% 55%;
+  --color-accent-fg: 224 36% 16%;
+  --color-danger: 0 72% 54%;
+  --color-success: 150 64% 40%;
+  --color-warning: 42 80% 55%;
+
+  /* Gradients */
+  --gradient-1: linear-gradient(135deg, hsl(var(--color-primary)) 0%, hsl(var(--color-accent)) 100%);
+  --gradient-2: linear-gradient(180deg, hsl(var(--color-surface)) 0%, hsl(var(--color-surface-2)) 100%);
+  --gradient-3: radial-gradient(120% 120% at 10% 10%, hsl(var(--color-accent) / 0.25), transparent 70%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px hsl(var(--color-text) / 0.08);
+  --shadow-md: 0 12px 30px -20px hsl(var(--color-text) / 0.35);
+  --shadow-lg: 0 30px 60px -40px hsl(var(--color-text) / 0.4);
+
+  /* Legacy semantic aliases (tailwind + existing UI) */
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --muted: var(--color-surface-2);
+  --muted-foreground: var(--color-muted);
+  --border: var(--color-border);
+  --input: var(--color-surface-2);
+  --ring: var(--color-primary);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-fg);
+  --secondary: var(--color-secondary);
+  --secondary-foreground: var(--color-secondary-fg);
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-accent-fg);
+  --destructive: var(--color-danger);
+  --destructive-foreground: var(--color-primary-fg);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-text);
+}

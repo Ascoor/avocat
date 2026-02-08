@@ -1,0 +1,32 @@
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: 224 22% 12%;
+  --color-surface: 224 24% 16%;
+  --color-surface-2: 224 22% 20%;
+  --color-text: 0 0% 98%;
+  --color-muted: 220 14% 70%;
+  --color-border: 224 18% 28%;
+  --color-overlay: 0 0% 0%;
+  --color-primary: 42 80% 55%;
+  --color-primary-fg: 224 32% 12%;
+  --color-secondary: 224 18% 24%;
+  --color-secondary-fg: 0 0% 98%;
+  --color-accent: 46 90% 55%;
+  --color-accent-fg: 224 32% 12%;
+  --color-danger: 0 70% 60%;
+  --color-success: 150 60% 45%;
+  --color-warning: 42 80% 55%;
+
+  --gradient-1: linear-gradient(135deg, hsl(var(--color-primary)) 0%, hsl(var(--color-accent)) 100%);
+  --gradient-2: linear-gradient(180deg, hsl(var(--color-surface)) 0%, hsl(var(--color-surface-2)) 100%);
+  --gradient-3: radial-gradient(120% 120% at 20% 10%, hsl(var(--color-primary) / 0.35), transparent 70%);
+
+  --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.35);
+  --shadow-md: 0 18px 35px -24px hsl(0 0% 0% / 0.6);
+  --shadow-lg: 0 32px 70px -50px hsl(0 0% 0% / 0.75);
+}
