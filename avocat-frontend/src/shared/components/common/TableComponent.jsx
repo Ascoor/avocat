@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { MdEdit, MdVisibility } from "react-icons/md";
-import { FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
+import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 /**
  * Header:
@@ -10,6 +9,8 @@ import { FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
  *   searchable?: boolean (default true),
  *   sortable?: boolean (default true),
  *   getValue?: (row) => any, // for search + sort (fallback row[key])
+ *   sortValue?: (row) => any, // optional override for sorting
+ *   searchValue?: (row) => any, // optional override for searching
  *   tdClassName?: string,
  *   thClassName?: string,
  *   mobileLabel?: string, // optional for card view label
@@ -41,6 +42,18 @@ const defaultGetValue = (row, header) => {
   return row?.[header.key];
 };
 
+const defaultSearchValue = (row, header) => {
+  if (!row || !header) return "";
+  if (typeof header.searchValue === "function") return header.searchValue(row);
+  return defaultGetValue(row, header);
+};
+
+const defaultSortValue = (row, header) => {
+  if (!row || !header) return "";
+  if (typeof header.sortValue === "function") return header.sortValue(row);
+  return defaultGetValue(row, header);
+};
+
 const toComparable = (v) => {
   if (v === null || v === undefined) return "";
   const s = String(v).trim();
@@ -68,6 +81,7 @@ const TableComponent = ({
   onView,
   onEdit,
   onDelete,
+  onRowAction,
 
   // add
   onAdd,
@@ -78,6 +92,12 @@ const TableComponent = ({
   itemsPerPage = 10,
   searchPlaceholder = "ابحث...",
   emptyLabel = "لا يوجد بيانات",
+  loadingLabel = "جارٍ التحميل...",
+  errorLabel = "تعذر تحميل البيانات.",
+  retryLabel = "إعادة المحاولة",
+  loading = false,
+  error,
+  onRetry,
 
   // row identity
   rowKey = "id",
@@ -85,6 +105,9 @@ const TableComponent = ({
 
   // layout
   title, // optional
+
+  // qa
+  qaMode = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +133,9 @@ const TableComponent = ({
 
     return data.filter((row) =>
       keywords.every((kw) =>
-        searchableHeaders.some((header) => normalize(defaultGetValue(row, header)).includes(kw)),
+        searchableHeaders.some((header) =>
+          normalize(defaultSearchValue(row, header)).includes(kw),
+        ),
       ),
     );
   }, [data, searchQuery, searchableHeaders]);
@@ -126,8 +151,8 @@ const TableComponent = ({
     return filteredData
       .map((row, idx) => ({ row, idx }))
       .sort((a, b) => {
-        const aVal = defaultGetValue(a.row, header);
-        const bVal = defaultGetValue(b.row, header);
+        const aVal = defaultSortValue(a.row, header);
+        const bVal = defaultSortValue(b.row, header);
         const cmp = compareValues(aVal, bVal);
         if (cmp !== 0) return cmp * dir;
         return a.idx - b.idx;
@@ -146,6 +171,14 @@ const TableComponent = ({
   const getId = (row, index) => {
     const id = typeof getRowId === "function" ? getRowId(row) : row?.[rowKey];
     return id ?? index;
+  };
+
+  const resolveIdMeta = (row, index) => {
+    const rawId = typeof getRowId === "function" ? getRowId(row) : row?.[rowKey];
+    return {
+      id: rawId ?? index,
+      isMissing: rawId === null || rawId === undefined,
+    };
   };
 
   const handleSort = (key) => {
@@ -239,11 +272,50 @@ const TableComponent = ({
     </div>
   );
 
+  const renderLoadingRows = () => (
+    <tbody>
+      {Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, index) => (
+        <tr key={`loading-${index}`} className="border-b border-border/40">
+          <td colSpan={headers.length + Number(showView) + Number(showEdit) + Number(showDelete)}>
+            <div className="h-10 w-full rounded-xl skeleton-shimmer" />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
+
+  const renderErrorRow = () => (
+    <tbody>
+      <tr>
+        <td
+          colSpan={headers.length + Number(showView) + Number(showEdit) + Number(showDelete)}
+          className="px-4 py-6 text-center text-sm text-destructive"
+        >
+          <div className="space-y-3">
+            <div>{errorLabel}</div>
+            {onRetry && (
+              <button
+                type="button"
+                onClick={onRetry}
+                className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive"
+              >
+                <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+                {retryLabel}
+              </button>
+            )}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  );
+
+  const showEmptyState = !loading && !error && filteredData.length === 0;
+
   return (
     <section className="w-full">
       {Toolbar}
 
-      {filteredData.length === 0 ? (
+      {showEmptyState ? (
         <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-6 text-sm text-muted-foreground shadow-sm backdrop-blur">
           {emptyLabel}
         </div>
@@ -273,7 +345,12 @@ const TableComponent = ({
                       >
                         <span className="inline-flex items-center justify-center gap-2">
                           {h.text}
-                          {active && (sortDirection === "asc" ? <FaSortUp /> : <FaSortDown />)}
+                          {active &&
+                            (sortDirection === "asc" ? (
+                              <LexicraftIcon name="sort-up" size={14} />
+                            ) : (
+                              <LexicraftIcon name="sort-down" size={14} />
+                            ))}
                         </span>
                       </th>
                     );
@@ -284,54 +361,123 @@ const TableComponent = ({
                 </tr>
               </thead>
 
-              <tbody>
-                {paginatedData.map((row, index) => {
-                  const id = getId(row, index);
+              {loading ? (
+                renderLoadingRows()
+              ) : error ? (
+                renderErrorRow()
+              ) : (
+                <tbody>
+                  {paginatedData.map((row, index) => {
+                    const { id, isMissing } = resolveIdMeta(row, index);
+                    const warnId = qaMode && isMissing;
 
-                  return (
-                    <tr key={id} className="border-b border-border/50 transition hover:bg-[hsl(var(--muted)/0.45)]">
-                      {showView && (
-                        <td className="px-4 py-3 text-center">
-                          <ActionBtn onClick={() => onView(id)} title="عرض" tone="primary">
-                            <MdVisibility />
-                          </ActionBtn>
-                        </td>
-                      )}
+                    return (
+                      <tr key={id} className="border-b border-border/50 transition hover:bg-[hsl(var(--muted)/0.45)]">
+                        {showView && (
+                          <td className="px-4 py-3 text-center">
+                            <ActionBtn
+                              onClick={() => {
+                                onView(id);
+                                onRowAction?.("view", id, row);
+                              }}
+                              title="عرض"
+                              tone="primary"
+                            >
+                              <LexicraftIcon name="view" size={16} />
+                            </ActionBtn>
+                          </td>
+                        )}
 
-                      {headers.map((h) => (
-                        <td key={`${id}-${h.key}`} className={["px-4 py-3 text-center text-sm text-foreground", h.tdClassName || ""].join(" ")}>
-                          {typeof customRenderers?.[h.key] === "function"
-                            ? customRenderers[h.key](row)
-                            : defaultGetValue(row, h) ?? ""}
-                        </td>
-                      ))}
+                        {headers.map((h, headerIndex) => (
+                          <td
+                            key={`${id}-${h.key}`}
+                            className={[
+                              "px-4 py-3 text-center text-sm text-foreground",
+                              h.tdClassName || "",
+                            ].join(" ")}
+                          >
+                            <div className="flex flex-wrap items-center justify-center gap-2">
+                              <span>
+                                {typeof customRenderers?.[h.key] === "function"
+                                  ? customRenderers[h.key](row)
+                                  : defaultGetValue(row, h) ?? ""}
+                              </span>
+                              {warnId && headerIndex === 0 && (
+                                <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                                  Missing ID
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        ))}
 
-                      {showEdit && (
-                        <td className="px-4 py-3 text-center">
-                          <ActionBtn onClick={() => onEdit(id)} title="تعديل" tone="primary">
-                            <MdEdit />
-                          </ActionBtn>
-                        </td>
-                      )}
+                        {showEdit && (
+                          <td className="px-4 py-3 text-center">
+                            <ActionBtn
+                              onClick={() => {
+                                onEdit(id);
+                                onRowAction?.("edit", id, row);
+                              }}
+                              title="تعديل"
+                              tone="primary"
+                            >
+                              <LexicraftIcon name="edit" size={16} />
+                            </ActionBtn>
+                          </td>
+                        )}
 
-                      {showDelete && (
-                        <td className="px-4 py-3 text-center">
-                          <ActionBtn onClick={() => onDelete(id, row)} title="حذف" tone="danger">
-                            <FaTrashAlt />
-                          </ActionBtn>
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
+                        {showDelete && (
+                          <td className="px-4 py-3 text-center">
+                            <ActionBtn
+                              onClick={() => {
+                                onDelete(id, row);
+                                onRowAction?.("delete", id, row);
+                              }}
+                              title="حذف"
+                              tone="danger"
+                            >
+                              <LexicraftIcon name="trash" size={16} />
+                            </ActionBtn>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              )}
             </table>
           </div>
 
           {/* Mobile cards */}
           <div className="grid gap-3 md:hidden">
-            {paginatedData.map((row, index) => {
-              const id = getId(row, index);
+            {loading &&
+              Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, index) => (
+                <div key={`loading-card-${index}`} className="h-28 rounded-2xl skeleton-shimmer" />
+              ))}
+
+            {!loading && error && (
+              <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+                <div className="space-y-3">
+                  <div>{errorLabel}</div>
+                  {onRetry && (
+                    <button
+                      type="button"
+                      onClick={onRetry}
+                      className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive"
+                    >
+                      <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+                      {retryLabel}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {!loading &&
+              !error &&
+              paginatedData.map((row, index) => {
+              const { id, isMissing } = resolveIdMeta(row, index);
+              const warnId = qaMode && isMissing;
 
               return (
                 <div
@@ -348,23 +494,51 @@ const TableComponent = ({
                             : defaultGetValue(row, headers[0]) ?? ""}
                         </span>
                       </p>
-                      <p className="mt-1 text-xs text-muted-foreground">ID: {id}</p>
+                      <p className="mt-1 text-xs text-muted-foreground flex items-center gap-2 justify-between">
+                        <span>ID: {id}</span>
+                        {warnId && (
+                          <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                            Missing ID
+                          </span>
+                        )}
+                      </p>
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-2">
+                    <div className="table-actions flex shrink-0 items-center gap-2">
                       {showView && (
-                        <ActionBtn onClick={() => onView(id)} title="عرض" tone="primary">
-                          <MdVisibility />
+                        <ActionBtn
+                          onClick={() => {
+                            onView(id);
+                            onRowAction?.("view", id, row);
+                          }}
+                          title="عرض"
+                          tone="primary"
+                        >
+                          <LexicraftIcon name="view" size={16} />
                         </ActionBtn>
                       )}
                       {showEdit && (
-                        <ActionBtn onClick={() => onEdit(id)} title="تعديل" tone="primary">
-                          <MdEdit />
+                        <ActionBtn
+                          onClick={() => {
+                            onEdit(id);
+                            onRowAction?.("edit", id, row);
+                          }}
+                          title="تعديل"
+                          tone="primary"
+                        >
+                          <LexicraftIcon name="edit" size={16} />
                         </ActionBtn>
                       )}
                       {showDelete && (
-                        <ActionBtn onClick={() => onDelete(id, row)} title="حذف" tone="danger">
-                          <FaTrashAlt />
+                        <ActionBtn
+                          onClick={() => {
+                            onDelete(id, row);
+                            onRowAction?.("delete", id, row);
+                          }}
+                          title="حذف"
+                          tone="danger"
+                        >
+                          <LexicraftIcon name="trash" size={16} />
                         </ActionBtn>
                       )}
                     </div>

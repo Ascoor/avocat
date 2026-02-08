@@ -75,6 +75,12 @@ export const sidebarGroups = [
         icon: LayoutGrid,
         path: "/dashboard/tools/icons",
       },
+      {
+        key: "ui_qa",
+        labelKey: "navigation.uiQa",
+        icon: ShieldCheck,
+        path: "/dashboard/tools/qa",
+      },
     ],
   },
 ];

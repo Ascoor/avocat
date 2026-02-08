@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import LegalAdModal from './Modals/LegalAdModal';
 import {
-  getLegalAdsByLegCaseId,
   deleteLegalAd,
 } from '@shared/services/api/legalCases';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
@@ -9,7 +8,13 @@ import { useAlert } from '@shared/contexts/AlertContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 
-const LegalCaseAds = ({ legCaseId }) => {
+const LegalCaseAds = ({
+  legCaseId,
+  legalAds = [],
+  loading = false,
+  error = '',
+  onRefresh,
+}) => {
   const { triggerAlert } = useAlert();
   const { t } = useLanguage();
   const [showModal, setShowModal] = useState(false);
@@ -17,9 +22,7 @@ const LegalCaseAds = ({ legCaseId }) => {
   const [selectedAd, setSelectedAd] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [adToDelete, setAdToDelete] = useState(null);
-  const [legalAds, setLegalAds] = useState([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [localAds, setLocalAds] = useState(legalAds);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -33,30 +36,9 @@ const LegalCaseAds = ({ legCaseId }) => {
     return data.slice(startIndex, endIndex);
   };
 
-  const fetchLegalAds = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      if (!legCaseId) throw new Error('Missing case id');
-
-      const response = await getLegalAdsByLegCaseId(legCaseId);
-
-      if (response?.data && Array.isArray(response.data)) {
-        setLegalAds(response.data);
-      } else {
-        throw new Error('Invalid data');
-      }
-    } catch (err) {
-      setError(t('legalCaseDetails.ads.errors.fetch'));
-      triggerAlert('error', t('legalCaseDetails.ads.errors.fetch'));
-    } finally {
-      setLoading(false);
-    }
-  }, [legCaseId, t, triggerAlert]);
-
   useEffect(() => {
-    fetchLegalAds();
-  }, [fetchLegalAds]);
+    setLocalAds(legalAds);
+  }, [legalAds]);
 
   const handleAddAd = () => {
     setModalMode('add');
@@ -79,7 +61,7 @@ const LegalCaseAds = ({ legCaseId }) => {
     try {
       if (adToDelete) {
         await deleteLegalAd(adToDelete.id);
-        setLegalAds((prevAds) =>
+        setLocalAds((prevAds) =>
           prevAds.filter((ad) => ad.id !== adToDelete.id),
         );
 
@@ -87,11 +69,12 @@ const LegalCaseAds = ({ legCaseId }) => {
 
         setConfirmDelete(false);
         triggerAlert('success', t('legalCaseDetails.ads.alerts.deleteSuccess'));
+        onRefresh?.();
       }
     } catch (error) {
       triggerAlert('error', t('legalCaseDetails.ads.alerts.deleteError'));
     }
-  }, [adToDelete, triggerAlert, t]);
+  }, [adToDelete, onRefresh, triggerAlert, t]);
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -100,7 +83,7 @@ const LegalCaseAds = ({ legCaseId }) => {
   };
 
   const handleAdSubmit = (data) => {
-    setLegalAds((prevAds) => {
+    setLocalAds((prevAds) => {
       if (modalMode === 'add') {
         return [...prevAds, data];
       } else if (modalMode === 'edit') {
@@ -109,11 +92,12 @@ const LegalCaseAds = ({ legCaseId }) => {
       return prevAds;
     });
     handleModalClose();
+    onRefresh?.();
   };
 
-  const legalAdsToDisplay = paginateData(legalAds);
-  const totalPages = Math.ceil(legalAds.length / rowsPerPage) || 1;
-  const isEmpty = !loading && legalAds.length === 0;
+  const legalAdsToDisplay = paginateData(localAds);
+  const totalPages = Math.ceil(localAds.length / rowsPerPage) || 1;
+  const isEmpty = !loading && localAds.length === 0;
 
   return (
     <div className="space-y-6">
@@ -137,7 +121,16 @@ const LegalCaseAds = ({ legCaseId }) => {
 
       {error && (
         <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <button
+              onClick={() => onRefresh?.()}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
+            >
+              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -291,7 +284,7 @@ const LegalCaseAds = ({ legCaseId }) => {
           legCaseId={legCaseId}
           initialData={selectedAd}
           isEdit={modalMode === 'edit'}
-          fetchLegalAds={fetchLegalAds}
+          fetchLegalAds={onRefresh}
           onSubmit={handleAdSubmit}
         />
       )}

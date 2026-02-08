@@ -22,12 +22,12 @@ const LabelInput = ({ iconName, label, required, as = 'input', ...props }) => (
       {as === 'input' ? (
         <input
           {...props}
-          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground ps-10"
+          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))] ps-10"
         />
       ) : (
         <textarea
           {...props}
-          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground ps-10"
+          className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))] ps-10"
         />
       )}
     </div>
@@ -41,7 +41,7 @@ const SelectInput = ({ label, options, required, ...props }) => (
     </label>
     <select
       {...props}
-      className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+      className="block w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
     >
       <option value="">{label}</option>
       {options.map((option) => (
@@ -71,6 +71,7 @@ const LegalCaseEditForm = ({
   showAlert,
   alertMessage,
   onDismissAlert,
+  onCancel,
   isEditing,
   t,
 }) => (
@@ -225,9 +226,18 @@ const LegalCaseEditForm = ({
 
     <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
       <button
-        type="submit"
-        className="pressable rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+        type="button"
+        onClick={onCancel}
+        className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold"
       >
+        <LexicraftIcon name="arrow-forward" size={16} isDirectional />
+        {t('common.cancel')}
+      </button>
+      <button
+        type="submit"
+        className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+      >
+        <LexicraftIcon name="document" size={16} />
         {isEditing ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
       </button>
     </div>
@@ -353,11 +363,21 @@ const AddEditLegCase = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <h5 className="text-lg font-semibold">
-            {isEditing ? t('legalCaseDetails.editForm.editTitle') : t('legalCaseDetails.editForm.addTitle')}
-          </h5>
+      <div className="modal-surface modal-motion w-full max-w-2xl rounded-2xl p-6 shadow-xl">
+        <div className="flex items-start justify-between border-b border-border pb-3">
+          <div className="flex items-start gap-3">
+            <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <LexicraftIcon name="briefcase" size={20} />
+            </span>
+            <div>
+              <h5 className="text-lg font-semibold text-foreground">
+                {isEditing ? t('legalCaseDetails.editForm.editTitle') : t('legalCaseDetails.editForm.addTitle')}
+              </h5>
+              <p className="text-sm text-muted-foreground">
+                {t('legalCaseDetails.editForm.subtitle')}
+              </p>
+            </div>
+          </div>
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground"
@@ -377,6 +397,7 @@ const AddEditLegCase = ({
           showAlert={showAlert}
           alertMessage={alertMessage}
           onDismissAlert={() => setShowAlert(false)}
+          onCancel={onClose}
           isEditing={isEditing}
           t={t}
         />

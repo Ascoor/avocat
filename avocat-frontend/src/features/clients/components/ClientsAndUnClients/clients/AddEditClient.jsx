@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import GlobalModal from "@shared/components/common/GlobalModal";
 import api from "@shared/services/api/axiosConfig";
 import { useAlert } from "@shared/contexts/AlertContext";
+import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 const toInputDate = (d) => {
   if (!d) return null;
@@ -92,29 +93,37 @@ const AddEditClient = ({ client = null, isOpen, onClose, onSaved }) => {
   };
 
   return (
-    <GlobalModal isOpen={isOpen} onClose={onClose} title={isEdit ? "تعديل العميل" : "إضافة عميل"}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <GlobalModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEdit ? "تعديل العميل" : "إضافة عميل"}
+      subtitle="نموذج موحد لإدارة بيانات العملاء مع تحقق سريع."
+      titleIcon={<LexicraftIcon name="user" size={20} />}
+    >
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
           {fields.map(({ name, label, type, required }) => (
-            <div key={name} className="space-y-1">
-              <label className="text-sm font-semibold text-foreground">{label}</label>
+            <div key={name} className="space-y-2">
+              <label className="text-xs font-semibold text-muted-foreground">
+                {label} {required && <span className="text-destructive">*</span>}
+              </label>
               <input
                 type={type}
                 name={name}
                 value={formData[name] ?? ""}
                 onChange={handleChange}
                 required={required}
-                className="w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
               />
             </div>
           ))}
 
-          <div className="space-y-1">
-            <label className="text-sm font-semibold text-foreground">تاريخ الميلاد</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-muted-foreground">تاريخ الميلاد</label>
             <DatePicker
               selected={formData.date_of_birth}
               onChange={(date) => setFormData((p) => ({ ...p, date_of_birth: date }))}
-              className="w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
             />
           </div>
         </div>
@@ -123,16 +132,18 @@ const AddEditClient = ({ client = null, isOpen, onClose, onSaved }) => {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition hover:opacity-90"
+            className="pressable inline-flex items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2 text-sm font-semibold text-foreground transition hover:opacity-90"
           >
+            <LexicraftIcon name="arrow-forward" size={16} isDirectional />
             إلغاء
           </button>
 
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-[hsl(var(--primary))] px-5 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] shadow-sm transition hover:opacity-90 disabled:opacity-60"
+            className="pressable inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60"
           >
+            <LexicraftIcon name="document" size={16} />
             {saving ? "جارٍ الحفظ..." : "حفظ"}
           </button>
         </div>

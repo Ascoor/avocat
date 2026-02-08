@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  getSessionsByLegCaseId,
   deleteSession,
 } from '@shared/services/api/sessions';
 import SessionModal from './Modals/SessionModal';
@@ -10,17 +9,21 @@ import SessionDetailsModal from './Modals/SessionDetailsModal';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 
-const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
+const LegalCaseSessions = ({
+  legCaseId,
+  openAddSignal = 0,
+  sessions = [],
+  loading = false,
+  error = '',
+  onRefresh,
+}) => {
   const { triggerAlert } = useAlert();
   const { t } = useLanguage();
-  const [sessions, setSessions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
 
@@ -34,24 +37,6 @@ const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
     return data.slice(startIndex, endIndex);
   };
   const sessionsToDisplay = paginateData(sessions);
-
-  const fetchSessions = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await getSessionsByLegCaseId(legCaseId);
-      setSessions(response.data.data || []);
-    } catch (error) {
-      setError(t('legalCaseDetails.sessions.errors.fetch'));
-      setSessions([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSessions();
-  }, [legCaseId]);
 
   useEffect(() => {
     if (openAddSignal > 0) {
@@ -79,11 +64,9 @@ const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
     try {
       if (sessionToDelete) {
         await deleteSession(sessionToDelete.id);
-        setSessions((prev) =>
-          prev.filter((sess) => sess.id !== sessionToDelete.id),
-        );
         triggerAlert('success', t('legalCaseDetails.sessions.alerts.deleteSuccess'));
         setSessionToDelete(null);
+        onRefresh?.();
       }
     } catch (error) {
       triggerAlert('error', t('legalCaseDetails.sessions.alerts.deleteError'));
@@ -91,16 +74,8 @@ const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
   };
 
   const handleSubmitSession = (newSessionData) => {
-    if (isEditMode) {
-      setSessions((prev) =>
-        prev.map((sess) =>
-          sess.id === newSessionData.id ? { ...sess, ...newSessionData } : sess,
-        ),
-      );
-    } else {
-      setSessions((prev) => [...prev, newSessionData]);
-    }
     setShowModal(false);
+    onRefresh?.();
     triggerAlert(
       'success',
       isEditMode
@@ -138,7 +113,16 @@ const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
 
       {error && (
         <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <button
+              onClick={() => onRefresh?.()}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
+            >
+              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -300,7 +284,7 @@ const LegalCaseSessions = ({ legCaseId, openAddSignal = 0 }) => {
       {showModal && (
         <SessionModal
           isOpen={showModal}
-          fetchSessions={fetchSessions}
+          fetchSessions={onRefresh}
           legalCaseId={legCaseId}
           onClose={() => setShowModal(false)}
           onSubmit={handleSubmitSession}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  getProceduresByLegCaseId,
   deleteProcedure,
 } from '@shared/services/api/procedures';
 import ProcedureModal from './Modals/ProcedureModal';
@@ -9,17 +8,21 @@ import { useAlert } from '@shared/contexts/AlertContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 
-const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
+const LegalCaseProcedures = ({
+  legCaseId,
+  openAddSignal = 0,
+  procedures = [],
+  loading = false,
+  error = '',
+  onRefresh,
+}) => {
   const { triggerAlert } = useAlert();
   const { t } = useLanguage();
-  const [procedures, setProcedures] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [procedureToDelete, setProcedureToDelete] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
 
@@ -33,24 +36,6 @@ const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
     return data.slice(startIndex, endIndex);
   };
   const proceduresToDisplay = paginateData(procedures);
-
-  const fetchProcedures = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await getProceduresByLegCaseId(legCaseId);
-      setProcedures(response.data);
-    } catch (error) {
-      setError(t('legalCaseDetails.procedures.errors.fetch'));
-      triggerAlert('error', t('legalCaseDetails.procedures.errors.fetch'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProcedures();
-  }, [legCaseId]);
 
   useEffect(() => {
     if (openAddSignal > 0) {
@@ -80,7 +65,7 @@ const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
       try {
         await deleteProcedure(procedureToDelete.id);
         triggerAlert('success', t('legalCaseDetails.procedures.alerts.deleteSuccess'));
-        fetchProcedures();
+        onRefresh?.();
       } catch (error) {
         triggerAlert('error', t('legalCaseDetails.procedures.alerts.deleteError'));
       } finally {
@@ -115,7 +100,16 @@ const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
 
       {error && (
         <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <button
+              onClick={() => onRefresh?.()}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
+            >
+              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
+              {t('legalCaseDetails.actions.retry')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -269,7 +263,7 @@ const LegalCaseProcedures = ({ legCaseId, openAddSignal = 0 }) => {
           legalCaseId={legCaseId}
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          onSubmit={fetchProcedures}
+          onSubmit={onRefresh}
           initialData={modalData}
           isEdit={isEditMode}
         />

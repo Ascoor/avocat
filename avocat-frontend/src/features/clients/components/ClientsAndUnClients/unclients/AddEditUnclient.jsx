@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { useAlert } from '@shared/contexts/AlertContext';
 import api from '@shared/services/api/axiosConfig';
 import GlobalModal from '@shared/components/common/GlobalModal';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
 
 const AddEditUnclient = ({ unclient = {}, isOpen, onClose, onSaved }) => {
   const [formData, setFormData] = useState({
@@ -115,8 +116,10 @@ const AddEditUnclient = ({ unclient = {}, isOpen, onClose, onSaved }) => {
       isOpen={isOpen}
       onClose={onClose}
       title={unclient?.id ? 'تعديل العميل' : 'إضافة عميل'}
+      subtitle="نموذج موحد للعملاء بدون وكالة."
+      titleIcon={<LexicraftIcon name="users" size={20} />}
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {[
           { name: 'name', label: 'الاسم الكامل', type: 'text' },
           { name: 'slug', label: 'رقم العميل', type: 'text' },
@@ -129,8 +132,8 @@ const AddEditUnclient = ({ unclient = {}, isOpen, onClose, onSaved }) => {
           { name: 'phone_number', label: 'رقم الهاتف', type: 'text' },
           { name: 'emergency_number', label: 'رقم الطوارئ', type: 'text' },
         ].map(({ name, label, type }) => (
-          <div key={name}>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div key={name} className="space-y-2">
+            <label className="block text-xs font-semibold text-muted-foreground">
               {label}
             </label>
             <input
@@ -139,33 +142,35 @@ const AddEditUnclient = ({ unclient = {}, isOpen, onClose, onSaved }) => {
               value={formData[name]}
               onChange={handleInputChange}
               required
-              className="w-full mt-1 p-3 border rounded-lg bg-gray-50 dark:bg-gray-200"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
             />
           </div>
         ))}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="space-y-2">
+          <label className="block text-xs font-semibold text-muted-foreground">
             تاريخ الميلاد
           </label>
           <DatePicker
             selected={formData.date_of_birth}
             onChange={handleDateChange}
-            className="w-full mt-1 p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-100"
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
           />
         </div>
-        <div className="flex justify-end space-x-3">
+        <div className="flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 bg-gray-500 text-white rounded-lg"
+            className="pressable inline-flex items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2 text-sm font-semibold text-foreground transition hover:opacity-90"
           >
+            <LexicraftIcon name="arrow-forward" size={16} isDirectional />
             إلغاء
           </button>
           <button
             type="submit"
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="pressable inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90"
           >
+            <LexicraftIcon name="document" size={16} />
             حفظ
           </button>
         </div>

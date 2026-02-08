@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   IoMdClose,
@@ -10,7 +10,7 @@ import {
   IoMdConstruct,
 } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
-const GlobalModal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
+const GlobalModal = ({ isOpen, onClose, title, subtitle, titleIcon, children, size = 'lg' }) => {
   const sizeClasses = {
     sm: 'max-w-sm',
     md: 'max-w-md',
@@ -45,19 +45,29 @@ const GlobalModal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className={`w-full ${sizeClasses[size]} transform overflow-hidden rounded-2xl bg-indigo-100  font-bold dark:bg-gradient-night p-8 shadow-2xl transition-all`}
+                className={`modal-surface modal-motion w-full ${sizeClasses[size]} transform overflow-hidden rounded-2xl p-6 shadow-2xl transition-all`}
               >
-                <div className="flex justify-between items-center border-b pb-4 mb-6">
-                  <Dialog.Title className="text-3xl text-bold text-avocat-blue dark:text-avocat-orange  ">
-                    {title}
-                  </Dialog.Title>
+                <div className="flex justify-between items-start border-b border-border pb-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    {titleIcon && (
+                      <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        {titleIcon}
+                      </span>
+                    )}
+                    <div>
+                      <Dialog.Title className="text-xl font-semibold text-foreground">
+                        {title}
+                      </Dialog.Title>
+                      {subtitle && (
+                        <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+                      )}
+                    </div>
+                  </div>
                   <button
                     onClick={onClose}
                     className="
-    text-avocat-orange 
-    dark:text-white 
-    hover:text-avocat-red 
-    dark:hover:text-avocat-orange
+    text-muted-foreground 
+    hover:text-foreground 
     transition-colors 
     duration-300"
                   >

@@ -27,6 +27,11 @@ export const lexicraftManifest = [
   { name: "calendar", tags: ["schedule", "date"], category: "General" },
   { name: "search", tags: ["find", "lookup"], category: "Tools" },
   { name: "tool", tags: ["settings", "wrench"], category: "Tools" },
+  { name: "view", tags: ["preview", "eye"], category: "Tools" },
+  { name: "edit", tags: ["edit", "pencil"], category: "Tools" },
+  { name: "trash", tags: ["delete", "remove"], category: "Tools" },
+  { name: "sort-up", tags: ["sort", "ascending"], category: "Tools" },
+  { name: "sort-down", tags: ["sort", "descending"], category: "Tools" },
   { name: "arrow-forward", tags: ["direction", "next"], category: "General", isDirectional: true },
 ] satisfies LexicraftIconMeta[];
 
