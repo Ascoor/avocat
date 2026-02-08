@@ -27,7 +27,7 @@ export const useLegalCase = (id?: string) =>
     queryFn: async () => {
       if (!id) throw new Error('Case ID is required');
       const response = await getLegCaseById(id);
-      const payload = response.data?.data ?? response.data;
+      const payload: any = response.data?.data ?? response.data;
       return payload?.leg_case ?? payload;
     },
     enabled: !!id,
