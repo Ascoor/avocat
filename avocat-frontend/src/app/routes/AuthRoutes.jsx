@@ -19,6 +19,7 @@ const Procedures = lazy(() => import('@features/procedures/pages/ProceduresList'
 const LawyerList = lazy(() => import('@features/lawyers/pages/LawyerList'));
 const SearchCourtsApi = lazy(() => import('@features/courts/pages/SearchCourtsApi.jsx'));
 const LegalSessions = lazy(() => import('@features/sessions/components/Sessions/index.jsx'));
+const IconsGalleryPage = lazy(() => import('@features/icons-gallery/pages/IconsGalleryPage'));
 
 const NotFound = () => (
   <h1 className="text-center text-red-500">404 - Page Not Found</h1>
@@ -50,6 +51,7 @@ const AuthRoutes = () => {
           <Route path="legcases" element={<LegalCasesIndex />} />
           <Route path="legal-sessions" element={<LegalSessions />} />
           <Route path="search-courts-api" element={<SearchCourtsApi />} />
+          <Route path="tools/icons" element={<IconsGalleryPage />} />
           <Route
             path="managment-settings/procedures"
             element={<Procedures />}
