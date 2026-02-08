@@ -6,6 +6,7 @@ import {
   FileText,
   Gavel,
   LayoutDashboard,
+  LayoutGrid,
   Landmark,
   Scale,
   Settings,
@@ -62,6 +63,17 @@ export const sidebarGroups = [
           { key: "lawyers", labelKey: "navigation.lawyers", icon: UserCog, path: "/dashboard/lawyers" },
           { key: "users_permissions", labelKey: "navigation.usersPermissions", icon: ShieldCheck, path: "/dashboard/users-permissions" },
         ],
+      },
+    ],
+  },
+  {
+    key: "tools",
+    items: [
+      {
+        key: "icons_gallery",
+        labelKey: "navigation.iconsGallery",
+        icon: LayoutGrid,
+        path: "/dashboard/tools/icons",
       },
     ],
   },

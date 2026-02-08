@@ -161,4 +161,9 @@
   .table-soft-shadow {
     box-shadow: 0 16px 40px -26px hsl(var(--foreground) / 0.25);
   }
+
+  .rtl-mirror {
+    transform: scaleX(-1);
+    transform-origin: center;
+  }
 }
