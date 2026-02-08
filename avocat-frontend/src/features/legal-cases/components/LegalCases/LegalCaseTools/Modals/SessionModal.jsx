@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   createSession,
   updateSession,
@@ -8,6 +8,263 @@ import { getCourts } from '@shared/services/api/legalCases';
 import { getLawyers } from '@shared/services/api/lawyers';
 import useAuth from '@features/auth/components/AuthUser';
 import { useAlert } from '@shared/contexts/AlertContext';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+
+const SessionForm = ({
+  isEdit,
+  formData,
+  onChange,
+  courts,
+  legalSessionTypes,
+  lawyers,
+  onSubmit,
+  onClose,
+  formError,
+  t,
+}) => (
+  <form onSubmit={onSubmit} className="space-y-5">
+    {formError && (
+      <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+        {formError}
+      </div>
+    )}
+
+    {!isEdit && (
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.court')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="court_id"
+            value={formData.court_id}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="">{t('legalCaseDetails.sessions.form.courtPlaceholder')}</option>
+            {courts.map((court) => (
+              <option key={court.id} value={court.id}>
+                {court.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.type')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="legal_session_type_id"
+            value={formData.legal_session_type_id}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="">{t('legalCaseDetails.sessions.form.typePlaceholder')}</option>
+            {legalSessionTypes.map((legalSessionType) => (
+              <option
+                key={legalSessionType.id}
+                value={legalSessionType.id}
+              >
+                {legalSessionType.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.department')}
+          </label>
+          <input
+            name="court_department"
+            type="text"
+            value={formData.court_department}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.roll')}
+          </label>
+          <input
+            name="session_roll"
+            type="text"
+            value={formData.session_roll}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.date')} <span className="text-destructive">*</span>
+          </label>
+          <input
+            name="session_date"
+            type="date"
+            value={formData.session_date}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.lawyer')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="lawyer_id"
+            value={formData.lawyer_id}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="">{t('legalCaseDetails.sessions.form.lawyerPlaceholder')}</option>
+            {lawyers.map((lawyer) => (
+              <option key={lawyer.id} value={lawyer.id}>
+                {lawyer.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.orders')} <span className="text-destructive">*</span>
+          </label>
+          <input
+            name="orders"
+            type="text"
+            value={formData.orders}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.notes')}
+          </label>
+          <input
+            name="notes"
+            type="text"
+            value={formData.notes}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+      </div>
+    )}
+
+    {isEdit && (
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.result')}
+          </label>
+          <input
+            name="result"
+            type="text"
+            value={formData.result}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.judgment')}
+          </label>
+          <textarea
+            name="Judgment_operative"
+            value={formData.Judgment_operative}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            rows="3"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-muted-foreground">
+            {t('legalCaseDetails.sessions.form.status')} <span className="text-destructive">*</span>
+          </label>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={onChange}
+            className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            required
+          >
+            <option value="جارى التنفيذ">{t('legalCaseDetails.sessions.form.statusInProgress')}</option>
+            <option value="تمت">{t('legalCaseDetails.sessions.form.statusDone')}</option>
+            <option value="لم ينفذ">{t('legalCaseDetails.sessions.form.statusNotDone')}</option>
+          </select>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.sessions.form.costReceipts')}
+            </label>
+            <input
+              name="cost1"
+              type="number"
+              value={formData.cost1}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.sessions.form.costFees')}
+            </label>
+            <input
+              name="cost2"
+              type="number"
+              value={formData.cost2}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.sessions.form.costOther')}
+            </label>
+            <input
+              name="cost3"
+              type="number"
+              value={formData.cost3}
+              onChange={onChange}
+              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            />
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+      <button
+        type="button"
+        onClick={onClose}
+        className="pressable rounded-full border border-border px-4 py-2 text-sm"
+      >
+        {t('common.cancel')}
+      </button>
+      <button
+        type="submit"
+        className="pressable rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+      >
+        {isEdit ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
+      </button>
+    </div>
+  </form>
+);
 
 const SessionModal = ({
   isOpen,
@@ -19,10 +276,12 @@ const SessionModal = ({
   isEdit = false,
 }) => {
   const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [courts, setCourts] = useState([]);
   const [legalSessionTypes, setLegalSessionTypes] = useState([]);
   const [lawyers, setLawyers] = useState([]);
+  const [formError, setFormError] = useState('');
 
   const [formData, setFormData] = useState({
     session_date: '',
@@ -57,11 +316,11 @@ const SessionModal = ({
         setLegalSessionTypes(legalSessionTypeResponse.data);
         setLawyers(lawyersResponse.data);
       } catch (error) {
-        triggerAlert('error', 'حدث خطأ أثناء تحميل البيانات.');
+        triggerAlert('error', t('legalCaseDetails.sessions.errors.loadForm'));
       }
     };
     fetchDropdownData();
-  }, [legalCaseId]);
+  }, [legalCaseId, t, triggerAlert]);
 
   useEffect(() => {
     if (isEdit && initialData) {
@@ -85,7 +344,7 @@ const SessionModal = ({
         Judgment_operative: initialData.Judgment_operative || '',
       });
     }
-  }, [isEdit, initialData, legalCaseId]);
+  }, [isEdit, initialData, legalCaseId, user.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,277 +353,55 @@ const SessionModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError('');
     try {
       if (isEdit) {
         await updateSession(initialData.id, formData);
-        triggerAlert('success', 'تم تحديث الجلسة بنجاح.');
+        triggerAlert('success', t('legalCaseDetails.sessions.alerts.updateSuccess'));
       } else {
         await createSession(formData);
-        triggerAlert('success', 'تم إضافة الجلسة بنجاح.');
+        triggerAlert('success', t('legalCaseDetails.sessions.alerts.addSuccess'));
       }
       onSubmit(formData);
       onClose();
       fetchSessions();
     } catch (error) {
-      triggerAlert('error', 'حدث خطأ أثناء حفظ الجلسة.');
+      const message = t('legalCaseDetails.sessions.alerts.saveError');
+      setFormError(message);
+      triggerAlert('error', message);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full sm:max-w-md md:max-w-lg p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition"
-        >
-          &#x2715;
-        </button>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">
-          {isEdit ? 'تحديث الجلسة' : 'إضافة إجراء جديد'}
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h2 className="text-lg font-semibold">
+            {isEdit ? t('legalCaseDetails.sessions.form.editTitle') : t('legalCaseDetails.sessions.form.addTitle')}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground"
+            aria-label={t('common.close')}
+          >
+            &#x2715;
+          </button>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {}
-            {!isEdit && (
-              <>
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    المحكمة
-                  </label>
-                  <select
-                    name="court_id"
-                    value={formData.court_id}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  >
-                    <option value="">اختر المحكمة</option>
-                    {courts.map((court) => (
-                      <option key={court.id} value={court.id}>
-                        {court.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    نوع الجلسة
-                  </label>
-                  <select
-                    name="legal_session_type_id"
-                    value={formData.legal_session_type_id}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  >
-                    <option value="">اختر نوع الجلسة</option>
-                    {legalSessionTypes.map((legalSessionType) => (
-                      <option
-                        key={legalSessionType.id}
-                        value={legalSessionType.id}
-                      >
-                        {legalSessionType.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    دائرة المحكمة
-                  </label>
-                  <input
-                    name="court_department"
-                    type="text"
-                    value={formData.court_department}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  />
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    رول القضية
-                  </label>
-                  <input
-                    name="session_roll"
-                    type="text"
-                    value={formData.session_roll}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  />
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    تاريخ الجلسة
-                  </label>
-                  <input
-                    name="session_date"
-                    type="date"
-                    value={formData.session_date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  />
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    المحامي
-                  </label>
-                  <select
-                    name="lawyer_id"
-                    value={formData.lawyer_id}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  >
-                    <option value="">اختر المحامي</option>
-                    {lawyers.map((lawyer) => (
-                      <option key={lawyer.id} value={lawyer.id}>
-                        {lawyer.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    الطلبات
-                  </label>
-                  <input
-                    name="orders"
-                    type="text"
-                    value={formData.orders}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  />
-                </div>
-
-                {}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    ملاحظات
-                  </label>
-                  <input
-                    name="notes"
-                    type="text"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  />
-                </div>
-              </>
-            )}
-
-            {}
-            {isEdit && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    النتيجة
-                  </label>
-                  <input
-                    name="result"
-                    type="text"
-                    value={formData.result}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    نص القرار أو الحكم
-                  </label>
-                  <textarea
-                    name="Judgment_operative"
-                    value={formData.Judgment_operative}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    rows="3"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    حالة الجلسة
-                  </label>
-                  <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    required
-                  >
-                    <option value="جارى التنفيذ">جارى التنفيذ</option>
-                    <option value="تمت">تمت</option>
-                    <option value="لم ينفذ">لم ينفذ</option>
-                  </select>
-                </div>
-
-                {}
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      رسوم بإيصالات
-                    </label>
-                    <input
-                      name="cost1"
-                      type="number"
-                      value={formData.cost1}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      أتعاب الجلسة
-                    </label>
-                    <input
-                      name="cost2"
-                      type="number"
-                      value={formData.cost2}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      مصروفات أخرى
-                    </label>
-                    <input
-                      name="cost3"
-                      type="number"
-                      value={formData.cost3}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            >
-              {isEdit ? 'تحديث' : 'إضافة'}
-            </button>
-          </div>
-        </form>
+        <SessionForm
+          isEdit={isEdit}
+          formData={formData}
+          onChange={handleChange}
+          courts={courts}
+          legalSessionTypes={legalSessionTypes}
+          lawyers={lawyers}
+          onSubmit={handleSubmit}
+          onClose={onClose}
+          formError={formError}
+          t={t}
+        />
       </div>
     </div>
   );

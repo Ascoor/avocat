@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { BiPlusCircle } from 'react-icons/bi';
 import {
   addLegalCaseCourts,
   getCourts,
@@ -9,19 +8,26 @@ import { useAlert } from '@shared/contexts/AlertContext';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import CourtModal from './Modals/CourtModal';
 import CourtList from './Modals/CourtList';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
 
 const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
+  const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const [courtLevels, setCourtLevels] = useState([]);
   const [courts, setCourts] = useState([]);
   const [filteredCourts, setFilteredCourts] = useState([]);
   const [legCaseNewCourts, setLegCaseNewCourts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourt, setSelectedCourt] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const years = Array.from({ length: 51 }, (_, i) => 2000 + i);
-  const { triggerAlert } = useAlert();
 
   useEffect(() => {
     const fetchCourtData = async () => {
+      setLoading(true);
+      setError('');
       try {
         const response = await getCourts();
         const fetchedCourts = response.data;
@@ -36,12 +42,14 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
 
         setCourtLevels(uniqueLevels);
       } catch (error) {
-        console.error('Error fetching courts:', error);
+        setError(t('legalCaseDetails.courts.errors.fetch'));
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCourtData();
-  }, []);
+  }, [t]);
 
   const addNewCourt = () => {
     setLegCaseNewCourts((prev) => [
@@ -61,7 +69,7 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
     if (field === 'court_level_id') {
       updated[index].court_id = '';
       const filtered = courts.filter(
-        (court) => court.court_level_id === parseInt(value),
+        (court) => court.court_level_id === parseInt(value, 10),
       );
       setFilteredCourts(filtered);
     }
@@ -71,7 +79,7 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
 
   const saveCourts = async () => {
     if (!legCaseNewCourts.length) {
-      triggerAlert('error', 'Please add at least one court before saving.');
+      triggerAlert('error', t('legalCaseDetails.courts.errors.missing'));
       return;
     }
 
@@ -79,21 +87,17 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
       (court) => !court.case_number || !court.case_year || !court.court_id,
     );
     if (invalidCourt) {
-      triggerAlert(
-        'error',
-        'جميع الحقول مطلوبة لكل محكمة. يرجى استكمال الحقول المفقودة.',
-      );
+      triggerAlert('error', t('legalCaseDetails.courts.errors.required'));
       return;
     }
 
     try {
       await addLegalCaseCourts(legCase.id, legCaseNewCourts);
-      triggerAlert('success', 'تمت إضافة المحاكم بنجاح!');
+      triggerAlert('success', t('legalCaseDetails.courts.alerts.addSuccess'));
       setLegCaseNewCourts([]);
       fetchLegCase();
     } catch (error) {
-      console.error('Error saving courts:', error.response || error.message);
-      triggerAlert('error', 'حدث خطأ أثناء حفظ المحاكم. حاول مرة أخرى.');
+      triggerAlert('error', t('legalCaseDetails.courts.alerts.addError'));
     }
   };
 
@@ -107,11 +111,10 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
 
     try {
       await removeLegalCaseCourt(legCase.id, selectedCourt.id);
-      triggerAlert('success', `تم حذف ${selectedCourt.name} بنجاح!`);
+      triggerAlert('success', t('legalCaseDetails.courts.alerts.deleteSuccess', { name: selectedCourt.name }));
       fetchLegCase();
     } catch (error) {
-      console.error('Failed to remove court:', error);
-      triggerAlert('error', 'فشل في حذف المحكمة. حاول مرة أخرى.');
+      triggerAlert('error', t('legalCaseDetails.courts.alerts.deleteError'));
     } finally {
       setIsModalOpen(false);
       setSelectedCourt(null);
@@ -119,42 +122,63 @@ const LegalCaseCourts = ({ legCase, fetchLegCase }) => {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg transition duration-300">
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">
-        المحاكم المرتبطة
-      </h2>
-
-      <div className="flex justify-center mb-6">
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">
+            {t('legalCaseDetails.courts.title')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t('legalCaseDetails.courts.subtitle')}
+          </p>
+        </div>
         <button
           onClick={addNewCourt}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 shadow-lg transition"
+          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
-          <BiPlusCircle size={24} />
-          إضافة محكمة
+          <LexicraftIcon name="court" size={18} />
+          {t('legalCaseDetails.courts.actions.addCourt')}
         </button>
-      </div>
+      </header>
 
-      <CourtModal
-        legCaseNewCourts={legCaseNewCourts}
-        updateCourtField={updateCourtField}
-        removeNewCourt={removeNewCourt}
-        courtLevels={courtLevels}
-        filteredCourts={filteredCourts}
-        years={years}
-      />
-
-      {legCaseNewCourts.length > 0 && (
-        <div className="flex justify-center mt-6">
-          <button
-            onClick={saveCourts}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 shadow-lg transition"
-          >
-            حفظ
-          </button>
+      {error && (
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+          {error}
         </div>
       )}
 
-      <CourtList courts={legCase.courts} handleDelete={handleDelete} />
+      {loading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div key={index} className="h-14 rounded-2xl skeleton-shimmer" />
+          ))}
+        </div>
+      ) : (
+        <>
+          <CourtModal
+            legCaseNewCourts={legCaseNewCourts}
+            updateCourtField={updateCourtField}
+            removeNewCourt={removeNewCourt}
+            courtLevels={courtLevels}
+            filteredCourts={filteredCourts}
+            years={years}
+          />
+
+          {legCaseNewCourts.length > 0 && (
+            <div className="flex justify-end">
+              <button
+                onClick={saveCourts}
+                className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
+                <LexicraftIcon name="document" size={18} />
+                {t('common.save')}
+              </button>
+            </div>
+          )}
+
+          <CourtList courts={legCase.courts} handleDelete={handleDelete} />
+        </>
+      )}
 
       <GlobalConfirmDeleteModal
         isOpen={isModalOpen}

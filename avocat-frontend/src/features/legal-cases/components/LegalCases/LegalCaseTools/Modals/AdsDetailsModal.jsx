@@ -1,129 +1,109 @@
-import React from 'react';
-import { BiX } from 'react-icons/bi';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
 
 const AdsDetailsModal = ({ isOpen, onClose, adDetails }) => {
+  const { t } = useLanguage();
   if (!isOpen || !adDetails) return null;
 
+  const notAvailable = t('legalCaseDetails.ads.details.notAvailable');
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-xl w-full">
-        <div className="flex justify-between items-center p-4 border-b border-gray-300 dark:border-gray-700">
-          <h3 className="text-lg font-semibold">تفاصيل الإعلان القانوني</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card shadow-xl">
+        <div className="flex items-center justify-between border-b border-border p-4">
+          <h3 className="text-lg font-semibold">
+            {t('legalCaseDetails.ads.details.title')}
+          </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-muted-foreground hover:text-foreground"
+            aria-label={t('common.close')}
           >
-            <BiX size={24} />
+            <LexicraftIcon name="lock" size={20} />
           </button>
         </div>
-        <div className="p-4">
-          {}
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {}
+        <div className="p-4 space-y-4 text-sm">
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium">نوع الإعلان</label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.legalAdType?.name || 'غير متوفر'}
-              </p>
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.type')}
+              </label>
+              <p>{adDetails.legalAdType?.name || notAvailable}</p>
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium">المحكمة</label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.court?.name || 'غير متوفر'}
-              </p>
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.court')}
+              </label>
+              <p>{adDetails.court?.name || notAvailable}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {}
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium">
-                المحامي المرسل
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.sender')}
               </label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.lawyerSend?.name || 'غير متوفر'}
-              </p>
+              <p>{adDetails.lawyerSend?.name || notAvailable}</p>
             </div>
-
-            {}
             <div>
-              <label className="block text-sm font-medium">
-                المحامي المستلم
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.receiver')}
               </label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.lawyerReceive?.name || 'غير متوفر'}
-              </p>
+              <p>{adDetails.lawyerReceive?.name || notAvailable}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {}
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium">تاريخ الإرسال</label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.send_date || 'غير متوفر'}
-              </p>
-            </div>
-
-            {}
-            <div>
-              <label className="block text-sm font-medium">
-                تاريخ الاستلام
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.sendDate')}
               </label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.receive_date || 'غير متوفر'}
-              </p>
+              <p>{adDetails.send_date || notAvailable}</p>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.receiveDate')}
+              </label>
+              <p>{adDetails.receive_date || notAvailable}</p>
             </div>
           </div>
 
-          {}
-          <div className="mb-4">
-            <label className="block text-sm font-medium">الحالة</label>
-            <p
-              className={`px-4 py-2 rounded-lg text-center ${
-                adDetails.status === 'تم'
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                  : adDetails.status === 'معلق'
-                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                    : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-              }`}
-            >
-              {adDetails.status || 'غير متوفر'}
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.details.status')}
+            </label>
+            <p className="mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-center">
+              {adDetails.status || notAvailable}
             </p>
           </div>
 
-          {}
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium">التكلفة 1</label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.cost || 'غير متوفر'}
-              </p>
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.costOne')}
+              </label>
+              <p>{adDetails.cost || notAvailable}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium">التكلفة 2</label>
-              <p className="text-gray-700 dark:text-gray-300">
-                {adDetails.cost2 || 'غير متوفر'}
-              </p>
+              <label className="block text-xs font-semibold text-muted-foreground">
+                {t('legalCaseDetails.ads.details.costTwo')}
+              </label>
+              <p>{adDetails.cost2 || notAvailable}</p>
             </div>
           </div>
 
-          {}
-          <div className="mb-4">
-            <label className="block text-sm font-medium">الوصف</label>
-            <p className="text-gray-700 dark:text-gray-300">
-              {adDetails.description || 'غير متوفر'}
-            </p>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.details.description')}
+            </label>
+            <p>{adDetails.description || notAvailable}</p>
           </div>
 
-          {}
-          <div className="mb-4">
-            <label className="block text-sm font-medium">النتائج</label>
-            <p className="text-gray-700 dark:text-gray-300">
-              {adDetails.results || 'غير متوفر'}
-            </p>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground">
+              {t('legalCaseDetails.ads.details.results')}
+            </label>
+            <p>{adDetails.results || notAvailable}</p>
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react';
-import { BiPlusCircle, BiPencil, BiTrash } from 'react-icons/bi';
 import LegalAdModal from './Modals/LegalAdModal';
 import {
   getLegalAdsByLegCaseId,
@@ -7,18 +6,20 @@ import {
 } from '@shared/services/api/legalCases';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import { useAlert } from '@shared/contexts/AlertContext';
-import { motion } from 'framer-motion';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { LexicraftIcon } from '@shared/icons/lexicraft';
+
 const LegalCaseAds = ({ legCaseId }) => {
   const { triggerAlert } = useAlert();
+  const { t } = useLanguage();
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('');
   const [selectedAd, setSelectedAd] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [adToDelete, setAdToDelete] = useState(null);
   const [legalAds, setLegalAds] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -34,25 +35,24 @@ const LegalCaseAds = ({ legCaseId }) => {
 
   const fetchLegalAds = useCallback(async () => {
     setLoading(true);
-    setError(null);
+    setError('');
     try {
-      if (!legCaseId) throw new Error('لم يتم العثور على معرف القضية.');
+      if (!legCaseId) throw new Error('Missing case id');
 
       const response = await getLegalAdsByLegCaseId(legCaseId);
-      console.log('Fetched Ads Data:', response.data);
 
       if (response?.data && Array.isArray(response.data)) {
         setLegalAds(response.data);
       } else {
-        throw new Error('خطأ في تنسيق البيانات المسترجعة.');
+        throw new Error('Invalid data');
       }
     } catch (err) {
-      console.error('Error fetching legal ads:', err);
-      triggerAlert('error', 'حدث خطاء في تحميل الإعلانات.');
+      setError(t('legalCaseDetails.ads.errors.fetch'));
+      triggerAlert('error', t('legalCaseDetails.ads.errors.fetch'));
     } finally {
       setLoading(false);
     }
-  }, [legCaseId]);
+  }, [legCaseId, t, triggerAlert]);
 
   useEffect(() => {
     fetchLegalAds();
@@ -86,12 +86,12 @@ const LegalCaseAds = ({ legCaseId }) => {
         setAdToDelete(null);
 
         setConfirmDelete(false);
-        triggerAlert('success', 'تم حذف الإعلان بنجاح.');
+        triggerAlert('success', t('legalCaseDetails.ads.alerts.deleteSuccess'));
       }
     } catch (error) {
-      triggerAlert('error', 'حدث خطاء في حذف الإعلان.');
+      triggerAlert('error', t('legalCaseDetails.ads.alerts.deleteError'));
     }
-  }, [adToDelete]);
+  }, [adToDelete, triggerAlert, t]);
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -112,143 +112,190 @@ const LegalCaseAds = ({ legCaseId }) => {
   };
 
   const legalAdsToDisplay = paginateData(legalAds);
-
-  const totalPages = Math.ceil(legalAds.length / rowsPerPage);
+  const totalPages = Math.ceil(legalAds.length / rowsPerPage) || 1;
+  const isEmpty = !loading && legalAds.length === 0;
 
   return (
-    <div className="min-h-screen bg-lightBg dark:bg-darkBg text-gray-900 dark:text-gray-100">
-      {}
-      <motion.header
-        className="p-4 bg-gradient-blue-dark dark:bg-avocat-blue-dark flex justify-between items-center rounded-lg shadow-md"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {}
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-muted/40 p-4">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">
+            {t('legalCaseDetails.ads.title')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t('legalCaseDetails.ads.subtitle')}
+          </p>
+        </div>
         <button
           onClick={handleAddAd}
-          className="px-2 py-2 text-sm rounded-lg font-bold bg-gradient-green-button hover:bg-gradient-green-dark-button text-white shadow-md hover:scale-105 transform transition-all"
+          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
-          <BiPlusCircle className="inline-block ml-2" />
-          إضافة
+          <LexicraftIcon name="document" size={18} />
+          {t('legalCaseDetails.actions.addAd')}
         </button>
-
-        {}
-        <h1 className="text-lg font-bold text-white flex-1 text-center">
-          الإعلانات
-        </h1>
-      </motion.header>
+      </header>
 
       {error && (
-        <div className="mb-4 text-red-500 font-semibold text-center mt-4">
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
         </div>
       )}
+
       {loading ? (
-        <div className="text-center py-4">جاري تحميل الإعلانات...</div>
-      ) : (
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-              <thead>
-                <tr className="bg-avocat-indigo dark:bg-avocat-blue text-white text-center">
-                  <th className="px-4 py-2">نوع الإعلان</th>
-                  <th className="px-4 py-2">تاريخ التسليم</th>
-                  <th className="px-4 py-2">تاريخ الإستلام</th>
-                  <th className="px-4 py-2">المسلم</th>
-                  <th className="px-4 py-2">المستلم</th>
-                  <th className="px-4 py-2">الوصف</th>
-                  <th className="px-4 py-2">الحالة</th>
-                  <th className="px-4 py-2">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {legalAdsToDisplay.length > 0 ? (
-                  legalAdsToDisplay.map((ad) => (
-                    <tr
-                      key={ad.id}
-                      className="border-b bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer text-center"
-                    >
-                      <td className="px-4 py-3">{ad.legal_ad_type?.name}</td>
-                      <td className="px-4 py-3">{ad.send_date}</td>
-                      <td className="px-4 py-3">
-                        {ad.receive_date || 'جاري الإستلام'}
-                      </td>
-                      <td className="px-4 py-3">
-                        {ad.lawyer_send?.name || 'غير متوفر'}
-                      </td>
-                      <td className="px-4 py-3">
-                        {ad.lawyer_receive?.name || 'غير متوفر'}
-                      </td>
-                      <td className="px-4 py-3">{ad.description}</td>
-                      <td className="px-4 py-3">{ad.status}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex justify-center gap-3">
-                          <button
-                            className="text-green-500 hover:text-green-700 transition-all transform hover:scale-110"
-                            onClick={() => handleEditAd(ad)}
-                          >
-                            <BiPencil size={22} />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 transition-all transform hover:scale-110"
-                            onClick={() => handleDeleteAd(ad)}
-                          >
-                            <BiTrash size={22} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="8"
-                      className="text-center py-4 text-gray-600 dark:text-gray-400"
-                    >
-                      🚫 لا توجد إعلانات قانونية مرتبطة بهذه القضية.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          {}
-          <div className="flex justify-center mt-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-              className="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
-            >
-              السابق
-            </button>
-            <span className="flex items-center">
-              {currentPage} / {totalPages}
-            </span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-              className="px-4 py-2 mx-2 bg-blue-500 text-white rounded"
-            >
-              التالي
-            </button>
-          </div>
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="h-16 rounded-2xl skeleton-shimmer" />
+          ))}
         </div>
+      ) : (
+        <>
+          {isEmpty ? (
+            <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <LexicraftIcon name="document" size={20} />
+              </div>
+              <div>{t('legalCaseDetails.ads.empty')}</div>
+              <button
+                onClick={handleAddAd}
+                className="pressable mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+              >
+                <LexicraftIcon name="document" size={16} />
+                {t('legalCaseDetails.actions.addAd')}
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="hidden md:block overflow-x-auto rounded-2xl border border-border">
+                <table className="min-w-full text-sm">
+                  <thead className="sticky top-0 bg-muted text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.type')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.sendDate')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.receiveDate')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.sender')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.receiver')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.description')}</th>
+                      <th className="px-4 py-3 text-start">{t('legalCaseDetails.ads.table.status')}</th>
+                      <th className="px-4 py-3 text-center">{t('legalCaseDetails.table.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {legalAdsToDisplay.map((ad) => (
+                      <tr
+                        key={ad.id}
+                        className="border-t border-border hover:bg-muted/40 transition"
+                      >
+                        <td className="px-4 py-3">{ad.legal_ad_type?.name}</td>
+                        <td className="px-4 py-3">{ad.send_date}</td>
+                        <td className="px-4 py-3">
+                          {ad.receive_date || t('legalCaseDetails.ads.pendingReceive')}
+                        </td>
+                        <td className="px-4 py-3">
+                          {ad.lawyer_send?.name || t('legalCaseDetails.ads.notAvailable')}
+                        </td>
+                        <td className="px-4 py-3">
+                          {ad.lawyer_receive?.name || t('legalCaseDetails.ads.notAvailable')}
+                        </td>
+                        <td className="px-4 py-3">{ad.description}</td>
+                        <td className="px-4 py-3">{ad.status}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex justify-center gap-2">
+                            <button
+                              className="pressable inline-flex h-9 w-9 items-center justify-center rounded-full border border-border"
+                              onClick={() => handleEditAd(ad)}
+                              aria-label={t('legalCaseDetails.actions.edit')}
+                            >
+                              <LexicraftIcon name="tool" size={18} />
+                            </button>
+                            <button
+                              className="pressable inline-flex h-9 w-9 items-center justify-center rounded-full border border-destructive/40 text-destructive"
+                              onClick={() => handleDeleteAd(ad)}
+                              aria-label={t('legalCaseDetails.actions.delete')}
+                            >
+                              <LexicraftIcon name="shield" size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="space-y-3 md:hidden">
+                {legalAdsToDisplay.map((ad) => (
+                  <div key={ad.id} className="rounded-2xl border border-border p-4 shadow-sm">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="text-sm font-semibold text-foreground">
+                          {ad.legal_ad_type?.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {ad.send_date} · {ad.status}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-xs text-muted-foreground">
+                      {ad.description}
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        onClick={() => handleEditAd(ad)}
+                        className="pressable inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border px-3 py-2 text-xs"
+                      >
+                        <LexicraftIcon name="tool" size={16} />
+                        {t('legalCaseDetails.actions.edit')}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAd(ad)}
+                        className="pressable inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-destructive/40 px-3 py-2 text-xs text-destructive"
+                      >
+                        <LexicraftIcon name="shield" size={16} />
+                        {t('legalCaseDetails.actions.delete')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {totalPages > 1 && (
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
+              >
+                {t('legalCaseDetails.pagination.prev')}
+              </button>
+              <span className="text-sm text-muted-foreground">
+                {t('legalCaseDetails.pagination.page', { current: currentPage, total: totalPages })}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
+              >
+                {t('legalCaseDetails.pagination.next')}
+              </button>
+            </div>
+          )}
+        </>
       )}
 
-      {}
       {showModal && (
         <LegalAdModal
           isOpen={showModal}
-          onClose={() => setShowModal(false)}
+          onClose={handleModalClose}
           legCaseId={legCaseId}
           initialData={selectedAd}
           isEdit={modalMode === 'edit'}
           fetchLegalAds={fetchLegalAds}
+          onSubmit={handleAdSubmit}
         />
       )}
 
-      {}
       {confirmDelete && (
         <GlobalConfirmDeleteModal
           isOpen={confirmDelete}

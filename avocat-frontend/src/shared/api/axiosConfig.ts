@@ -26,8 +26,9 @@ api.interceptors.response.use(
     const status = error?.response?.status;
     if (status === 401 || status === 419) {
       clearStoredAuth();
-      if (window.location.pathname !== '/') {
-        window.location.assign('/');
+      const currentPath = `${window.location.pathname}${window.location.search}`;
+      if (!window.location.pathname.startsWith('/login')) {
+        window.location.assign(`/login?next=${encodeURIComponent(currentPath)}`);
       }
     }
     return Promise.reject(error);
