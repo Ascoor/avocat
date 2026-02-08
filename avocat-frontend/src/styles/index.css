@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
 @import './theme-tokens.css';
+@import '../shared/styles/tokens.css';
+@import '../shared/styles/theme.css';
 @import './radix-vars.css';
 @import './dashboard-shell.css';
 
@@ -13,7 +15,6 @@
    ============================ */
 @layer base {
   :root {
-    --font-sans: 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
     --font-display: 'Playfair Display', 'Cairo', 'Inter', serif;
   }
 
@@ -28,11 +29,11 @@
   }
 
   html[lang='ar'] body {
-    font-family: 'Cairo', 'Inter', sans-serif;
+    font-family: var(--font-ar);
   }
 
   html[lang='ar'] .font-display {
-    font-family: 'Cairo', 'Playfair Display', serif;
+    font-family: var(--font-ar);
   }
 
   html[lang='en'] .font-display {
@@ -51,7 +52,7 @@
   :root,
   body {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary) / 0.35) transparent;
+    scrollbar-color: hsl(var(--color-primary) / 0.35) transparent;
   }
 
   body::-webkit-scrollbar {
@@ -66,16 +67,16 @@
     border-radius: 9999px;
     background-image: linear-gradient(
       180deg,
-      hsl(var(--accent) / 0.55),
-      hsl(var(--primary) / 0.7)
+      hsl(var(--color-accent) / 0.55),
+      hsl(var(--color-primary) / 0.7)
     );
   }
 
-  html.dark body::-webkit-scrollbar-thumb {
+  html[data-theme='dark'] body::-webkit-scrollbar-thumb {
     background-image: linear-gradient(
       180deg,
-      hsl(var(--gold) / 0.35),
-      hsl(var(--primary) / 0.6)
+      hsl(var(--color-accent) / 0.35),
+      hsl(var(--color-primary) / 0.6)
     );
   }
 }

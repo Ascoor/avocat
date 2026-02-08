@@ -14,9 +14,9 @@ const themeToggleToneVariantMap = {
 };
 
 const themeToggleToneClassMap = {
-  hero: "border-white/40 text-white hover:bg-white/15",
-  dark: "border-white/30 text-white hover:bg-white/10",
-  light: "border-border text-foreground hover:bg-muted",
+  hero: "border-[hsl(var(--color-glass))]/40 text-[hsl(var(--color-glass))] hover:bg-[hsl(var(--color-glass))]/15",
+  dark: "border-[hsl(var(--color-glass))]/30 text-[hsl(var(--color-glass))] hover:bg-[hsl(var(--color-glass))]/10",
+  light: "border-[hsl(var(--color-border))] text-[hsl(var(--color-text))] hover:bg-[hsl(var(--color-surface-2))]",
 };
 
 const ThemeToggle = ({ tone, className }) => {

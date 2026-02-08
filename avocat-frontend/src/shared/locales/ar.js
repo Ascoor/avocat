@@ -22,10 +22,17 @@ const ar = {
     switchToDark: "التبديل للوضع الداكن",
     backToHome: "العودة للصفحة الرئيسية",
     or: "أو",
+    save: "حفظ",
+    cancel: "إلغاء",
+    delete: "حذف",
+    search: "بحث",
+    logout: "تسجيل الخروج",
   },
   language: {
     switchToEnglish: "EN",
     switchToArabic: "عربي",
+    english: "English",
+    arabic: "العربية",
   },
   roles: {
     admin: "مدير",
@@ -81,6 +88,20 @@ const ar = {
       success_title: "تم تسجيل الدخول",
       success: "مرحباً بك في لوحة التحكم.",
       error: "تعذر تسجيل الدخول. حاول مرة أخرى.",
+      hero: {
+        badge: "بوابة العملاء الآمنة",
+        headline: "مرحباً بعودتك إلى بوابتك القانونية",
+        subheadline: "ادخل إلى لوحة التحكم لمتابعة قضاياك والتواصل مع فريقنا القانوني المتخصص.",
+        highlights: [
+          { icon: "shield", text: "حماية بيانات مشفرة بأعلى المعايير الدولية" },
+          { icon: "users", text: "تواصل مباشر مع المحامين والمستشارين" },
+          { icon: "check", text: "متابعة لحظية لتطورات القضايا والجلسات" },
+        ],
+        stats: [
+          { value: "٢٤/٧", label: "دعم متواصل" },
+          { value: "+٥٠٠", label: "عميل نشط" },
+        ],
+      },
     },
     security: {
       title: "بوابة آمنة",
@@ -104,6 +125,19 @@ const ar = {
       success: "تم إنشاء الحساب بنجاح.",
       error: "تعذر إنشاء الحساب. حاول مرة أخرى.",
       password_mismatch: "كلمتا المرور غير متطابقتين.",
+      hero: {
+        badge: "ابدأ رحلتك القانونية",
+        headline: "انضم إلى منصة أفوكات الآن",
+        subheadline: "أنشئ حسابك للوصول إلى فريقك القانوني وإدارة ملفاتك بسرعة وأمان.",
+        highlights: [
+          { icon: "shield", text: "تهيئة فورية لملفاتك وقضاياك" },
+          { icon: "user", text: "دعم مباشر من فريق الاستشارات" },
+        ],
+        stats: [
+          { value: "+١٥", label: "عام خبرة" },
+          { value: "%٩٨", label: "رضا العملاء" },
+        ],
+      },
     },
   },
   sidebar: {
@@ -114,6 +148,35 @@ const ar = {
       workFollow: "متابعة الأعمال",
       customerService: "خدمة العملاء",
     },
+  },
+  settings: {
+    serviceTypes: {
+      title: "أنواع الخدمات",
+      addButton: "إضافة نوع خدمة",
+      addTitle: "إضافة نوع خدمة",
+      editTitle: "تعديل نوع الخدمة",
+      nameLabel: "اسم الخدمة",
+      nameColumn: "الاسم",
+      actionsColumn: "الإجراءات",
+      saveChanges: "حفظ التغييرات",
+      addAction: "إضافة نوع خدمة",
+      pageStatus: "الصفحة {{current}} من {{total}}",
+      prev: "السابق",
+      next: "التالي",
+      alerts: {
+        fetchError: "تعذر جلب أنواع الخدمات. يرجى المحاولة مرة أخرى.",
+        addSuccess: "تمت إضافة نوع الخدمة بنجاح.",
+        updateSuccess: "تم تحديث نوع الخدمة بنجاح.",
+        saveError: "تعذر حفظ نوع الخدمة. يرجى المحاولة مرة أخرى.",
+        deleteSuccess: "تم حذف نوع الخدمة بنجاح.",
+        deleteError: "تعذر حذف نوع الخدمة. يرجى المحاولة مرة أخرى.",
+        deleteConfirm: "هل أنت متأكد من حذف نوع الخدمة؟",
+      },
+    },
+  },
+  finance: {
+    searchPlaceholder: "ابحث عن الفواتير أو العملاء...",
+    addInvoice: "إضافة فاتورة",
   },
 };
 

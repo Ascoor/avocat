@@ -28,37 +28,7 @@ const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const heroCopy = useMemo(() => {
-    if (isRTL) {
-      return {
-        badge: "ابدأ رحلتك القانونية",
-        headline: "انضم إلى منصة أفوكات الآن",
-        subheadline: "أنشئ حسابك للوصول إلى فريقك القانوني وإدارة ملفاتك بسرعة وأمان.",
-        highlights: [
-          { icon: ShieldCheck, text: "تهيئة فورية لملفاتك وقضاياك" },
-          { icon: UserPlus, text: "دعم مباشر من فريق الاستشارات" },
-        ],
-        stats: [
-          { value: "+١٥", label: "عام خبرة" },
-          { value: "%٩٨", label: "رضا العملاء" },
-        ],
-      };
-    }
-
-    return {
-      badge: "Start your legal journey",
-      headline: "Join Avocat in minutes",
-      subheadline: "Create your account to access your legal team and manage your files with clarity.",
-      highlights: [
-        { icon: ShieldCheck, text: "Instant workspace setup for your cases" },
-        { icon: UserPlus, text: "Concierge support from our legal advisors" },
-      ],
-      stats: [
-        { value: "15+", label: "Years of Practice" },
-        { value: "98%", label: "Client Satisfaction" },
-      ],
-    };
-  }, [isRTL]);
+  const heroCopy = useMemo(() => t("auth.signup.hero"), [t]);
 
   if (isAuthenticated) {
     const nextUrl = searchParams.get("next") || "/dashboard";
@@ -101,24 +71,25 @@ const Signup = () => {
       heroSide="right"
       toolbar={toolbar}
       hero={{
-        badge: (
+        badge: heroCopy?.badge ? (
           <>
             <Sparkles className="h-4 w-4" />
             <span>{heroCopy.badge}</span>
           </>
-        ),
-        title: heroCopy.headline,
-        description: heroCopy.subheadline,
-        highlights: heroCopy.highlights.map((highlight, idx) => ({
-          icon: <highlight.icon key={`hi-${idx}`} className="h-5 w-5" />,
-          text: highlight.text,
-        })),
-        stats: heroCopy.stats,
+        ) : null,
+        title: heroCopy?.headline,
+        description: heroCopy?.subheadline,
+        highlights:
+          heroCopy?.highlights?.map((highlight, idx) => {
+            const Icon = highlight.icon === "shield" ? ShieldCheck : UserPlus;
+            return { icon: <Icon key={`hi-${idx}`} className="h-5 w-5" />, text: highlight.text };
+          }) ?? [],
+        stats: heroCopy?.stats,
       }}
       card={{
         icon: (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
-            <UserPlus className="h-6 w-6 text-[hsl(var(--primary))]" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--color-primary))]/10">
+            <UserPlus className="h-6 w-6 text-[hsl(var(--color-primary))]" />
           </div>
         ),
         title: t("auth.signup.title"),
@@ -129,7 +100,7 @@ const Signup = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg border border-[hsl(var(--destructive))]/30 bg-[hsl(var(--destructive))]/10 px-4 py-3 text-sm text-[hsl(var(--destructive))]"
+                className="rounded-lg border border-[hsl(var(--color-danger))]/30 bg-[hsl(var(--color-danger))]/10 px-4 py-3 text-sm text-[hsl(var(--color-danger))]"
               >
                 {error}
               </motion.div>
@@ -193,7 +164,7 @@ const Signup = () => {
               </div>
               <Button type="submit" variant="premium" size="lg" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? t("auth.signup.loading") : t("auth.signup.submit")}
-                <ArrowRight className={cn("ml-2 h-4 w-4", isRTL && "rotate-180 mr-2 ml-0")} />
+                <ArrowRight className={cn("ms-2 h-4 w-4", isRTL && "rotate-180 me-2 ms-0")} />
               </Button>
             </form>
             <div className="text-center text-sm text-muted-foreground">

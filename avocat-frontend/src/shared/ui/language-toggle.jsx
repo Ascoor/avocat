@@ -16,10 +16,10 @@ const LanguageToggle = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setLanguage("en")} className={language === "en" ? "bg-muted" : ""}>
-          English
+          {t("language.english")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setLanguage("ar")} className={language === "ar" ? "bg-muted" : ""}>
-          العربية
+          {t("language.arabic")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

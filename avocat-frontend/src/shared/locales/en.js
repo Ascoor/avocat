@@ -22,10 +22,17 @@ const en = {
     switchToDark: "Switch to dark mode",
     backToHome: "Back to home",
     or: "or",
+    save: "Save",
+    cancel: "Cancel",
+    delete: "Delete",
+    search: "Search",
+    logout: "Logout",
   },
   language: {
     switchToEnglish: "EN",
     switchToArabic: "عربي",
+    english: "English",
+    arabic: "العربية",
   },
   roles: {
     admin: "Admin",
@@ -81,6 +88,20 @@ const en = {
       success_title: "Signed in",
       success: "Welcome back to your dashboard.",
       error: "Unable to sign in. Please try again.",
+      hero: {
+        badge: "Secure Client Portal",
+        headline: "Welcome Back to Your Legal Hub",
+        subheadline: "Access your dashboard to track cases, communicate with our legal team, and manage your matters.",
+        highlights: [
+          { icon: "shield", text: "Enterprise-grade encryption protecting your sensitive data" },
+          { icon: "users", text: "Direct communication with attorneys and legal advisors" },
+          { icon: "check", text: "Real-time updates on case progress and court sessions" },
+        ],
+        stats: [
+          { value: "24/7", label: "Support Available" },
+          { value: "500+", label: "Active Clients" },
+        ],
+      },
     },
     security: {
       title: "Secure Portal",
@@ -104,6 +125,19 @@ const en = {
       success: "Account created successfully.",
       error: "Unable to create account. Please try again.",
       password_mismatch: "Passwords do not match.",
+      hero: {
+        badge: "Start your legal journey",
+        headline: "Join Avocat in minutes",
+        subheadline: "Create your account to access your legal team and manage your files with clarity.",
+        highlights: [
+          { icon: "shield", text: "Instant workspace setup for your cases" },
+          { icon: "user", text: "Concierge support from our legal advisors" },
+        ],
+        stats: [
+          { value: "15+", label: "Years of Practice" },
+          { value: "98%", label: "Client Satisfaction" },
+        ],
+      },
     },
   },
   sidebar: {
@@ -114,6 +148,35 @@ const en = {
       workFollow: "Work follow-up",
       customerService: "Customer service",
     },
+  },
+  settings: {
+    serviceTypes: {
+      title: "Service Types",
+      addButton: "Add Service Type",
+      addTitle: "Add Service Type",
+      editTitle: "Edit Service Type",
+      nameLabel: "Service name",
+      nameColumn: "Name",
+      actionsColumn: "Actions",
+      saveChanges: "Save Changes",
+      addAction: "Add Service Type",
+      pageStatus: "Page {{current}} of {{total}}",
+      prev: "Previous",
+      next: "Next",
+      alerts: {
+        fetchError: "Failed to fetch service types. Please try again.",
+        addSuccess: "Service type added successfully.",
+        updateSuccess: "Service type updated successfully.",
+        saveError: "Failed to save service type. Please try again.",
+        deleteSuccess: "Service type deleted successfully.",
+        deleteError: "Failed to delete service type. Please try again.",
+        deleteConfirm: "Are you sure you want to delete this service type?",
+      },
+    },
+  },
+  finance: {
+    searchPlaceholder: "Search invoices or clients...",
+    addInvoice: "Add Invoice",
   },
 };
 
