@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react';
 import SectionHeader from '@shared/components/common/SectionHeader';
 import { ProcedureIcon } from '@assets/icons';
+import { useSecurity } from '@shared/security/SecurityContext';
+import { canCrud } from '@shared/security/permissions';
+import ForbiddenState from '@shared/security/ForbiddenState';
 
 const ProcedureTypes = lazy(
   () => import('../components/Procedures/ProcedureTypes'),
@@ -10,6 +13,10 @@ const ProcedurePlaceTypes = lazy(
 );
 
 const Procedures = () => {
+  const { permissions } = useSecurity();
+  const acl = canCrud(permissions, 'procedures');
+  if (!acl.view) return <ForbiddenState moduleLabel="Procedures" />;
+
   return (
     <div className="p-6 mt-12 xl:max-w-7xl xl:mx-auto w-full">
       <SectionHeader listName="الإجراءات" icon={ProcedureIcon} />
