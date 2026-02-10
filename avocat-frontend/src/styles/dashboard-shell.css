@@ -181,12 +181,14 @@
   .header-shell {
     position: sticky;
     top: 0;
-    z-index: 40;
+    z-index: 45;
+    width: 100%;
 
     background: hsl(var(--header-glass-background));
     border-bottom: 1px solid hsl(var(--header-glass-border));
     box-shadow: var(--header-glass-shadow);
     backdrop-filter: blur(18px);
+    overflow-x: clip;
   }
   
   .header-shell::after {
@@ -294,6 +296,21 @@
     width: 18px;
     height: 18px;
     opacity: 0.95;
+  }
+
+
+  .header-tabs-wrap-mobile {
+    border-top: 1px solid hsl(var(--border) / 0.5);
+    padding-top: 0.4rem;
+  }
+
+  .header-tabs-mobile {
+    padding-inline: 0.125rem;
+    scroll-snap-type: inline mandatory;
+  }
+
+  .header-tabs-mobile .tab-pill {
+    scroll-snap-align: start;
   }
 
   @media (max-width: 768px) {

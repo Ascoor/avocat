@@ -57,7 +57,7 @@ const en = {
     courtSettings: "Court settings",
     lawyers: "Lawyers",
     usersPermissions: "Users & permissions",
-    adminUsers: "Admin Users",
+    adminUsers: "User Management",
     adminRoles: "Admin Roles",
     adminPermissions: "Admin Permissions",
     iconsGallery: "Icons Gallery",
@@ -626,9 +626,20 @@ const en = {
       title: "Users", add: "Add user", edit: "Edit user", name: "Name", email: "Email", status: "Status", roles: "Roles", active: "Active", inactive: "Inactive"
     },
     roles: {
-      title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", selectModule: "Toggle module"
+      title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", clearAll: "Clear", selectModule: "Toggle module"
     },
     permissions: { title: "Permissions" },
+    hub: {
+      title: "User Management Hub",
+      description: "Manage users, roles, and permissions from a single structured workspace.",
+      userEditor: "User editor",
+      roleEditor: "Role editor",
+      selectUser: "User details",
+      selectRole: "Role details",
+      selectUserHint: "Select a user from the table to edit profile and role assignments.",
+      selectRoleHint: "Select a role to edit grouped permissions and access levels.",
+      effectivePermissions: "Effective permissions",
+    },
     qa: { title: "RBAC QA", switchUser: "Mock user" }
   },
 

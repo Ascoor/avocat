@@ -20,7 +20,7 @@ const PillLink = ({ to, icon: Icon, label }) => (
   </NavLink>
 );
 
-const HeaderTabs = ({ className }) => {
+const HeaderTabs = ({ className, mobile = false }) => {
   const { t, isRTL } = useLanguage();
 
   const items = useMemo(() => {
@@ -32,8 +32,8 @@ const HeaderTabs = ({ className }) => {
   }, []);
 
   return (
-    <div className={cn("header-tabs-wrap", className)}>
-      <div className={cn("header-tabs", isRTL ? "flex-row-reverse" : "flex-row")}>
+    <div className={cn("header-tabs-wrap", mobile && "header-tabs-wrap-mobile", className)}>
+      <div className={cn("header-tabs", mobile && "header-tabs-mobile", isRTL ? "flex-row-reverse" : "flex-row")}>
         {items.map((item) => {
           const Icon = item.icon;
           const label = t(item.labelKey);

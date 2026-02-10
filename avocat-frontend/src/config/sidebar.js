@@ -62,8 +62,6 @@ export const sidebarGroups = [
           { key: "court_settings", labelKey: "navigation.courtSettings", icon: Landmark, path: "/dashboard/cases_setting" },
           { key: "lawyers", labelKey: "navigation.lawyers", icon: UserCog, path: "/dashboard/lawyers" },
           { key: "admin_users", labelKey: "navigation.adminUsers", icon: ShieldCheck, path: "/dashboard/admin/users" },
-          { key: "admin_roles", labelKey: "navigation.adminRoles", icon: ShieldCheck, path: "/dashboard/admin/roles" },
-          { key: "admin_permissions", labelKey: "navigation.adminPermissions", icon: ShieldCheck, path: "/dashboard/admin/permissions" },
         ],
       },
     ],

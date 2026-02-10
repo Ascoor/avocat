@@ -27,10 +27,10 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
   const toggleLabel = language === "ar" ? t("language.switchToEnglish") : t("language.switchToArabic");
 
   return (
-    <header className={cn("header-shell sticky top-0 z-40", className)}>
-      <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className={cn("header-shell sticky top-0 z-40 overflow-x-clip", className)}>
+      <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[1fr_auto] items-center gap-3 px-3 py-2 sm:px-5 lg:grid-cols-[minmax(0,280px)_1fr_auto] lg:gap-4 lg:px-8">
         {/* LEFT */}
-        <div className={cn("flex items-center gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
+        <div className={cn("flex min-w-0 items-center gap-2 sm:gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
           {/* Mobile drawer toggle */}
           <Button
             variant="outline"
@@ -64,12 +64,12 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
         </div>
 
         {/* MIDDLE (Tabs) - desktop only */}
-        <div className="hidden lg:flex flex-1 px-4">
+        <div className="hidden min-w-0 lg:flex lg:px-2">
           <HeaderTabs className={cn("w-full", isRTL ? "justify-end" : "justify-start")} />
         </div>
 
         {/* RIGHT */}
-        <div className={cn("flex items-center gap-2 sm:gap-3", isRTL && "flex-row-reverse")}>
+        <div className={cn("flex items-center justify-self-end gap-2 sm:gap-3", isRTL && "flex-row-reverse")}>
           <div className="hidden sm:flex items-center gap-2">
             <div className="tab-pill px-2 py-1">
               <ThemeToggle />
@@ -141,8 +141,8 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
         </div>
       </div>
 
-      <div className="lg:hidden hidden md:block px-4 sm:px-6 pb-2">
-        <HeaderTabs />
+      <div className="mx-auto w-full max-w-[1440px] px-3 pb-2 sm:px-5 lg:hidden lg:px-8">
+        <HeaderTabs mobile />
       </div>
     </header>
   );

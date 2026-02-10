@@ -626,9 +626,20 @@ const ar = {
       title: "المستخدمون", add: "إضافة مستخدم", edit: "تعديل مستخدم", name: "الاسم", email: "البريد", status: "الحالة", roles: "الأدوار", active: "نشط", inactive: "غير نشط"
     },
     roles: {
-      title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", selectModule: "تحديد القسم"
+      title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", clearAll: "إلغاء التحديد", selectModule: "تحديد القسم"
     },
     permissions: { title: "الصلاحيات" },
+    hub: {
+      title: "مركز إدارة المستخدمين",
+      description: "إدارة المستخدمين والأدوار والصلاحيات من شاشة واحدة دون ازدحام الهيدر.",
+      userEditor: "تحرير المستخدم",
+      roleEditor: "تحرير الدور",
+      selectUser: "تفاصيل المستخدم",
+      selectRole: "تفاصيل الدور",
+      selectUserHint: "اختر مستخدمًا من الجدول لعرض التفاصيل وتعديل الأدوار.",
+      selectRoleHint: "اختر دورًا من الجدول لتعديل الصلاحيات حسب الأقسام.",
+      effectivePermissions: "الصلاحيات الفعّالة",
+    },
     qa: { title: "فحص RBAC", switchUser: "المستخدم التجريبي" }
   },
 
