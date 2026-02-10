@@ -108,15 +108,22 @@ const TableComponent = ({
 
   // qa
   qaMode = false,
+
+  permissions,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortKey, setSortKey] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
 
-  const showView = typeof onView === "function";
-  const showEdit = typeof onEdit === "function";
-  const showDelete = typeof onDelete === "function";
+  const canView = permissions?.view !== false;
+  const canCreate = permissions?.create !== false;
+  const canUpdate = permissions?.update !== false;
+  const canDelete = permissions?.delete !== false;
+
+  const showView = canView && typeof onView === "function";
+  const showEdit = canUpdate && typeof onEdit === "function";
+  const showDelete = canDelete && typeof onDelete === "function";
 
   const searchableHeaders = useMemo(
     () => headers.filter((h) => h?.key && h.searchable !== false && h.key !== "actions"),
@@ -194,7 +201,7 @@ const TableComponent = ({
 
   const renderAdd = () => {
     if (typeof renderAddButton === "function") return renderAddButton();
-    if (!onAdd) return null;
+    if (!onAdd || !canCreate) return null;
 
     return (
       <button

@@ -57,8 +57,12 @@ const en = {
     courtSettings: "Court settings",
     lawyers: "Lawyers",
     usersPermissions: "Users & permissions",
+    adminUsers: "Admin Users",
+    adminRoles: "Admin Roles",
+    adminPermissions: "Admin Permissions",
     iconsGallery: "Icons Gallery",
     uiQa: "UI QA",
+    qaRbac: "RBAC QA",
   },
   auth: {
     securePortal: "Secure encrypted portal with enterprise-grade protection",
@@ -608,6 +612,26 @@ const en = {
       },
     },
   },
+  rbac: {
+    forbidden: {
+      title: "Forbidden",
+      description: "You do not have view access to {{module}}."
+    },
+    modules: {
+      adminUsers: "Admin users",
+      adminRoles: "Admin roles",
+      adminPermissions: "Admin permissions"
+    },
+    users: {
+      title: "Users", add: "Add user", edit: "Edit user", name: "Name", email: "Email", status: "Status", roles: "Roles", active: "Active", inactive: "Inactive"
+    },
+    roles: {
+      title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", selectModule: "Toggle module"
+    },
+    permissions: { title: "Permissions" },
+    qa: { title: "RBAC QA", switchUser: "Mock user" }
+  },
+
   finance: {
     searchPlaceholder: "Search invoices or clients...",
     addInvoice: "Add Invoice",

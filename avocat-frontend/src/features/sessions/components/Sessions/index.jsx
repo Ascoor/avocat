@@ -7,8 +7,13 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import SessionDetailsModal from '@features/legal-cases/components/LegalCases/LegalCaseTools/Modals/SessionDetailsModal.jsx';
 import { MdVisibility } from 'react-icons/md';
+import { useSecurity } from '@shared/security/SecurityContext';
+import { canCrud } from '@shared/security/permissions';
+import ForbiddenState from '@shared/security/ForbiddenState';
 
 const LegalSessions = () => {
+  const { permissions } = useSecurity();
+  const acl = canCrud(permissions, 'sessions');
   const { showSpinner, hideSpinner } = useSpinner();
   const [allSessions, setAllSessions] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -180,6 +185,8 @@ const LegalSessions = () => {
     setIsModalOpen(false);
     setSelectedSession(null);
   };
+
+  if (!acl.view) return <ForbiddenState moduleLabel="Sessions" />;
 
   return (
     <div className="p-6">

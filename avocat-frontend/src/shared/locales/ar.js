@@ -57,8 +57,12 @@ const ar = {
     courtSettings: "إعدادات المحاكم",
     lawyers: "المحامون",
     usersPermissions: "المستخدمون والصلاحيات",
+    adminUsers: "إدارة المستخدمين",
+    adminRoles: "إدارة الأدوار",
+    adminPermissions: "الصلاحيات",
     iconsGallery: "معرض الأيقونات",
     uiQa: "اختبار الواجهة",
+    qaRbac: "اختبار RBAC",
   },
   auth: {
     securePortal: "بوابة آمنة ومشفرة بأعلى معايير الحماية",
@@ -608,6 +612,26 @@ const ar = {
       },
     },
   },
+  rbac: {
+    forbidden: {
+      title: "غير مصرح",
+      description: "ليس لديك صلاحية العرض لقسم {{module}}."
+    },
+    modules: {
+      adminUsers: "إدارة المستخدمين",
+      adminRoles: "إدارة الأدوار",
+      adminPermissions: "إدارة الصلاحيات"
+    },
+    users: {
+      title: "المستخدمون", add: "إضافة مستخدم", edit: "تعديل مستخدم", name: "الاسم", email: "البريد", status: "الحالة", roles: "الأدوار", active: "نشط", inactive: "غير نشط"
+    },
+    roles: {
+      title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", selectModule: "تحديد القسم"
+    },
+    permissions: { title: "الصلاحيات" },
+    qa: { title: "فحص RBAC", switchUser: "المستخدم التجريبي" }
+  },
+
   finance: {
     searchPlaceholder: "ابحث عن الفواتير أو العملاء...",
     addInvoice: "إضافة فاتورة",

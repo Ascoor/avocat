@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SearchResults from '@shared/layout/SearchResults';
 import api from '@shared/services/api/axiosConfig';
+import { useSecurity } from '@shared/security/SecurityContext';
+import { canCrud } from '@shared/security/permissions';
+import ForbiddenState from '@shared/security/ForbiddenState';
 
 const SearchCourtsApi = () => {
+  const { permissions } = useSecurity();
+  const acl = canCrud(permissions, 'courts');
   const [allData, setAllData] = useState({});
   const [degree, setDegree] = useState('');
   const [court, setCourt] = useState('');
@@ -87,6 +92,8 @@ const SearchCourtsApi = () => {
       setLoading(false);
     }
   };
+
+  if (!acl.view) return <ForbiddenState moduleLabel="Courts" />;
 
   return (
     <div className="container mx-auto p-6">

@@ -8,6 +8,7 @@ import { AlertProvider } from '@shared/contexts/AlertContext';
 import { AuthProvider } from '@shared/contexts/AuthContext';
 import { LanguageProvider } from '@shared/contexts/LanguageContext';
 import App from '@app/App';
+import { SecurityProvider } from '@shared/security/SecurityContext';
 
 const router = createBrowserRouter([
   {
@@ -27,9 +28,11 @@ if (rootElement) {
         <AlertProvider>
           <Provider store={store}>
             <AuthProvider>
-              <Suspense fallback={<div>Loading...</div>}>
-                <RouterProvider router={router} />
-              </Suspense>
+              <SecurityProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <RouterProvider router={router} />
+                </Suspense>
+              </SecurityProvider>
             </AuthProvider>
           </Provider>
         </AlertProvider>
