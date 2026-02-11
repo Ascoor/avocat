@@ -68,27 +68,27 @@ export const sidebarGroups = [
       },
     ],
   },
-  {
-    key: "tools",
-    items: [
-      {
-        key: "icons_gallery",
-        labelKey: "navigation.iconsGallery",
-        icon: LayoutGrid,
-        path: "/dashboard/tools/icons",
-      },
-      {
-        key: "ui_qa",
-        labelKey: "navigation.uiQa",
-        icon: ShieldCheck,
-        path: "/dashboard/tools/qa",
-      },
-      {
-        key: "qa_rbac",
-        labelKey: "navigation.qaRbac",
-        icon: ShieldCheck,
-        path: "/dashboard/tools/qa-rbac",
-      },
-    ],
-  },
+  // {
+  //   key: "tools",
+  //   items: [
+  //     {
+  //       key: "icons_gallery",
+  //       labelKey: "navigation.iconsGallery",
+  //       icon: LayoutGrid,
+  //       path: "/dashboard/tools/icons",
+  //     },
+  //     {
+  //       key: "ui_qa",
+  //       labelKey: "navigation.uiQa",
+  //       icon: ShieldCheck,
+  //       path: "/dashboard/tools/qa",
+  //     },
+  //     {
+  //       key: "qa_rbac",
+  //       labelKey: "navigation.qaRbac",
+  //       icon: ShieldCheck,
+  //       path: "/dashboard/tools/qa-rbac",
+  //     },
+  //   ],
+  // },
 ];
