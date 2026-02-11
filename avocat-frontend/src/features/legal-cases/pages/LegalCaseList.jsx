@@ -79,7 +79,7 @@ const LegalCasesIndex = () => {
     },
     actions: (legCase) => (
       <div className="flex space-x-2">
-        <Link to={`/legcases/show/${legCase.id}`} className="text-orange-400 hover:text-orange-800" title="عرض">
+        <Link to={`show/${legCase.id}`} className="text-orange-400 hover:text-orange-800" title="عرض">
           <AiFillEye size={20} />
         </Link>
       </div>
