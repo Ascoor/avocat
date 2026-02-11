@@ -3,38 +3,60 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CaseStatusController extends Controller
 {
-    public function fetchCaseStatus(Request $request)
+    public function fetchCaseStatus(Request $request): JsonResponse
     {
-        // Create a new Goutte client
-        $client = new Client();
+        return response()->json($this->fetchOptions());
+    }
 
-        // Send a GET request to the website URL
+    public function index(Request $request): JsonResponse
+    {
+        return $this->fetchCaseStatus($request);
+    }
+
+    public function fetchDegrees(): JsonResponse
+    {
+        return response()->json(['degrees' => $this->fetchOptions()['ddlCourtOptions']]);
+    }
+
+    public function getCourtOptions(): JsonResponse
+    {
+        return response()->json(['court_options' => $this->fetchOptions()['ddlCourtOptions']]);
+    }
+
+    public function getCaseTypeOptions(): JsonResponse
+    {
+        return response()->json(['case_type_options' => $this->fetchOptions()['caseTypeOptions']]);
+    }
+
+    public function getCaseYearOptions(): JsonResponse
+    {
+        return response()->json(['case_year_options' => $this->fetchOptions()['yearOptions']]);
+    }
+
+    public function getCaseDetails(Request $request): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Case details endpoint requires ministry integration payload and is not implemented in legacy code.',
+            'request' => $request->only(['degree', 'court', 'case_type', 'year', 'case_number']),
+        ], 501);
+    }
+
+    private function fetchOptions(): array
+    {
+        $client = new Client();
         $crawler = $client->request('GET', 'https://moj.gov.eg/ar/Pages/Services/CaseCurrentStatus.aspx');
 
-        // Extract the required data from the website
-        $lblDegree = $crawler->filter('#lblDegree')->text();
-        $ddlCourtOptions = $crawler->filter('#ddlCourt option')->each(function ($option) {
-            return $option->text();
-        });
-        $caseTypeOptions = $crawler->filter('#CaseType option')->each(function ($option) {
-            return $option->text();
-        });
-        $yearOptions = $crawler->filter('#year option')->each(function ($option) {
-            return $option->text();
-        });
-
-        // Return the extracted data as JSON response
-        return response()->json([
-            'lblDegree' => $lblDegree,
-            'ddlCourtOptions' => $ddlCourtOptions,
-            'caseTypeOptions' => $caseTypeOptions,
-            'yearOptions' => $yearOptions,
-        ]);
+        return [
+            'lblDegree' => $crawler->filter('#lblDegree')->text(),
+            'ddlCourtOptions' => $crawler->filter('#ddlCourt option')->each(fn ($option) => $option->text()),
+            'caseTypeOptions' => $crawler->filter('#CaseType option')->each(fn ($option) => $option->text()),
+            'yearOptions' => $crawler->filter('#year option')->each(fn ($option) => $option->text()),
+        ];
     }
 }

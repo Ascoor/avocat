@@ -250,6 +250,8 @@ public function RemoveCourtFromLegCase(Request $request)
      * @throws \Exception An error occurred while searching leg cases.
      * @return \Illuminate\Http\JsonResponse The JSON response containing the filtered leg cases.
      */
+
+
 public function getLegCaseSearch(Request $request)
 {
     try {
