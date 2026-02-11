@@ -1,27 +1,31 @@
-import React, { useMemo } from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useMemo } from 'react';
+import { ChevronDown } from 'lucide-react';
 
-import { NavLink } from "./NavLink";
-import { sidebarGroups } from "@config/sidebar";
-import { useLanguage } from "@shared/contexts/LanguageContext";
-import { cn } from "@shared/lib/utils";
+import { NavLink } from './NavLink';
+import { sidebarGroups } from '@config/sidebar';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { cn } from '@shared/lib/utils';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@shared/ui/dropdown-menu";
+} from '@shared/ui/dropdown-menu';
 
 const PillLink = ({ to, icon: Icon, label }) => (
-  <NavLink to={to} className={cn("tab-pill", "shrink-0")} activeClassName="is-active">
+  <NavLink
+    to={to}
+    className={cn('tab-pill', 'shrink-0')}
+    activeClassName="is-active"
+  >
     {Icon && <Icon className="tab-pill-icon" />}
     <span className="truncate">{label}</span>
   </NavLink>
 );
 
 const HeaderTabs = ({ className }) => {
-  const { t, isRTL } = useLanguage();
+  const { t, direction, isRTL } = useLanguage();
 
   const items = useMemo(() => {
     const flat = [];
@@ -31,28 +35,49 @@ const HeaderTabs = ({ className }) => {
     return flat;
   }, []);
 
+  const orderedItems = useMemo(() => {
+    if (!isRTL) return items;
+
+    const dashboardItem = items.find((item) => item.key === 'dashboard');
+    const remaining = items
+      .filter((item) => item.key !== 'dashboard')
+      .reverse();
+
+    return dashboardItem ? [dashboardItem, ...remaining] : remaining;
+  }, [isRTL, items]);
+
   return (
-    <div className={cn("header-tabs-wrap", className)}>
-      <div className={cn("header-tabs", isRTL ? "flex-row-reverse" : "flex-row")}>
-        {items.map((item) => {
+    <div className={cn('header-tabs-wrap', className)}>
+      <div className="header-tabs" dir={direction}>
+        {orderedItems.map((item) => {
           const Icon = item.icon;
           const label = t(item.labelKey);
 
           if (!item.children?.length) {
-            return <PillLink key={item.key} to={item.path} icon={Icon} label={label} />;
+            return (
+              <PillLink
+                key={item.key}
+                to={item.path}
+                icon={Icon}
+                label={label}
+              />
+            );
           }
 
           return (
             <DropdownMenu key={item.key}>
               <DropdownMenuTrigger asChild>
-                <button type="button" className={cn("tab-pill", "shrink-0")}>
+                <button type="button" className={cn('tab-pill', 'shrink-0')}>
                   {Icon && <Icon className="tab-pill-icon" />}
                   <span className="truncate">{label}</span>
                   <ChevronDown className="ms-1 h-4 w-4 opacity-80" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align={isRTL ? "start" : "end"} className="min-w-56">
+              <DropdownMenuContent
+                align={isRTL ? 'start' : 'end'}
+                className="min-w-56"
+              >
                 {item.children.map((child) => {
                   const ChildIcon = child.icon;
                   return (
@@ -60,8 +85,8 @@ const HeaderTabs = ({ className }) => {
                       <NavLink
                         to={child.path}
                         className={cn(
-                          "flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm",
-                          isRTL && "flex-row-reverse",
+                          'flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm',
+                          isRTL && 'flex-row-reverse',
                         )}
                         activeClassName="bg-muted"
                       >
