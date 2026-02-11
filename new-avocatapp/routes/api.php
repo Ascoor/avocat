@@ -91,10 +91,11 @@ Route::prefix('v1')->group(function () {
         Route::get('legal-case-search', [LegCaseController::class, 'getLegCaseSearch']);
         Route::post('legal-cases/{legCaseId}/add_clients', [LegCaseController::class, 'addClients']);
         Route::delete('legal-cases/{legCaseId}/clients/{clientId}', [LegCaseController::class, 'delete']);
-        Route::post('legal-cases/add_courts', [LegCaseController::class, 'addLegCaseCourts']);
-        Route::delete('leg-case/remove-court', [LegCaseController::class, 'removeCourtFromLegCase']);
+        Route::post('legal-cases/add_courts', [LegCaseController::class, 'AddLegCaseCourts']);
+        Route::delete('leg-case/remove-court', [LegCaseController::class, 'RemoveCourtFromLegCase']);
 
         Route::get('legal-ads', [LegalAdController::class, 'index']);
+        Route::get('legal_ads', [LegalAdController::class, 'index']);
         Route::get('legal_ad_types', [LegalAdTypeController::class, 'index']);
         Route::post('legal_ad_types', [LegalAdTypeController::class, 'store']);
         Route::get('legal-ads/{legCaseId}', [LegalAdController::class, 'getByLegCaseId']);

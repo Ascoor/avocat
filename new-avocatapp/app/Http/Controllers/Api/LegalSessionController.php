@@ -148,6 +148,25 @@ class LegalSessionController extends Controller
     }
 }
 
+
+    public function getByCourtId($courtId)
+    {
+        $sessions = LegalSession::where('court_id', $courtId)
+            ->with(['legalSessionType', 'legCase', 'court', 'lawyer'])
+            ->get();
+
+        return response()->json($sessions);
+    }
+
+    public function getByLawyerId($lawyerId)
+    {
+        $sessions = LegalSession::where('lawyer_id', $lawyerId)
+            ->with(['legalSessionType', 'legCase', 'court', 'lawyer'])
+            ->get();
+
+        return response()->json($sessions);
+    }
+
     public function destroy($id)
     {
         LegalSession::destroy($id);
