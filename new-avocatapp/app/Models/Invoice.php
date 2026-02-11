@@ -41,4 +41,17 @@ class Invoice extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function updateStatus(): void
+    {
+        $totalPayments = $this->payments->sum('amount');
+
+        if ($totalPayments >= $this->total_amount) {
+            $this->status = 'Paid';
+        } elseif ($this->due_date < now()) {
+            $this->status = 'Overdue';
+        }
+
+        $this->save();
+    }
 }

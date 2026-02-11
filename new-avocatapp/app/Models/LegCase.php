@@ -92,4 +92,27 @@ class LegCase extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function softDelete(): void
+    {
+        $this->is_deleted = true;
+        $this->save();
+    }
+
+    public function restore(): void
+    {
+        $this->is_deleted = false;
+        $this->save();
+    }
+
+    public function newQuery($excludeDeleted = true)
+    {
+        $query = parent::newQuery();
+
+        if ($excludeDeleted) {
+            $query->where('is_deleted', false);
+        }
+
+        return $query;
+    }
 }
