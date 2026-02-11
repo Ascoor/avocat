@@ -18,4 +18,11 @@ class CourtLevel extends Model
     {
         return $this->hasMany(Court::class);
     }
+
+    public function delete()
+    {
+        $this->courts()->delete();
+
+        return parent::delete();
+    }
 }

@@ -26,4 +26,12 @@ class Payment extends Model
     {
         return $this->belongsTo(Invoice::class);
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Payment $payment): void {
+            $payment->invoice?->updateStatus();
+        });
+    }
 }
+
