@@ -6,7 +6,6 @@ import {
   FileText,
   Gavel,
   LayoutDashboard,
-  LayoutGrid,
   Landmark,
   Scale,
   Settings,
@@ -30,11 +29,14 @@ export const sidebarGroups = [
     items: [
       {
         key: "reports",
-        labelKey: "navigation.workFollowUp",
+        labelKey: "navigation.reports",
         icon: Folder,
         children: [
-          { key: "sessions", labelKey: "navigation.sessions", icon: Calendar, path: "/dashboard/legal-sessions" },
-          { key: "procedures", labelKey: "navigation.procedures", icon: FileText, path: "/dashboard/procedures" },
+          { key: "sessions", labelKey: "navigation.sessions", icon: Calendar, path: "/dashboard/reports/sessions" },
+          { key: "procedures", labelKey: "navigation.procedures", icon: FileText, path: "/dashboard/reports/procedures" },
+          { key: "clients_reports", labelKey: "navigation.clients", icon: Users, path: "/dashboard/reports/clients" },
+          { key: "cases_reports", labelKey: "navigation.cases", icon: Gavel, path: "/dashboard/reports/cases" },
+          { key: "services_reports", labelKey: "navigation.services", icon: Scale, path: "/dashboard/reports/services" },
         ],
       },
       {
