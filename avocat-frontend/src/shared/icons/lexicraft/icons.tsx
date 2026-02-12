@@ -187,6 +187,30 @@ export const SortDownIcon = (props: IconBaseProps) => (
   </IconBase>
 );
 
+export const ClientIcon = (props: IconBaseProps) => (
+  
+    <IconBase {...props}>
+      {/* بسيطة: شكل user + badge */}
+      <path
+        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M4 20c1.5-3 4.5-5 8-5s6.5 2 8 5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18.5 8.5h3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+        </IconBase>
+  
+);
 export const ArrowForwardIcon = (props: IconBaseProps) => (
   <IconBase {...props}>
     <path d="M5 12h13" />

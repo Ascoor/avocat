@@ -29,6 +29,8 @@ export const lexicraftManifest = [
   { name: "tool", tags: ["settings", "wrench"], category: "Tools" },
   { name: "view", tags: ["preview", "eye"], category: "Tools" },
   { name: "edit", tags: ["edit", "pencil"], category: "Tools" },
+  
+  { name: "client", tags: ["client", "clients", "customer", "user"], category: "People" },
   { name: "trash", tags: ["delete", "remove"], category: "Tools" },
   { name: "sort-up", tags: ["sort", "ascending"], category: "Tools" },
   { name: "sort-down", tags: ["sort", "descending"], category: "Tools" },

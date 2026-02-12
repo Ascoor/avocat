@@ -1,5 +1,6 @@
 import React, { useState, lazy, Suspense, useMemo } from "react";
-import { FaUserTie, FaUserAltSlash } from "react-icons/fa";
+import { FaUserTie, FaUserAltSlash } from "react-icons/fa"; 
+import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 import GlobalSpinner from "@shared/components/common/Spinners/GlobalSpinner";
 import SectionHeader from "@shared/components/common/SectionHeader"; 
@@ -22,9 +23,12 @@ const ClientUnclientList = () => {
     <div className="w-full">
       <div className="p-6">
         <SectionHeader
+
           listName="العملاء"
           subtitle="إدارة العملاء حسب نوع الوكالة"
           showBack
+          icon={<LexicraftIcon name="client" size={20} />}
+
           sticky={false}
         />
  
