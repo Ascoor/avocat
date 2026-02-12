@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 interface Column {
   key: string;
   label: string;
-  render?: (value: any, row: any) => React.ReactNode;
+  render?: (value: any, row: any) => ReactNode;
 }
 
 interface DataTableProps {
@@ -23,7 +24,7 @@ const DataTable = ({ columns, data, isRtl }: DataTableProps) => (
     <table className="w-full text-sm">
       <thead>
         <tr className="border-b border-border bg-secondary/50">
-          {columns.map(col => (
+          {columns.map((col) => (
             <th key={col.key} className="px-4 py-3 text-start font-semibold text-foreground whitespace-nowrap">
               {col.label}
             </th>
@@ -33,7 +34,7 @@ const DataTable = ({ columns, data, isRtl }: DataTableProps) => (
       <tbody>
         {data.map((row, i) => (
           <tr key={i} className="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
-            {columns.map(col => (
+            {columns.map((col) => (
               <td key={col.key} className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                 {col.render ? col.render(row[col.key], row) : row[col.key]}
               </td>
