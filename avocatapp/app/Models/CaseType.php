@@ -19,7 +19,7 @@ public function legCases()
 
 public function caseSubTypes()
 {
-    return $this->hasMany(CaseSubType::class, 'case_type_id');
+    return $this->hasMany(CaseSubType::class);
 }
 
 }

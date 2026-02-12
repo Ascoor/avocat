@@ -130,8 +130,8 @@ const LegalCaseEditForm = ({
       />
       <SelectInput
         label={t('legalCaseDetails.editForm.caseSubType')}
-        name="case_sub_type_id"
-        value={caseData.case_sub_type_id}
+        name="sub_type_id"
+        value={caseData.sub_type_id}
         onChange={(event) =>
           setCaseData((prevData) => ({
             ...prevData,
@@ -257,7 +257,7 @@ const AddEditLegCase = ({
     title: '',
     description: '',
     case_type_id: '',
-    case_sub_type_id: '',
+    sub_type_id: '',
     client_capacity: '',
     litigants_name: '',
     litigants_phone: '',
@@ -301,7 +301,7 @@ const AddEditLegCase = ({
       title: '',
       description: '',
       case_type_id: '',
-      case_sub_type_id: '',
+      sub_type_id: '',
       client_capacity: '',
       litigants_name: '',
       litigants_phone: '',
@@ -318,7 +318,7 @@ const AddEditLegCase = ({
     setCaseData((prevData) => ({
       ...prevData,
       case_type_id: newCaseTypeId,
-      case_sub_type_id: '',
+      sub_type_id: '',
     }));
 
     updateSubTypes(newCaseTypeId);
@@ -329,7 +329,7 @@ const AddEditLegCase = ({
       (type) => type.id.toString() === caseTypeId,
     );
     if (selectedCaseType) {
-      setCaseSubTypes(selectedCaseType.case_sub_types);
+      setCaseSubTypes(selectedCaseType.sub_types);
     } else {
       setCaseSubTypes([]);
     }

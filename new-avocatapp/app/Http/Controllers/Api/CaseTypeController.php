@@ -13,7 +13,7 @@ class CaseTypeController extends Controller
     public function index()
     {
         // Retrieve all case types with their subtypes
-        $caseTypes = CaseType::with('caseSubTypes')->get();
+        $caseTypes = CaseType::with('subTypes')->get();
 
         return response()->json($caseTypes);
     }
