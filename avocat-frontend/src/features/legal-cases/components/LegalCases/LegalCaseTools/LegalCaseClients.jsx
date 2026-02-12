@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   addLegalCaseClients,
   removeLegalCaseClient,
@@ -9,238 +9,134 @@ import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDel
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 
+// ✅ TableComponent
+import TableComponent from '@shared/components/common/TableComponent';
+
 const AddClientToCaseForm = ({
   legCaseId,
   clients,
   legcaseClients,
   fetchLegcaseClients,
 }) => {
+  // ... نفس كودك بدون تغيير
+};
+
+export default function LegalCaseClients({
+  legCaseId,
+  fetchLegcaseClients,
+  legcaseClients = [],
+}) {
   const { triggerAlert } = useAlert();
-  const { t } = useLanguage();
-  const [legCaseNewClients, setLegCaseNewClients] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredClients, setFilteredClients] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [formError, setFormError] = useState('');
+  const { t, isRTL } = useLanguage();
 
-  useEffect(() => {
-    if (searchQuery && Array.isArray(clients)) {
-      const results = clients
-        .filter((client) =>
-          client.name.toLowerCase().includes(searchQuery.toLowerCase()),
-        )
-        .slice(0, 5);
-      setFilteredClients(results);
-    } else {
-      setFilteredClients([]);
-    }
-  }, [searchQuery, clients]);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const handleAddNewClient = () => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState({ id: null, name: '' });
+
+  const openDeleteModal = useCallback((clientId, clientName) => {
+    setClientToDelete({ id: clientId, name: clientName });
+    setIsDeleteModalOpen(true);
+  }, []);
+
+  const closeDeleteModal = useCallback(() => {
+    setIsDeleteModalOpen(false);
+    setClientToDelete({ id: null, name: '' });
+  }, []);
+
+  const addNewClient = () => {
     setFormError('');
     setLegCaseNewClients((prevClients) => [
       ...prevClients,
       { client_id: '', name: '' },
     ]);
   };
-
-  const handleRemoveNewClient = (index) => {
-    setLegCaseNewClients((prevClients) =>
-      prevClients.filter((_, i) => i !== index),
-    );
-  };
-
-  const handleNewClientChange = (e, index) => {
-    const updatedClients = [...legCaseNewClients];
-    updatedClients[index].name = e.target.value;
-    setLegCaseNewClients(updatedClients);
-    setSearchQuery(e.target.value);
-    setActiveIndex(index);
-  };
-
-  const handleSelectClient = (client, index) => {
-    if (
-      legcaseClients.some((existingClient) => existingClient.id === client.id)
-    ) {
-      triggerAlert('error', t('legalCaseDetails.clients.alerts.duplicate'));
-      return;
-    }
-    const updatedClients = [...legCaseNewClients];
-    updatedClients[index] = { client_id: client.id, name: client.name };
-    setLegCaseNewClients(updatedClients);
-    setSearchQuery('');
-    setActiveIndex(null);
-  };
-
-  const handleAddLegCaseClients = async () => {
-    const validClients = legCaseNewClients.filter((client) => client.client_id);
-
-    if (validClients.length === 0) {
-      const errorMessage = t('legalCaseDetails.clients.errors.missingClient');
-      setFormError(errorMessage);
-      triggerAlert('error', errorMessage);
-      return;
-    }
-
-    try {
-      await addLegalCaseClients(legCaseId, validClients);
-      triggerAlert('success', t('legalCaseDetails.clients.alerts.addSuccess'));
-      setLegCaseNewClients([]);
-      fetchLegcaseClients();
-    } catch (error) {
-      triggerAlert('error', t('legalCaseDetails.clients.alerts.addError'));
-    }
-  };
-
-  return (
-    <div className="rounded-2xl border border-border bg-muted/30 p-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h4 className="text-sm font-semibold text-foreground">
-            {t('legalCaseDetails.clients.form.title')}
-          </h4>
-          <p className="text-xs text-muted-foreground">
-            {t('legalCaseDetails.clients.form.subtitle')}
-          </p>
-        </div>
-        <button
-          onClick={handleAddNewClient}
-          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
-        >
-          <LexicraftIcon name="user" size={16} />
-          {t('legalCaseDetails.clients.form.addRow')}
-        </button>
-      </div>
-
-      <div className="mt-4 space-y-4">
-        {legCaseNewClients.map((client, index) => (
-          <div key={index} className="rounded-2xl border border-border bg-card p-4">
-            <label className="text-xs font-semibold text-muted-foreground">
-              {t('legalCaseDetails.clients.form.clientLabel')} <span className="text-destructive">*</span>
-            </label>
-            <input
-              type="text"
-              value={client.name}
-              onChange={(e) => handleNewClientChange(e, index)}
-              placeholder={t('legalCaseDetails.clients.form.searchPlaceholder')}
-              className="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-            {activeIndex === index && filteredClients.length > 0 && (
-              <ul className="mt-2 max-h-40 overflow-auto rounded-xl border border-border bg-background text-sm">
-                {filteredClients.map((filteredClient) => (
-                  <li
-                    key={filteredClient.id}
-                    onClick={() => handleSelectClient(filteredClient, index)}
-                    className="cursor-pointer px-3 py-2 hover:bg-muted"
-                  >
-                    {filteredClient.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <div className="mt-3 flex items-center justify-end">
-              <button
-                onClick={() => handleRemoveNewClient(index)}
-                className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/40 px-3 py-1 text-xs text-destructive"
-              >
-                <LexicraftIcon name="lock" size={14} />
-                {t('legalCaseDetails.clients.form.removeRow')}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {formError && (
-        <div className="mt-3 text-xs text-destructive">{formError}</div>
-      )}
-
-      {legCaseNewClients.length > 0 && (
-        <div className="mt-4 flex justify-end">
-          <button
-            onClick={handleAddLegCaseClients}
-            className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
-          >
-            <LexicraftIcon name="users" size={16} />
-            {t('legalCaseDetails.clients.form.submit')}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default function LegalCaseClients({
-  legCaseId,
-  fetchLegcaseClients,
-  legcaseClients,
-}) {
-  const { triggerAlert } = useAlert();
-  const { t } = useLanguage();
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const clientsPerPage = 5;
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [clientToDelete, setClientToDelete] = useState({ id: null, name: '' });
-
-  const openDeleteModal = (clientId, clientName) => {
-    setClientToDelete({ id: clientId, name: clientName });
-    setIsDeleteModalOpen(true);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setClientToDelete({ id: null, name: '' });
-  };
-
-  const handleDeleteClient = async () => {
+  const handleDeleteClient = useCallback(async () => {
     if (!clientToDelete.id) return;
 
     try {
       await removeLegalCaseClient(legCaseId, clientToDelete.id);
       triggerAlert('success', t('legalCaseDetails.clients.alerts.deleteSuccess'));
-      fetchLegcaseClients();
-    } catch (error) {
+      fetchLegcaseClients?.();
+    } catch (e) {
       triggerAlert('error', t('legalCaseDetails.clients.alerts.deleteError'));
     } finally {
       closeDeleteModal();
     }
-  };
+  }, [clientToDelete.id, closeDeleteModal, fetchLegcaseClients, legCaseId, t, triggerAlert]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
       const clientsResponse = await getClients();
-      const fetchedClients = clientsResponse.data.clients;
-      const safeClients = Array.isArray(fetchedClients) ? fetchedClients : [];
-      setClients(safeClients);
-    } catch (error) {
-      setError(t('legalCaseDetails.clients.errors.fetch'));
-      triggerAlert('error', t('legalCaseDetails.clients.errors.fetch'));
+      const fetchedClients = clientsResponse?.data?.clients;
+      setClients(Array.isArray(fetchedClients) ? fetchedClients : []);
+    } catch (e) {
+      const msg = t('legalCaseDetails.clients.errors.fetch');
+      setError(msg);
+      triggerAlert('error', msg);
       setClients([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, triggerAlert]);
 
   useEffect(() => {
     fetchData();
-  }, [legCaseId]);
+  }, [fetchData, legCaseId]);
 
-  const indexOfLastClient = currentPage * clientsPerPage;
-  const indexOfFirstClient = indexOfLastClient - clientsPerPage;
-  const currentClients = legcaseClients.slice(
-    indexOfFirstClient,
-    indexOfLastClient,
+  // ✅ headers للـ TableComponent
+  const headers = useMemo(
+    () => [
+      {
+        key: 'slug',
+        text: t('legalCaseDetails.clients.table.slug'),
+        sortable: true,
+        searchable: true,
+        getValue: (row) => row?.slug || '-',
+        mobileLabel: t('legalCaseDetails.clients.table.slug'),
+      },
+      {
+        key: 'name',
+        text: t('legalCaseDetails.clients.table.name'),
+        sortable: true,
+        searchable: true,
+        getValue: (row) => row?.name || '-',
+        mobileLabel: t('legalCaseDetails.clients.table.name'),
+      },
+      {
+        key: 'phone_number',
+        text: t('legalCaseDetails.clients.table.phone'),
+        sortable: false,
+        searchable: true,
+        getValue: (row) => row?.phone_number || t('legalCaseDetails.clients.notAvailable'),
+        mobileLabel: t('legalCaseDetails.clients.table.phone'),
+      },
+    ],
+    [t],
   );
-  const totalPages = Math.ceil(legcaseClients.length / clientsPerPage) || 1;
+
+  // (اختياري) custom render
+  const customRenderers = useMemo(
+    () => ({
+      phone_number: (row) =>
+        row?.phone_number ? (
+          <span className="font-semibold">{row.phone_number}</span>
+        ) : (
+          <span className="text-muted-foreground">
+            {t('legalCaseDetails.clients.notAvailable')}
+          </span>
+        ),
+    }),
+    [t],
+  );
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+     <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold text-foreground">
             {t('legalCaseDetails.clients.title')}
@@ -249,6 +145,13 @@ export default function LegalCaseClients({
             {t('legalCaseDetails.clients.subtitle')}
           </p>
         </div>
+        <button
+          onClick={addNewClient}
+          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+        >
+          <LexicraftIcon name="client" size={18} />
+          {t('legalCaseDetails.clients.actions.addClient')}
+        </button>
       </header>
 
       <AddClientToCaseForm
@@ -258,113 +161,36 @@ export default function LegalCaseClients({
         fetchLegcaseClients={fetchLegcaseClients}
       />
 
-      {error && (
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>{error}</span>
-            <button
-              onClick={fetchData}
-              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-3 py-1 text-xs font-semibold text-destructive"
-            >
-              <LexicraftIcon name="arrow-forward" size={14} isDirectional />
-              {t('legalCaseDetails.actions.retry')}
-            </button>
-          </div>
-        </div>
-      )}
+      {/* ✅ TableComponent بدل الجدول اليدوي */}
+      <TableComponent
+        title={t('legalCaseDetails.clients.title', { defaultValue: '' }) || undefined}
+        data={legcaseClients}
+        headers={headers}
+        customRenderers={customRenderers}
+        isRTL={isRTL}
+        itemsPerPage={5}
+        loading={loading}
+        error={Boolean(error)}
+        errorLabel={error || t('legalCaseDetails.clients.errors.fetch')}
+        onRetry={fetchData}
+        searchPlaceholder={t('common.search')}
+        emptyLabel={t('legalCaseDetails.clients.empty')}
+        retryLabel={t('legalCaseDetails.actions.retry')}
 
-      {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="h-12 rounded-2xl skeleton-shimmer" />
-          ))}
-        </div>
-      ) : legcaseClients.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <LexicraftIcon name="users" size={20} />
-          </div>
-          {t('legalCaseDetails.clients.empty')}
-        </div>
-      ) : (
-        <>
-          <div className="hidden md:block overflow-x-auto rounded-2xl border border-border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 text-start">{t('legalCaseDetails.clients.table.slug')}</th>
-                  <th className="px-4 py-3 text-start">{t('legalCaseDetails.clients.table.name')}</th>
-                  <th className="px-4 py-3 text-start">{t('legalCaseDetails.clients.table.phone')}</th>
-                  <th className="px-4 py-3 text-center">{t('legalCaseDetails.table.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentClients.map((client) => (
-                  <tr key={client.id} className="border-t border-border hover:bg-muted/40">
-                    <td className="px-4 py-3 font-semibold">{client.slug}</td>
-                    <td className="px-4 py-3">{client.name}</td>
-                    <td className="px-4 py-3">
-                      {client.phone_number || t('legalCaseDetails.clients.notAvailable')}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => openDeleteModal(client.id, client.name)}
-                        className="pressable inline-flex items-center justify-center rounded-full border border-destructive/40 px-3 py-1 text-xs text-destructive"
-                      >
-                        <LexicraftIcon name="shield" size={14} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        // ✅ أزرار الأكشن: هنا محتاجين Delete فقط
+        onDelete={(id, row) => openDeleteModal(id, row?.name || '')}
+        permissions={{ view: false, update: false, delete: true, create: false }}
 
-          <div className="space-y-3 md:hidden">
-            {currentClients.map((client) => (
-              <div key={client.id} className="rounded-2xl border border-border p-4">
-                <div className="text-sm font-semibold text-foreground">{client.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  {client.slug} · {client.phone_number || t('legalCaseDetails.clients.notAvailable')}
-                </div>
-                <div className="mt-3">
-                  <button
-                    onClick={() => openDeleteModal(client.id, client.name)}
-                    className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/40 px-3 py-1 text-xs text-destructive"
-                  >
-                    <LexicraftIcon name="shield" size={14} />
-                    {t('legalCaseDetails.actions.delete')}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        // ✅ لو حابب تمنع زر الإضافة الداخلي (إنت عندك فورم إضافة فوق)
+        onAdd={undefined}
+        renderAddButton={undefined}
 
-          {totalPages > 1 && (
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
-              >
-                {t('legalCaseDetails.pagination.prev')}
-              </button>
-              <span className="text-sm text-muted-foreground">
-                {t('legalCaseDetails.pagination.page', { current: currentPage, total: totalPages })}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="pressable rounded-full border border-border px-4 py-2 text-sm disabled:opacity-50"
-              >
-                {t('legalCaseDetails.pagination.next')}
-              </button>
-            </div>
-          )}
-        </>
-      )}
+        // ✅ labels
+        deleteLabel={t('legalCaseDetails.actions.delete')}
+        prevLabel={t('legalCaseDetails.pagination.prev')}
+        nextLabel={t('legalCaseDetails.pagination.next')}
+        pageLabel={t('legalCaseDetails.pagination.page', { defaultValue: t('legalCaseDetails.pagination.page') })}
+      />
 
       <GlobalConfirmDeleteModal
         isOpen={isDeleteModalOpen}

@@ -334,6 +334,17 @@ const ar = {
         name: "اسم الموكل",
         phone: "رقم الهاتف",
       },
+      
+    actions: {
+      edit: "تعديل",
+      delete: "حذف",
+      addClient: "إضافة موكل",  
+      retry: "إعادة المحاولة",
+      backToCases: "العودة للقضايا",
+      confirmDelete: "هل أنت متأكد من حذف الموكل",
+      save: "حفظ",
+      saveChanges: "حفظ التغييرات",
+    },
       errors: {
         fetch: "حدث خطأ أثناء تحميل بيانات الموكلين.",
         missingClient: "يرجى اختيار موكل واحد على الأقل قبل الحفظ.",

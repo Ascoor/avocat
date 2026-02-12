@@ -36,23 +36,32 @@ const HeaderTabs = ({ className }) => {
   }, []);
 
   const orderedItems = useMemo(() => {
-    if (!isRTL) return items;
+    const preferredOrder = [
+      'dashboard',
+      'customer_service',
+      'cases',
+      'services',
+      'work_follow',
+      'settings',
+    ]; 
+    const orderMap = new Map(preferredOrder.map((key, index) => [key, index]));
 
-    const dashboardItem = items.find((item) => item.key === 'dashboard');
-    const remaining = items
-      .filter((item) => item.key !== 'dashboard')
-      .reverse();
-
-    return dashboardItem ? [dashboardItem, ...remaining] : remaining;
-  }, [isRTL, items]);
-
+ 
+    return [...items].sort((a, b) => {
+      const aOrder = orderMap.get(a.key) ?? Number.MAX_SAFE_INTEGER;
+      const bOrder = orderMap.get(b.key) ?? Number.MAX_SAFE_INTEGER;
+      return aOrder - bOrder;
+    });
+  }, [items]);
   return (
     <div className={cn('header-tabs-wrap', className)}>
       <div className="header-tabs" dir={direction}>
         {orderedItems.map((item) => {
-          const Icon = item.icon;
-          const label = t(item.labelKey);
-
+          const Icon = item.icon; 
+          const labelKey = item.key === 'customer_service'
+            ? 'navigation.clients'
+            : item.labelKey;
+          const label = t(labelKey);
           if (!item.children?.length) {
             return (
               <PillLink
