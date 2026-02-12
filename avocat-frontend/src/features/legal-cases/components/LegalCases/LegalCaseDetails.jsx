@@ -13,11 +13,11 @@
   import { motion, AnimatePresence } from 'framer-motion';
   import {
     deleteLegCase,
-    getLegCaseById,
+    getCaseDetails,
+    getCaseProcedures,
+    getCaseSessions,
     getLegalAdsByLegCaseId,
   } from '@shared/services/api/legalCases';
-  import { getProceduresByLegCaseId } from '@shared/services/api/procedures';
-  import { getSessionsByLegCaseId } from '@shared/services/api/sessions';
   import {
     fetchWithCaseCache,
     invalidateCaseFetchCache,
@@ -184,9 +184,12 @@
         logFetch('fetch-case', { id });
         const response = await fetchWithCaseCache({
           key: `legal-case:${id}`,
-          fetcher: () => getLegCaseById(id),
+          fetcher: () => getCaseDetails(id, {
+            include:
+              'clients,courts,caseType,caseSubType,procedures,procedures.procedureType,legalSessions,legalSessions.court,legalSessions.legalSessionType,services',
+          }),
         });
-        const legCaseData = response.data?.leg_case;
+        const legCaseData = response.data?.data || response.data?.leg_case;
         if (!legCaseData) throw new Error('Missing case data');
         setLegCase(legCaseData);
         setLegcaseClients(legCaseData.clients || []);
@@ -233,16 +236,16 @@
     const fetchProcedures = useCallback(
       () =>
         fetchSection('procedures', async () => {
-          const r = await getProceduresByLegCaseId(id);
-          return r.data || [];
+          const r = await getCaseProcedures(id);
+          return r.data?.data || r.data || [];
         }),
       [fetchSection, id],
     );
     const fetchSessions = useCallback(
       () =>
         fetchSection('sessions', async () => {
-          const r = await getSessionsByLegCaseId(id);
-          return r.data?.data || [];
+          const r = await getCaseSessions(id);
+          return r.data?.data || r.data || [];
         }),
       [fetchSection, id],
     );
