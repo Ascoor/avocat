@@ -11,9 +11,12 @@ const tabs = [
   { key: 'services', to: '/dashboard/reports/services', icon: 'scales' },
 ];
 
+const getActiveTab = (pathname) => tabs.find((tab) => pathname.startsWith(tab.to)) || null;
+
 const ReportsIndex = () => {
   const { t, isRTL } = useLanguage();
   const location = useLocation();
+  const activeTab = getActiveTab(location.pathname);
 
   if (location.pathname === '/dashboard/reports') {
     return <Navigate to="/dashboard/reports/sessions" replace />;
@@ -24,11 +27,13 @@ const ReportsIndex = () => {
       <header className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-5 shadow-sm backdrop-blur">
         <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[hsl(var(--primary)/0.1)] text-[hsl(var(--primary))]">
-            <LexicraftIcon name="briefcase" size={20} />
+            <LexicraftIcon name={activeTab?.icon || 'briefcase'} size={20} />
           </span>
           <div className={isRTL ? 'text-right' : 'text-left'}>
-            <h1 className="text-xl font-bold">{t('reports.title')}</h1>
-            <p className="text-sm text-muted-foreground">{t('reports.subtitle')}</p>
+            <h1 className="text-xl font-bold">{activeTab ? t(`reports.${activeTab.key}.title`) : t('reports.title')}</h1>
+            <p className="text-sm text-muted-foreground">
+              {activeTab ? t(`reports.${activeTab.key}.subtitle`) : t('reports.subtitle')}
+            </p>
           </div>
         </div>
       </header>

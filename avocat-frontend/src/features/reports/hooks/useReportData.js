@@ -14,7 +14,13 @@ const withinDateRange = (value, startDate, endDate) => {
   if (!itemDate) return false;
 
   if (startDate && itemDate < toDate(startDate)) return false;
-  if (endDate && itemDate > toDate(endDate)) return false;
+  if (endDate) {
+    const end = toDate(endDate);
+    if (end) {
+      end.setHours(23, 59, 59, 999);
+      if (itemDate > end) return false;
+    }
+  }
   return true;
 };
 
@@ -108,6 +114,7 @@ export const useReportData = ({ fetcher, dateField, searchFields = [], selectFil
 
   return {
     rows: filteredRows,
+    allRows: Array.isArray(rows) ? rows : [],
     loading,
     error,
     filters,

@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import TableComponent from '@shared/components/common/TableComponent';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import ReportFilters from '@features/reports/components/Filters/ReportFilters';
-import ReportPageHeader from '@features/reports/components/Reports/ReportPageHeader';
 import ReportStatusBadge from '@features/reports/components/Reports/ReportStatusBadge';
 import { useProceduresReport } from '@features/reports/hooks/useProceduresReport';
 import { useReportsMetadata } from '@features/reports/hooks/useReportsMetadata';
@@ -36,19 +35,33 @@ const ProceduresReport = () => {
 
   const headers = useMemo(
     () => [
-      { key: 'procedure_type', text: t('reports.columns.procedureType'), getValue: (row) => row?.procedure_type?.name || '-' },
-      { key: 'lawyer', text: t('reports.columns.lawyer'), getValue: (row) => row?.lawyer?.name || '-' },
-      { key: 'court', text: t('reports.columns.court'), getValue: (row) => row?.court?.name || '-' },
-      { key: 'date_start', text: t('reports.columns.startDate') },
-      { key: 'date_end', text: t('reports.columns.endDate') },
-      { key: 'status', text: t('reports.columns.status') },
+      {
+        key: 'procedure_type',
+        text: t('reports.columns.procedureType'),
+        getValue: (row) => row?.procedure_type?.name || '-',
+        sortValue: (row) => row?.procedure_type?.name || '',
+      },
+      {
+        key: 'lawyer',
+        text: t('reports.columns.lawyer'),
+        getValue: (row) => row?.lawyer?.name || '-',
+        sortValue: (row) => row?.lawyer?.name || '',
+      },
+      {
+        key: 'court',
+        text: t('reports.columns.court'),
+        getValue: (row) => row?.court?.name || '-',
+        sortValue: (row) => row?.court?.name || '',
+      },
+      { key: 'date_start', text: t('reports.columns.startDate'), sortValue: (row) => row?.date_start || '' },
+      { key: 'date_end', text: t('reports.columns.endDate'), sortValue: (row) => row?.date_end || '' },
+      { key: 'status', text: t('reports.columns.status'), sortValue: (row) => row?.status || '' },
     ],
     [t],
   );
 
   return (
     <div className="space-y-4">
-      <ReportPageHeader title={t('reports.procedures.title')} subtitle={t('reports.procedures.subtitle')} icon="document" />
       <ReportFilters
         filters={draftFilters}
         selectFilters={selectFilters}
