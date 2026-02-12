@@ -54,8 +54,14 @@ const SelectInput = ({ label, options, required, ...props }) => (
 );
 
 const clientCapacityOptions = (t) => [
-  { id: 'مدعى عليه', name: t('legalCaseDetails.editForm.clientCapacity.defendant') },
-  { id: 'مجنى عليه', name: t('legalCaseDetails.editForm.clientCapacity.victim') },
+  {
+    id: 'مدعى عليه',
+    name: t('legalCaseDetails.editForm.clientCapacity.defendant'),
+  },
+  {
+    id: 'مجنى عليه',
+    name: t('legalCaseDetails.editForm.clientCapacity.victim'),
+  },
   { id: 'مدعى', name: t('legalCaseDetails.editForm.clientCapacity.claimant') },
   { id: 'متهم', name: t('legalCaseDetails.editForm.clientCapacity.accused') },
 ];
@@ -67,7 +73,6 @@ const LegalCaseEditForm = ({
   caseSubTypes,
   onCaseTypeChange,
   onSubmit,
-  validated,
   showAlert,
   alertMessage,
   onDismissAlert,
@@ -75,7 +80,7 @@ const LegalCaseEditForm = ({
   isEditing,
   t,
 }) => (
-  <form noValidate validated={validated} onSubmit={onSubmit} className="space-y-4">
+  <form noValidate onSubmit={onSubmit} className="space-y-4">
     {showAlert && (
       <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
         <div>{alertMessage}</div>
@@ -238,7 +243,9 @@ const LegalCaseEditForm = ({
         className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
       >
         <LexicraftIcon name="document" size={16} />
-        {isEditing ? t('legalCaseDetails.actions.saveChanges') : t('legalCaseDetails.actions.save')}
+        {isEditing
+          ? t('legalCaseDetails.actions.saveChanges')
+          : t('legalCaseDetails.actions.save')}
       </button>
     </div>
   </form>
@@ -266,7 +273,6 @@ const AddEditLegCase = ({
     created_by: getUser().id,
   });
 
-  const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [caseTypes, setCaseTypes] = useState([]);
@@ -340,7 +346,6 @@ const AddEditLegCase = ({
     const form = event.currentTarget;
     if (!form.checkValidity()) {
       event.stopPropagation();
-      setValidated(true);
       return;
     }
 
@@ -356,7 +361,11 @@ const AddEditLegCase = ({
       onClose();
       fetchLegCases();
     } catch (error) {
-      setAlertMessage(t('legalCaseDetails.editForm.errors.saveFailed', { message: error.message }));
+      setAlertMessage(
+        t('legalCaseDetails.editForm.errors.saveFailed', {
+          message: error.message,
+        }),
+      );
       setShowAlert(true);
     }
   };
@@ -371,7 +380,9 @@ const AddEditLegCase = ({
             </span>
             <div>
               <h5 className="text-lg font-semibold text-foreground">
-                {isEditing ? t('legalCaseDetails.editForm.editTitle') : t('legalCaseDetails.editForm.addTitle')}
+                {isEditing
+                  ? t('legalCaseDetails.editForm.editTitle')
+                  : t('legalCaseDetails.editForm.addTitle')}
               </h5>
               <p className="text-sm text-muted-foreground">
                 {t('legalCaseDetails.editForm.subtitle')}
@@ -393,7 +404,6 @@ const AddEditLegCase = ({
           caseSubTypes={caseSubTypes}
           onCaseTypeChange={handleCaseTypeChange}
           onSubmit={handleSubmit}
-          validated={validated}
           showAlert={showAlert}
           alertMessage={alertMessage}
           onDismissAlert={() => setShowAlert(false)}
