@@ -275,12 +275,13 @@ const en = {
     
     kpi: {
       nextSession: "Next Session",
+      noUpcoming: "No upcoming sessions",
       totalSessions: "Total sessions",
       totalProcedures: "Total procedures",
       totalAds: "Total ads",
       },
     overview: {
-      title: "overview",
+      title: "Overview",
       caseNumber: "Case number",
       status: "Status",
       clients: "Clients",
@@ -291,6 +292,7 @@ const en = {
       
     },
     tabs: {
+      overview: "Overview",
       clients: "Clients",
       courts: "Courts",
       procedures: "Procedures",
@@ -311,6 +313,8 @@ const en = {
       addProcedure: "Add procedure",
       addSession: "Add session",
       addAd: "Add ad",
+      addClient: "Add client",
+      addCourt: "Add court",
       retry: "Try again",
       backToCases: "Back to cases",
       confirmDelete: "Are you sure you want to delete this case?",
@@ -328,6 +332,7 @@ const en = {
       subtitle: "Add and manage clients linked to this case.",
       empty: "No clients are linked to this case yet.",
       notAvailable: "Not available",
+      searchPlaceholder: "Search clients...",
       table: {
         slug: "File number",
         name: "Client name",
@@ -359,9 +364,7 @@ const en = {
       subtitle: "Track courts assigned to this case.",
       listTitle: "Current courts",
       empty: "No courts linked to this case yet.",
-      actions: {
-        addCourt: "Add court",
-      },
+      searchPlaceholder: "Search courts...",
       table: {
         court: "Court",
         year: "Year",
@@ -394,6 +397,7 @@ const en = {
       title: "Procedures",
       subtitle: "Manage procedures linked to this case.",
       empty: "No procedures yet. Add the first procedure.",
+      searchPlaceholder: "Search procedures...",
       table: {
         procedure: "Procedure",
         lawyer: "Lawyer",
@@ -441,6 +445,7 @@ const en = {
       title: "Sessions",
       subtitle: "Manage sessions and outcomes.",
       empty: "No sessions yet. Add the first session.",
+      searchPlaceholder: "Search sessions...",
       table: {
         date: "Session date",
         lawyer: "Lawyer",
@@ -510,6 +515,7 @@ const en = {
       empty: "No ads linked to this case yet.",
       pendingReceive: "Pending receipt",
       notAvailable: "Not available",
+      searchPlaceholder: "Search ads...",
       table: {
         type: "Ad type",
         sendDate: "Send date",

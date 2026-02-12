@@ -4,8 +4,8 @@ import { deleteLegalAd } from '@shared/services/api/legalCases';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import { useAlert } from '@shared/contexts/AlertContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { LexicraftIcon } from '@shared/icons/lexicraft';
 import TableComponent from '@shared/components/common/TableComponent';
+import SectionHeader from './SectionHeader';
 
 const LegalCaseAds = ({
   legCaseId,
@@ -166,23 +166,13 @@ const LegalCaseAds = ({
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/40 p-4">
-        <div>
-          <h3 className="text-lg font-semibold text-foreground">
-            {t('legalCaseDetails.ads.title')}
-          </h3>
-          <p className="text-sm text-[hsl(var(--color-muted))]">
-            {t('legalCaseDetails.ads.subtitle')}
-          </p>
-        </div>
-        <button
-          onClick={handleAddAd}
-          className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
-        >
-          <LexicraftIcon name="document" size={18} />
-          {t('legalCaseDetails.actions.addAd')}
-        </button>
-      </header>
+      <SectionHeader
+        icon="briefcase"
+        title={t('legalCaseDetails.ads.title')}
+        subtitle={t('legalCaseDetails.ads.subtitle')}
+        addLabel={t('legalCaseDetails.actions.addAd')}
+        onAdd={handleAddAd}
+      />
 
       <TableComponent
              title={t('legalCaseDetails.ads.title', { defaultValue: '' }) || undefined}
@@ -195,7 +185,7 @@ const LegalCaseAds = ({
         error={Boolean(error)}
         errorLabel={error || t('legalCaseDetails.ads.errors.fetch')}
         onRetry={() => onRefresh?.()}
-        searchPlaceholder={t('common.search')}
+        searchPlaceholder={t('legalCaseDetails.ads.searchPlaceholder')}
         emptyLabel={t('legalCaseDetails.ads.empty')}
         retryLabel={t('legalCaseDetails.actions.retry')}
         onAdd={undefined}
@@ -209,6 +199,9 @@ const LegalCaseAds = ({
           if (ad) handleDeleteAd(ad);
         }}
         permissions={{ view: false, update: true, delete: true, create: true }}
+        prevLabel={t('legalCaseDetails.pagination.prev')}
+        nextLabel={t('legalCaseDetails.pagination.next')}
+        pageLabel={t('legalCaseDetails.pagination.page')}
       />
 
       {showModal && (
