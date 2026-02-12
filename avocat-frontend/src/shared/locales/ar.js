@@ -312,6 +312,8 @@ const ar = {
       addProcedure: "إضافة إجراء",
       addSession: "إضافة جلسة",
       addAd: "إضافة إعلان",
+      addClient: "إضافة موكل",
+      addCourt: "إضافة محكمة",
       retry: "إعادة المحاولة",
       backToCases: "العودة للقضايا",
       confirmDelete: "هل أنت متأكد من حذف القضية؟",
@@ -329,22 +331,13 @@ const ar = {
       subtitle: "إضافة وإدارة الموكلين المرتبطين بالقضية.",
       empty: "لا يوجد موكلون مرتبطون بهذه القضية بعد.",
       notAvailable: "غير متوفر",
+      searchPlaceholder: "ابحث عن الموكلين...",
       table: {
         slug: "رقم الملف",
         name: "اسم الموكل",
         phone: "رقم الهاتف",
       },
       
-    actions: {
-      edit: "تعديل",
-      delete: "حذف",
-      addClient: "إضافة موكل",  
-      retry: "إعادة المحاولة",
-      backToCases: "العودة للقضايا",
-      confirmDelete: "هل أنت متأكد من حذف الموكل",
-      save: "حفظ",
-      saveChanges: "حفظ التغييرات",
-    },
       errors: {
         fetch: "حدث خطأ أثناء تحميل بيانات الموكلين.",
         missingClient: "يرجى اختيار موكل واحد على الأقل قبل الحفظ.",
@@ -371,9 +364,7 @@ const ar = {
       subtitle: "متابعة المحاكم المرتبطة بهذه القضية.",
       listTitle: "المحاكم الحالية",
       empty: "لا توجد محاكم مرتبطة بهذه القضية بعد.",
-      actions: {
-        addCourt: "إضافة محكمة",
-      },
+      searchPlaceholder: "ابحث في المحاكم...",
       table: {
         court: "المحكمة",
         year: "السنة",
@@ -406,6 +397,7 @@ const ar = {
       title: "الإجراءات",
       subtitle: "إدارة الإجراءات المرتبطة بالقضية.",
       empty: "لا توجد إجراءات بعد. ابدأ بإضافة إجراء.",
+      searchPlaceholder: "ابحث في الإجراءات...",
       table: {
         procedure: "الإجراء",
         lawyer: "المحامي",
@@ -522,6 +514,7 @@ const ar = {
       empty: "لا توجد إعلانات مرتبطة بهذه القضية بعد.",
       pendingReceive: "قيد الاستلام",
       notAvailable: "غير متوفر",
+      searchPlaceholder: "ابحث في الإعلانات...",
       table: {
         type: "نوع الإعلان",
         sendDate: "تاريخ التسليم",

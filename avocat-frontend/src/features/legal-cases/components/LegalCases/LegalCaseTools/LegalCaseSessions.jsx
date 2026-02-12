@@ -5,7 +5,7 @@ import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDel
 import { useAlert } from '@shared/contexts/AlertContext';
 import SessionDetailsModal from './Modals/SessionDetailsModal';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { LexicraftIcon } from '@shared/icons/lexicraft';
+import SectionHeader from './SectionHeader';
 
 // ✅ استخدم مكون الجدول الموحد
 import TableComponent from '@shared/components/common/TableComponent';
@@ -164,24 +164,13 @@ const LegalCaseSessions = ({
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-muted/40 p-4">
-        <div>
-          <h3 className="text-lg font-semibold text-foreground">
-            {t('legalCaseDetails.sessions.title')}
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {t('legalCaseDetails.sessions.subtitle')}
-          </p>
-        </div>
-
-        <button
-          onClick={handleAddSession}
-          className="pressable inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-        >
-          <LexicraftIcon name="calendar" size={18} />
-          {t('legalCaseDetails.actions.addSession')}
-        </button>
-      </header>
+      <SectionHeader
+        icon="calendar"
+        title={t('legalCaseDetails.sessions.title')}
+        subtitle={t('legalCaseDetails.sessions.subtitle')}
+        addLabel={t('legalCaseDetails.actions.addSession')}
+        onAdd={handleAddSession}
+      />
 
       {/* ✅ TableComponent يتعامل مع: loading/error/empty/pagination/search/sort/mobile */}
       <TableComponent
@@ -195,7 +184,7 @@ const LegalCaseSessions = ({
         error={Boolean(error)}
         errorLabel={error || t('legalCaseDetails.sessions.errors.fetch')}
         onRetry={() => onRefresh?.()}
-        searchPlaceholder={t('legalCaseDetails.sessions.searchPlaceholder', { defaultValue: t('common.search') })}
+        searchPlaceholder={t('legalCaseDetails.sessions.searchPlaceholder')}
         emptyLabel={t('legalCaseDetails.sessions.empty')}
         retryLabel={t('legalCaseDetails.actions.retry')}
         addLabel={t('legalCaseDetails.actions.addSession')}
@@ -217,6 +206,9 @@ const LegalCaseSessions = ({
         }}
         // لو عندك Permissions أو ACL، مررها هنا. وإلا اتركها لتظهر الأكشنز.
         permissions={{ view: true, update: true, delete: true, create: true }}
+        prevLabel={t('legalCaseDetails.pagination.prev')}
+        nextLabel={t('legalCaseDetails.pagination.next')}
+        pageLabel={t('legalCaseDetails.pagination.page')}
       />
 
       {/* تفاصيل الجلسة */}

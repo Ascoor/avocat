@@ -15,7 +15,7 @@ const CourtModal = ({
     <div className="space-y-4">
       {legCaseNewCourts.map((court, index) => (
         <div
-          key={index}
+          key={court.key || `court-`}
           className="rounded-2xl border border-border bg-card p-4 shadow-sm"
         >
           <div className="grid gap-3 md:grid-cols-2">

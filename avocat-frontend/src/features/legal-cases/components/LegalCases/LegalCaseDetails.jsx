@@ -117,6 +117,9 @@ const StatusBadge = ({ status }) => {
 
 const SectionStateMessage = ({ title, message, onRetry, retryLabel }) => (
   <div className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/30 p-4">
+    <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--color-primary))]/10 text-[hsl(var(--color-primary))]">
+      <LexicraftIcon name="shield" size={14} />
+    </div>
     <h4 className="text-sm font-semibold text-[hsl(var(--color-text))]">
       {title}
     </h4>
@@ -671,10 +674,10 @@ export default function LegCaseDetails() {
         transition={{ duration: 0.35 }}
         className="sticky top-2 z-10 rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))]/95 p-5 md:p-6 shadow-lg backdrop-blur-sm"
       >
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className={`flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
           {/* Left: Title & metadata */}
           <div className="flex flex-col gap-3 min-w-0">
-            <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[hsl(var(--color-primary))]/10 text-[hsl(var(--color-primary))]">
                 <LexicraftIcon name="briefcase" size={26} />
               </span>
@@ -705,7 +708,7 @@ export default function LegCaseDetails() {
           </div>
 
           {/* Right: Actions */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className={`flex flex-wrap items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <button
               onClick={() => setEditModalOpen(true)}
               className="pressable inline-flex items-center gap-2 rounded-full border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] px-4 py-2 text-sm font-semibold transition hover:border-[hsl(var(--color-primary))]"
@@ -757,7 +760,7 @@ export default function LegCaseDetails() {
         onValueChange={setActiveTab}
         className="space-y-0"
       >
-        <TabsList className="flex w-full flex-wrap gap-1.5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 p-1.5">
+        <TabsList className={`flex w-full flex-wrap gap-1.5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 p-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
           {tabDef.map((tab) => (
             <TabsTrigger
               key={tab.value}
@@ -771,7 +774,7 @@ export default function LegCaseDetails() {
         </TabsList>
 
         <div className="mt-4 rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 md:p-6 shadow-sm">
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="sync" initial={false}>
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 8 }}

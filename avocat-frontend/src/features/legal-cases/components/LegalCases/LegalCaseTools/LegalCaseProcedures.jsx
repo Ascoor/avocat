@@ -4,8 +4,8 @@ import ProcedureModal from './Modals/ProcedureModal';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import { useAlert } from '@shared/contexts/AlertContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { LexicraftIcon } from '@shared/icons/lexicraft';
 import TableComponent from '@shared/components/common/TableComponent';
+import SectionHeader from './SectionHeader';
 
 const LegalCaseProcedures = ({
   legCaseId,
@@ -153,23 +153,13 @@ const LegalCaseProcedures = ({
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/40 p-4">
-        <div>
-          <h3 className="text-lg font-semibold text-foreground">
-            {t('legalCaseDetails.procedures.title')}
-          </h3>
-          <p className="text-sm text-[hsl(var(--color-muted))]">
-            {t('legalCaseDetails.procedures.subtitle')}
-          </p>
-        </div>
-        <button
-          onClick={handleAddProcedure}
-          className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
-        >
-          <LexicraftIcon name="document" size={18} />
-          {t('legalCaseDetails.actions.addProcedure')}
-        </button>
-      </header>
+      <SectionHeader
+        icon="document"
+        title={t('legalCaseDetails.procedures.title')}
+        subtitle={t('legalCaseDetails.procedures.subtitle')}
+        addLabel={t('legalCaseDetails.actions.addProcedure')}
+        onAdd={handleAddProcedure}
+      />
 
       <TableComponent
              title={t('legalCaseDetails.procedures.title', { defaultValue: '' }) || undefined}
@@ -182,7 +172,7 @@ const LegalCaseProcedures = ({
         error={Boolean(error)}
         errorLabel={error || t('legalCaseDetails.procedures.errors.fetch')}
         onRetry={() => onRefresh?.()}
-        searchPlaceholder={t('common.search')}
+        searchPlaceholder={t('legalCaseDetails.procedures.searchPlaceholder')}
         emptyLabel={t('legalCaseDetails.procedures.empty')}
         retryLabel={t('legalCaseDetails.actions.retry')}
         onAdd={undefined}
@@ -196,6 +186,9 @@ const LegalCaseProcedures = ({
           if (p) handleDeleteClick(p);
         }}
         permissions={{ view: false, update: true, delete: true, create: true }}
+        prevLabel={t('legalCaseDetails.pagination.prev')}
+        nextLabel={t('legalCaseDetails.pagination.next')}
+        pageLabel={t('legalCaseDetails.pagination.page')}
       />
 
       {showModal && (
