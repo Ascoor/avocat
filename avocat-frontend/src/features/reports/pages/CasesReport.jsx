@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import TableComponent from '@shared/components/common/TableComponent';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import ReportFilters from '@features/reports/components/Filters/ReportFilters';
-import ReportPageHeader from '@features/reports/components/Reports/ReportPageHeader';
 import ReportStatusBadge from '@features/reports/components/Reports/ReportStatusBadge';
 import { useCasesReport } from '@features/reports/hooks/useCasesReport';
 
@@ -13,17 +12,21 @@ const CasesReport = () => {
 
   const headers = useMemo(
     () => [
-      { key: 'title', text: t('reports.columns.caseTitle') },
-      { key: 'case_number', text: t('reports.columns.caseNumber') },
-      { key: 'client', text: t('reports.columns.clientName'), getValue: (row) => row?.client?.name || '-' },
-      { key: 'status', text: t('reports.columns.status') },
+      { key: 'title', text: t('reports.columns.caseTitle'), sortValue: (row) => row?.title || '' },
+      { key: 'case_number', text: t('reports.columns.caseNumber'), sortValue: (row) => row?.case_number || '' },
+      {
+        key: 'client',
+        text: t('reports.columns.clientName'),
+        getValue: (row) => row?.client?.name || '-',
+        sortValue: (row) => row?.client?.name || '',
+      },
+      { key: 'status', text: t('reports.columns.status'), sortValue: (row) => row?.status || '' },
     ],
     [t],
   );
 
   return (
     <div className="space-y-4">
-      <ReportPageHeader title={t('reports.cases.title')} subtitle={t('reports.cases.subtitle')} icon="briefcase" />
       <ReportFilters
         filters={draftFilters}
         onChange={(payload) => setDraftFilters((prev) => ({ ...prev, ...payload }))}

@@ -21,9 +21,9 @@ export const useProceduresReport = () => {
   });
 
   const statuses = useMemo(() => {
-    const allRows = query.rows || [];
+    const allRows = query.allRows || [];
     return [...new Set(allRows.map((row) => row?.status).filter(Boolean))];
-  }, [query.rows]);
+  }, [query.allRows]);
 
   return { ...query, statuses };
 };
