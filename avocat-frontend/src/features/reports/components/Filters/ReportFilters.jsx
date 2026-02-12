@@ -1,9 +1,8 @@
-import React from 'react';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const baseInputClass =
-  'w-full rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.72)] px-3 py-2.5 text-sm text-foreground shadow-sm backdrop-blur outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]';
+  'w-full rounded-xl border border-border/70 bg-[hsl(var(--card)/0.75)] px-3 py-2.5 text-sm text-foreground shadow-sm backdrop-blur outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]';
 
 const ReportFilters = ({
   filters,
@@ -18,6 +17,10 @@ const ReportFilters = ({
 
   return (
     <section className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-4 shadow-sm backdrop-blur">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-foreground">{t('common.filters') || 'Filters'}</h2>
+      </div>
+
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         <div className="relative">
           <LexicraftIcon
@@ -97,14 +100,14 @@ const ReportFilters = ({
         <button
           type="button"
           onClick={onReset}
-          className="w-full rounded-2xl border border-border/70 px-4 py-2 text-sm font-semibold text-foreground md:w-auto"
+          className="w-full rounded-xl border border-border/70 px-4 py-2 text-sm font-semibold text-foreground md:w-auto"
         >
           {t('common.reset')}
         </button>
         <button
           type="button"
           onClick={onApply}
-          className="w-full rounded-2xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] md:w-auto"
+          className="w-full rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] md:w-auto"
         >
           {t('common.applyFilters')}
         </button>
