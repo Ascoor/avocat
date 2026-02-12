@@ -18,6 +18,23 @@ const withinDateRange = (value, startDate, endDate) => {
   return true;
 };
 
+const extractRows = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (!payload || typeof payload !== 'object') return [];
+
+  if (Array.isArray(payload.data)) return payload.data;
+  if (Array.isArray(payload.rows)) return payload.rows;
+  if (Array.isArray(payload.items)) return payload.items;
+
+  if (payload.data && typeof payload.data === 'object') {
+    if (Array.isArray(payload.data.data)) return payload.data.data;
+    if (Array.isArray(payload.data.rows)) return payload.data.rows;
+    if (Array.isArray(payload.data.items)) return payload.data.items;
+  }
+
+  return [];
+};
+
 export const useReportData = ({ fetcher, dateField, searchFields = [], selectFilterMap = {} }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +51,7 @@ export const useReportData = ({ fetcher, dateField, searchFields = [], selectFil
     setError('');
     try {
       const response = await fetcher();
-      setRows(response?.data ?? []);
+      setRows(extractRows(response));
     } catch (err) {
       setError(err?.message || 'load_error');
       setRows([]);
@@ -61,9 +78,10 @@ export const useReportData = ({ fetcher, dateField, searchFields = [], selectFil
   }, []);
 
   const filteredRows = useMemo(() => {
+    const safeRows = Array.isArray(rows) ? rows : [];
     const query = normalize(filters.searchTerm);
 
-    return rows.filter((row) => {
+    return safeRows.filter((row) => {
       if (query) {
         const hasMatch = searchFields.some((field) => normalize(field(row)).includes(query));
         if (!hasMatch) return false;
