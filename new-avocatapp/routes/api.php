@@ -90,12 +90,13 @@ Route::prefix('v1')->group(function () {
         Route::get('legal-case/case-types-sub-types', [LegCaseController::class, 'getCaseTypesWithCaseSubTypes']);
         Route::get('case-types/{caseTypeId}/sub-types', [CaseTypeController::class, 'getCaseTypesWithSubTypes'])->name('case-sub-types.index');
         Route::get('legal-case-search', [LegCaseController::class, 'getLegCaseSearch']);
+        Route::get('cases/search', [CaseReportingController::class, 'search'])->name('cases.search');
+        Route::get('search', [CaseReportingController::class, 'search']); // backward compatibility
         Route::get('cases/{case_id}', [CaseReportingController::class, 'show']);
         Route::get('cases/{case_id}/sessions', [CaseReportingController::class, 'sessions']);
         Route::get('cases/{case_id}/procedures', [CaseReportingController::class, 'procedures']);
         Route::get('cases/{case_id}/clients', [CaseReportingController::class, 'clients']);
         Route::get('cases/{case_id}/services', [CaseReportingController::class, 'services']);
-        Route::get('search', [CaseReportingController::class, 'search']);
         Route::post('legal-cases/{legCaseId}/add_clients', [LegCaseController::class, 'addClients']);
         Route::delete('legal-cases/{legCaseId}/clients/{clientId}', [LegCaseController::class, 'delete']);
         Route::post('legal-cases/add_courts', [LegCaseController::class, 'AddLegCaseCourts']);

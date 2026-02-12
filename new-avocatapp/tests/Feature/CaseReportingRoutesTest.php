@@ -11,12 +11,13 @@ class CaseReportingRoutesTest extends TestCase
     public function test_case_reporting_endpoints_are_registered(): void
     {
         $expectations = [
+            ['GET', '/api/v1/cases/search', 'App\\Http\\Controllers\\Api\\CaseReportingController@search'],
+            ['GET', '/api/v1/search', 'App\\Http\\Controllers\\Api\\CaseReportingController@search'],
             ['GET', '/api/v1/cases/1', 'App\\Http\\Controllers\\Api\\CaseReportingController@show'],
             ['GET', '/api/v1/cases/1/sessions', 'App\\Http\\Controllers\\Api\\CaseReportingController@sessions'],
             ['GET', '/api/v1/cases/1/procedures', 'App\\Http\\Controllers\\Api\\CaseReportingController@procedures'],
             ['GET', '/api/v1/cases/1/clients', 'App\\Http\\Controllers\\Api\\CaseReportingController@clients'],
             ['GET', '/api/v1/cases/1/services', 'App\\Http\\Controllers\\Api\\CaseReportingController@services'],
-            ['GET', '/api/v1/search', 'App\\Http\\Controllers\\Api\\CaseReportingController@search'],
         ];
 
         foreach ($expectations as [$method, $uri, $action]) {
@@ -25,5 +26,10 @@ class CaseReportingRoutesTest extends TestCase
             $this->assertSame($action, $route->getActionName());
             $this->assertContains('auth:sanctum', $route->gatherMiddleware());
         }
+    }
+
+    public function test_cases_search_named_route_points_to_new_endpoint(): void
+    {
+        $this->assertSame('/api/v1/cases/search', route('cases.search', absolute: false));
     }
 }
