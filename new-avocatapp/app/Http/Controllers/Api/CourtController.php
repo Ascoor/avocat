@@ -11,7 +11,7 @@ class CourtController extends Controller
 {
     public function index()
     {
-        $courts = Court::with('court_type', 'court_level')->get();
+        $courts = Court::with('courtType', 'courtLevel')->get();
         return response()->json($courts);
     }
     // إنشاء محكمة جديدة

@@ -37,7 +37,7 @@ class LegalSession extends Model
         'cost3' => 'decimal:2',
     ];
 
-    public function legalSessionType(): BelongsTo
+    public function legalSessionType(): BelongsTo 
     {
         return $this->belongsTo(LegalSessionType::class);
     }

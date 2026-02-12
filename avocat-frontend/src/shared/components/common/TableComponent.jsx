@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 /**
@@ -8,12 +8,13 @@ import { LexicraftIcon } from "@shared/icons/lexicraft";
  *   text: string,
  *   searchable?: boolean (default true),
  *   sortable?: boolean (default true),
- *   getValue?: (row) => any, // for search + sort (fallback row[key])
- *   sortValue?: (row) => any, // optional override for sorting
- *   searchValue?: (row) => any, // optional override for searching
+ *   getValue?: (row) => any,
+ *   sortValue?: (row) => any,
+ *   searchValue?: (row) => any,
  *   tdClassName?: string,
  *   thClassName?: string,
- *   mobileLabel?: string, // optional for card view label
+ *   mobileLabel?: string,
+ *   align?: "start" | "center" | "end" // optional per-column alignment override
  * }
  */
 
@@ -73,7 +74,94 @@ const compareValues = (a, b) => {
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-const TableComponent = ({
+/** small helper for micro-animations (no extra libs) */
+const cx = (...parts) => parts.filter(Boolean).join(" ");
+
+function EmptyState({ label }) {
+  return (
+    <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-6 text-sm text-muted-foreground shadow-sm backdrop-blur">
+      {label}
+    </div>
+  );
+}
+
+function ErrorState({ label, onRetry, retryLabel, isRTL }) {
+  return (
+    <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-5 text-sm text-destructive">
+      <div className="space-y-3 text-center">
+        <div className="font-semibold">{label}</div>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive transition hover:opacity-90"
+          >
+            <LexicraftIcon
+              name="arrow-forward"
+              size={14}
+              isDirectional
+              dir={isRTL ? "rtl" : "ltr"}
+            />
+            {retryLabel}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LoadingRows({ colSpan, rows = 6 }) {
+  return (
+    <tbody>
+      {Array.from({ length: rows }).map((_, idx) => (
+        <tr key={`sk-${idx}`} className="border-b border-border/40">
+          <td colSpan={colSpan} className="p-3">
+            <div className="h-10 w-full rounded-xl skeleton-shimmer" />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
+}
+
+function Pagination({
+  isRTL,
+  currentPage,
+  totalPages,
+  onPrev,
+  onNext,
+  pageLabel,
+  prevLabel,
+  nextLabel,
+}) {
+  return (
+    <div className="mt-4 flex items-center justify-between gap-3">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={currentPage <= 1}
+        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
+      >
+        {prevLabel}
+      </button>
+
+      <span className="text-sm text-muted-foreground">
+        {pageLabel} {currentPage} / {totalPages}
+      </span>
+
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={currentPage >= totalPages}
+        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  );
+}
+
+export default function TableComponent({
   data = [],
   headers = [],
   customRenderers = {},
@@ -101,16 +189,32 @@ const TableComponent = ({
 
   // row identity
   rowKey = "id",
-  getRowId, // optional override: (row) => string|number
+  getRowId,
 
   // layout
-  title, // optional
+  title,
 
   // qa
   qaMode = false,
 
   permissions,
-}) => {
+
+  // Direction
+  isRTL = true,
+
+  // Labels (optional i18n overrides)
+  viewLabel = "عرض",
+  editLabel = "تعديل",
+  deleteLabel = "حذف",
+  prevLabel = "سابق",
+  nextLabel = "التالي",
+  pageLabel = "الصفحة",
+}) {
+  const dir = isRTL ? "rtl" : "ltr";
+  const thAlign = isRTL ? "text-right" : "text-left";
+  const tdAlign = isRTL ? "text-right" : "text-left";
+  const cellJustify = isRTL ? "justify-end" : "justify-start";
+
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortKey, setSortKey] = useState(null);
@@ -127,7 +231,7 @@ const TableComponent = ({
 
   const searchableHeaders = useMemo(
     () => headers.filter((h) => h?.key && h.searchable !== false && h.key !== "actions"),
-    [headers],
+    [headers]
   );
 
   useEffect(() => setCurrentPage(1), [searchQuery, sortKey, sortDirection]);
@@ -141,11 +245,25 @@ const TableComponent = ({
     return data.filter((row) =>
       keywords.every((kw) =>
         searchableHeaders.some((header) =>
-          normalize(defaultSearchValue(row, header)).includes(kw),
-        ),
-      ),
+          normalize(defaultSearchValue(row, header)).includes(kw)
+        )
+      )
     );
   }, [data, searchQuery, searchableHeaders]);
+
+  const handleSort = useCallback(
+    (key) => {
+      const header = headers.find((h) => h.key === key);
+      if (!header || header.sortable === false) return;
+
+      if (sortKey === key) setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
+      else {
+        setSortKey(key);
+        setSortDirection("asc");
+      }
+    },
+    [headers, sortKey]
+  );
 
   const sortedData = useMemo(() => {
     if (!sortKey) return filteredData;
@@ -153,7 +271,7 @@ const TableComponent = ({
     const header = headers.find((h) => h.key === sortKey);
     if (!header || header.sortable === false) return filteredData;
 
-    const dir = sortDirection === "asc" ? 1 : -1;
+    const dirMul = sortDirection === "asc" ? 1 : -1;
 
     return filteredData
       .map((row, idx) => ({ row, idx }))
@@ -161,42 +279,23 @@ const TableComponent = ({
         const aVal = defaultSortValue(a.row, header);
         const bVal = defaultSortValue(b.row, header);
         const cmp = compareValues(aVal, bVal);
-        if (cmp !== 0) return cmp * dir;
+        if (cmp !== 0) return cmp * dirMul;
         return a.idx - b.idx;
       })
       .map((x) => x.row);
   }, [filteredData, headers, sortKey, sortDirection]);
 
   const totalPages = Math.max(1, Math.ceil(sortedData.length / itemsPerPage));
+  const safePage = clamp(currentPage, 1, totalPages);
 
   const paginatedData = useMemo(() => {
-    const safePage = clamp(currentPage, 1, totalPages);
     const start = (safePage - 1) * itemsPerPage;
     return sortedData.slice(start, start + itemsPerPage);
-  }, [sortedData, currentPage, totalPages, itemsPerPage]);
-
-  const getId = (row, index) => {
-    const id = typeof getRowId === "function" ? getRowId(row) : row?.[rowKey];
-    return id ?? index;
-  };
+  }, [sortedData, safePage, itemsPerPage]);
 
   const resolveIdMeta = (row, index) => {
     const rawId = typeof getRowId === "function" ? getRowId(row) : row?.[rowKey];
-    return {
-      id: rawId ?? index,
-      isMissing: rawId === null || rawId === undefined,
-    };
-  };
-
-  const handleSort = (key) => {
-    const header = headers.find((h) => h.key === key);
-    if (!header || header.sortable === false) return;
-
-    if (sortKey === key) setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
-    else {
-      setSortKey(key);
-      setSortDirection("asc");
-    }
+    return { id: rawId ?? index, isMissing: rawId === null || rawId === undefined };
   };
 
   const renderAdd = () => {
@@ -207,7 +306,7 @@ const TableComponent = ({
       <button
         type="button"
         onClick={onAdd}
-        className="rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] shadow-sm transition hover:opacity-90"
+        className="rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] shadow-sm transition hover:opacity-90 active:scale-[0.98]"
       >
         {addLabel}
       </button>
@@ -219,138 +318,203 @@ const TableComponent = ({
       tone === "danger"
         ? "text-[hsl(var(--destructive))]"
         : tone === "primary"
-          ? "text-[hsl(var(--primary))]"
-          : "text-foreground";
+        ? "text-[hsl(var(--primary))]"
+        : "text-foreground";
 
     return (
       <button
         type="button"
         onClick={onClick}
         title={tt}
-        className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70 bg-[hsl(var(--background)/0.55)] shadow-sm transition hover:opacity-90 ${toneClass}`}
+        className={cx(
+          "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70",
+          "bg-[hsl(var(--background)/0.55)] shadow-sm transition",
+          "hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98]",
+          toneClass
+        )}
       >
         {children}
       </button>
     );
   };
 
-  const Toolbar = (
-    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-3">
-        {title && <h3 className="text-lg font-bold text-foreground">{title}</h3>}
-        {renderAdd()}
-      </div>
-
-      <div className="w-full sm:w-[360px]">
-        <input
-          type="text"
-          value={searchQuery}
-          placeholder={searchPlaceholder}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] px-3 py-2 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]"
-        />
-      </div>
-    </div>
-  );
-
-  const Pagination = (
-    <div className="mt-4 flex items-center justify-between gap-3">
-      <button
-        type="button"
-        onClick={() => setCurrentPage((p) => clamp(p - 1, 1, totalPages))}
-        disabled={currentPage <= 1}
-        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50"
-      >
-        سابق
-      </button>
-
-      <span className="text-sm text-muted-foreground">
-        الصفحة {clamp(currentPage, 1, totalPages)} من {totalPages}
-      </span>
-
-      <button
-        type="button"
-        onClick={() => setCurrentPage((p) => clamp(p + 1, 1, totalPages))}
-        disabled={currentPage >= totalPages}
-        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50"
-      >
-        التالي
-      </button>
-    </div>
-  );
-
-  const renderLoadingRows = () => (
-    <tbody>
-      {Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, index) => (
-        <tr key={`loading-${index}`} className="border-b border-border/40">
-          <td colSpan={headers.length + Number(showView) + Number(showEdit) + Number(showDelete)}>
-            <div className="h-10 w-full rounded-xl skeleton-shimmer" />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  );
-
-  const renderErrorRow = () => (
-    <tbody>
-      <tr>
-        <td
-          colSpan={headers.length + Number(showView) + Number(showEdit) + Number(showDelete)}
-          className="px-4 py-6 text-center text-sm text-destructive"
-        >
-          <div className="space-y-3">
-            <div>{errorLabel}</div>
-            {onRetry && (
-              <button
-                type="button"
-                onClick={onRetry}
-                className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive"
-              >
-                <LexicraftIcon name="arrow-forward" size={14} isDirectional />
-                {retryLabel}
-              </button>
-            )}
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  );
-
+  const colSpan = headers.length + Number(showView) + Number(showEdit) + Number(showDelete);
   const showEmptyState = !loading && !error && filteredData.length === 0;
 
+  // Actions columns order: LTR -> actions first, RTL -> actions last (so they appear on the right)
+  const renderHeadActions = (pos) => {
+    if (pos === "start") {
+      if (isRTL) return null;
+      return (
+        <>
+          {showView && (
+            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+              {viewLabel}
+            </th>
+          )}
+          {showEdit && (
+            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+              {editLabel}
+            </th>
+          )}
+          {showDelete && (
+            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+              {deleteLabel}
+            </th>
+          )}
+        </>
+      );
+    }
+
+    // end
+    if (!isRTL) return null;
+    return (
+      <>
+        {showView && (
+          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+            {viewLabel}
+          </th>
+        )}
+        {showEdit && (
+          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+            {editLabel}
+          </th>
+        )}
+        {showDelete && (
+          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+            {deleteLabel}
+          </th>
+        )}
+      </>
+    );
+  };
+
+  const renderRowActions = (pos, id, row) => {
+    const btns = (
+      <div className="flex items-center justify-center gap-2">
+        {showView && (
+          <ActionBtn
+            onClick={() => {
+              onView(id);
+              onRowAction?.("view", id, row);
+            }}
+            title={viewLabel}
+            tone="primary"
+          >
+            <LexicraftIcon name="view" size={16} />
+          </ActionBtn>
+        )}
+        {showEdit && (
+          <ActionBtn
+            onClick={() => {
+              onEdit(id);
+              onRowAction?.("edit", id, row);
+            }}
+            title={editLabel}
+            tone="primary"
+          >
+            <LexicraftIcon name="edit" size={16} />
+          </ActionBtn>
+        )}
+        {showDelete && (
+          <ActionBtn
+            onClick={() => {
+              onDelete(id, row);
+              onRowAction?.("delete", id, row);
+            }}
+            title={deleteLabel}
+            tone="danger"
+          >
+            <LexicraftIcon name="trash" size={16} />
+          </ActionBtn>
+        )}
+      </div>
+    );
+
+    if (pos === "start") {
+      if (isRTL) return null;
+      return <td className="px-4 py-3 text-center">{btns}</td>;
+    }
+    if (!isRTL) return null;
+    return <td className="px-4 py-3 text-center">{btns}</td>;
+  };
+
+  const colAlignClass = (h, fallback) => {
+    // allow per-column overrides
+    if (h?.align === "center") return "text-center";
+    if (h?.align === "end") return isRTL ? "text-left" : "text-right"; // end relative to dir
+    if (h?.align === "start") return isRTL ? "text-right" : "text-left";
+    return fallback;
+  };
+
   return (
-    <section className="w-full">
-      {Toolbar}
+    <section className="w-full" dir={dir}>
+      {/* Toolbar */}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className={cx("flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
+          {title && (
+            <h3 className="text-lg font-bold text-foreground tracking-tight">
+              {title}
+            </h3>
+          )}
+          {renderAdd()}
+        </div>
+
+        <div className="w-full sm:w-[360px]">
+          <div className="relative">
+            <span
+              className={cx(
+                "pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground",
+                isRTL ? "right-3" : "left-3"
+              )}
+            >
+              <LexicraftIcon name="search" size={16} />
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              placeholder={searchPlaceholder}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={cx(
+                "w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] py-2 text-sm text-foreground outline-none transition",
+                "focus:ring-2 focus:ring-[hsl(var(--ring))]",
+                isRTL ? "pr-10 pl-3 text-right" : "pl-10 pr-3 text-left"
+              )}
+            />
+          </div>
+        </div>
+      </div>
 
       {showEmptyState ? (
-        <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-6 text-sm text-muted-foreground shadow-sm backdrop-blur">
-          {emptyLabel}
-        </div>
+        <EmptyState label={emptyLabel} />
       ) : (
         <>
           {/* Desktop table */}
           <div className="hidden w-full overflow-x-auto rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] shadow-sm backdrop-blur md:block">
-            <table className="w-full table-auto table-soft-shadow">
+            <table className="w-full table-auto table-soft-shadow" dir={dir}>
               <thead className="border-b border-border/70 bg-[hsl(var(--muted))]">
                 <tr>
-                  {showView && <th className="px-4 py-3 text-center text-xs font-bold text-foreground">عرض</th>}
+                  {renderHeadActions("start")}
 
                   {headers.map((h) => {
                     const sortable = h.sortable !== false;
                     const active = sortKey === h.key;
+                    const align = colAlignClass(h, thAlign);
 
                     return (
                       <th
                         key={h.key}
                         onClick={() => sortable && handleSort(h.key)}
-                        className={[
-                          "px-4 py-3 text-center text-xs font-bold text-foreground",
+                        className={cx(
+                          "px-4 py-3 text-xs font-bold text-foreground",
+                          align,
                           sortable ? "cursor-pointer select-none hover:opacity-90" : "opacity-80",
-                          h.thClassName || "",
-                        ].join(" ")}
-                        title={sortable ? "ترتيب" : undefined}
+                          "transition",
+                          h.thClassName
+                        )}
+                        title={sortable ? (isRTL ? "ترتيب" : "Sort") : undefined}
                       >
-                        <span className="inline-flex items-center justify-center gap-2">
+                        <span className={cx("inline-flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
                           {h.text}
                           {active &&
                             (sortDirection === "asc" ? (
@@ -363,15 +527,25 @@ const TableComponent = ({
                     );
                   })}
 
-                  {showEdit && <th className="px-4 py-3 text-center text-xs font-bold text-foreground">تعديل</th>}
-                  {showDelete && <th className="px-4 py-3 text-center text-xs font-bold text-foreground">حذف</th>}
+                  {renderHeadActions("end")}
                 </tr>
               </thead>
 
               {loading ? (
-                renderLoadingRows()
+                <LoadingRows colSpan={colSpan} rows={Math.min(itemsPerPage, 6)} />
               ) : error ? (
-                renderErrorRow()
+                <tbody>
+                  <tr>
+                    <td colSpan={colSpan} className="p-4">
+                      <ErrorState
+                        label={errorLabel}
+                        onRetry={onRetry}
+                        retryLabel={retryLabel}
+                        isRTL={isRTL}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
               ) : (
                 <tbody>
                   {paginatedData.map((row, index) => {
@@ -379,74 +553,46 @@ const TableComponent = ({
                     const warnId = qaMode && isMissing;
 
                     return (
-                      <tr key={id} className="border-b border-border/50 transition hover:bg-[hsl(var(--muted)/0.45)]">
-                        {showView && (
-                          <td className="px-4 py-3 text-center">
-                            <ActionBtn
-                              onClick={() => {
-                                onView(id);
-                                onRowAction?.("view", id, row);
-                              }}
-                              title="عرض"
-                              tone="primary"
-                            >
-                              <LexicraftIcon name="view" size={16} />
-                            </ActionBtn>
-                          </td>
+                      <tr
+                        key={id}
+                        className={cx(
+                          "border-b border-border/50 transition",
+                          "hover:bg-[hsl(var(--muted)/0.45)]",
+                          "animate-in fade-in duration-200"
                         )}
+                      >
+                        {renderRowActions("start", id, row)}
 
-                        {headers.map((h, headerIndex) => (
-                          <td
-                            key={`${id}-${h.key}`}
-                            className={[
-                              "px-4 py-3 text-center text-sm text-foreground",
-                              h.tdClassName || "",
-                            ].join(" ")}
-                          >
-                            <div className="flex flex-wrap items-center justify-center gap-2">
-                              <span>
-                                {typeof customRenderers?.[h.key] === "function"
-                                  ? customRenderers[h.key](row)
-                                  : defaultGetValue(row, h) ?? ""}
-                              </span>
-                              {warnId && headerIndex === 0 && (
-                                <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-                                  Missing ID
-                                </span>
+                        {headers.map((h, headerIndex) => {
+                          const align = colAlignClass(h, tdAlign);
+
+                          return (
+                            <td
+                              key={`${id}-${h.key}`}
+                              className={cx(
+                                "px-4 py-3 text-sm text-foreground",
+                                align,
+                                h.tdClassName
                               )}
-                            </div>
-                          </td>
-                        ))}
-
-                        {showEdit && (
-                          <td className="px-4 py-3 text-center">
-                            <ActionBtn
-                              onClick={() => {
-                                onEdit(id);
-                                onRowAction?.("edit", id, row);
-                              }}
-                              title="تعديل"
-                              tone="primary"
                             >
-                              <LexicraftIcon name="edit" size={16} />
-                            </ActionBtn>
-                          </td>
-                        )}
+                              <div className={cx("flex flex-wrap items-center gap-2", cellJustify)}>
+                                <span className="min-w-0">
+                                  {typeof customRenderers?.[h.key] === "function"
+                                    ? customRenderers[h.key](row)
+                                    : defaultGetValue(row, h) ?? ""}
+                                </span>
 
-                        {showDelete && (
-                          <td className="px-4 py-3 text-center">
-                            <ActionBtn
-                              onClick={() => {
-                                onDelete(id, row);
-                                onRowAction?.("delete", id, row);
-                              }}
-                              title="حذف"
-                              tone="danger"
-                            >
-                              <LexicraftIcon name="trash" size={16} />
-                            </ActionBtn>
-                          </td>
-                        )}
+                                {warnId && headerIndex === 0 && (
+                                  <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                                    Missing ID
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          );
+                        })}
+
+                        {renderRowActions("end", id, row)}
                       </tr>
                     );
                   })}
@@ -458,121 +604,127 @@ const TableComponent = ({
           {/* Mobile cards */}
           <div className="grid gap-3 md:hidden">
             {loading &&
-              Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, index) => (
-                <div key={`loading-card-${index}`} className="h-28 rounded-2xl skeleton-shimmer" />
+              Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, idx) => (
+                <div key={`loading-card-${idx}`} className="h-28 rounded-2xl skeleton-shimmer" />
               ))}
 
             {!loading && error && (
-              <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-                <div className="space-y-3">
-                  <div>{errorLabel}</div>
-                  {onRetry && (
-                    <button
-                      type="button"
-                      onClick={onRetry}
-                      className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive"
-                    >
-                      <LexicraftIcon name="arrow-forward" size={14} isDirectional />
-                      {retryLabel}
-                    </button>
-                  )}
-                </div>
-              </div>
+              <ErrorState label={errorLabel} onRetry={onRetry} retryLabel={retryLabel} isRTL={isRTL} />
             )}
 
             {!loading &&
               !error &&
               paginatedData.map((row, index) => {
-              const { id, isMissing } = resolveIdMeta(row, index);
-              const warnId = qaMode && isMissing;
+                const { id, isMissing } = resolveIdMeta(row, index);
+                const warnId = qaMode && isMissing;
 
-              return (
-                <div
-                  key={id}
-                  className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-foreground">
-                        {headers[0]?.text}:{" "}
-                        <span className="font-semibold">
-                          {typeof customRenderers?.[headers[0]?.key] === "function"
-                            ? customRenderers[headers[0]?.key](row)
-                            : defaultGetValue(row, headers[0]) ?? ""}
-                        </span>
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground flex items-center gap-2 justify-between">
-                        <span>ID: {id}</span>
-                        {warnId && (
-                          <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-                            Missing ID
+                const topHeader = headers[0];
+
+                return (
+                  <div
+                    key={id}
+                    className={cx(
+                      "rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur",
+                      "animate-in fade-in duration-200"
+                    )}
+                  >
+                    <div className={cx("flex items-start justify-between gap-3", isRTL ? "flex-row-reverse" : "")}>
+                      <div className="min-w-0">
+                        <p className={cx("text-sm font-bold text-foreground", isRTL ? "text-right" : "text-left")}>
+                          {topHeader?.text}:{" "}
+                          <span className="font-semibold">
+                            {typeof customRenderers?.[topHeader?.key] === "function"
+                              ? customRenderers[topHeader?.key](row)
+                              : defaultGetValue(row, topHeader) ?? ""}
                           </span>
-                        )}
-                      </p>
-                    </div>
+                        </p>
 
-                    <div className="table-actions flex shrink-0 items-center gap-2">
-                      {showView && (
-                        <ActionBtn
-                          onClick={() => {
-                            onView(id);
-                            onRowAction?.("view", id, row);
-                          }}
-                          title="عرض"
-                          tone="primary"
-                        >
-                          <LexicraftIcon name="view" size={16} />
-                        </ActionBtn>
-                      )}
-                      {showEdit && (
-                        <ActionBtn
-                          onClick={() => {
-                            onEdit(id);
-                            onRowAction?.("edit", id, row);
-                          }}
-                          title="تعديل"
-                          tone="primary"
-                        >
-                          <LexicraftIcon name="edit" size={16} />
-                        </ActionBtn>
-                      )}
-                      {showDelete && (
-                        <ActionBtn
-                          onClick={() => {
-                            onDelete(id, row);
-                            onRowAction?.("delete", id, row);
-                          }}
-                          title="حذف"
-                          tone="danger"
-                        >
-                          <LexicraftIcon name="trash" size={16} />
-                        </ActionBtn>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 grid gap-2">
-                    {headers.slice(1).map((h) => (
-                      <div key={`${id}-m-${h.key}`} className="flex items-start justify-between gap-3">
-                        <span className="text-xs font-semibold text-muted-foreground">{h.mobileLabel || h.text}</span>
-                        <span className="text-xs text-foreground text-right">
-                          {typeof customRenderers?.[h.key] === "function"
-                            ? customRenderers[h.key](row)
-                            : defaultGetValue(row, h) ?? ""}
-                        </span>
+                        <p className={cx("mt-1 text-xs text-muted-foreground flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+                          <span>ID: {id}</span>
+                          {warnId && (
+                            <span className="rounded-full border border-amber-400/50 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                              Missing ID
+                            </span>
+                          )}
+                        </p>
                       </div>
-                    ))}
+
+                      {(showView || showEdit || showDelete) && (
+                        <div className={cx("flex shrink-0 items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+                          {showView && (
+                            <ActionBtn
+                              onClick={() => {
+                                onView(id);
+                                onRowAction?.("view", id, row);
+                              }}
+                              title={viewLabel}
+                              tone="primary"
+                            >
+                              <LexicraftIcon name="view" size={16} />
+                            </ActionBtn>
+                          )}
+                          {showEdit && (
+                            <ActionBtn
+                              onClick={() => {
+                                onEdit(id);
+                                onRowAction?.("edit", id, row);
+                              }}
+                              title={editLabel}
+                              tone="primary"
+                            >
+                              <LexicraftIcon name="edit" size={16} />
+                            </ActionBtn>
+                          )}
+                          {showDelete && (
+                            <ActionBtn
+                              onClick={() => {
+                                onDelete(id, row);
+                                onRowAction?.("delete", id, row);
+                              }}
+                              title={deleteLabel}
+                              tone="danger"
+                            >
+                              <LexicraftIcon name="trash" size={16} />
+                            </ActionBtn>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-3 grid gap-2">
+                      {headers.slice(1).map((h) => (
+                        <div
+                          key={`${id}-m-${h.key}`}
+                          className={cx("flex items-start justify-between gap-3", isRTL ? "flex-row-reverse" : "")}
+                        >
+                          <span className="text-xs font-semibold text-muted-foreground">
+                            {h.mobileLabel || h.text}
+                          </span>
+                          <span className={cx("text-xs text-foreground", isRTL ? "text-right" : "text-left")}>
+                            {typeof customRenderers?.[h.key] === "function"
+                              ? customRenderers[h.key](row)
+                              : defaultGetValue(row, h) ?? ""}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
-          {Pagination}
+          <Pagination
+            isRTL={isRTL}
+            currentPage={safePage}
+            totalPages={totalPages}
+            onPrev={() => setCurrentPage((p) => clamp(p - 1, 1, totalPages))}
+            onNext={() => setCurrentPage((p) => clamp(p + 1, 1, totalPages))}
+            pageLabel={pageLabel}
+            prevLabel={prevLabel}
+            nextLabel={nextLabel}
+          />
         </>
       )}
     </section>
   );
-};
-
-export default TableComponent;
+}

@@ -125,24 +125,24 @@ class LegalSessionController extends Controller
     try {
         // Fetch the legal case with its sessions and related data
         $legalCase = LegCase::with([
-            'sessions.legalSessionType',
-            'sessions.court',
-            'sessions.lawyer',
-            'sessions.createdBy',
+            'legalSessions.legalSessionType',
+            'legalSessions.court',
+            'legalSessions.lawyer',
+            'legalSessions.createdBy',
         ])->findOrFail($legCaseId);
 
         // Return the legal case with its sessions
         return response()->json([
             'success' => true,
-            'data' => $legalCase->sessions,
-            'message' => 'Sessions for the legal case retrieved successfully.',
+            'data' => $legalCase->legalSessions,
+            'message' => 'legal sessions for the legal case retrieved successfully.',
         ], 200);
 
     } catch (\Exception $e) {
         // Handle errors gracefully
         return response()->json([
             'success' => false,
-            'message' => 'Failed to retrieve sessions for the legal case.',
+            'message' => 'Failed to retrieve legal sessions for the legal case.',
             'error' => $e->getMessage(),
         ], 500);
     }
