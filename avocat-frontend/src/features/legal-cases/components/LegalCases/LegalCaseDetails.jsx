@@ -29,6 +29,9 @@
   const LegalCaseAds = lazy(() => import('./LegalCaseTools/LegalCaseAds'));
   const LegCaseClients = lazy(() => import('./LegalCaseTools/LegalCaseClients'));
   const LegalCaseCourts = lazy(() => import('./LegalCaseTools/LegCaseCourts'));
+  const CaseDataAndReportsSection = lazy(
+    () => import('./LegalCaseTools/CaseDataAndReportsSection'),
+  );
   const AddEditLegCase = lazy(() => import('./AddEditLegCase'));
 
   /* ─── Skeleton ─── */
@@ -299,6 +302,16 @@
 
       return [
         {
+          key: 'totalReports',
+          label: t('legalCaseDetails.kpi.totalReports'),
+          value:
+            sessionsData.length +
+            (sectionsState.procedures.data || []).length +
+            (sectionsState.ads.data || []).length,
+          icon: 'briefcase',
+          accent: true,
+        },
+        {
           key: 'nextSession',
           label: t('legalCaseDetails.kpi.nextSession'),
           value: nextSession
@@ -323,7 +336,7 @@
           key: 'totalAds',
           label: t('legalCaseDetails.kpi.totalAds'),
           value: (sectionsState.ads.data || []).length,
-          icon: 'briefcase',
+          icon: 'tool',
         },
       ];
     }, [sectionsState, t, language]);
@@ -401,6 +414,22 @@
             <h3 className="text-lg font-semibold text-[hsl(var(--color-text))]">
               {t('legalCaseDetails.overview.title')}
             </h3>
+            <Suspense
+              fallback={
+                <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+                  {t('common.loading')}
+                </div>
+              }
+            >
+              <CaseDataAndReportsSection
+                legCase={legCase}
+                sessions={sectionsState.sessions.data}
+                procedures={sectionsState.procedures.data}
+                ads={sectionsState.ads.data}
+                clients={legcaseClients}
+                onOpenTab={(tab) => setActiveTab(tab)}
+              />
+            </Suspense>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {overviewCards.map((card) => (
                 <div
@@ -569,17 +598,9 @@
       legCase,
       legcaseClients,
       overviewCards,
+      sectionsState,
       procedureSignal,
       refreshSection,
-      sectionsState.ads.data,
-      sectionsState.ads.error,
-      sectionsState.ads.loading,
-      sectionsState.procedures.data,
-      sectionsState.procedures.error,
-      sectionsState.procedures.loading,
-      sectionsState.sessions.data,
-      sectionsState.sessions.error,
-      sectionsState.sessions.loading,
       sessionSignal,
       t,
     ]);
@@ -697,11 +718,11 @@
 
       <div className={["min-w-0 w-full", isRTL ? "text-right" : "text-left"].join(" ")}>
         <h1 className="text-xl md:text-2xl font-bold text-[hsl(var(--color-text))] truncate">
-          {legCase?.title || t("legalCaseDetails.titleFallback")}
+          {legCase?.slug || legCase?.id || t("legalCaseDetails.titleFallback")}
         </h1>
 
         <p className="text-sm text-[hsl(var(--color-muted))] truncate">
-          {t("legalCaseDetails.subtitle")} · {legCase?.case_sub_type?.name || "-"}
+          {legCase?.title || t("legalCaseDetails.subtitle")} · {legCase?.case_sub_type?.name || "-"}
         </p>
       </div>
     </div>
