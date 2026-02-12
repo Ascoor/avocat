@@ -394,6 +394,7 @@ const ar = {
     titleFallback: "تفاصيل القضية",
     subtitle: "لمحة عن القضية",
     kpi: {
+      totalReports: "إجمالي التقارير",
       nextSession: "الجلسة القادمة",
       noUpcoming: "لا توجد جلسات قادمة",
       totalSessions: "إجمالي الجلسات",

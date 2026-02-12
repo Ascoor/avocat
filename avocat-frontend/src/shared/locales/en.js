@@ -395,6 +395,7 @@ const en = {
     subtitle: "Case overview",
     
     kpi: {
+      totalReports: "Total reports",
       nextSession: "Next Session",
       noUpcoming: "No upcoming sessions",
       totalSessions: "Total sessions",
