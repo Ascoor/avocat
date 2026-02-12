@@ -4,6 +4,10 @@ import TableSkeleton from './TableSkeleton'; // Your skeleton loader for the fal
 
 const LegalCaseOverview = ({ legCase, sectionsState, legcaseClients }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const sessionsCount = sectionsState?.sessions?.data?.length ?? 0;
+  const proceduresCount = sectionsState?.procedures?.data?.length ?? 0;
+  const adsCount = sectionsState?.ads?.data?.length ?? 0;
+  const clientsCount = legcaseClients?.length ?? 0;
 
   return (
     <div>
@@ -16,25 +20,25 @@ const LegalCaseOverview = ({ legCase, sectionsState, legcaseClients }) => {
               {
                 key: 'sessions',
                 label: 'Sessions',
-                value: sectionsState.sessions.data.length,
+                value: sessionsCount,
                 icon: 'calendar',
               },
               {
                 key: 'procedures',
                 label: 'Procedures',
-                value: sectionsState.procedures.data.length,
+                value: proceduresCount,
                 icon: 'document',
               },
               {
                 key: 'clients',
                 label: 'Clients',
-                value: legcaseClients.length,
+                value: clientsCount,
                 icon: 'users',
               },
               {
                 key: 'ads',
                 label: 'Ads',
-                value: sectionsState.ads.data.length,
+                value: adsCount,
                 icon: 'megaphone',
               },
             ]}
