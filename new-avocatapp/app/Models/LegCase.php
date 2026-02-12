@@ -83,6 +83,14 @@ class LegCase extends Model
         return $this->hasMany(LegalAd::class);
     }
 
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class, 'invoices', 'leg_case_id', 'service_id')
+            ->withPivot(['invoice_number', 'status', 'issue_date', 'due_date', 'total_amount'])
+            ->whereNotNull('service_id')
+            ->distinct();
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
