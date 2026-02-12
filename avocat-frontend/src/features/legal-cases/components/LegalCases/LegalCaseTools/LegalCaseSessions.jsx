@@ -185,7 +185,7 @@ const LegalCaseSessions = ({
 
       {/* ✅ TableComponent يتعامل مع: loading/error/empty/pagination/search/sort/mobile */}
       <TableComponent
-        title={t('legalCaseDetails.sessions.tableTitle', { defaultValue: '' }) || undefined}
+        title={t('legalCaseDetails.sessions.title', { defaultValue: '' }) || undefined}
         data={sessions}
         headers={headers}
         customRenderers={customRenderers}

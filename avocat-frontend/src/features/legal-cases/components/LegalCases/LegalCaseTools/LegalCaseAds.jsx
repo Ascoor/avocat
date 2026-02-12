@@ -185,6 +185,7 @@ const LegalCaseAds = ({
       </header>
 
       <TableComponent
+             title={t('legalCaseDetails.ads.title', { defaultValue: '' }) || undefined}
         data={localAds}
         headers={headers}
         customRenderers={customRenderers}

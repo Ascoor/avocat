@@ -172,6 +172,7 @@ const LegalCaseProcedures = ({
       </header>
 
       <TableComponent
+             title={t('legalCaseDetails.procedures.title', { defaultValue: '' }) || undefined}
         data={procedures}
         headers={headers}
         customRenderers={customRenderers}

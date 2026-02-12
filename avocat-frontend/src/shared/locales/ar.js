@@ -272,6 +272,14 @@ const ar = {
   legalCaseDetails: {
     titleFallback: "تفاصيل القضية",
     subtitle: "لمحة عن القضية",
+    kpi: {
+      nextSession: "الجلسة القادمة",
+      noUpcoming: "لا توجد جلسات قادمة",
+      totalSessions: "إجمالي الجلسات",
+      totalProcedures: "إجمالي الإجراءات",
+      totalAds: "إجمالي الإعلانات",
+    },
+  
     overview: {
       title: "نظرة عامة",
       caseNumber: "رقم الملف",
@@ -283,6 +291,7 @@ const ar = {
       updatedJustNow: "تم التحديث للتو",
     },
     tabs: {
+      overview: "نظرة عامة",
       clients: "الموكلون",
       courts: "المحاكم",
       procedures: "الإجراءات",

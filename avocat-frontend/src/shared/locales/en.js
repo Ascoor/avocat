@@ -272,8 +272,15 @@ const en = {
   legalCaseDetails: {
     titleFallback: "Case details",
     subtitle: "Case overview",
+    
+    kpi: {
+      nextSession: "Next Session",
+      totalSessions: "Total sessions",
+      totalProcedures: "Total procedures",
+      totalAds: "Total ads",
+      },
     overview: {
-      title: "Overview",
+      title: "overview",
       caseNumber: "Case number",
       status: "Status",
       clients: "Clients",
@@ -281,6 +288,7 @@ const en = {
       createdDate: "Created date",
       unknown: "Unknown",
       updatedJustNow: "Updated just now",
+      
     },
     tabs: {
       clients: "Clients",
