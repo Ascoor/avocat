@@ -16,7 +16,9 @@
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx}\"",
+    "test": "node --test tests/**/*.test.mjs",
+    "test:watch": "vitest"
   },
   "keywords": [
     "react",

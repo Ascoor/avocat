@@ -394,6 +394,11 @@ export default function LegCaseDetails() {
     [t],
   );
 
+  const orderedTabs = useMemo(() => (isRTL ? [...tabDef].reverse() : tabDef), [
+    isRTL,
+    tabDef,
+  ]);
+
   const renderActiveTabContent = useCallback(() => {
     if (activeTab === 'overview') {
       return (
@@ -672,7 +677,7 @@ export default function LegCaseDetails() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="sticky top-2 z-10 rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))]/95 p-5 md:p-6 shadow-lg backdrop-blur-sm"
+        className="sticky top-4 z-20 min-h-[132px] rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))]/90 p-5 md:p-6 shadow-lg backdrop-blur-md"
       >
         <div className={`flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
           {/* Left: Title & metadata */}
@@ -708,41 +713,46 @@ export default function LegCaseDetails() {
           </div>
 
           {/* Right: Actions */}
-          <div className={`flex flex-wrap items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <button
-              onClick={() => setEditModalOpen(true)}
-              className="pressable inline-flex items-center gap-2 rounded-full border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] px-4 py-2 text-sm font-semibold transition hover:border-[hsl(var(--color-primary))]"
-            >
-              <LexicraftIcon name="tool" size={16} />
-              {t('legalCaseDetails.actions.edit')}
-            </button>
-            <button
-              onClick={handleDeleteCase}
-              className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive"
-            >
-              <LexicraftIcon name="shield" size={16} />
-              {t('legalCaseDetails.actions.delete')}
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('procedures');
-                setProcedureSignal((p) => p + 1);
-              }}
-              className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
-            >
-              <LexicraftIcon name="tool" size={16} />
-              {t('legalCaseDetails.actions.addProcedure')}
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('sessions');
-                setSessionSignal((p) => p + 1);
-              }}
-              className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
-            >
-              <LexicraftIcon name="calendar" size={16} />
-              {t('legalCaseDetails.actions.addSession')}
-            </button>
+          <div className={`flex flex-col gap-2 ${isRTL ? 'items-start' : 'items-end'}`}>
+            <div className={`flex flex-wrap items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <button
+                onClick={() => {
+                  setActiveTab('procedures');
+                  setProcedureSignal((p) => p + 1);
+                }}
+                className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
+              >
+                <LexicraftIcon name="tool" size={16} />
+                {t('legalCaseDetails.actions.addProcedure')}
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('sessions');
+                  setSessionSignal((p) => p + 1);
+                }}
+                className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
+              >
+                <LexicraftIcon name="calendar" size={16} />
+                {t('legalCaseDetails.actions.addSession')}
+              </button>
+            </div>
+
+            <div className={`flex flex-wrap items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <button
+                onClick={() => setEditModalOpen(true)}
+                className="pressable inline-flex items-center gap-2 rounded-full border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] px-4 py-2 text-sm font-semibold transition hover:border-[hsl(var(--color-primary))]"
+              >
+                <LexicraftIcon name="tool" size={16} />
+                {t('legalCaseDetails.actions.edit')}
+              </button>
+              <button
+                onClick={handleDeleteCase}
+                className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm font-semibold text-destructive"
+              >
+                <LexicraftIcon name="shield" size={16} />
+                {t('legalCaseDetails.actions.delete')}
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>
@@ -761,11 +771,11 @@ export default function LegCaseDetails() {
         className="space-y-0"
       >
         <TabsList className={`flex w-full flex-wrap gap-1.5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 p-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          {tabDef.map((tab) => (
+          {orderedTabs.map((tab) => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="relative flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-[hsl(var(--color-muted))] transition-all data-[state=active]:bg-[hsl(var(--color-surface))] data-[state=active]:text-[hsl(var(--color-primary))] data-[state=active]:shadow-sm"
+              className="relative flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-[hsl(var(--color-muted))] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--color-primary))] focus-visible:ring-offset-1 data-[state=active]:bg-[hsl(var(--color-surface))] data-[state=active]:text-[hsl(var(--color-primary))] data-[state=active]:shadow-sm"
             >
               <LexicraftIcon name={tab.icon} size={16} />
               <span className="hidden sm:inline">{tab.label}</span>

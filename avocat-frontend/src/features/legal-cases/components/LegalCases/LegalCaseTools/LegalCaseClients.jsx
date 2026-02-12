@@ -264,6 +264,7 @@ export default function LegalCaseClients({
       />
 
       <TableComponent
+        actionsMode="single"
         data={legcaseClients}
         headers={headers}
         isRTL={isRTL}

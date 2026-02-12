@@ -34,6 +34,7 @@ const CourtList = ({ courts = [], handleDelete }) => {
 
   return (
     <TableComponent
+        actionsMode="single"
       data={courts}
       headers={headers}
       isRTL={isRTL}

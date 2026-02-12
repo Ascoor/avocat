@@ -162,6 +162,7 @@ const LegalCaseProcedures = ({
       />
 
       <TableComponent
+        actionsMode="single"
              title={t('legalCaseDetails.procedures.title', { defaultValue: '' }) || undefined}
         data={procedures}
         headers={headers}

@@ -1,5 +1,11 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
+import {
+  dispatchTableAction,
+  getActionColumnsCount,
+  getTableDirectionMeta,
+  resolveActionsMode,
+} from "./tableActions.helpers";
 
 /**
  * Header:
@@ -135,14 +141,17 @@ function Pagination({
   nextLabel,
 }) {
   return (
-    <div className="mt-4 flex items-center justify-between gap-3">
+    <div className={cx("mt-4 flex items-center justify-between gap-3", isRTL ? "flex-row-reverse" : "")}>
       <button
         type="button"
         onClick={onPrev}
         disabled={currentPage <= 1}
         className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
       >
-        {prevLabel}
+        <span className="inline-flex items-center gap-1">
+          <LexicraftIcon name="arrow-forward" size={14} isDirectional dir={isRTL ? "rtl" : "ltr"} />
+          {prevLabel}
+        </span>
       </button>
 
       <span className="text-sm text-muted-foreground">
@@ -155,7 +164,10 @@ function Pagination({
         disabled={currentPage >= totalPages}
         className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
       >
-        {nextLabel}
+        <span className="inline-flex items-center gap-1">
+          {nextLabel}
+          <LexicraftIcon name="arrow-forward" size={14} isDirectional dir={isRTL ? "ltr" : "rtl"} />
+        </span>
       </button>
     </div>
   );
@@ -170,6 +182,7 @@ export default function TableComponent({
   onEdit,
   onDelete,
   onRowAction,
+  actionsMode = "separate",
 
   // add
   onAdd,
@@ -209,11 +222,10 @@ export default function TableComponent({
   prevLabel = "سابق",
   nextLabel = "التالي",
   pageLabel = "الصفحة",
+  actionsLabel,
 }) {
-  const dir = isRTL ? "rtl" : "ltr";
-  const thAlign = isRTL ? "text-right" : "text-left";
-  const tdAlign = isRTL ? "text-right" : "text-left";
-  const cellJustify = isRTL ? "justify-end" : "justify-start";
+  const { dir, thAlign, tdAlign, cellJustify } = getTableDirectionMeta(isRTL);
+  const resolvedActionsLabel = actionsLabel || (isRTL ? "الإجراءات" : "Actions");
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -228,6 +240,7 @@ export default function TableComponent({
   const showView = canView && typeof onView === "function";
   const showEdit = canUpdate && typeof onEdit === "function";
   const showDelete = canDelete && typeof onDelete === "function";
+  const resolvedActionsMode = resolveActionsMode(actionsMode);
 
   const searchableHeaders = useMemo(
     () => headers.filter((h) => h?.key && h.searchable !== false && h.key !== "actions"),
@@ -324,7 +337,10 @@ export default function TableComponent({
     return (
       <button
         type="button"
-        onClick={onClick}
+        onClick={(event) => {
+          event.stopPropagation();
+          onClick?.(event);
+        }}
         title={tt}
         className={cx(
           "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70",
@@ -338,13 +354,28 @@ export default function TableComponent({
     );
   };
 
-  const colSpan = headers.length + Number(showView) + Number(showEdit) + Number(showDelete);
+  const actionsCount = Number(showView) + Number(showEdit) + Number(showDelete);
+  const actionColumnsCount = getActionColumnsCount({
+    showView,
+    showEdit,
+    showDelete,
+    actionsMode: resolvedActionsMode,
+  });
+  const colSpan = headers.length + actionColumnsCount;
   const showEmptyState = !loading && !error && filteredData.length === 0;
 
   // Actions columns order: LTR -> actions first, RTL -> actions last (so they appear on the right)
   const renderHeadActions = (pos) => {
+    if (!actionsCount) return null;
     if (pos === "start") {
       if (isRTL) return null;
+      if (resolvedActionsMode === "single") {
+        return (
+          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+            {resolvedActionsLabel}
+          </th>
+        );
+      }
       return (
         <>
           {showView && (
@@ -368,6 +399,13 @@ export default function TableComponent({
 
     // end
     if (!isRTL) return null;
+    if (resolvedActionsMode === "single") {
+      return (
+        <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
+          {resolvedActionsLabel}
+        </th>
+      );
+    }
     return (
       <>
         {showView && (
@@ -389,14 +427,12 @@ export default function TableComponent({
     );
   };
 
-  const renderRowActions = (pos, id, row) => {
-    const btns = (
+  const renderActionButtons = (id, row) => (
       <div className="flex items-center justify-center gap-2">
         {showView && (
           <ActionBtn
             onClick={() => {
-              onView(id);
-              onRowAction?.("view", id, row);
+              dispatchTableAction({ action: "view", id, row, onView, onEdit, onDelete, onRowAction });
             }}
             title={viewLabel}
             tone="primary"
@@ -407,8 +443,7 @@ export default function TableComponent({
         {showEdit && (
           <ActionBtn
             onClick={() => {
-              onEdit(id);
-              onRowAction?.("edit", id, row);
+              dispatchTableAction({ action: "edit", id, row, onView, onEdit, onDelete, onRowAction });
             }}
             title={editLabel}
             tone="primary"
@@ -419,8 +454,7 @@ export default function TableComponent({
         {showDelete && (
           <ActionBtn
             onClick={() => {
-              onDelete(id, row);
-              onRowAction?.("delete", id, row);
+              dispatchTableAction({ action: "delete", id, row, onView, onEdit, onDelete, onRowAction });
             }}
             title={deleteLabel}
             tone="danger"
@@ -431,12 +465,112 @@ export default function TableComponent({
       </div>
     );
 
+  const renderRowActions = (pos, id, row) => {
+    if (!actionsCount) return null;
+    const btns = renderActionButtons(id, row);
+
     if (pos === "start") {
       if (isRTL) return null;
-      return <td className="px-4 py-3 text-center">{btns}</td>;
+      if (resolvedActionsMode === "single") {
+        return <td className="px-4 py-3 text-center">{btns}</td>;
+      }
+      return (
+        <>
+          {showView && (
+            <td className="px-4 py-3 text-center">
+              <ActionBtn
+                onClick={() => {
+                  onView(id);
+                  onRowAction?.("view", id, row);
+                }}
+                title={viewLabel}
+                tone="primary"
+              >
+                <LexicraftIcon name="view" size={16} />
+              </ActionBtn>
+            </td>
+          )}
+          {showEdit && (
+            <td className="px-4 py-3 text-center">
+              <ActionBtn
+                onClick={() => {
+                  onEdit(id);
+                  onRowAction?.("edit", id, row);
+                }}
+                title={editLabel}
+                tone="primary"
+              >
+                <LexicraftIcon name="edit" size={16} />
+              </ActionBtn>
+            </td>
+          )}
+          {showDelete && (
+            <td className="px-4 py-3 text-center">
+              <ActionBtn
+                onClick={() => {
+                  onDelete(id, row);
+                  onRowAction?.("delete", id, row);
+                }}
+                title={deleteLabel}
+                tone="danger"
+              >
+                <LexicraftIcon name="trash" size={16} />
+              </ActionBtn>
+            </td>
+          )}
+        </>
+      );
     }
     if (!isRTL) return null;
-    return <td className="px-4 py-3 text-center">{btns}</td>;
+    if (resolvedActionsMode === "single") {
+      return <td className="px-4 py-3 text-center">{btns}</td>;
+    }
+    return (
+      <>
+        {showView && (
+          <td className="px-4 py-3 text-center">
+            <ActionBtn
+              onClick={() => {
+                onView(id);
+                onRowAction?.("view", id, row);
+              }}
+              title={viewLabel}
+              tone="primary"
+            >
+              <LexicraftIcon name="view" size={16} />
+            </ActionBtn>
+          </td>
+        )}
+        {showEdit && (
+          <td className="px-4 py-3 text-center">
+            <ActionBtn
+              onClick={() => {
+                onEdit(id);
+                onRowAction?.("edit", id, row);
+              }}
+              title={editLabel}
+              tone="primary"
+            >
+              <LexicraftIcon name="edit" size={16} />
+            </ActionBtn>
+          </td>
+        )}
+        {showDelete && (
+          <td className="px-4 py-3 text-center">
+            <ActionBtn
+              onClick={() => {
+                onDelete(id, row);
+                onRowAction?.("delete", id, row);
+              }}
+              title={deleteLabel}
+              tone="danger"
+            >
+              <LexicraftIcon name="trash" size={16} />
+            </ActionBtn>
+          </td>
+        )}
+      </>
+    );
   };
 
   const colAlignClass = (h, fallback) => {
@@ -461,7 +595,7 @@ export default function TableComponent({
         </div>
 
         <div className="w-full sm:w-[360px]">
-          <div className="relative">
+          <div className="relative" dir={dir}>
             <span
               className={cx(
                 "pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground",
@@ -602,7 +736,7 @@ export default function TableComponent({
           </div>
 
           {/* Mobile cards */}
-          <div className="grid gap-3 md:hidden">
+          <div className="grid gap-3 md:hidden" dir={dir}>
             {loading &&
               Array.from({ length: Math.min(itemsPerPage, 6) }).map((_, idx) => (
                 <div key={`loading-card-${idx}`} className="h-28 rounded-2xl skeleton-shimmer" />
@@ -624,8 +758,8 @@ export default function TableComponent({
                   <div
                     key={id}
                     className={cx(
-                      "rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur",
-                      "animate-in fade-in duration-200"
+                      "rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur transition",
+                      "hover:-translate-y-0.5 hover:shadow-md animate-in fade-in duration-200"
                     )}
                   >
                     <div className={cx("flex items-start justify-between gap-3", isRTL ? "flex-row-reverse" : "")}>
