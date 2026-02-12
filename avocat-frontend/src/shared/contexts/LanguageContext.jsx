@@ -1,7 +1,20 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { getLanguage, setLanguage as setStoredLanguage, t as translate } from '@shared/i18n';
+import {
+  getLanguage,
+  setLanguage as setStoredLanguage,
+  t as translate,
+} from '@shared/i18n';
 
 const LanguageContext = createContext(null);
+
+const humanizeTranslationKey = (key) => {
+  if (typeof key !== 'string') return '';
+  const lastSegment = key.split('.').pop() || key;
+  return lastSegment
+    .replace(/[_-]+/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .trim();
+};
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => getLanguage());
@@ -19,12 +32,26 @@ export const LanguageProvider = ({ children }) => {
 
   const value = useMemo(() => {
     const t = (key, options = {}) => {
-      return translate(key, options);
+      const translatedValue = translate(key, options);
+      if (typeof translatedValue !== 'string' || translatedValue !== key) {
+        return translatedValue;
+      }
+
+      if (
+        typeof options === 'object' &&
+        'fallback' in options &&
+        options.fallback
+      ) {
+        return options.fallback;
+      }
+
+      return humanizeTranslationKey(key);
     };
 
     return {
       language,
-      setLanguage: (nextLanguage) => setLanguage(setStoredLanguage(nextLanguage)),
+      setLanguage: (nextLanguage) =>
+        setLanguage(setStoredLanguage(nextLanguage)),
       direction,
       isRTL,
       t,

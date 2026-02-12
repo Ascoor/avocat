@@ -1,8 +1,15 @@
-import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   deleteLegCase,
@@ -11,7 +18,10 @@ import {
 } from '@shared/services/api/legalCases';
 import { getProceduresByLegCaseId } from '@shared/services/api/procedures';
 import { getSessionsByLegCaseId } from '@shared/services/api/sessions';
-import { fetchWithCaseCache, invalidateCaseFetchCache } from '@shared/utils/caseFetchCache';
+import {
+  fetchWithCaseCache,
+  invalidateCaseFetchCache,
+} from '@shared/utils/caseFetchCache';
 import { formatDate } from '@shared/i18n/formatters';
 
 const Procedure = lazy(() => import('./LegalCaseTools/LegalCaseProcedures'));
@@ -25,7 +35,10 @@ const AddEditLegCase = lazy(() => import('./AddEditLegCase'));
 const OverviewSkeleton = () => (
   <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     {Array.from({ length: 4 }).map((_, i) => (
-      <div key={i} className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-5">
+      <div
+        key={i}
+        className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-5"
+      >
         <div className="h-4 w-1/2 rounded-full skeleton-shimmer" />
         <div className="mt-3 h-7 w-3/4 rounded-full skeleton-shimmer" />
         <div className="mt-4 h-3 w-1/3 rounded-full skeleton-shimmer" />
@@ -52,25 +65,33 @@ const KpiCard = ({ icon, label, value, accent = false }) => (
     className={`
       relative overflow-hidden rounded-2xl border p-5 shadow-sm transition-all duration-200
       hover:-translate-y-0.5 hover:shadow-md
-      ${accent
-        ? 'border-[hsl(var(--color-primary))]/30 bg-[hsl(var(--color-primary))]/5'
-        : 'border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))]'
+      ${
+        accent
+          ? 'border-[hsl(var(--color-primary))]/30 bg-[hsl(var(--color-primary))]/5'
+          : 'border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))]'
       }
     `}
   >
     <div className="flex items-center justify-between">
-      <p className="text-sm font-medium text-[hsl(var(--color-muted))]">{label}</p>
-      <span className={`
+      <p className="text-sm font-medium text-[hsl(var(--color-muted))]">
+        {label}
+      </p>
+      <span
+        className={`
         inline-flex h-10 w-10 items-center justify-center rounded-xl
-        ${accent
-          ? 'bg-[hsl(var(--color-primary))]/15 text-[hsl(var(--color-primary))]'
-          : 'bg-[hsl(var(--color-surface-2))] text-[hsl(var(--color-muted))]'
+        ${
+          accent
+            ? 'bg-[hsl(var(--color-primary))]/15 text-[hsl(var(--color-primary))]'
+            : 'bg-[hsl(var(--color-surface-2))] text-[hsl(var(--color-muted))]'
         }
-      `}>
+      `}
+      >
         <LexicraftIcon name={icon} size={20} />
       </span>
     </div>
-    <div className="mt-3 text-2xl font-bold text-[hsl(var(--color-text))]">{value}</div>
+    <div className="mt-3 text-2xl font-bold text-[hsl(var(--color-text))]">
+      {value}
+    </div>
   </motion.div>
 );
 
@@ -78,32 +99,39 @@ const KpiCard = ({ icon, label, value, accent = false }) => (
 const StatusBadge = ({ status }) => {
   const colorMap = {
     open: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
-    closed: 'bg-[hsl(var(--color-muted))]/15 text-[hsl(var(--color-muted))] border-[hsl(var(--color-border))]',
+    closed:
+      'bg-[hsl(var(--color-muted))]/15 text-[hsl(var(--color-muted))] border-[hsl(var(--color-border))]',
     pending: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
     in_progress: 'bg-blue-500/15 text-blue-600 border-blue-500/30',
   };
   const cls = colorMap[status] || colorMap.pending;
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${cls}`}
+    >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {status || '-'}
     </span>
   );
 };
 
-/* ─── Tab Wrapper with animation ─── */
-const AnimatedTabContent = ({ children, value }) => (
-  <TabsContent value={value} className="mt-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-    <motion.div
-      key={value}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.25 }}
-    >
-      {children}
-    </motion.div>
-  </TabsContent>
+const SectionStateMessage = ({ title, message, onRetry, retryLabel }) => (
+  <div className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/30 p-4">
+    <h4 className="text-sm font-semibold text-[hsl(var(--color-text))]">
+      {title}
+    </h4>
+    <p className="mt-1 text-sm text-[hsl(var(--color-muted))]">{message}</p>
+    {onRetry && (
+      <button
+        type="button"
+        onClick={onRetry}
+        className="pressable mt-3 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--color-border))] px-4 py-2 text-xs font-semibold"
+      >
+        <LexicraftIcon name="arrow-forward" size={14} />
+        {retryLabel}
+      </button>
+    )}
+  </div>
 );
 
 /* ─── Main Component ─── */
@@ -126,7 +154,8 @@ export default function LegCaseDetails() {
   });
 
   const logFetch = useCallback((label, payload) => {
-    if (import.meta.env?.DEV) console.info('[LegalCaseDetails]', label, payload || '');
+    if (import.meta.env?.DEV)
+      console.info('[LegalCaseDetails]', label, payload || '');
   }, []);
 
   const updateSectionState = useCallback((key, updater) => {
@@ -179,7 +208,10 @@ export default function LegCaseDetails() {
       updateSectionState(key, (p) => ({ ...p, loading: true, error: '' }));
       try {
         logFetch('fetch-section', { key, id });
-        const data = await fetchWithCaseCache({ key: `legal-case:${id}:${key}`, fetcher });
+        const data = await fetchWithCaseCache({
+          key: `legal-case:${id}:${key}`,
+          fetcher,
+        });
         updateSectionState(key, { data, loading: false, error: '' });
       } catch (err) {
         updateSectionState(key, (p) => ({
@@ -193,24 +225,29 @@ export default function LegCaseDetails() {
   );
 
   const fetchProcedures = useCallback(
-    () => fetchSection('procedures', async () => {
-      const r = await getProceduresByLegCaseId(id);
-      return r.data || [];
-    }),
+    () =>
+      fetchSection('procedures', async () => {
+        const r = await getProceduresByLegCaseId(id);
+        return r.data || [];
+      }),
     [fetchSection, id],
   );
   const fetchSessions = useCallback(
-    () => fetchSection('sessions', async () => {
-      const r = await getSessionsByLegCaseId(id);
-      return r.data?.data || [];
-    }),
+    () =>
+      fetchSection('sessions', async () => {
+        const r = await getSessionsByLegCaseId(id);
+        return r.data?.data || [];
+      }),
     [fetchSection, id],
   );
   const fetchAds = useCallback(
-    () => fetchSection('ads', async () => {
-      const r = await getLegalAdsByLegCaseId(id);
-      return r.data || [];
-    }),
+    () =>
+      fetchSection('ads', async () => {
+        const r = await getLegalAdsByLegCaseId(id);
+        if (Array.isArray(r.data)) return r.data;
+        if (Array.isArray(r.data?.data)) return r.data.data;
+        return [];
+      }),
     [fetchSection, id],
   );
 
@@ -219,12 +256,18 @@ export default function LegCaseDetails() {
     await Promise.allSettled([fetchProcedures(), fetchSessions(), fetchAds()]);
   }, [fetchProcedures, fetchSessions, fetchAds, id]);
 
-  useEffect(() => { fetchLegCase(); }, [fetchLegCase]);
-  useEffect(() => { if (legCase) fetchSectionsParallel(); }, [legCase, fetchSectionsParallel]);
+  useEffect(() => {
+    fetchLegCase();
+  }, [fetchLegCase]);
+  useEffect(() => {
+    if (legCase) fetchSectionsParallel();
+  }, [legCase, fetchSectionsParallel]);
 
   const handleDeleteCase = async () => {
     if (!id) return;
-    const confirmed = window.confirm(t('legalCaseDetails.actions.confirmDelete'));
+    const confirmed = window.confirm(
+      t('legalCaseDetails.actions.confirmDelete'),
+    );
     if (!confirmed) return;
     try {
       await deleteLegCase(id);
@@ -314,15 +357,229 @@ export default function LegCaseDetails() {
 
   const tabDef = useMemo(
     () => [
-      { value: 'overview', label: t('legalCaseDetails.tabs.overview'), icon: 'view' },
-      { value: 'clients', label: t('legalCaseDetails.tabs.clients'), icon: 'users' },
-      { value: 'courts', label: t('legalCaseDetails.tabs.courts'), icon: 'court' },
-      { value: 'procedures', label: t('legalCaseDetails.tabs.procedures'), icon: 'document' },
-      { value: 'sessions', label: t('legalCaseDetails.tabs.sessions'), icon: 'calendar' },
-      { value: 'ads', label: t('legalCaseDetails.tabs.ads'), icon: 'briefcase' },
+      {
+        value: 'overview',
+        label: t('legalCaseDetails.tabs.overview'),
+        icon: 'view',
+      },
+      {
+        value: 'clients',
+        label: t('legalCaseDetails.tabs.clients'),
+        icon: 'users',
+      },
+      {
+        value: 'courts',
+        label: t('legalCaseDetails.tabs.courts'),
+        icon: 'court',
+      },
+      {
+        value: 'procedures',
+        label: t('legalCaseDetails.tabs.procedures'),
+        icon: 'document',
+      },
+      {
+        value: 'sessions',
+        label: t('legalCaseDetails.tabs.sessions'),
+        icon: 'calendar',
+      },
+      {
+        value: 'ads',
+        label: t('legalCaseDetails.tabs.ads'),
+        icon: 'briefcase',
+      },
     ],
     [t],
   );
+
+  const renderActiveTabContent = useCallback(() => {
+    if (activeTab === 'overview') {
+      return (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold text-[hsl(var(--color-text))]">
+            {t('legalCaseDetails.overview.title')}
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {overviewCards.map((card) => (
+              <div
+                key={card.key}
+                className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/30 p-4 transition hover:shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-[hsl(var(--color-muted))]">
+                    {card.label}
+                  </p>
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--color-primary))]/10 text-[hsl(var(--color-primary))]">
+                    <LexicraftIcon name={card.icon} size={16} />
+                  </span>
+                </div>
+                <div className="mt-2 text-xl font-bold text-[hsl(var(--color-text))]">
+                  {card.value}
+                </div>
+              </div>
+            ))}
+          </div>
+          {legCase?.description && (
+            <div className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/20 p-4">
+              <p className="text-sm leading-relaxed text-[hsl(var(--color-text))]">
+                {legCase.description}
+              </p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (activeTab === 'clients') {
+      return (
+        <Suspense
+          fallback={
+            <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+              {t('common.loading')}
+            </div>
+          }
+        >
+          <LegCaseClients
+            legCaseId={id}
+            fetchLegcaseClients={fetchLegCase}
+            legcaseClients={legcaseClients}
+          />
+        </Suspense>
+      );
+    }
+
+    if (activeTab === 'courts') {
+      return (
+        <Suspense
+          fallback={
+            <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+              {t('common.loading')}
+            </div>
+          }
+        >
+          <LegalCaseCourts legCase={legCase} fetchLegCase={fetchLegCase} />
+        </Suspense>
+      );
+    }
+
+    if (activeTab === 'procedures') {
+      return (
+        <div className="space-y-4">
+          {sectionsState.procedures.error &&
+            !sectionsState.procedures.loading && (
+              <SectionStateMessage
+                title={t('legalCaseDetails.procedures.title')}
+                message={sectionsState.procedures.error}
+                onRetry={() => refreshSection('procedures')}
+                retryLabel={t('legalCaseDetails.actions.retry')}
+              />
+            )}
+          <Suspense
+            fallback={
+              <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+                {t('common.loading')}
+              </div>
+            }
+          >
+            <Procedure
+              legCaseId={id}
+              openAddSignal={procedureSignal}
+              procedures={sectionsState.procedures.data}
+              loading={sectionsState.procedures.loading}
+              error={sectionsState.procedures.error}
+              onRefresh={() => refreshSection('procedures')}
+            />
+          </Suspense>
+        </div>
+      );
+    }
+
+    if (activeTab === 'sessions') {
+      return (
+        <div className="space-y-4">
+          {sectionsState.sessions.error && !sectionsState.sessions.loading && (
+            <SectionStateMessage
+              title={t('legalCaseDetails.sessions.title')}
+              message={sectionsState.sessions.error}
+              onRetry={() => refreshSection('sessions')}
+              retryLabel={t('legalCaseDetails.actions.retry')}
+            />
+          )}
+          <Suspense
+            fallback={
+              <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+                {t('common.loading')}
+              </div>
+            }
+          >
+            <LegalSession
+              legCaseId={id}
+              openAddSignal={sessionSignal}
+              sessions={sectionsState.sessions.data}
+              loading={sectionsState.sessions.loading}
+              error={sectionsState.sessions.error}
+              onRefresh={() => refreshSection('sessions')}
+            />
+          </Suspense>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        {sectionsState.ads.error && !sectionsState.ads.loading && (
+          <SectionStateMessage
+            title={t('legalCaseDetails.ads.title')}
+            message={sectionsState.ads.error}
+            onRetry={() => refreshSection('ads')}
+            retryLabel={t('legalCaseDetails.actions.retry')}
+          />
+        )}
+        {!sectionsState.ads.loading &&
+          !sectionsState.ads.error &&
+          !sectionsState.ads.data?.length && (
+            <SectionStateMessage
+              title={t('legalCaseDetails.ads.title')}
+              message={t('legalCaseDetails.ads.empty')}
+            />
+          )}
+        <Suspense
+          fallback={
+            <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+              {t('common.loading')}
+            </div>
+          }
+        >
+          <LegalCaseAds
+            legCaseId={id}
+            legalAds={sectionsState.ads.data}
+            loading={sectionsState.ads.loading}
+            error={sectionsState.ads.error}
+            onRefresh={() => refreshSection('ads')}
+          />
+        </Suspense>
+      </div>
+    );
+  }, [
+    activeTab,
+    fetchLegCase,
+    id,
+    legCase,
+    legcaseClients,
+    overviewCards,
+    procedureSignal,
+    refreshSection,
+    sectionsState.ads.data,
+    sectionsState.ads.error,
+    sectionsState.ads.loading,
+    sectionsState.procedures.data,
+    sectionsState.procedures.error,
+    sectionsState.procedures.loading,
+    sectionsState.sessions.data,
+    sectionsState.sessions.error,
+    sectionsState.sessions.loading,
+    sessionSignal,
+    t,
+  ]);
 
   /* ─── States ─── */
   if (loading) return <PageSkeleton />;
@@ -341,10 +598,18 @@ export default function LegCaseDetails() {
           <div className="text-lg font-semibold text-destructive">{error}</div>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
-              onClick={() => { invalidateCaseFetchCache(`legal-case:${id}`); fetchLegCase(); }}
+              onClick={() => {
+                invalidateCaseFetchCache(`legal-case:${id}`);
+                fetchLegCase();
+              }}
               className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-[hsl(var(--color-surface))] px-5 py-2.5 text-sm font-semibold"
             >
-              <LexicraftIcon name="arrow-forward" size={18} isDirectional dir={isRTL ? 'rtl' : 'ltr'} />
+              <LexicraftIcon
+                name="arrow-forward"
+                size={18}
+                isDirectional
+                dir={isRTL ? 'rtl' : 'ltr'}
+              />
               {t('legalCaseDetails.actions.retry')}
             </button>
             <button
@@ -363,13 +628,23 @@ export default function LegCaseDetails() {
     return (
       <div className="max-w-5xl mx-auto p-4 md:p-6">
         <div className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-8 text-center">
-          <div className="text-lg font-semibold text-foreground">{t('legalCaseDetails.errors.empty')}</div>
+          <div className="text-lg font-semibold text-foreground">
+            {t('legalCaseDetails.errors.empty')}
+          </div>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <button
-              onClick={() => { invalidateCaseFetchCache(`legal-case:${id}`); fetchLegCase(); }}
+              onClick={() => {
+                invalidateCaseFetchCache(`legal-case:${id}`);
+                fetchLegCase();
+              }}
               className="pressable inline-flex items-center gap-2 rounded-full border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold"
             >
-              <LexicraftIcon name="arrow-forward" size={18} isDirectional dir={isRTL ? 'rtl' : 'ltr'} />
+              <LexicraftIcon
+                name="arrow-forward"
+                size={18}
+                isDirectional
+                dir={isRTL ? 'rtl' : 'ltr'}
+              />
               {t('legalCaseDetails.actions.retry')}
             </button>
             <button
@@ -385,7 +660,10 @@ export default function LegCaseDetails() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+    <div
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className={`max-w-7xl mx-auto p-4 md:p-6 space-y-6 ${isRTL ? 'text-right' : 'text-left'}`}
+    >
       {/* ─── Case Header ─── */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
@@ -405,7 +683,8 @@ export default function LegCaseDetails() {
                   {legCase?.title || t('legalCaseDetails.titleFallback')}
                 </h1>
                 <p className="text-sm text-[hsl(var(--color-muted))] truncate">
-                  {t('legalCaseDetails.subtitle')} · {legCase?.case_sub_type?.name || '-'}
+                  {t('legalCaseDetails.subtitle')} ·{' '}
+                  {legCase?.case_sub_type?.name || '-'}
                 </p>
               </div>
             </div>
@@ -416,7 +695,10 @@ export default function LegCaseDetails() {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 px-3 py-1 text-[hsl(var(--color-muted))]">
                 <LexicraftIcon name="calendar" size={14} />
-                {formatDate(legCase?.case_date || legCase?.created_at, language)}
+                {formatDate(
+                  legCase?.case_date || legCase?.created_at,
+                  language,
+                )}
               </span>
               <StatusBadge status={legCase?.status} />
             </div>
@@ -439,14 +721,20 @@ export default function LegCaseDetails() {
               {t('legalCaseDetails.actions.delete')}
             </button>
             <button
-              onClick={() => { setActiveTab('procedures'); setProcedureSignal((p) => p + 1); }}
+              onClick={() => {
+                setActiveTab('procedures');
+                setProcedureSignal((p) => p + 1);
+              }}
               className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
             >
               <LexicraftIcon name="tool" size={16} />
               {t('legalCaseDetails.actions.addProcedure')}
             </button>
             <button
-              onClick={() => { setActiveTab('sessions'); setSessionSignal((p) => p + 1); }}
+              onClick={() => {
+                setActiveTab('sessions');
+                setSessionSignal((p) => p + 1);
+              }}
               className="pressable inline-flex items-center gap-2 rounded-full bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-fg))]"
             >
               <LexicraftIcon name="calendar" size={16} />
@@ -458,13 +746,17 @@ export default function LegCaseDetails() {
 
       {/* ─── KPI Cards ─── */}
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {kpiCards.map((card) => (
-          <KpiCard key={card.key} {...card} />
+        {kpiCards.map(({ key, ...card }) => (
+          <KpiCard key={key} {...card} />
         ))}
       </section>
 
       {/* ─── Tabs ─── */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-0"
+      >
         <TabsList className="flex w-full flex-wrap gap-1.5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 p-1.5">
           {tabDef.map((tab) => (
             <TabsTrigger
@@ -479,101 +771,29 @@ export default function LegCaseDetails() {
         </TabsList>
 
         <div className="mt-4 rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 md:p-6 shadow-sm">
-          <AnimatePresence mode="wait">
-            {/* Overview */}
-            <AnimatedTabContent value="overview">
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-[hsl(var(--color-text))]">
-                  {t('legalCaseDetails.overview.title')}
-                </h3>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {overviewCards.map((card) => (
-                    <div key={card.key} className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/30 p-4 transition hover:shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-[hsl(var(--color-muted))]">{card.label}</p>
-                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--color-primary))]/10 text-[hsl(var(--color-primary))]">
-                          <LexicraftIcon name={card.icon} size={16} />
-                        </span>
-                      </div>
-                      <div className="mt-2 text-xl font-bold text-[hsl(var(--color-text))]">{card.value}</div>
-                    </div>
-                  ))}
-                </div>
-                {legCase?.description && (
-                  <div className="rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/20 p-4">
-                    <p className="text-sm leading-relaxed text-[hsl(var(--color-text))]">
-                      {legCase.description}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </AnimatedTabContent>
-
-            {/* Clients */}
-            <AnimatedTabContent value="clients">
-              <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
-                <LegCaseClients
-                  legCaseId={id}
-                  fetchLegcaseClients={fetchLegCase}
-                  legcaseClients={legcaseClients}
-                />
-              </Suspense>
-            </AnimatedTabContent>
-
-            {/* Courts */}
-            <AnimatedTabContent value="courts">
-              <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
-                <LegalCaseCourts legCase={legCase} fetchLegCase={fetchLegCase} />
-              </Suspense>
-            </AnimatedTabContent>
-
-            {/* Procedures */}
-            <AnimatedTabContent value="procedures">
-              <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
-                <Procedure
-                  legCaseId={id}
-                  openAddSignal={procedureSignal}
-                  procedures={sectionsState.procedures.data}
-                  loading={sectionsState.procedures.loading}
-                  error={sectionsState.procedures.error}
-                  onRefresh={() => refreshSection('procedures')}
-                />
-              </Suspense>
-            </AnimatedTabContent>
-
-            {/* Sessions */}
-            <AnimatedTabContent value="sessions">
-              <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
-                <LegalSession
-                  legCaseId={id}
-                  openAddSignal={sessionSignal}
-                  sessions={sectionsState.sessions.data}
-                  loading={sectionsState.sessions.loading}
-                  error={sectionsState.sessions.error}
-                  onRefresh={() => refreshSection('sessions')}
-                />
-              </Suspense>
-            </AnimatedTabContent>
-
-            {/* Ads */}
-            <AnimatedTabContent value="ads">
-              <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
-                <LegalCaseAds
-                  legCaseId={id}
-                  legalAds={sectionsState.ads.data}
-                  loading={sectionsState.ads.loading}
-                  error={sectionsState.ads.error}
-                  onRefresh={() => refreshSection('ads')}
-                />
-              </Suspense>
-            </AnimatedTabContent>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+            >
+              {renderActiveTabContent()}
+            </motion.div>
           </AnimatePresence>
         </div>
       </Tabs>
 
       {/* ─── Edit Modal ─── */}
       {editModalOpen && (
-        <Suspense fallback={<div className="p-6 text-center text-[hsl(var(--color-muted))]">{t('common.loading')}</div>}>
+        <Suspense
+          fallback={
+            <div className="p-6 text-center text-[hsl(var(--color-muted))]">
+              {t('common.loading')}
+            </div>
+          }
+        >
           <AddEditLegCase
             isEditing
             editingLegCase={legCase}
