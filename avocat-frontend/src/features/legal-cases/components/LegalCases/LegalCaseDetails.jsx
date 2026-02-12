@@ -678,7 +678,14 @@
     dir={isRTL ? "rtl" : "ltr"}
     className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between"
   >
- <div
+  {/* ✅ Title + Icon block */}
+  <div
+    className={[
+      "min-w-0 flex-1 w-full",
+      isRTL ? "lg:order-2" : "lg:order-1",
+    ].join(" ")}
+  >
+    <div
       className={[
         "w-full flex items-center gap-3",
         isRTL ? "flex-row-reverse justify-end text-right" : "justify-start text-left",
@@ -698,13 +705,6 @@
         </p>
       </div>
     </div>
-  <div
-    className={[
-      "min-w-0 flex-1 w-full",
-      isRTL ? "lg:order-2" : "lg:order-1",
-    ].join(" ")}
-  >
-   
 
     <div
       className={[
