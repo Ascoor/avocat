@@ -144,7 +144,63 @@
     color: hsl(var(--primary-foreground)) !important;
     border-radius: 0.75rem !important;
   }
-}
+
+    .kpi-card {
+      @apply bg-card rounded-xl border border-border p-5 transition-all duration-200;
+      box-shadow: var(--shadow-card);
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-elevated);
+      @apply -translate-y-0.5;
+    }
+  
+    .legal-header {
+      background: var(--gradient-hero);
+      @apply text-primary-foreground;
+    }
+  
+    .tab-trigger {
+      @apply relative px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors;
+    }
+    .tab-trigger[data-state="active"] {
+      @apply text-foreground;
+    }
+    .tab-trigger[data-state="active"]::after {
+      content: '';
+      @apply absolute bottom-0 left-0 right-0 h-0.5 rounded-full;
+      background: hsl(var(--accent));
+    }
+  
+    .status-badge {
+      @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+    }
+    .status-open { @apply bg-green-50 text-green-700 ring-1 ring-green-200; }
+    .status-closed { @apply bg-gray-100 text-gray-600 ring-1 ring-gray-200; }
+    .status-pending { @apply bg-amber-50 text-amber-700 ring-1 ring-amber-200; }
+    .status-in-progress { @apply bg-blue-50 text-blue-700 ring-1 ring-blue-200; }
+  
+    .action-btn {
+      @apply inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200;
+    }
+    .action-btn-primary {
+      @apply action-btn bg-primary text-primary-foreground hover:opacity-90;
+    }
+    .action-btn-outline {
+      @apply action-btn border border-border bg-card text-foreground hover:bg-secondary;
+    }
+    .action-btn-destructive {
+      @apply action-btn bg-destructive text-destructive-foreground hover:opacity-90;
+    }
+    .action-btn-accent {
+      @apply action-btn;
+      background: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+    .action-btn-accent:hover {
+      opacity: 0.9;
+    }
+  }
+  
 
 /* ============================
    Utilities
