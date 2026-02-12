@@ -26,15 +26,15 @@ export const sidebarGroups = [
     ],
   },
   {
-    key: "services",
+    key: "reports",
     items: [
       {
-        key: "work_follow",
+        key: "reports",
         labelKey: "navigation.workFollowUp",
         icon: Folder,
         children: [
           { key: "sessions", labelKey: "navigation.sessions", icon: Calendar, path: "/dashboard/legal-sessions" },
-          { key: "procedures", labelKey: "navigation.procedures", icon: FileText, path: "/dashboard/managment-settings/procedures" },
+          { key: "procedures", labelKey: "navigation.procedures", icon: FileText, path: "/dashboard/procedures" },
         ],
       },
       {

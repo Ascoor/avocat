@@ -25,6 +25,7 @@ const AdminUsersPage = lazy(() => import('@features/admin/pages/AdminUsersPage')
 const AdminRolesPage = lazy(() => import('@features/admin/pages/AdminRolesPage'));
 const AdminPermissionsPage = lazy(() => import('@features/admin/pages/AdminPermissionsPage'));
 const QaRbacPage = lazy(() => import('@features/admin/pages/QaRbacPage'));
+const ProcedureSearch = lazy(() => import('@/features/reports/components/Reports/procedure_search.component'));
 
 const NotFound = () => (
   <h1 className="text-center text-red-500">404 - Page Not Found</h1>
@@ -63,8 +64,8 @@ const AuthRoutes = () => {
           <Route path="admin/roles" element={<AdminRolesPage />} />
           <Route path="admin/permissions" element={<AdminPermissionsPage />} />
           <Route
-            path="managment-settings/procedures"
-            element={<Procedures />}
+            path="procedures"
+            element={<ProcedureSearch />}
           />
           <Route path="financial-dashboard" element={<FinancialDashboard />} />
 
