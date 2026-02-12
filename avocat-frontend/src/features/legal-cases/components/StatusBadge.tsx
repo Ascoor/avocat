@@ -1,7 +1,5 @@
-import { CaseStatus } from '@/types/legal';
-
 interface StatusBadgeProps {
-  status: CaseStatus | string;
+  status?: string;
   lang?: 'en' | 'ar';
 }
 
@@ -9,6 +7,7 @@ const statusMap: Record<string, { en: string; ar: string; className: string }> =
   open: { en: 'Open', ar: 'مفتوحة', className: 'status-open' },
   closed: { en: 'Closed', ar: 'مغلقة', className: 'status-closed' },
   pending: { en: 'Pending', ar: 'معلقة', className: 'status-pending' },
+  in_progress: { en: 'In Progress', ar: 'قيد التنفيذ', className: 'status-in-progress' },
   'in-progress': { en: 'In Progress', ar: 'قيد التنفيذ', className: 'status-in-progress' },
   completed: { en: 'Completed', ar: 'مكتملة', className: 'status-open' },
   cancelled: { en: 'Cancelled', ar: 'ملغاة', className: 'status-closed' },
@@ -16,7 +15,7 @@ const statusMap: Record<string, { en: string; ar: string; className: string }> =
   postponed: { en: 'Postponed', ar: 'مؤجلة', className: 'status-pending' },
 };
 
-const StatusBadge = ({ status, lang = 'en' }: StatusBadgeProps) => {
+const StatusBadge = ({ status = 'pending', lang = 'en' }: StatusBadgeProps) => {
   const config = statusMap[status] || { en: status, ar: status, className: 'status-pending' };
 
   return (
