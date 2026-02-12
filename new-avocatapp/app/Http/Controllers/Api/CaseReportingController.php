@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CaseReportingController extends Controller
-{
+{ 
     /**
      * @var array<int, string>
      */
@@ -29,7 +29,7 @@ class CaseReportingController extends Controller
 
     public function show(Request $request, int $caseId): JsonResponse
     {
-        $case = LegCase::with($this->resolveIncludes($request))
+        $case = LegCase::with($this->resolveIncludes($request)) 
             ->find($caseId);
 
         if (! $case) {
