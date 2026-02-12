@@ -34,8 +34,8 @@ const LegalSession = lazy(() => import('./LegalCaseTools/LegalCaseSessions'));
 const LegalCaseAds = lazy(() => import('./LegalCaseTools/LegalCaseAds'));
 const LegCaseClients = lazy(() => import('./LegalCaseTools/LegalCaseClients'));
 const LegalCaseCourts = lazy(() => import('./LegalCaseTools/LegCaseCourts'));
-const CaseDataAndReportsSection = lazy(
-  () => import('./LegalCaseTools/CaseDataAndReportsSection'),
+const LegalCaseOverview = lazy(
+  () => import('./LegalCaseTools/LegalCaseOverview'),
 );
 const AddEditLegCase = lazy(() => import('./AddEditLegCase'));
 
@@ -285,7 +285,7 @@ export default function LegCaseDetails() {
             >
               <Suspense fallback={<TableSkeleton />}>
                 {activeTab === 'overview' && (
-                  <CaseDataAndReportsSection
+                  <LegalCaseOverview
                     legCase={legCase}
                     sessions={sectionsState.sessions.data}
                     procedures={sectionsState.procedures.data}
