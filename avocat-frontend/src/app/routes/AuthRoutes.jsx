@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useSpinner } from '@shared/contexts/SpinnerContext';
 import GlobalSpinner from '@shared/components/common/Spinners/GlobalSpinner';
 import { lazy } from 'react';
@@ -15,17 +15,20 @@ const FinancialDashboard = lazy(() => import('@features/finance/components/Finan
 const LegalCasesIndex = lazy(() => import('@features/legal-cases/pages/LegalCaseList'));
 const LegCaseDetails = lazy(() => import('@features/legal-cases/components/LegalCases/LegalCaseDetails'));
 const ProfileUser = lazy(() => import('@features/settings/components/Settings/ProfileUser'));
-const Procedures = lazy(() => import('@features/procedures/pages/ProceduresList'));
 const LawyerList = lazy(() => import('@features/lawyers/pages/LawyerList'));
 const SearchCourtsApi = lazy(() => import('@features/courts/pages/SearchCourtsApi.jsx'));
-const LegalSessions = lazy(() => import('@features/sessions/components/Sessions/index.jsx'));
 const IconsGalleryPage = lazy(() => import('@features/icons-gallery/pages/IconsGalleryPage'));
 const UiQaPage = lazy(() => import('@features/ui-qa/pages/UiQaPage'));
 const AdminUsersPage = lazy(() => import('@features/admin/pages/AdminUsersPage'));
 const AdminRolesPage = lazy(() => import('@features/admin/pages/AdminRolesPage'));
 const AdminPermissionsPage = lazy(() => import('@features/admin/pages/AdminPermissionsPage'));
 const QaRbacPage = lazy(() => import('@features/admin/pages/QaRbacPage'));
-const ProcedureSearch = lazy(() => import('@/features/reports/components/Reports/procedure_search.component'));
+const ReportsIndex = lazy(() => import('@features/reports/pages/ReportsIndex'));
+const SessionsReport = lazy(() => import('@features/reports/pages/SessionsReport'));
+const ProceduresReport = lazy(() => import('@features/reports/pages/ProceduresReport'));
+const ClientsReport = lazy(() => import('@features/reports/pages/ClientsReport'));
+const CasesReport = lazy(() => import('@features/reports/pages/CasesReport'));
+const ServicesReport = lazy(() => import('@features/reports/pages/ServicesReport'));
 
 const NotFound = () => (
   <h1 className="text-center text-red-500">404 - Page Not Found</h1>
@@ -55,18 +58,24 @@ const AuthRoutes = () => {
           <Route path="legcases/show/:id" element={<LegCaseDetails />} />
           <Route path="profile/:userId" element={<ProfileUser />} />
           <Route path="legcases" element={<LegalCasesIndex />} />
-          <Route path="legal-sessions" element={<LegalSessions />} />
           <Route path="search-courts-api" element={<SearchCourtsApi />} />
+          <Route path="reports" element={<ReportsIndex />}>
+            <Route index element={<Navigate to="sessions" replace />} />
+            <Route path="sessions" element={<SessionsReport />} />
+            <Route path="procedures" element={<ProceduresReport />} />
+            <Route path="clients" element={<ClientsReport />} />
+            <Route path="cases" element={<CasesReport />} />
+            <Route path="services" element={<ServicesReport />} />
+          </Route>
+
+          <Route path="legal-sessions" element={<Navigate to="/dashboard/reports/sessions" replace />} />
+          <Route path="procedures" element={<Navigate to="/dashboard/reports/procedures" replace />} />
           <Route path="tools/icons" element={<IconsGalleryPage />} />
           <Route path="tools/qa" element={<UiQaPage />} />
           <Route path="tools/qa-rbac" element={<QaRbacPage />} />
           <Route path="admin/users" element={<AdminUsersPage />} />
           <Route path="admin/roles" element={<AdminRolesPage />} />
           <Route path="admin/permissions" element={<AdminPermissionsPage />} />
-          <Route
-            path="procedures"
-            element={<ProcedureSearch />}
-          />
           <Route path="financial-dashboard" element={<FinancialDashboard />} />
 
           <Route path="*" element={<NotFound />} />
