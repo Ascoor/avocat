@@ -16,7 +16,10 @@ const ReportFilters = ({
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-4 shadow-sm backdrop-blur">
+    <section
+      className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-4 shadow-sm backdrop-blur"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-foreground">{t('common.filters') || 'Filters'}</h2>
       </div>
@@ -41,7 +44,7 @@ const ReportFilters = ({
             key={filter.key}
             value={filters[filter.key] || ''}
             onChange={(event) => onChange({ [filter.key]: event.target.value })}
-            className={baseInputClass}
+            className={`${baseInputClass} ${isRTL ? 'text-right' : 'text-left'}`}
           >
             <option value="">{filter.placeholder}</option>
             {filter.options.map((option) => (
@@ -63,6 +66,7 @@ const ReportFilters = ({
             value={filters.startDate || ''}
             onChange={(event) => onChange({ startDate: event.target.value })}
             className={`${baseInputClass} ${isRTL ? 'pr-10 text-right' : 'pl-10 text-left'}`}
+            dir={isRTL ? 'rtl' : 'ltr'}
           />
         </div>
 
@@ -77,6 +81,7 @@ const ReportFilters = ({
             value={filters.endDate || ''}
             onChange={(event) => onChange({ endDate: event.target.value })}
             className={`${baseInputClass} ${isRTL ? 'pr-10 text-right' : 'pl-10 text-left'}`}
+            dir={isRTL ? 'rtl' : 'ltr'}
           />
         </div>
 
@@ -84,7 +89,7 @@ const ReportFilters = ({
           <select
             value={filters.status || ''}
             onChange={(event) => onChange({ status: event.target.value })}
-            className={baseInputClass}
+            className={`${baseInputClass} ${isRTL ? 'text-right' : 'text-left'}`}
           >
             <option value="">{t('reports.filters.allStatuses')}</option>
             {statusOptions.map((status) => (
