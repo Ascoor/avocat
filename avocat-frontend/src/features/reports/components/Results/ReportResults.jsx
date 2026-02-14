@@ -4,7 +4,7 @@ import ReportStatusBadge from '@features/reports/components/Reports/ReportStatus
 const getDetailLink = (tabKey, row) => {
   if (tabKey === 'cases') return `/dashboard/legcases/${row?.id}`;
   if (tabKey === 'clients') return `/dashboard/clients/${row?.id}`;
-  const caseId = row?.legcase_id || row?._raw?.legcase_id || row?._raw?.leg_case_id || row?._raw?.leg_case?.id || row?._raw?.legcase?.id || row?._raw?.legCase?.id;
+  const caseId = row?.legcase_id || row?._raw?.legcase_id || row?._raw?.leg_case_id || row?._raw?.legcase?.id || row?._raw?.legCase?.id;
   return caseId ? `/dashboard/legcases/${caseId}` : '#';
 };
 

@@ -43,9 +43,6 @@ const inDateRange = (value, fromDate, toDate) => {
   return true;
 };
 
-
-const resolveLegCase = (row) => row?.leg_case || row?.legcase || row?.legCase || null;
-
 const normalizeRow = (tabKey, row) => {
   if (tabKey === 'cases') {
     return {
@@ -62,11 +59,10 @@ const normalizeRow = (tabKey, row) => {
   }
 
   if (tabKey === 'services') {
-    const legCase = resolveLegCase(row);
     return {
       id: row?.id,
       title: row?.description || row?.serviceType?.name || '-',
-      slug: row?.slug || legCase?.slug || row?.file_number || '-',
+      slug: row?.slug || row?.legcase?.slug || row?.file_number || '-',
       client_name: row?.client?.name || row?.clients?.[0]?.name || row?.unclients?.[0]?.name || '-',
       status: row?.status || '-',
       type_id: row?.service_type_id || row?.serviceType?.id || '',
@@ -77,35 +73,33 @@ const normalizeRow = (tabKey, row) => {
   }
 
   if (tabKey === 'procedures') {
-    const legCase = resolveLegCase(row);
     return {
       id: row?.id,
       title: row?.procedure_type?.name || row?.procedureType?.name || row?.job || '-',
-      slug: legCase?.slug || row?.slug || '-',
-      client_name: row?.client?.name || legCase?.clients?.[0]?.name || '-',
+      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
+      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
       status: row?.status || '-',
       type_id: row?.procedure_type_id || row?.procedure_type?.id || row?.procedureType?.id || '',
       type_name: row?.procedure_type?.name || row?.procedureType?.name || '-',
       lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
       row_date: row?.date_start || row?.date_end || row?.created_at || null,
-      legcase_id: row?.legcase_id || row?.leg_case_id || legCase?.id || null,
+      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
       _raw: row,
     };
   }
 
   if (tabKey === 'sessions') {
-    const legCase = resolveLegCase(row);
     return {
       id: row?.id,
       title: row?.session_type?.name || row?.legalSessionType?.name || row?.court_session || '-',
-      slug: legCase?.slug || row?.slug || '-',
-      client_name: row?.client?.name || legCase?.clients?.[0]?.name || '-',
+      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
+      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
       status: row?.status || '-',
       type_id: row?.session_type_id || row?.legal_session_type_id || row?.session_type?.id || row?.legalSessionType?.id || '',
       type_name: row?.session_type?.name || row?.legalSessionType?.name || '-',
       lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
       row_date: row?.session_date || row?.created_at || null,
-      legcase_id: row?.legcase_id || row?.leg_case_id || legCase?.id || null,
+      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
       _raw: row,
     };
   }
