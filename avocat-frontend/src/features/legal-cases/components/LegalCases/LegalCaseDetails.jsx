@@ -8,6 +8,8 @@ import {
 } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
+import { useSecurity } from '@shared/security/SecurityContext';
+import { canAction } from '@shared/security/permissions';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 import { Tabs, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,6 +45,7 @@ export default function LegCaseDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t, isRTL, language } = useLanguage();
+  const { permissions } = useSecurity();
 
   const [legCase, setLegCase] = useState(null);
   const [legcaseClients, setLegcaseClients] = useState([]);
@@ -166,6 +169,10 @@ export default function LegCaseDetails() {
     Promise.allSettled([fetchProcedures(), fetchSessions(), fetchAds()]);
   }, [legCase, fetchProcedures, fetchSessions, fetchAds]);
 
+
+  const canUpdateCase = canAction(permissions, 'legalCases', 'update');
+  const canDeleteCase = canAction(permissions, 'legalCases', 'delete');
+
   const kpiCards = useMemo(() => {
     const sessionsData = sectionsState.sessions.data || [];
     const nextSession = sessionsData
@@ -247,14 +254,18 @@ export default function LegCaseDetails() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setEditModalOpen(true)} className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
-              <LexicraftIcon name="tool" size={16} />
-              {t('legalCaseDetails.actions.edit')}
-            </button>
-            <button onClick={handleDeleteCase} className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive">
-              <LexicraftIcon name="shield" size={16} />
-              {t('legalCaseDetails.actions.delete')}
-            </button>
+            {canUpdateCase && (
+              <button onClick={() => setEditModalOpen(true)} className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
+                <LexicraftIcon name="tool" size={16} />
+                {t('legalCaseDetails.actions.edit')}
+              </button>
+            )}
+            {canDeleteCase && (
+              <button onClick={handleDeleteCase} className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive">
+                <LexicraftIcon name="shield" size={16} />
+                {t('legalCaseDetails.actions.delete')}
+              </button>
+            )}
           </div>
         </div>
       </motion.header>

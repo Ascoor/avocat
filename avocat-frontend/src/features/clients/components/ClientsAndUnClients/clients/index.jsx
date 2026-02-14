@@ -9,9 +9,10 @@ import { useAlert } from "@shared/contexts/AlertContext";
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
+import { canAccessByOffice, canViewSensitiveClientFields, maskSensitive } from '@shared/security/abac';
 
 const ClientList = () => {
-  const { permissions } = useSecurity();
+  const { permissions, user, roles } = useSecurity();
   const acl = canCrud(permissions, 'clients');
   const dispatch = useDispatch();
   const { triggerAlert } = useAlert();
@@ -20,6 +21,18 @@ const ClientList = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [busyIds, setBusyIds] = useState(() => new Set());
+
+  const accessUser = useMemo(() => ({
+    id: user?.id || '',
+    officeId: user?.officeId ?? user?.office_id,
+    roleNames: roles.map((role) => role.name),
+    permissions,
+  }), [user, roles, permissions]);
+
+  const filteredClients = useMemo(
+    () => clients.filter((client) => canAccessByOffice(accessUser, { officeId: client.office_id ?? client.officeId })),
+    [clients, accessUser],
+  );
 
   const refresh = useCallback(() => dispatch(fetchClients()), [dispatch]);
   useEffect(() => { refresh(); }, [refresh]);
@@ -55,12 +68,33 @@ const ClientList = () => {
   ], []);
 
   const customRenderers = useMemo(() => ({
+    identity_number: (client) => {
+      const allowed = canViewSensitiveClientFields(accessUser, {
+        officeId: client.office_id ?? client.officeId,
+        isSensitive: Boolean(client.identity_number),
+      });
+      return maskSensitive(client.identity_number || '-', allowed);
+    },
+    phone_number: (client) => {
+      const allowed = canViewSensitiveClientFields(accessUser, {
+        officeId: client.office_id ?? client.officeId,
+        isSensitive: Boolean(client.phone_number),
+      });
+      return maskSensitive(client.phone_number || '-', allowed);
+    },
+    email: (client) => {
+      const allowed = canViewSensitiveClientFields(accessUser, {
+        officeId: client.office_id ?? client.officeId,
+        isSensitive: Boolean(client.email),
+      });
+      return maskSensitive(client.email || '-', allowed);
+    },
     status: (client) => {
       const disabled = busyIds.has(client.id);
       const active = client.status === "active";
-      return <button type="button" onClick={() => handleToggleStatus(client)} className="inline-flex" disabled={disabled} title="تغيير الحالة"><span className={["inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold", active ? "border-[hsl(var(--accent)/0.25)] bg-[hsl(var(--accent)/0.10)] text-foreground" : "border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-muted-foreground", disabled ? "opacity-60 pointer-events-none" : "cursor-pointer hover:opacity-90"].join(" ")}>{active ? <AiFillCheckCircle className="opacity-80" /> : <AiFillCloseCircle className="opacity-80" />}{active ? "نشط" : "غير نشط"}</span></button>;
+      return <button type="button" onClick={() => handleToggleStatus(client)} className="inline-flex" disabled={disabled}><span className={["inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold", active ? "border-[hsl(var(--accent)/0.25)] bg-[hsl(var(--accent)/0.10)] text-foreground" : "border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-muted-foreground", disabled ? "opacity-60 pointer-events-none" : "cursor-pointer hover:opacity-90"].join(" ")}>{active ? <AiFillCheckCircle className="opacity-80" /> : <AiFillCloseCircle className="opacity-80" />}{active ? "نشط" : "غير نشط"}</span></button>;
     },
-  }), [busyIds]);
+  }), [busyIds, accessUser]);
 
   if (!acl.view) return <ForbiddenState moduleLabel="Clients" />;
 
@@ -69,10 +103,10 @@ const ClientList = () => {
       {isModalOpen && <AddEditClient client={selectedClient} isOpen={isModalOpen} onClose={closeModal} onSaved={refresh} />}
       <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur sm:p-6">
         <TableComponent
-          data={clients}
+          data={filteredClients}
           headers={headers}
           loading={loading}
-          onEdit={acl.update ? ((id) => openAddEditModal(clients.find((c) => c.id === id))) : undefined}
+          onEdit={acl.update ? ((id) => openAddEditModal(filteredClients.find((c) => c.id === id))) : undefined}
           onDelete={acl.delete ? handleDelete : undefined}
           customRenderers={customRenderers}
           renderAddButton={acl.create ? (() => <button onClick={() => openAddEditModal()} className="rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] shadow-sm transition hover:opacity-90">إضافة عميل</button>) : undefined}
