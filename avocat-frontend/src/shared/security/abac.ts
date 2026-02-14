@@ -26,6 +26,8 @@ const asSet = (arr?: Array<string | number>) => new Set((arr ?? []).map((item) =
 export const canAccessByOffice = (user: AccessUser, record: AccessRecord) =>
   same(user.officeId, record.officeId) || (user.roleNames ?? []).includes("super_admin");
 
+export const canAccessOffice = canAccessByOffice;
+
 export const canLawyerAccessCase = (user: AccessUser, record: AccessRecord) => {
   if (!canAccessByOffice(user, record)) return false;
 

@@ -1,13 +1,29 @@
-import { permissionMap, type ModulePermissions, type PermissionModuleKey, type PermissionName } from "@shared/security/permission-map";
+import { permissionAliases, permissionMap, type ModulePermissions, type PermissionModuleKey, type PermissionName } from "@shared/security/permission-map";
+
+const warnedAliases = new Set<string>();
+
+const normalizePermission = (permission?: string) => {
+  if (!permission) return permission;
+  const normalized = permissionAliases[permission] ?? permission;
+
+  if (import.meta.env.DEV && normalized !== permission && !warnedAliases.has(permission)) {
+    warnedAliases.add(permission);
+    console.warn(`[RBAC] Deprecated permission key "${permission}" used. Please migrate to "${normalized}".`);
+  }
+
+  return normalized;
+};
+
+const normalizePermissionList = (permissions: string[] = []) => permissions.map((permission) => normalizePermission(permission));
 
 export const hasPermission = (permissions: string[] = [], permission?: string) =>
-  Boolean(permission && permissions.includes(permission));
+  Boolean(permission && normalizePermissionList(permissions).includes(normalizePermission(permission)));
 
 export const hasAny = (permissions: string[] = [], required: string[] = []) =>
-  required.some((permission) => permissions.includes(permission));
+  required.some((permission) => hasPermission(permissions, permission));
 
 export const hasAll = (permissions: string[] = [], required: string[] = []) =>
-  required.every((permission) => permissions.includes(permission));
+  required.every((permission) => hasPermission(permissions, permission));
 
 export const modulePermissions = <TModule extends PermissionModuleKey>(moduleKey: TModule): ModulePermissions<TModule> =>
   permissionMap[moduleKey];

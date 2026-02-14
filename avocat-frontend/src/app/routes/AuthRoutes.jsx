@@ -3,6 +3,8 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useSpinner } from '@shared/contexts/SpinnerContext';
 import GlobalSpinner from '@shared/components/common/Spinners/GlobalSpinner';
 import { lazy } from 'react';
+import PermissionGuard from '@shared/security/PermissionGuard';
+import { permissionMap } from '@shared/security/permission-map';
 
 const Home = lazy(() => import('@features/dashboard/components/dashboard/Dashboard'));
 const ClientsAndUnClients = lazy(
@@ -30,6 +32,12 @@ const ClientsReport = lazy(() => import('@features/reports/pages/ClientsReport')
 const CasesReport = lazy(() => import('@features/reports/pages/CasesReport'));
 const ServicesReport = lazy(() => import('@features/reports/pages/ServicesReport'));
 
+const Guarded = ({ require, moduleLabel, children }) => (
+  <PermissionGuard require={require} moduleLabel={moduleLabel}>
+    {children}
+  </PermissionGuard>
+);
+
 const NotFound = () => (
   <h1 className="text-center text-red-500">404 - Page Not Found</h1>
 );
@@ -50,16 +58,16 @@ const AuthRoutes = () => {
       <Suspense fallback={<GlobalSpinner />}>
         <Routes>
           <Route index element={<Home />} />
-          <Route path="clients" element={<ClientsAndUnClients />} />
-          <Route path="legcase-services" element={<LegalServiceList />} />
-          <Route path="court-search" element={<CourtSearch />} />
-          <Route path="cases_setting" element={<CaseTypeSet />} />
-          <Route path="lawyers" element={<LawyerList />} />
-          <Route path="legcases/show/:id" element={<LegCaseDetails />} />
+          <Route path="clients" element={<Guarded require={permissionMap.clients.list} moduleLabel="Clients"><ClientsAndUnClients /></Guarded>} />
+          <Route path="legcase-services" element={<Guarded require={permissionMap.services.list} moduleLabel="Services"><LegalServiceList /></Guarded>} />
+          <Route path="court-search" element={<Guarded require={permissionMap.reports.view} moduleLabel="Court Search"><CourtSearch /></Guarded>} />
+          <Route path="cases_setting" element={<Guarded require={permissionMap.courts.list} moduleLabel="Court Settings"><CaseTypeSet /></Guarded>} />
+          <Route path="lawyers" element={<Guarded require={permissionMap.lawyers.list} moduleLabel="Lawyers"><LawyerList /></Guarded>} />
+          <Route path="legcases/show/:id" element={<Guarded require={permissionMap.legalCases.view} moduleLabel="Case Details"><LegCaseDetails /></Guarded>} />
           <Route path="profile/:userId" element={<ProfileUser />} />
-          <Route path="legcases" element={<LegalCasesIndex />} />
-          <Route path="search-courts-api" element={<SearchCourtsApi />} />
-          <Route path="reports" element={<ReportsIndex />}>
+          <Route path="legcases" element={<Guarded require={permissionMap.legalCases.list} moduleLabel="Legal Cases"><LegalCasesIndex /></Guarded>} />
+          <Route path="search-courts-api" element={<Guarded require={permissionMap.courts.search} moduleLabel="Courts"><SearchCourtsApi /></Guarded>} />
+          <Route path="reports" element={<Guarded require={permissionMap.reports.view} moduleLabel="Reports"><ReportsIndex /></Guarded>}>
             <Route index element={<Navigate to="sessions" replace />} />
             <Route path="sessions" element={<SessionsReport />} />
             <Route path="procedures" element={<ProceduresReport />} />
@@ -73,9 +81,9 @@ const AuthRoutes = () => {
           <Route path="tools/icons" element={<IconsGalleryPage />} />
           <Route path="tools/qa" element={<UiQaPage />} />
           <Route path="tools/qa-rbac" element={<QaRbacPage />} />
-          <Route path="admin/users" element={<AdminUsersPage />} />
-          <Route path="admin/roles" element={<AdminRolesPage />} />
-          <Route path="admin/permissions" element={<AdminPermissionsPage />} />
+          <Route path="admin/users" element={<Guarded require={permissionMap.adminUsers.list} moduleLabel="Admin Users"><AdminUsersPage /></Guarded>} />
+          <Route path="admin/roles" element={<Guarded require={permissionMap.adminRoles.list} moduleLabel="Admin Roles"><AdminRolesPage /></Guarded>} />
+          <Route path="admin/permissions" element={<Guarded require={permissionMap.adminPermissions.list} moduleLabel="Admin Permissions"><AdminPermissionsPage /></Guarded>} />
           <Route path="financial-dashboard" element={<FinancialDashboard />} />
 
           <Route path="*" element={<NotFound />} />
