@@ -117,3 +117,39 @@ export type ModulePermissions<TModule extends PermissionModuleKey = PermissionMo
 export type PermissionName = (typeof permissionMap)[PermissionModuleKey][keyof (typeof permissionMap)[PermissionModuleKey]];
 
 export const allPermissions = Array.from(new Set(Object.values(permissionMap).flatMap((modulePermissions) => Object.values(modulePermissions))));
+
+// Legacy keys inventory (2026-02 migration): only these dashed names are still accepted via aliases.
+// TODO: remove this alias list after callers and persisted role data are fully migrated to canonical resource.action keys.
+
+export const permissionAliases: Record<string, PermissionName> = {
+  "legal-cases.view": permissionMap.legalCases.view,
+  "legal-cases.list": permissionMap.legalCases.list,
+  "legal-cases.search": permissionMap.legalCases.search,
+  "legal-cases.create": permissionMap.legalCases.create,
+  "legal-cases.update": permissionMap.legalCases.update,
+  "legal-cases.delete": permissionMap.legalCases.delete,
+  "legal-cases.change-status": permissionMap.legalCases.changeStatus,
+  "legal-cases.close": permissionMap.legalCases.close,
+  "legal-cases.reopen": permissionMap.legalCases.reopen,
+  "legal-cases.assign": permissionMap.legalCases.assign,
+  "legal-cases.reassign": permissionMap.legalCases.reassign,
+  "legal-cases.attachments-manage": permissionMap.legalCases.attachmentsManage,
+  "legal-cases.notes-manage": permissionMap.legalCases.notesManage,
+  "admin-users.view": permissionMap.adminUsers.view,
+  "admin-users.list": permissionMap.adminUsers.list,
+  "admin-users.search": permissionMap.adminUsers.search,
+  "admin-users.create": permissionMap.adminUsers.create,
+  "admin-users.update": permissionMap.adminUsers.update,
+  "admin-users.delete": permissionMap.adminUsers.delete,
+  "admin-users.assign-roles": permissionMap.adminUsers.assignRoles,
+  "admin-users.change-status": permissionMap.adminUsers.changeStatus,
+  "admin-roles.view": permissionMap.adminRoles.view,
+  "admin-roles.list": permissionMap.adminRoles.list,
+  "admin-roles.create": permissionMap.adminRoles.create,
+  "admin-roles.update": permissionMap.adminRoles.update,
+  "admin-roles.delete": permissionMap.adminRoles.delete,
+  "admin-roles.assign-permissions": permissionMap.adminRoles.assignPermissions,
+  "admin-permissions.view": permissionMap.adminPermissions.view,
+  "admin-permissions.list": permissionMap.adminPermissions.list,
+  "admin-permissions.search": permissionMap.adminPermissions.search,
+};

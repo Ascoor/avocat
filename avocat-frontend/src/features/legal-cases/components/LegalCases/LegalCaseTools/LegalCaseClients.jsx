@@ -158,6 +158,7 @@ export default function LegalCaseClients({
   legCaseId,
   fetchLegcaseClients,
   legcaseClients = [],
+  acl = { create: true, delete: true },
 }) {
   const { triggerAlert } = useAlert();
   const { t, isRTL } = useLanguage();
@@ -251,10 +252,11 @@ export default function LegalCaseClients({
         icon="users"
         title={t('legalCaseDetails.clients.title')}
         subtitle={t('legalCaseDetails.clients.subtitle')}
-        addLabel={t('legalCaseDetails.actions.addClient')}
-        onAdd={() => addFormRef.current?.addNewRow?.()}
+        addLabel={acl.create ? t('legalCaseDetails.actions.addClient') : undefined}
+        onAdd={acl.create ? (() => addFormRef.current?.addNewRow?.()) : undefined}
       />
 
+      {acl.create && (
       <AddClientToCaseForm
         ref={addFormRef}
         legCaseId={legCaseId}
@@ -262,6 +264,7 @@ export default function LegalCaseClients({
         legcaseClients={legcaseClients}
         fetchLegcaseClients={fetchLegcaseClients}
       />
+      )}
 
       <TableComponent
         data={legcaseClients}
@@ -275,8 +278,8 @@ export default function LegalCaseClients({
         searchPlaceholder={t('legalCaseDetails.clients.searchPlaceholder')}
         emptyLabel={t('legalCaseDetails.clients.empty')}
         retryLabel={t('legalCaseDetails.actions.retry')}
-        onDelete={(id, row) => openDeleteModal(id, row?.name || '')}
-        permissions={{ view: false, update: false, delete: true, create: false }}
+        onDelete={acl.delete ? ((id, row) => openDeleteModal(id, row?.name || '')) : undefined}
+        permissions={{ view: true, update: false, delete: acl.delete, create: acl.create }}
         deleteLabel={t('legalCaseDetails.actions.delete')}
         prevLabel={t('legalCaseDetails.pagination.prev')}
         nextLabel={t('legalCaseDetails.pagination.next')}

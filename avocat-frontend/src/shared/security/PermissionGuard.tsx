@@ -5,16 +5,21 @@ import { guardPermissions } from "@shared/security/permissions";
 import ForbiddenState from "@shared/security/ForbiddenState";
 
 type PermissionGuardProps = {
-  require: PermissionName | PermissionName[];
+  require?: PermissionName | PermissionName[];
+  permissions?: PermissionName | PermissionName[];
   match?: "all" | "any";
   moduleLabel?: string;
   fallback?: ReactNode;
   children: ReactNode;
 };
 
-const PermissionGuard = ({ require, match = "all", fallback, children, moduleLabel = "هذا القسم" }: PermissionGuardProps) => {
+const PermissionGuard = ({ require, permissions: permissionsProp, match = "all", fallback, children, moduleLabel = "هذا القسم" }: PermissionGuardProps) => {
   const { permissions } = useSecurity();
-  const allowed = guardPermissions(permissions, require, match);
+  const requirement = permissionsProp ?? require;
+
+  if (!requirement) return <>{children}</>;
+
+  const allowed = guardPermissions(permissions, requirement, match);
 
   if (!allowed) return <>{fallback ?? <ForbiddenState moduleLabel={moduleLabel} />}</>;
   return <>{children}</>;

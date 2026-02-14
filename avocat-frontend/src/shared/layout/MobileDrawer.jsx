@@ -7,9 +7,11 @@ import { cn } from "@shared/lib/utils";
 import { useSidebar } from "@shared/contexts/SidebarContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { sidebarGroups } from "@config/sidebar";
+import { useSecurity } from "@shared/security/SecurityContext";
+import { hasPermission } from "@shared/security/permissions";
 
 const drawerVariants = {
-  open: (rtl) => ({
+  open: () => ({
     x: 0,
     transition: { duration: 0.3, ease: "easeOut" },
   }),
@@ -21,6 +23,7 @@ const drawerVariants = {
 
 const MobileDrawer = () => {
   const { t, isRTL } = useLanguage();
+  const { permissions } = useSecurity();
   const { isMobileOpen, closeMobile } = useSidebar();
 
   useEffect(() => {
@@ -46,6 +49,16 @@ const MobileDrawer = () => {
     }
     document.documentElement.classList.remove("overflow-hidden");
   }, [isMobileOpen]);
+
+  const isAllowed = (item) => !item.requiredPermission || hasPermission(permissions, item.requiredPermission);
+  const visibleGroups = sidebarGroups
+    .map((group) => ({
+      ...group,
+      items: group.items
+        .map((item) => ({ ...item, children: item.children?.filter((child) => isAllowed(child)) }))
+        .filter((item) => isAllowed(item) && (!item.children || item.children.length > 0)),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <AnimatePresence mode="wait">
@@ -78,7 +91,7 @@ const MobileDrawer = () => {
             </div>
 
             <nav className="flex flex-1 flex-col gap-6 overflow-y-auto p-4">
-              {sidebarGroups.map((group) => (
+              {visibleGroups.map((group) => (
                 <div key={group.key} className="space-y-3">
                   <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-sidebar-text-muted">
                     {t(`sidebar.sections.${group.key}`)}

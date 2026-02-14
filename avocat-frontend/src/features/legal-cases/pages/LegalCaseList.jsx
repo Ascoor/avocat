@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SectionHeader from '@shared/components/common/SectionHeader';
 import TableComponent from '@shared/components/common/TableComponent';
@@ -9,16 +9,36 @@ import api from '@shared/services/api/axiosConfig';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
+import PermissionGuard from '@shared/security/PermissionGuard';
+import { permissionMap } from '@shared/security/permission-map';
+import { canAccessCase, canAccessOffice } from '@shared/security/abac';
 
 const AddEditLegCase = lazy(() => import('../components/LegalCases/AddEditLegCase'));
 
 const LegalCasesIndex = () => {
-  const { permissions } = useSecurity();
+  const { permissions, user, roles } = useSecurity();
   const acl = canCrud(permissions, 'legalCases');
   const [legCases, setLegCases] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingLegCase, setEditingLegCase] = useState(null);
+
+  const accessUser = useMemo(() => ({
+    id: user?.id || '',
+    officeId: user?.officeId ?? user?.office_id,
+    roleNames: roles.map((role) => role.name),
+    lawyerId: user?.lawyerId ?? user?.lawyer_id,
+    teamLawyerIds: user?.teamLawyerIds ?? user?.team_lawyer_ids,
+  }), [user, roles]);
+
+  const visibleCases = useMemo(
+    () => legCases.filter((legCase) => canAccessCase(accessUser, {
+      officeId: legCase.office_id ?? legCase.officeId,
+      assignedLawyerId: legCase.assigned_lawyer_id ?? legCase.lawyer_id ?? legCase.assignedLawyerId,
+      teamLawyerIds: legCase.team_lawyer_ids ?? legCase.teamLawyerIds,
+    }) && canAccessOffice(accessUser, legCase.office_id ?? legCase.officeId)),
+    [legCases, accessUser],
+  );
 
   const fetchLegCases = useCallback(async () => {
     try {
@@ -98,12 +118,16 @@ const LegalCasesIndex = () => {
       )}
 
       <TableComponent
-        data={legCases}
+        data={visibleCases}
         headers={headers}
-        onEdit={acl.update ? ((id) => handleAddEditModal(legCases.find((legCase) => legCase.id === id))) : undefined}
+        onEdit={acl.update ? ((id) => handleAddEditModal(visibleCases.find((legCase) => legCase.id === id))) : undefined}
         onDelete={acl.delete ? handleDeleteCase : undefined}
         customRenderers={customRenderers}
-        renderAddButton={acl.create ? (() => <button onClick={() => handleAddEditModal()} className="bg-gradient-green-button hover:bg-gradient-green-dark-button text-white px-4 py-2 rounded-lg transition">+ إضافة قضية جديدة</button>) : undefined}
+        renderAddButton={acl.create ? (() => (
+          <PermissionGuard permissions={permissionMap.legalCases.create} fallback={null}>
+            <button onClick={() => handleAddEditModal()} className="bg-gradient-green-button hover:bg-gradient-green-dark-button text-white px-4 py-2 rounded-lg transition">+ إضافة قضية جديدة</button>
+          </PermissionGuard>
+        )) : undefined}
         permissions={acl}
       />
     </div>
