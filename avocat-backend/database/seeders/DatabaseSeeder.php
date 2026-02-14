@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UsersTableSeeder::class,
             CourtTypesTableSeeder::class,
             CourtLevelsTableSeeder::class,
             CourtsTableSeeder::class,
@@ -46,6 +45,10 @@ class DatabaseSeeder extends Seeder
             SearchDegreesTableSeeder::class,
             SearchCaseTypesTableSeeder::class,
             ServiceClientTableSeeder::class,
+            UsersTableSeeder::class,
+            PermissionsSeeder::class,
+            RolesSeeder::class,
+            SuperAdminUserSeeder::class,
         ]);
     }
 }
