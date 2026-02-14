@@ -1,118 +1,96 @@
-import { LexicraftIcon } from '@shared/icons/lexicraft';
-import { useLanguage } from '@shared/contexts/LanguageContext';
+import { useEffect, useState } from 'react';
 
-const baseInputClass =
-  'w-full rounded-xl border border-border/70 bg-[hsl(var(--card)/0.75)] px-3 py-2.5 text-sm text-foreground shadow-sm backdrop-blur outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]';
+const inputClass =
+  'w-full rounded-xl border border-border/70 bg-[hsl(var(--card)/0.85)] px-3 py-2.5 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]';
 
-const ReportFilters = ({
-  filters,
-  selectFilters = [],
-  statusOptions = [],
-  onChange,
-  onApply,
-  onReset,
-  searchPlaceholder,
-}) => {
-  const { t, isRTL } = useLanguage();
+const formatDisplayDate = (value) => {
+  if (!value) return '--/--/----';
+  const [year, month, day] = value.split('-');
+  if (!year || !month || !day) return '--/--/----';
+  return `${day}/${month}/${year}`;
+};
+
+const TextInput = ({ field, value, onChange }) => (
+  <label className="space-y-1.5" dir="rtl">
+    <span className="block text-sm font-semibold text-foreground">{field.label}</span>
+    <input
+      value={value || ''}
+      onChange={(event) => onChange(field.name, event.target.value)}
+      className={`${inputClass} text-right`}
+    />
+  </label>
+);
+
+const SelectInput = ({ field, value, onChange, options }) => (
+  <label className="space-y-1.5" dir="rtl">
+    <span className="block text-sm font-semibold text-foreground">{field.label}</span>
+    <select value={value || ''} onChange={(event) => onChange(field.name, event.target.value)} className={`${inputClass} text-right`}>
+      <option value="">الكل</option>
+      {(options || []).map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </label>
+);
+
+const DateInput = ({ field, value, onChange }) => (
+  <label className="space-y-1.5" dir="rtl">
+    <span className="block text-sm font-semibold text-foreground">{field.label}</span>
+    <input type="date" value={value || ''} onChange={(event) => onChange(field.name, event.target.value)} className={`${inputClass} text-right`} />
+    <p className="text-xs text-muted-foreground">{formatDisplayDate(value)}</p>
+  </label>
+);
+
+const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
+  const [draft, setDraft] = useState(values);
+
+  useEffect(() => {
+    setDraft(values);
+  }, [values]);
+
+  const handleFieldChange = (name, value) => {
+    setDraft((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
-    <section className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-4 shadow-sm backdrop-blur">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-foreground">{t('common.filters') || 'Filters'}</h2>
-      </div>
-
+    <form
+      className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-4 shadow-sm"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit(draft);
+      }}
+      dir="rtl"
+    >
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-        <div className="relative">
-          <LexicraftIcon
-            name="search"
-            size={16}
-            className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`}
-          />
-          <input
-            value={filters.searchTerm || ''}
-            onChange={(event) => onChange({ searchTerm: event.target.value })}
-            placeholder={searchPlaceholder || t('common.search')}
-            className={`${baseInputClass} ${isRTL ? 'pr-10 text-right' : 'pl-10 text-left'}`}
-          />
-        </div>
-
-        {selectFilters.map((filter) => (
-          <select
-            key={filter.key}
-            value={filters[filter.key] || ''}
-            onChange={(event) => onChange({ [filter.key]: event.target.value })}
-            className={baseInputClass}
-          >
-            <option value="">{filter.placeholder}</option>
-            {filter.options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        ))}
-
-        <div className="relative">
-          <LexicraftIcon
-            name="calendar"
-            size={16}
-            className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`}
-          />
-          <input
-            type="date"
-            value={filters.startDate || ''}
-            onChange={(event) => onChange({ startDate: event.target.value })}
-            className={`${baseInputClass} ${isRTL ? 'pr-10 text-right' : 'pl-10 text-left'}`}
-          />
-        </div>
-
-        <div className="relative">
-          <LexicraftIcon
-            name="calendar"
-            size={16}
-            className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`}
-          />
-          <input
-            type="date"
-            value={filters.endDate || ''}
-            onChange={(event) => onChange({ endDate: event.target.value })}
-            className={`${baseInputClass} ${isRTL ? 'pr-10 text-right' : 'pl-10 text-left'}`}
-          />
-        </div>
-
-        {statusOptions.length > 0 && (
-          <select
-            value={filters.status || ''}
-            onChange={(event) => onChange({ status: event.target.value })}
-            className={baseInputClass}
-          >
-            <option value="">{t('reports.filters.allStatuses')}</option>
-            {statusOptions.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        )}
+        {schema.map((field) => {
+          if (field.type === 'select') {
+            return <SelectInput key={field.name} field={field} value={draft[field.name]} onChange={handleFieldChange} options={options[field.name]} />;
+          }
+          if (field.type === 'date') {
+            return <DateInput key={field.name} field={field} value={draft[field.name]} onChange={handleFieldChange} />;
+          }
+          return <TextInput key={field.name} field={field} value={draft[field.name]} onChange={handleFieldChange} />;
+        })}
       </div>
 
-      <div className={`mt-4 flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
-        <button
-          type="button"
-          onClick={onReset}
-          className="w-full rounded-xl border border-border/70 px-4 py-2 text-sm font-semibold text-foreground md:w-auto"
-        >
-          {t('common.reset')}
+      <div className="mt-4 flex flex-wrap justify-start gap-2">
+        <button type="submit" className="rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))]">
+          بحث
         </button>
         <button
           type="button"
-          onClick={onApply}
-          className="w-full rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] md:w-auto"
+          onClick={() => {
+            const clean = onReset();
+            setDraft(clean);
+          }}
+          className="rounded-xl border border-border/70 px-4 py-2 text-sm font-semibold text-foreground"
         >
-          {t('common.applyFilters')}
+          إعادة تعيين
         </button>
       </div>
-    </section>
+    </form>
   );
 };
 
