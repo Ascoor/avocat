@@ -765,10 +765,46 @@ const ar = {
       title: "المستخدمون", add: "إضافة مستخدم", edit: "تعديل مستخدم", name: "الاسم", email: "البريد", status: "الحالة", roles: "الأدوار", active: "نشط", inactive: "غير نشط"
     },
     roles: {
-      title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", selectModule: "تحديد القسم"
+      title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", selectModule: "تحديد القسم", assignPermissions: "تعيين الصلاحيات"
     },
     permissions: { title: "الصلاحيات" },
+    management: {
+      title: "المستخدمون والأدوار والصلاحيات",
+      subtitle: "إدارة الصلاحيات من مركز تحكم موحد بتصميم حديث ومنظم."
+    },
+    tabs: { users: "المستخدمون", roles: "الأدوار", permissions: "الصلاحيات" },
     qa: { title: "فحص RBAC", switchUser: "المستخدم التجريبي" }
+  },
+
+  access: {
+    permissionsModal: {
+      title: "إدارة صلاحيات الدور",
+      description: "إدارة صلاحيات هذا الدور من لوحة تحكم مرنة ومتجاوبة.",
+      searchPlaceholder: "ابحث داخل الصلاحيات...",
+      selectAll: "تحديد الكل",
+      deselectAll: "إلغاء تحديد الكل",
+      selectSection: "تحديد القسم",
+      selectedCount: "{{selected}} / {{total}} محدد",
+      totalSelected: "{{count}} محدد"
+    },
+    sections: {
+      dashboard: "لوحة التحكم",
+      legalCases: "القضايا",
+      clients: "العملاء",
+      sessions: "الجلسات",
+      procedures: "الإجراءات",
+      services: "الخدمات",
+      courts: "المحاكم",
+      lawyers: "المحامون",
+      reports: "التقارير",
+      adminUsers: "إدارة المستخدمين",
+      adminRoles: "إدارة الأدوار",
+      adminPermissions: "إدارة الصلاحيات",
+      expenses: "المصروفات",
+      notifications: "الإشعارات",
+      events: "الأحداث",
+      settings: "الإعدادات"
+    }
   },
 
   finance: {
