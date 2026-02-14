@@ -7,7 +7,7 @@ const ReportTabPage = ({ tabKey }) => {
 
   return (
     <div className="space-y-4">
-      <ReportFilters schema={schema} values={filters} options={options} onSubmit={submitFilters} onReset={resetFilters} />
+      <ReportFilters tabKey={tabKey} schema={schema} values={filters} options={options} onSubmit={submitFilters} onReset={resetFilters} />
       <ReportResults tabKey={tabKey} rows={rows} loading={loading} error={error} onRetry={retry} />
     </div>
   );
