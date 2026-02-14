@@ -23,7 +23,7 @@ class SuperAdminUserSeeder extends Seeder
         }
 
         $user = User::updateOrCreate(
-            ['email' => 'a@a.com'],
+            ['email' => env('SUPER_ADMIN_EMAIL', 'admin@domain.com')],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make($password),
