@@ -3,66 +3,56 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\Procedure;
 use Illuminate\Http\Request;
-use Symfony\Component\Process\Process;
 
 class ProcedureSearchController extends Controller
 {
     public function searchFilters(Request $request)
     {
-        // Validate the incoming request data
-        $request->validate([
+        $validated = $request->validate([
             'date_start' => 'nullable|date',
             'date_end' => 'nullable|date|after_or_equal:date_start',
             'lawyer_id' => 'nullable|exists:lawyers,id',
-            'court_id' => 'nullable|exists:courts,id',
             'procedure_type_id' => 'nullable|exists:procedure_types,id',
-            'procedure_Place_type_id' => 'nullable|exists:procedure_types,id',
-            'status' => 'nullable|in:منتهي,لم ينفذ,قيد التنفيذ',
+            'procedure_place_type_id' => 'nullable|exists:procedure_place_types,id',
+            'status' => 'nullable|in:تمت,لم ينفذ,جاري التنفيذ',
         ]);
 
-        // Retrieve data based on the provided filters
         $query = Procedure::query();
 
-        if ($request->filled('date_start') && $request->filled('date_end')) {
-            $query->whereBetween('date_start', [$request->date_start, $request->date_end]);
+        if (!empty($validated['date_start']) && !empty($validated['date_end'])) {
+            $query->whereBetween('date_start', [$validated['date_start'], $validated['date_end']]);
         }
 
-        if ($request->filled('lawyer_id')) {
-            $query->where('lawyer_id', $request->lawyer_id);
+        if (!empty($validated['lawyer_id'])) {
+            $query->where('lawyer_id', $validated['lawyer_id']);
         }
 
-        if ($request->filled('court_id')) {
-            $query->where('court_id', $request->court_id);
+        if (!empty($validated['procedure_type_id'])) {
+            $query->where('procedure_type_id', $validated['procedure_type_id']);
         }
 
-        if ($request->filled('procedure_type_id')) {
-            $query->where('procedure_type_id', $request->procedure_type_id);
-        }
-        if ($request->filled('procedure_Place_type_id')) {
-            $query->where('procedure_Place_type_id', $request->procedure_Place_type_id);
+        if (!empty($validated['procedure_place_type_id'])) {
+            $query->where('procedure_place_type_id', $validated['procedure_place_type_id']);
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if (!empty($validated['status'])) {
+            $query->where('status', $validated['status']);
         }
-        // Add more filter conditions here based on other filters
 
-        // Execute the query and get the results
-        $procedures = $query->with([
-            'court',
+        $procedures = $query
+            ->with([
+                'legCase:id,slug,title',
+                'lawyer:id,name',
+                'createdBy:id,name',
+                'procedurePlaceType:id,name',
+                'procedureType:id,name',
+            ])
+            ->orderByDesc('date_start')
+            ->orderByDesc('id')
+            ->get();
 
-
-            'lawyer',
-
-
-            'createdBy',
-            'procedurePlaceType',
-            'procedureType'
-        ])->get();
-
-        return response()->json($procedures );
+        return response()->json($procedures);
     }
 }
