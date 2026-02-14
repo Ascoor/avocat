@@ -29,6 +29,8 @@ import { toast } from "@shared/hooks/use-toast";
 import { cn } from "@shared/lib/utils";
 
 const Login = () => {
+  const demoEmail = import.meta.env.VITE_DEMO_LOGIN_EMAIL ?? "demo@avocat.app";
+  const demoPassword = import.meta.env.VITE_DEMO_LOGIN_PASSWORD ?? "demo12345";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +70,12 @@ const Login = () => {
   const heroCopy = useMemo(() => t("auth.login.hero"), [t]);
 
   const shouldReverse = useMemo(() => mirrored, [mirrored]);
+
+  const fillDemoCredentials = () => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setFormError(null);
+  };
 
   const heroHighlights = useMemo(() => {
     if (!heroCopy?.highlights) return [];
@@ -310,6 +318,17 @@ const Login = () => {
                 <p className="font-semibold text-foreground">{t("auth.security.title")}</p>
                 <p className="text-muted-foreground">{t("auth.security.subtitle")}</p>
               </div>
+            </div>
+
+            <div className="mt-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-semibold text-foreground">{t("auth.login.demo_title")}</p>
+                <Button type="button" size="sm" variant="outline" onClick={fillDemoCredentials}>
+                  {t("auth.login.use_demo")}
+                </Button>
+              </div>
+              <p className="mt-2 text-muted-foreground">{t("auth.login.demo_hint")}</p>
+              <p className="mt-1 text-foreground/90">{demoEmail} / {demoPassword}</p>
             </div>
           </div>
         ),
