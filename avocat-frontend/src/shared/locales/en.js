@@ -769,6 +769,11 @@ const en = {
       title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", selectModule: "Toggle module"
     },
     permissions: { title: "Permissions" },
+    management: {
+      title: "Users, roles and permissions",
+      subtitle: "Manage access from a unified control center with modern workflow."
+    },
+    tabs: { users: "Users", roles: "Roles", permissions: "Permissions" },
     qa: { title: "RBAC QA", switchUser: "Mock user" }
   },
 

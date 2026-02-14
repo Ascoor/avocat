@@ -6,7 +6,7 @@ import { sidebarGroups } from '@config/sidebar';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { cn } from '@shared/lib/utils';
 import { useSecurity } from '@shared/security/SecurityContext';
-import { hasPermission } from '@shared/security/permissions';
+import { hasAny, hasPermission } from '@shared/security/permissions';
 
 import {
   DropdownMenu,
@@ -31,7 +31,12 @@ const HeaderTabs = ({ className }) => {
   const { permissions } = useSecurity();
 
   const items = useMemo(() => {
-    const isAllowed = (item) => !item.requiredPermission || hasPermission(permissions, item.requiredPermission);
+    const isAllowed = (item) => {
+      if (!item.requiredPermission) return true;
+      return Array.isArray(item.requiredPermission)
+        ? hasAny(permissions, item.requiredPermission)
+        : hasPermission(permissions, item.requiredPermission);
+    };
     const flat = [];
     for (const group of sidebarGroups) {
       for (const item of group.items) {

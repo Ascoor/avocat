@@ -18,9 +18,7 @@ const LawyerList = lazy(() => import('@features/lawyers/pages/LawyerList'));
 const SearchCourtsApi = lazy(() => import('@features/courts/pages/SearchCourtsApi.jsx'));
 const IconsGalleryPage = lazy(() => import('@features/icons-gallery/pages/IconsGalleryPage'));
 const UiQaPage = lazy(() => import('@features/ui-qa/pages/UiQaPage'));
-const AdminUsersPage = lazy(() => import('@features/admin/pages/AdminUsersPage'));
-const AdminRolesPage = lazy(() => import('@features/admin/pages/AdminRolesPage'));
-const AdminPermissionsPage = lazy(() => import('@features/admin/pages/AdminPermissionsPage'));
+const AdminAccessManagementPage = lazy(() => import('@features/admin/pages/AdminAccessManagementPage'));
 const QaRbacPage = lazy(() => import('@features/admin/pages/QaRbacPage'));
 const ReportsIndex = lazy(() => import('@features/reports/pages/ReportsIndex'));
 const SessionsReport = lazy(() => import('@features/reports/pages/SessionsReport'));
@@ -34,10 +32,10 @@ const ServicesReport = lazy(() => import('@features/reports/pages/ServicesReport
  * - supports both prop names: `permissions` (old) and `require` (new)
  * - passes both down to PermissionGuard so either implementation works.
  */
-const Guarded = ({ require, permissions, moduleLabel, children }) => {
+const Guarded = ({ require, permissions, match, moduleLabel, children }) => {
   const req = require ?? permissions;
   return (
-    <PermissionGuard require={req} permissions={req} moduleLabel={moduleLabel}>
+    <PermissionGuard require={req} permissions={req} match={match} moduleLabel={moduleLabel}>
       {children}
     </PermissionGuard>
   );
@@ -160,29 +158,20 @@ const AuthRoutes = () => {
 
           {/* admin */}
           <Route
-            path="admin/users"
+            path="admin/access"
             element={
-              <Guarded require={permissionMap.adminUsers.list} moduleLabel="Admin Users">
-                <AdminUsersPage />
+              <Guarded
+                require={[permissionMap.adminUsers.list, permissionMap.adminRoles.list, permissionMap.adminPermissions.list]}
+                match="any"
+                moduleLabel="Admin Access Management"
+              >
+                <AdminAccessManagementPage />
               </Guarded>
             }
           />
-          <Route
-            path="admin/roles"
-            element={
-              <Guarded require={permissionMap.adminRoles.list} moduleLabel="Admin Roles">
-                <AdminRolesPage />
-              </Guarded>
-            }
-          />
-          <Route
-            path="admin/permissions"
-            element={
-              <Guarded require={permissionMap.adminPermissions.list} moduleLabel="Admin Permissions">
-                <AdminPermissionsPage />
-              </Guarded>
-            }
-          />
+          <Route path="admin/users" element={<Navigate to="/dashboard/admin/access?tab=users" replace />} />
+          <Route path="admin/roles" element={<Navigate to="/dashboard/admin/access?tab=roles" replace />} />
+          <Route path="admin/permissions" element={<Navigate to="/dashboard/admin/access?tab=permissions" replace />} />
 
           <Route
             path="financial-dashboard"

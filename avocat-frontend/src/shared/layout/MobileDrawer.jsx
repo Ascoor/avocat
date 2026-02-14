@@ -8,7 +8,7 @@ import { useSidebar } from "@shared/contexts/SidebarContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { sidebarGroups } from "@config/sidebar";
 import { useSecurity } from "@shared/security/SecurityContext";
-import { hasPermission } from "@shared/security/permissions";
+import { hasAny, hasPermission } from "@shared/security/permissions";
 
 const drawerVariants = {
   open: () => ({
@@ -50,7 +50,12 @@ const MobileDrawer = () => {
     document.documentElement.classList.remove("overflow-hidden");
   }, [isMobileOpen]);
 
-  const isAllowed = (item) => !item.requiredPermission || hasPermission(permissions, item.requiredPermission);
+  const isAllowed = (item) => {
+    if (!item.requiredPermission) return true;
+    return Array.isArray(item.requiredPermission)
+      ? hasAny(permissions, item.requiredPermission)
+      : hasPermission(permissions, item.requiredPermission);
+  };
   const visibleGroups = sidebarGroups
     .map((group) => ({
       ...group,
