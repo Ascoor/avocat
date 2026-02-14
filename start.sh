@@ -3,13 +3,13 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 COMPOSE="$ROOT/docker-compose.yml"
-BACKEND_DIR="$ROOT/new-avocatapp"
+BACKEND_DIR="$ROOT/avocat-backend"
 
 usage() {
   cat <<'USAGE'
 Usage: ./start.sh [up|rebuild|down|logs|init|migrate|ps|aliases]
 Core workflow (root script):
-  up       Start stack (detached) using the NEW backend (new-avocatapp)
+  up       Start stack (detached) using the NEW backend (avocat-backend)
   rebuild  Full rebuild from zero (down -v + no-cache build + up)
   down     Stop stack and remove volumes
 

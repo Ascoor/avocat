@@ -35,7 +35,7 @@ services:
   api:
     image: avocat-backend:latest
     build:
-      context: ./new-avocatapp
+      context: ./avocat-backend
       dockerfile: Dockerfile
     container_name: avc-api
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
       COMPOSER_CACHE_DIR: /tmp/composer-cache
       COMPOSER_ALLOW_SUPERUSER: "1"
     volumes:
-      - ./new-avocatapp:/var/www/html
+      - ./avocat-backend:/var/www/html
       - ./backend.env:/var/www/html/.env.docker:ro
       - avc-composer-cache:/tmp/composer-cache
     depends_on:
