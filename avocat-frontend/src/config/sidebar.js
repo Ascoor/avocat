@@ -20,7 +20,7 @@ export const sidebarGroups = [
   {
     key: "main",
     items: [
-      { key: "dashboard", labelKey: "navigation.dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { key: "dashboard", labelKey: "navigation.dashboard", icon: LayoutDashboard, path: "/dashboard", requiredPermission: permissionMap.dashboard.view },
       { key: "cases", labelKey: "navigation.cases", icon: Gavel, path: "/dashboard/legcases", requiredPermission: permissionMap.legalCases.list },
       { key: "services", labelKey: "navigation.services", icon: Scale, path: "/dashboard/legcase-services", requiredPermission: permissionMap.services.list },
     ],
@@ -45,6 +45,7 @@ export const sidebarGroups = [
         key: "customer_service",
         labelKey: "navigation.customerService",
         icon: Briefcase,
+        requiredPermission: permissionMap.clients.list,
         children: [
           { key: "clients", labelKey: "navigation.clients", icon: Briefcase, path: "/dashboard/clients", requiredPermission: permissionMap.clients.list },
           { key: "clients_no_agency", labelKey: "navigation.clientsNoAgency", icon: Users, path: "/dashboard/clients", requiredPermission: permissionMap.clients.list },
@@ -61,6 +62,7 @@ export const sidebarGroups = [
         key: "settings",
         labelKey: "navigation.settings",
         icon: Settings,
+        requiredPermission: permissionMap.settings.view,
         children: [
           { key: "office_settings", labelKey: "navigation.officeSettings", icon: Building2, path: "/dashboard/office-settings" },
           { key: "court_settings", labelKey: "navigation.courtSettings", icon: Landmark, path: "/dashboard/cases_setting", requiredPermission: permissionMap.courts.list },
