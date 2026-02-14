@@ -164,28 +164,42 @@ const filterRows = (rows, params) => {
 const endpoints = {
   cases: '/legal-cases',
   services: '/services',
-  procedures: '/procedures',
+  procedures: '/procedures-search',
   sessions: '/legal_sessions',
   clients: '/clients',
 };
 
-const BACKEND_SAFE_FILTERS = {
-  cases: ['slug', 'client_name'],
-  services: ['slug', 'client_name'],
-  procedures: [],
-  sessions: [],
-  clients: ['slug', 'client_name'],
-};
+const buildBackendRequest = (tabKey, params) => {
+  if (tabKey === 'procedures') {
+    return {
+      endpoint: endpoints[tabKey],
+      params: cleanParams({
+        procedure_type_id: params.procedure_type_id,
+        lawyer_id: params.lawyer_id,
+        date_start: params.from_date,
+        date_end: params.to_date,
+      }),
+    };
+  }
 
-const pickBackendParams = (tabKey, params) => {
+  const BACKEND_SAFE_FILTERS = {
+    cases: ['slug', 'client_name'],
+    services: ['slug', 'client_name'],
+    sessions: [],
+    clients: ['slug', 'client_name'],
+  };
+
   const allowedKeys = BACKEND_SAFE_FILTERS[tabKey] || [];
-  return Object.fromEntries(Object.entries(params).filter(([key]) => allowedKeys.includes(key)));
+  return {
+    endpoint: endpoints[tabKey],
+    params: Object.fromEntries(Object.entries(params).filter(([key]) => allowedKeys.includes(key))),
+  };
 };
 
 export const fetchReportRows = async (tabKey, params = {}) => {
   const sanitizedParams = cleanParams(params);
-  const backendParams = pickBackendParams(tabKey, sanitizedParams);
-  const response = await api.get(endpoints[tabKey], { params: backendParams });
+  const backendRequest = buildBackendRequest(tabKey, sanitizedParams);
+  const response = await api.get(backendRequest.endpoint, { params: backendRequest.params });
   const rows = extractRows(response?.data).map((row) => normalizeRow(tabKey, row));
   return filterRows(rows, sanitizedParams);
 };
