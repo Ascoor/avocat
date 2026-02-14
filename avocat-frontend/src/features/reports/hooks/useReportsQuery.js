@@ -18,45 +18,46 @@ export const REPORT_TABS = [
 ];
 
 const baseDateFields = [
-  { name: 'from_date', type: 'date', label: 'من تاريخ' },
-  { name: 'to_date', type: 'date', label: 'إلى تاريخ' },
+  { name: 'from_date', type: 'date', label: 'من' },
+  { name: 'to_date', type: 'date', label: 'إلى' },
 ];
 
 export const FILTER_SCHEMA = {
   cases: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'file_number', type: 'text', label: 'رقم الملف' },
-    { name: 'case_type_id', type: 'select', label: 'قائمة منسدلة بانواع القضايا' },
+    { name: 'case_type_id', type: 'select', label: 'نوع القضية' },
     ...baseDateFields,
-    { name: 'case_status', type: 'select', label: 'قائمة منسدلة بحالة القضية' },
+    { name: 'case_status', type: 'select', label: 'الحالة' },
   ],
   services: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'file_number', type: 'text', label: 'رقم الملف' },
-    { name: 'case_type_id', type: 'select', label: 'قائمة منسدلة بانواع القضايا' },
+    { name: 'case_type_id', type: 'select', label: 'نوع الخدمة' },
     ...baseDateFields,
-    { name: 'service_status', type: 'select', label: 'قائمة منسدلة بحالة الخدمة' },
+    { name: 'service_status', type: 'select', label: 'الحالة' },
   ],
   procedures: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'lawyer_id', type: 'select', label: 'قائمة منسدلة المحامين' },
+    { name: 'lawyer_id', type: 'select', label: 'المحامي' },
     { name: 'file_number', type: 'text', label: 'رقم الملف' },
-    { name: 'procedure_type_id', type: 'select', label: 'قائمة منسدلة بانواع الإجراءات' },
+    { name: 'procedure_type_id', type: 'select', label: 'نوع الإجراء' },
     ...baseDateFields,
-    { name: 'procedure_status', type: 'select', label: 'قائمة منسدلة بحالة الإجراء' },
+    { name: 'procedure_status', type: 'select', label: 'الحالة' },
   ],
   sessions: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'lawyer_id', type: 'select', label: 'قائمة منسدلة المحامين' },
+    { name: 'lawyer_id', type: 'select', label: 'المحامي' },
     { name: 'file_number', type: 'text', label: 'رقم الملف' },
-    { name: 'session_type_id', type: 'select', label: 'قائمة منسدلة بانواع الجلسات' },
+    { name: 'session_type_id', type: 'select', label: 'نوع الجلسة' },
     ...baseDateFields,
-    { name: 'session_status', type: 'select', label: 'قائمة منسدلة بحالة الجلسة' },
+    { name: 'session_status', type: 'select', label: 'الحالة' },
   ],
   clients: [
-    { name: 'client_type', type: 'select', label: 'قائمة منسدلة بانواع الموكلين: (بدون توكيل / بوكالة)' },
+    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
+    { name: 'client_type', type: 'select', label: 'نوع الموكل' },
     ...baseDateFields,
-    { name: 'client_status', type: 'select', label: 'قائمة منسدلة بحالة الموكل' },
+    { name: 'client_status', type: 'select', label: 'الحالة' },
   ],
 };
 
