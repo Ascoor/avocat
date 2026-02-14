@@ -27,7 +27,7 @@ fi
 # --- Clear caches BEFORE any artisan that boots the app ---
 php artisan optimize:clear || true
 
-# --- Wait DB ---
+# --- Wait for DB ---
 if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ]; then
   echo "⏳ Waiting for database ${DB_HOST}:${DB_PORT}..."
   until nc -z "$DB_HOST" "$DB_PORT"; do sleep 1; done
@@ -37,12 +37,11 @@ fi
 if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)" ]; then
   php artisan key:generate --force --ansi
 fi
+
 # --- Migrate & Seed (seed only once using marker) ---
 echo "⏳ Running migrations..."
-  php artisan db:wipe
-  php artisan migrate:fresh  --seed 
-
-
+php artisan db:wipe
+php artisan migrate:fresh --seed 
 
 # --- Queue (optional) ---
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
