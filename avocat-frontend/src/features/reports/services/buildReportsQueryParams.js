@@ -7,19 +7,27 @@ const cleanValue = (value) => {
   return value;
 };
 
-export const buildReportsQueryParams = ({ filters = {}, pagination = {} } = {}) => {
+export const buildReportsQueryParams = (
+  { filters = {}, pagination = {} } = {},
+  allowedFilterKeys = [],
+) => {
   const params = {
     page: Number(pagination.page || 1),
     per_page: Number(pagination.per_page || 20),
   };
 
+  const allowedKeysSet = new Set(allowedFilterKeys);
+
   Object.entries(filters || {}).forEach(([key, rawValue]) => {
+    if (allowedKeysSet.size && !allowedKeysSet.has(key)) return;
     const value = cleanValue(rawValue);
     if (value == null) return;
     params[key] = value;
   });
 
-  return Object.fromEntries(Object.entries(params).filter(([, value]) => value != null));
+  return Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value != null),
+  );
 };
 
 export const parseReportsStateFromSearch = (searchParams, defaults) => {
@@ -33,7 +41,9 @@ export const parseReportsStateFromSearch = (searchParams, defaults) => {
     filters: nextFilters,
     pagination: {
       page: Number(searchParams.get('page') || defaults.pagination.page),
-      per_page: Number(searchParams.get('per_page') || defaults.pagination.per_page),
+      per_page: Number(
+        searchParams.get('per_page') || defaults.pagination.per_page,
+      ),
     },
   };
 };
