@@ -1,26 +1,6 @@
 export const FILTER_SCHEMA = {
   cases: {
-    fields: {
-      client_name: { label: 'اسم الموكل', type: 'text' },
-      file_number: { label: 'رقم الملف', type: 'text' },
-      case_type_id: { label: 'نوع القضية', type: 'select' },
-      from_date: { label: 'من تاريخ', type: 'date' },
-      to_date: { label: 'إلى تاريخ', type: 'date' },
-      case_status: { label: 'حالة القضية', type: 'select' },
-    },
-    groups: [
-      {
-        title: 'بيانات القضية',
-        fields: ['client_name', 'file_number', 'case_type_id'],
-      },
-      { title: 'الحالة', fields: ['case_status'] },
-      { title: 'الفترة الزمنية', fields: ['from_date', 'to_date'] },
-    ],
-    layout: [
-      ['client_name', 'file_number', 'case_type_id'],
-      ['case_status', 'from_date', 'to_date'],
-    ],
-    defaultValues: {
+    defaults: {
       client_name: '',
       file_number: '',
       case_type_id: '',
@@ -28,29 +8,26 @@ export const FILTER_SCHEMA = {
       to_date: '',
       case_status: '',
     },
-  },
-  services: {
     fields: {
-      client_name: { label: 'اسم الموكل', type: 'text' },
-      file_number: { label: 'رقم الملف', type: 'text' },
-      case_type_id: { label: 'نوع القضية', type: 'select' },
-      from_date: { label: 'من تاريخ', type: 'date' },
-      to_date: { label: 'إلى تاريخ', type: 'date' },
-      service_status: { label: 'حالة الخدمة', type: 'select' },
+      client_name: { type: 'text', labelKey: 'reports.filters.fields.clientName' },
+      file_number: { type: 'text', labelKey: 'reports.filters.fields.fileNumber' },
+      case_type_id: { type: 'select', labelKey: 'reports.filters.fields.caseType' },
+      from_date: { type: 'date', labelKey: 'reports.filters.fields.fromDate' },
+      to_date: { type: 'date', labelKey: 'reports.filters.fields.toDate' },
+      case_status: { type: 'select', labelKey: 'reports.filters.fields.caseStatus' },
     },
     groups: [
-      {
-        title: 'بيانات الخدمة',
-        fields: ['client_name', 'file_number', 'case_type_id'],
-      },
-      { title: 'الحالة', fields: ['service_status'] },
-      { title: 'الفترة الزمنية', fields: ['from_date', 'to_date'] },
+      { titleKey: 'reports.filters.groups.basic', fields: ['client_name', 'file_number', 'case_type_id'] },
+      { titleKey: 'reports.filters.groups.classification', fields: ['case_status'] },
+      { titleKey: 'reports.filters.groups.date', fields: ['from_date', 'to_date'] },
     ],
     layout: [
       ['client_name', 'file_number', 'case_type_id'],
-      ['service_status', 'from_date', 'to_date'],
+      ['case_status', 'from_date', 'to_date'],
     ],
-    defaultValues: {
+  },
+  services: {
+    defaults: {
       client_name: '',
       file_number: '',
       case_type_id: '',
@@ -58,96 +35,102 @@ export const FILTER_SCHEMA = {
       to_date: '',
       service_status: '',
     },
-  },
-  procedures: {
     fields: {
-      client_name: { label: 'اسم الموكل', type: 'text' },
-      file_number: { label: 'رقم الملف', type: 'text' },
-      lawyer_id: { label: 'المحامي', type: 'select' },
-      procedure_type_id: { label: 'نوع الإجراء', type: 'select' },
-      from_date: { label: 'من تاريخ', type: 'date' },
-      to_date: { label: 'إلى تاريخ', type: 'date' },
-      procedure_status: { label: 'حالة الإجراء', type: 'select' },
+      client_name: { type: 'text', labelKey: 'reports.filters.fields.clientName' },
+      file_number: { type: 'text', labelKey: 'reports.filters.fields.fileNumber' },
+      case_type_id: { type: 'select', labelKey: 'reports.filters.fields.caseType' },
+      from_date: { type: 'date', labelKey: 'reports.filters.fields.fromDate' },
+      to_date: { type: 'date', labelKey: 'reports.filters.fields.toDate' },
+      service_status: { type: 'select', labelKey: 'reports.filters.fields.serviceStatus' },
     },
     groups: [
-      {
-        title: 'بيانات الإجراء',
-        fields: [
-          'client_name',
-          'file_number',
-          'lawyer_id',
-          'procedure_type_id',
-        ],
-      },
-      { title: 'الحالة', fields: ['procedure_status'] },
-      { title: 'الفترة الزمنية', fields: ['from_date', 'to_date'] },
+      { titleKey: 'reports.filters.groups.basic', fields: ['client_name', 'file_number', 'case_type_id'] },
+      { titleKey: 'reports.filters.groups.classification', fields: ['service_status'] },
+      { titleKey: 'reports.filters.groups.date', fields: ['from_date', 'to_date'] },
     ],
     layout: [
-      ['client_name', 'file_number', 'lawyer_id'],
-      ['procedure_type_id', 'procedure_status', 'from_date'],
-      ['to_date'],
+      ['client_name', 'file_number', 'case_type_id'],
+      ['service_status', 'from_date', 'to_date'],
     ],
-    defaultValues: {
+  },
+  procedures: {
+    defaults: {
       client_name: '',
-      file_number: '',
       lawyer_id: '',
+      file_number: '',
       procedure_type_id: '',
       from_date: '',
       to_date: '',
       procedure_status: '',
     },
-  },
-  sessions: {
     fields: {
-      client_name: { label: 'اسم الموكل', type: 'text' },
-      file_number: { label: 'رقم الملف', type: 'text' },
-      lawyer_id: { label: 'المحامي', type: 'select' },
-      session_type_id: { label: 'نوع الجلسة', type: 'select' },
-      from_date: { label: 'من تاريخ', type: 'date' },
-      to_date: { label: 'إلى تاريخ', type: 'date' },
-      session_status: { label: 'حالة الجلسة', type: 'select' },
+      client_name: { type: 'text', labelKey: 'reports.filters.fields.clientName' },
+      lawyer_id: { type: 'select', labelKey: 'reports.filters.fields.lawyer' },
+      file_number: { type: 'text', labelKey: 'reports.filters.fields.fileNumber' },
+      procedure_type_id: { type: 'select', labelKey: 'reports.filters.fields.procedureType' },
+      from_date: { type: 'date', labelKey: 'reports.filters.fields.fromDate' },
+      to_date: { type: 'date', labelKey: 'reports.filters.fields.toDate' },
+      procedure_status: { type: 'select', labelKey: 'reports.filters.fields.procedureStatus' },
     },
     groups: [
-      {
-        title: 'بيانات الجلسة',
-        fields: ['client_name', 'file_number', 'lawyer_id', 'session_type_id'],
-      },
-      { title: 'الحالة', fields: ['session_status'] },
-      { title: 'الفترة الزمنية', fields: ['from_date', 'to_date'] },
+      { titleKey: 'reports.filters.groups.basic', fields: ['client_name', 'lawyer_id', 'file_number', 'procedure_type_id'] },
+      { titleKey: 'reports.filters.groups.classification', fields: ['procedure_status'] },
+      { titleKey: 'reports.filters.groups.date', fields: ['from_date', 'to_date'] },
     ],
     layout: [
-      ['client_name', 'file_number', 'lawyer_id'],
-      ['session_type_id', 'session_status', 'from_date'],
+      ['client_name', 'lawyer_id', 'file_number'],
+      ['procedure_type_id', 'procedure_status', 'from_date'],
       ['to_date'],
     ],
-    defaultValues: {
+  },
+  sessions: {
+    defaults: {
       client_name: '',
-      file_number: '',
       lawyer_id: '',
+      file_number: '',
       session_type_id: '',
       from_date: '',
       to_date: '',
       session_status: '',
     },
-  },
-  clients: {
     fields: {
-      client_type: { label: 'نوع الموكل', type: 'select' },
-      from_date: { label: 'من تاريخ', type: 'date' },
-      to_date: { label: 'إلى تاريخ', type: 'date' },
-      client_status: { label: 'حالة الموكل', type: 'select' },
+      client_name: { type: 'text', labelKey: 'reports.filters.fields.clientName' },
+      lawyer_id: { type: 'select', labelKey: 'reports.filters.fields.lawyer' },
+      file_number: { type: 'text', labelKey: 'reports.filters.fields.fileNumber' },
+      session_type_id: { type: 'select', labelKey: 'reports.filters.fields.sessionType' },
+      from_date: { type: 'date', labelKey: 'reports.filters.fields.fromDate' },
+      to_date: { type: 'date', labelKey: 'reports.filters.fields.toDate' },
+      session_status: { type: 'select', labelKey: 'reports.filters.fields.sessionStatus' },
     },
     groups: [
-      { title: 'بيانات الموكل', fields: ['client_type', 'client_status'] },
-      { title: 'الفترة الزمنية', fields: ['from_date', 'to_date'] },
+      { titleKey: 'reports.filters.groups.basic', fields: ['client_name', 'lawyer_id', 'file_number', 'session_type_id'] },
+      { titleKey: 'reports.filters.groups.classification', fields: ['session_status'] },
+      { titleKey: 'reports.filters.groups.date', fields: ['from_date', 'to_date'] },
     ],
-    layout: [['client_type', 'client_status', 'from_date'], ['to_date']],
-    defaultValues: {
+    layout: [
+      ['client_name', 'lawyer_id', 'file_number'],
+      ['session_type_id', 'session_status', 'from_date'],
+      ['to_date'],
+    ],
+  },
+  clients: {
+    defaults: {
       client_type: '',
       from_date: '',
       to_date: '',
       client_status: '',
     },
+    fields: {
+      client_type: { type: 'select', labelKey: 'reports.filters.fields.clientType' },
+      from_date: { type: 'date', labelKey: 'reports.filters.fields.fromDate' },
+      to_date: { type: 'date', labelKey: 'reports.filters.fields.toDate' },
+      client_status: { type: 'select', labelKey: 'reports.filters.fields.clientStatus' },
+    },
+    groups: [
+      { titleKey: 'reports.filters.groups.classification', fields: ['client_type', 'client_status'] },
+      { titleKey: 'reports.filters.groups.date', fields: ['from_date', 'to_date'] },
+    ],
+    layout: [['client_type', 'client_status', 'from_date'], ['to_date']],
   },
 };
 
@@ -158,10 +141,9 @@ export const getDefaultReportState = (tabKey) => {
   }
 
   return {
-    filters: { ...schema.defaultValues },
+    filters: { ...schema.defaults },
     pagination: { page: 1, per_page: 20 },
   };
 };
 
-export const getFilterKeysForTab = (tabKey) =>
-  Object.keys(FILTER_SCHEMA[tabKey]?.fields || {});
+export const getFilterKeysForTab = (tabKey) => Object.keys(FILTER_SCHEMA[tabKey]?.fields || {});

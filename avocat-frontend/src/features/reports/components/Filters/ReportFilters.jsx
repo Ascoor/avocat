@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-
-const inputClass =
-  'h-11 w-full rounded-xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] px-3 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--color-primary)/0.3)]';
-
-const FieldWrapper = ({ label, helper, children }) => (
-  <label className="space-y-1.5 text-right">
-    <span className="block text-sm font-medium text-foreground">{label}</span>
-    {children}
-    {helper ? <span className="block text-xs text-muted-foreground">{helper}</span> : null}
-  </label>
-);
+import {
+  DateRange,
+  FilterGrid,
+  FilterGroup,
+  FilterShell,
+  FormField,
+  SelectInput,
+  TextInput,
+} from '@shared/components/filters';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { isDateRangeValid } from '@shared/utils/dateFilters';
 
 const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
   const [draft, setDraft] = useState(values);
+  const { direction, t } = useLanguage();
 
   useEffect(() => setDraft(values), [values]);
 
@@ -20,79 +21,97 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
 
   const renderField = (name) => {
     const field = fieldsByName[name];
-    if (!field) return <div key={name} />;
+    if (!field) return null;
+
+    const label = t(field.labelKey);
 
     if (field.type === 'select') {
       return (
-        <FieldWrapper key={name} label={field.label}>
-          <select
+        <FormField key={name} label={label}>
+          <SelectInput
             value={draft[name] || ''}
-            onChange={(e) => setDraft((prev) => ({ ...prev, [name]: e.target.value }))}
-            className={inputClass}
-          >
-            <option value="">الكل</option>
-            {(options[name] || []).map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </FieldWrapper>
+            onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
+            options={options[name] || []}
+            emptyOptionLabel={t('reports.filters.emptyOption')}
+          />
+        </FormField>
       );
     }
 
-    return (
-      <FieldWrapper key={name} label={field.label} helper={field.type === 'date' ? 'التنسيق: يوم/شهر/سنة' : ''}>
-        <input
-          type={field.type === 'date' ? 'date' : 'text'}
-          value={draft[name] || ''}
-          onChange={(e) => setDraft((prev) => ({ ...prev, [name]: e.target.value }))}
-          className={inputClass}
-        />
-      </FieldWrapper>
-    );
+    if (field.type === 'text') {
+      return (
+        <FormField key={name} label={label}>
+          <TextInput
+            value={draft[name] || ''}
+            onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
+            placeholder={t('reports.filters.textPlaceholder')}
+          />
+        </FormField>
+      );
+    }
+
+    return null;
   };
+
+  const hasDateRange = Boolean(fieldsByName.from_date && fieldsByName.to_date);
 
   return (
     <form
-      dir="rtl"
-      className="space-y-5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 md:p-5"
-      onSubmit={(e) => {
-        e.preventDefault();
+      dir={direction}
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!isDateRangeValid(draft.from_date, draft.to_date)) return;
         onSubmit(draft);
       }}
     >
-      <div className="space-y-4">
-        {(schema.groups || []).map((group, index) => (
-          <section key={group.title} className={index > 0 ? 'border-t border-border/60 pt-4' : ''}>
-            <h3 className="mb-3 text-xs font-semibold text-muted-foreground">{group.title}</h3>
-            <div className="flex flex-wrap gap-2">
-              {group.fields.map((fieldName) => (
-                <span key={fieldName} className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {fieldsByName[fieldName]?.label}
-                </span>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
+      <FilterShell
+        dir={direction}
+        title={t('reports.filters.title')}
+        subtitle={t('reports.filters.subtitle')}
+        actions={(
+          <>
+            <button type="submit" className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))]">
+              {t('reports.filters.searchButton')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDraft(onReset())}
+              className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground"
+            >
+              {t('reports.filters.resetButton')}
+            </button>
+          </>
+        )}
+      >
+        {(schema.groups || []).map((group, index) => {
+          const fieldNames = group.fields.filter(
+            (fieldName) => !(hasDateRange && (fieldName === 'from_date' || fieldName === 'to_date')),
+          );
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {(schema.layout || []).flat().map((fieldName) => renderField(fieldName))}
-      </div>
+          return (
+            <FilterGroup key={group.titleKey} title={t(group.titleKey)} divider={index > 0}>
+              {fieldNames.length ? (
+                <FilterGrid columns={{ base: 1, md: 2, lg: 3 }}>
+                  {fieldNames.map((fieldName) => renderField(fieldName))}
+                </FilterGrid>
+              ) : null}
 
-      <div className="flex items-center justify-start gap-2 md:justify-end">
-        <button type="submit" className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))]">
-          بحث
-        </button>
-        <button
-          type="button"
-          onClick={() => setDraft(onReset())}
-          className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground"
-        >
-          إعادة تعيين
-        </button>
-      </div>
+              {hasDateRange && group.fields.includes('from_date') ? (
+                <DateRange
+                  fromLabel={t(fieldsByName.from_date.labelKey)}
+                  toLabel={t(fieldsByName.to_date.labelKey)}
+                  fromValue={draft.from_date || ''}
+                  toValue={draft.to_date || ''}
+                  onChange={({ from_date, to_date }) => setDraft((prev) => ({ ...prev, from_date, to_date }))}
+                  helperText={t('reports.filters.dateFormat')}
+                  invalidRangeText={t('reports.filters.invalidDateRange')}
+                  clearText={t('reports.filters.clearDateRange')}
+                />
+              ) : null}
+            </FilterGroup>
+          );
+        })}
+      </FilterShell>
     </form>
   );
 };
