@@ -12,7 +12,7 @@ class RolesSeeder extends Seeder
 {
     public function run(): void
     {
-        $guardName = (string) config('permissions.guard', 'api');
+        $guardName = (string) config('permissions.guard', 'web');
         $allPermissions = Permission::query()->where('guard_name', $guardName)->pluck('name');
         $roleMap = config('permissions.roles', []);
 

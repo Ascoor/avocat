@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -16,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
 
-    protected string $guard_name = 'api';
+    protected string $guard_name = 'web';
 
     /**
      * The attributes that are mass assignable.
@@ -125,4 +126,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Expense::class, 'created_by');
     }
+    public function lawyerProfile(): HasOne
+    {
+        return $this->hasOne(Lawyer::class);
+    }
 }
+

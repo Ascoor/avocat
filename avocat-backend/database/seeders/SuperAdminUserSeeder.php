@@ -31,7 +31,7 @@ class SuperAdminUserSeeder extends Seeder
             ]
         );
 
-        $guardName = (string) config('permissions.guard', 'api');
+        $guardName = (string) config('permissions.guard', 'web');
         $role = Role::findOrCreate('super_admin', $guardName);
 
         $user->syncRoles([$role]);
