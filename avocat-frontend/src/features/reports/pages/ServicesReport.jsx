@@ -1,56 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import TableComponent from '@shared/components/common/TableComponent';
-import { useLanguage } from '@shared/contexts/LanguageContext';
-import ReportFilters from '@features/reports/components/Filters/ReportFilters';
-import ReportStatusBadge from '@features/reports/components/Reports/ReportStatusBadge';
-import { useServicesReport } from '@features/reports/hooks/useServicesReport';
+import ReportTabPage from '@features/reports/pages/ReportTabPage';
 
-const ServicesReport = () => {
-  const { t, isRTL } = useLanguage();
-  const { rows, loading, error, filters, updateFilters, resetFilters, reload } = useServicesReport();
-  const [draftFilters, setDraftFilters] = useState(filters);
-
-  const headers = useMemo(
-    () => [
-      { key: 'name', text: t('reports.columns.serviceName'), sortValue: (row) => row?.name || '' },
-      { key: 'description', text: t('reports.columns.description'), sortValue: (row) => row?.description || '' },
-      {
-        key: 'client',
-        text: t('reports.columns.clientName'),
-        getValue: (row) => row?.client?.name || '-',
-        sortValue: (row) => row?.client?.name || '',
-      },
-      { key: 'status', text: t('reports.columns.status'), sortValue: (row) => row?.status || '' },
-    ],
-    [t],
-  );
-
-  return (
-    <div className="space-y-4">
-      <ReportFilters
-        filters={draftFilters}
-        onChange={(payload) => setDraftFilters((prev) => ({ ...prev, ...payload }))}
-        onApply={() => updateFilters(draftFilters)}
-        onReset={() => {
-          const clean = { searchTerm: '', startDate: '', endDate: '', status: '' };
-          setDraftFilters(clean);
-          resetFilters();
-        }}
-      />
-      <TableComponent
-        data={rows}
-        headers={headers}
-        loading={loading}
-        error={error}
-        isRTL={isRTL}
-        onRetry={reload}
-        customRenderers={{ status: (row) => <ReportStatusBadge status={row?.status} /> }}
-        emptyLabel={t('reports.states.empty')}
-        errorLabel={t('reports.states.error')}
-        searchPlaceholder={t('reports.filters.search')}
-      />
-    </div>
-  );
-};
+const ServicesReport = () => <ReportTabPage tabKey="services" />;
 
 export default ServicesReport;
