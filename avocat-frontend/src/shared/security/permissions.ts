@@ -1,4 +1,4 @@
-import { permissionMap, type PermissionModuleKey } from "@shared/security/permission-map";
+import { permissionMap, type ModulePermissions, type PermissionModuleKey, type PermissionName } from "@shared/security/permission-map";
 
 export const hasPermission = (permissions: string[] = [], permission?: string) =>
   Boolean(permission && permissions.includes(permission));
@@ -9,12 +9,30 @@ export const hasAny = (permissions: string[] = [], required: string[] = []) =>
 export const hasAll = (permissions: string[] = [], required: string[] = []) =>
   required.every((permission) => permissions.includes(permission));
 
+export const modulePermissions = <TModule extends PermissionModuleKey>(moduleKey: TModule): ModulePermissions<TModule> =>
+  permissionMap[moduleKey];
+
 export const canCrud = (permissions: string[] = [], moduleKey: PermissionModuleKey) => {
-  const crud = permissionMap[moduleKey];
+  const moduleAcl = permissionMap[moduleKey];
   return {
-    view: hasPermission(permissions, crud.view),
-    create: hasPermission(permissions, crud.create),
-    update: hasPermission(permissions, crud.update),
-    delete: hasPermission(permissions, crud.delete),
+    view: hasPermission(permissions, moduleAcl.view),
+    create: hasPermission(permissions, moduleAcl.create),
+    update: hasPermission(permissions, moduleAcl.update),
+    delete: hasPermission(permissions, moduleAcl.delete),
   };
+};
+
+export const canAction = (
+  permissions: string[] = [],
+  moduleKey: PermissionModuleKey,
+  action: keyof ModulePermissions,
+) => hasPermission(permissions, permissionMap[moduleKey][action]);
+
+export const guardPermissions = (
+  permissions: string[] = [],
+  requirement: PermissionName | PermissionName[],
+  match: "all" | "any" = "all",
+) => {
+  const required = Array.isArray(requirement) ? requirement : [requirement];
+  return match === "all" ? hasAll(permissions, required) : hasAny(permissions, required);
 };
