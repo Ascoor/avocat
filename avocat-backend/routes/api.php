@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\ProcedureController;
 use App\Http\Controllers\Api\ProcedurePlaceTypeController;
 use App\Http\Controllers\Api\ProcedureSearchController;
 use App\Http\Controllers\Api\ProcedureTypeController;
+use App\Http\Controllers\Api\RbacController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ServiceProcedureController;
 use App\Http\Controllers\Api\UnclientController;
@@ -48,6 +49,18 @@ Route::prefix('v1')->group(function () {
             ->name('verification.verify');
         Route::post('email/verify/resend', [AuthController::class, 'resendVerificationEmail'])->name('verification.resend');
         Route::post('token/refresh', [AuthController::class, 'token']);
+
+
+        Route::get('rbac/me', [RbacController::class, 'me']);
+        Route::get('rbac/users', [RbacController::class, 'users']);
+        Route::post('rbac/users', [RbacController::class, 'storeUser']);
+        Route::put('rbac/users/{user}', [RbacController::class, 'updateUser']);
+        Route::delete('rbac/users/{user}', [RbacController::class, 'deleteUser']);
+        Route::get('rbac/roles', [RbacController::class, 'roles']);
+        Route::post('rbac/roles', [RbacController::class, 'storeRole']);
+        Route::put('rbac/roles/{role}', [RbacController::class, 'updateRole']);
+        Route::delete('rbac/roles/{role}', [RbacController::class, 'deleteRole']);
+        Route::get('rbac/permissions', [RbacController::class, 'permissions']);
 
         Route::get('search-court', [CourtSearchController::class, 'index']);
         Route::get('clients/search', [DashboardController::class, 'getClientByNameOrPhoneNumber'])->name('client.search');
