@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableComponent from '@shared/components/common/TableComponent';
 import { rbacClient } from '@shared/api/rbac/client';
 import { useLanguage } from '@shared/contexts/LanguageContext';
@@ -22,13 +22,13 @@ const AdminUsersPage = () => {
   const [editing, setEditing] = useState(null);
   const [toDelete, setToDelete] = useState(null);
 
-  const reload = async () => {
+  const reload = useCallback(async () => {
     const [usersRes, rolesRes] = await Promise.all([rbacClient.users.list(), rbacClient.roles.list()]);
     setUsers(usersRes);
     setRoles(rolesRes);
-  };
+  }, []);
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => { reload(); }, [reload]);
 
   const headers = useMemo(() => [
     { key: 'name', text: t('rbac.users.name') },
@@ -53,6 +53,49 @@ const AdminUsersPage = () => {
     setOpen(false);
   };
 
+  const toggleStatus = useCallback(async (row) => {
+    const nextStatus = row.status === 'active' ? 'inactive' : 'active';
+    await rbacClient.users.update(row.id, {
+      name: row.name,
+      email: row.email,
+      roleIds: row.roleIds,
+      status: nextStatus,
+    });
+    await reload();
+    await refreshMe();
+  }, [refreshMe, reload]);
+
+  const actionColumns = useMemo(() => [
+    {
+      key: 'edit',
+      header: t('common.edit'),
+      icon: 'edit',
+      width: 88,
+      onClick: (_row, id) => openEdit(id),
+      isVisible: () => acl.update,
+      tooltip: t('common.edit'),
+    },
+    {
+      key: 'delete',
+      header: t('common.delete'),
+      icon: 'trash',
+      width: 88,
+      danger: true,
+      onClick: (row) => setToDelete(row),
+      isVisible: () => acl.delete,
+      tooltip: t('common.delete'),
+    },
+    {
+      key: 'change_status',
+      header: t('common.status'),
+      icon: 'shield',
+      width: 88,
+      onClick: (row) => toggleStatus(row),
+      isVisible: () => acl.update,
+      tooltip: t('common.status'),
+    },
+  ], [acl.delete, acl.update, t, toggleStatus]);
+
   if (!acl.view) return <ForbiddenState moduleLabel={t('rbac.modules.adminUsers')} />;
 
   return (
@@ -62,8 +105,7 @@ const AdminUsersPage = () => {
         data={users}
         headers={headers}
         onAdd={openCreate}
-        onEdit={openEdit}
-        onDelete={(id) => setToDelete(users.find((u) => u.id === id) || null)}
+        actionColumns={actionColumns}
         addLabel={t('rbac.users.add')}
         permissions={acl}
         customRenderers={{

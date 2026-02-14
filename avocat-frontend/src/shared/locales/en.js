@@ -25,6 +25,11 @@ const en = {
     save: "Save",
     cancel: "Cancel",
     delete: "Delete",
+
+    view: "View",
+    edit: "Edit",
+    assign: "Assign",
+    status: "Status",
     search: "Search",
     logout: "Logout",
     applyFilters: "Apply filters",

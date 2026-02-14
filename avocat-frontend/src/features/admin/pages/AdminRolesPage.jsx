@@ -47,11 +47,42 @@ const AdminRolesPage = () => {
     setOpen(false);
   };
 
+  const actionColumns = useMemo(() => [
+    {
+      key: 'edit',
+      header: t('common.edit'),
+      icon: 'edit',
+      width: 88,
+      onClick: (_row, id) => openEditor(id),
+      isVisible: () => acl.update,
+      tooltip: t('common.edit'),
+    },
+    {
+      key: 'delete',
+      header: t('common.delete'),
+      icon: 'trash',
+      width: 88,
+      danger: true,
+      onClick: (role) => setToDelete(role),
+      isVisible: () => acl.delete,
+      tooltip: t('common.delete'),
+    },
+    {
+      key: 'assign_permissions',
+      header: t('common.assign'),
+      icon: 'shield',
+      width: 92,
+      onClick: (_row, id) => openEditor(id),
+      isVisible: () => acl.update,
+      tooltip: t('common.assign'),
+    },
+  ], [acl.delete, acl.update, t]);
+
   if (!acl.view) return <ForbiddenState moduleLabel={t('rbac.modules.adminRoles')} />;
 
   return (
     <div className="p-6 mt-12">
-      <TableComponent title={t('rbac.roles.title')} data={roles} headers={headers} addLabel={t('rbac.roles.add')} onAdd={() => { setEditing(null); setForm({ name: '', permissionNames: [] }); setOpen(true); }} onEdit={openEditor} onDelete={(id) => setToDelete(roles.find((role) => role.id === id))} permissions={acl} customRenderers={{ count: (role) => role.permissionNames.length }} />
+      <TableComponent title={t('rbac.roles.title')} data={roles} headers={headers} addLabel={t('rbac.roles.add')} onAdd={() => { setEditing(null); setForm({ name: '', permissionNames: [] }); setOpen(true); }} actionColumns={actionColumns} permissions={acl} customRenderers={{ count: (role) => role.permissionNames.length }} />
       <GlobalModal isOpen={open} onClose={() => setOpen(false)} title={editing ? t('rbac.roles.edit') : t('rbac.roles.add')} titleIcon={<LexicraftIcon name="shield" size={16} />}>
         <form onSubmit={save} className="grid gap-3">
           <input className="rounded border p-2" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} placeholder={t('rbac.roles.name')} />

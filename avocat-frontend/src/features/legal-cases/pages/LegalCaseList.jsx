@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, lazy, Suspense, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SectionHeader from '@shared/components/common/SectionHeader';
 import TableComponent from '@shared/components/common/TableComponent';
-import { AiFillCheckCircle, AiFillEye } from 'react-icons/ai';
+import { AiFillCheckCircle } from 'react-icons/ai';
 import { LegCaseIcon } from '@assets/icons';
 import { getLegCases } from '@shared/services/api/legalCases';
 import api from '@shared/services/api/axiosConfig';
@@ -12,11 +12,14 @@ import ForbiddenState from '@shared/security/ForbiddenState';
 import PermissionGuard from '@shared/security/PermissionGuard';
 import { permissionMap } from '@shared/security/permission-map';
 import { canAccessCase, canAccessOffice } from '@shared/security/abac';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const AddEditLegCase = lazy(() => import('../components/LegalCases/AddEditLegCase'));
 
 const LegalCasesIndex = () => {
   const { permissions, user, roles } = useSecurity();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
   const acl = canCrud(permissions, 'legalCases');
   const [legCases, setLegCases] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -68,7 +71,6 @@ const LegalCasesIndex = () => {
   };
 
   const headers = [
-    { key: 'actions', text: 'عرض' },
     { key: 'slug', text: 'رقم الملف' },
     { key: 'clients', text: 'الموكل' },
     { key: 'client_capacity', text: 'صفة الموكل' },
@@ -97,14 +99,38 @@ const LegalCasesIndex = () => {
       const statusText = legCase.status || 'غير محدد';
       return <span className={`flex items-center ${statusColors[statusText] || 'text-gray-400'}`}><AiFillCheckCircle className="mr-1" /> {statusText}</span>;
     },
-    actions: (legCase) => (
-      <div className="flex space-x-2">
-        <Link to={`show/${legCase.id}`} className="text-orange-400 hover:text-orange-800" title="عرض">
-          <AiFillEye size={20} />
-        </Link>
-      </div>
-    ),
   };
+
+  const actionColumns = useMemo(() => [
+    {
+      key: 'view',
+      header: t('common.view'),
+      icon: 'view',
+      width: 84,
+      onClick: (_row, id) => navigate(`show/${id}`),
+      isVisible: () => acl.view,
+      tooltip: t('common.view'),
+    },
+    {
+      key: 'edit',
+      header: t('common.edit'),
+      icon: 'edit',
+      width: 84,
+      onClick: (row) => handleAddEditModal(row),
+      isVisible: () => acl.update,
+      tooltip: t('common.edit'),
+    },
+    {
+      key: 'delete',
+      header: t('common.delete'),
+      icon: 'trash',
+      width: 84,
+      danger: true,
+      onClick: (_row, id) => handleDeleteCase(id),
+      isVisible: () => acl.delete,
+      tooltip: t('common.delete'),
+    },
+  ], [acl.delete, acl.update, acl.view, navigate, t]);
 
   if (!acl.view) return <ForbiddenState moduleLabel="Legal Cases" />;
 
@@ -120,8 +146,7 @@ const LegalCasesIndex = () => {
       <TableComponent
         data={visibleCases}
         headers={headers}
-        onEdit={acl.update ? ((id) => handleAddEditModal(visibleCases.find((legCase) => legCase.id === id))) : undefined}
-        onDelete={acl.delete ? handleDeleteCase : undefined}
+        actionColumns={actionColumns}
         customRenderers={customRenderers}
         renderAddButton={acl.create ? (() => (
           <PermissionGuard permissions={permissionMap.legalCases.create} fallback={null}>

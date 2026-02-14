@@ -25,6 +25,11 @@ const ar = {
     save: "حفظ",
     cancel: "إلغاء",
     delete: "حذف",
+
+    view: "عرض",
+    edit: "تعديل",
+    assign: "إسناد",
+    status: "الحالة",
     search: "بحث",
     logout: "تسجيل الخروج",
     applyFilters: "تطبيق",

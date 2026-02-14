@@ -170,6 +170,8 @@ export default function TableComponent({
   onEdit,
   onDelete,
   onRowAction,
+  actionColumns = [],
+  actionsMode = "multiColumn",
 
   // add
   onAdd,
@@ -225,9 +227,61 @@ export default function TableComponent({
   const canUpdate = permissions?.update !== false;
   const canDelete = permissions?.delete !== false;
 
-  const showView = canView && typeof onView === "function";
-  const showEdit = canUpdate && typeof onEdit === "function";
-  const showDelete = canDelete && typeof onDelete === "function";
+  const legacyActions = useMemo(
+    () => [
+      {
+        key: "view",
+        header: viewLabel,
+        icon: "view",
+        isVisible: () => canView && typeof onView === "function",
+        onClick: (row, id) => {
+          onView(id);
+          onRowAction?.("view", id, row);
+        },
+      },
+      {
+        key: "edit",
+        header: editLabel,
+        icon: "edit",
+        isVisible: () => canUpdate && typeof onEdit === "function",
+        onClick: (row, id) => {
+          onEdit(id);
+          onRowAction?.("edit", id, row);
+        },
+      },
+      {
+        key: "delete",
+        header: deleteLabel,
+        icon: "trash",
+        danger: true,
+        isVisible: () => canDelete && typeof onDelete === "function",
+        onClick: (row, id) => {
+          onDelete(id, row);
+          onRowAction?.("delete", id, row);
+        },
+      },
+    ],
+    [canDelete, canUpdate, canView, deleteLabel, editLabel, onDelete, onEdit, onRowAction, onView, viewLabel]
+  );
+
+  const effectiveActionColumns = useMemo(() => {
+    if (Array.isArray(actionColumns) && actionColumns.length > 0) return actionColumns;
+    return legacyActions;
+  }, [actionColumns, legacyActions]);
+
+  const visibleActionColumns = useMemo(
+    () =>
+      effectiveActionColumns.filter((action) => {
+        if (!action?.key || typeof action?.onClick !== "function") return false;
+        if (typeof action.isVisible !== "function") return true;
+        if (!data.length) return Boolean(action.isVisible(undefined));
+        return data.some((row) => action.isVisible(row));
+      }),
+    [data, effectiveActionColumns]
+  );
+
+  const showActionColumns = actionsMode !== "singleColumn";
+  const showGroupedActions = !showActionColumns && visibleActionColumns.length > 0;
 
   const searchableHeaders = useMemo(
     () => headers.filter((h) => h?.key && h.searchable !== false && h.key !== "actions"),
@@ -313,7 +367,7 @@ export default function TableComponent({
     );
   };
 
-  const ActionBtn = ({ onClick, title: tt, children, tone = "neutral" }) => {
+  const ActionBtn = ({ onClick, title: tt, children, tone = "neutral", disabled = false }) => {
     const toneClass =
       tone === "danger"
         ? "text-[hsl(var(--destructive))]"
@@ -326,10 +380,12 @@ export default function TableComponent({
         type="button"
         onClick={onClick}
         title={tt}
+        disabled={disabled}
         className={cx(
           "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70",
           "bg-[hsl(var(--background)/0.55)] shadow-sm transition",
           "hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98]",
+          disabled ? "cursor-not-allowed opacity-50 hover:translate-y-0 hover:shadow-sm" : "",
           toneClass
         )}
       >
@@ -338,30 +394,25 @@ export default function TableComponent({
     );
   };
 
-  const colSpan = headers.length + Number(showView) + Number(showEdit) + Number(showDelete);
+  const colSpan = headers.length + (showActionColumns ? visibleActionColumns.length : Number(showGroupedActions));
   const showEmptyState = !loading && !error && filteredData.length === 0;
 
   // Actions columns order: LTR -> actions first, RTL -> actions last (so they appear on the right)
   const renderHeadActions = (pos) => {
+    if (!showActionColumns || visibleActionColumns.length === 0) return null;
     if (pos === "start") {
       if (isRTL) return null;
       return (
         <>
-          {showView && (
-            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-              {viewLabel}
+          {visibleActionColumns.map((action) => (
+            <th
+              key={`head-${action.key}`}
+              className="px-3 py-3 text-center text-xs font-bold text-foreground"
+              style={{ width: action.width }}
+            >
+              {action.header || action.key}
             </th>
-          )}
-          {showEdit && (
-            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-              {editLabel}
-            </th>
-          )}
-          {showDelete && (
-            <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-              {deleteLabel}
-            </th>
-          )}
+          ))}
         </>
       );
     }
@@ -370,73 +421,90 @@ export default function TableComponent({
     if (!isRTL) return null;
     return (
       <>
-        {showView && (
-          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-            {viewLabel}
+        {visibleActionColumns.map((action) => (
+          <th
+            key={`head-${action.key}`}
+            className="px-3 py-3 text-center text-xs font-bold text-foreground"
+            style={{ width: action.width }}
+          >
+            {action.header || action.key}
           </th>
-        )}
-        {showEdit && (
-          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-            {editLabel}
-          </th>
-        )}
-        {showDelete && (
-          <th className="px-4 py-3 text-center text-xs font-bold text-foreground">
-            {deleteLabel}
-          </th>
-        )}
+        ))}
       </>
     );
   };
 
   const renderRowActions = (pos, id, row) => {
+    if (!showActionColumns || visibleActionColumns.length === 0) return null;
+    const rowActions = visibleActionColumns.filter((action) =>
+      typeof action.isVisible === "function" ? Boolean(action.isVisible(row)) : true
+    );
+
     const btns = (
-      <div className="flex items-center justify-center gap-2">
-        {showView && (
-          <ActionBtn
-            onClick={() => {
-              onView(id);
-              onRowAction?.("view", id, row);
-            }}
-            title={viewLabel}
-            tone="primary"
-          >
-            <LexicraftIcon name="view" size={16} />
-          </ActionBtn>
-        )}
-        {showEdit && (
-          <ActionBtn
-            onClick={() => {
-              onEdit(id);
-              onRowAction?.("edit", id, row);
-            }}
-            title={editLabel}
-            tone="primary"
-          >
-            <LexicraftIcon name="edit" size={16} />
-          </ActionBtn>
-        )}
-        {showDelete && (
-          <ActionBtn
-            onClick={() => {
-              onDelete(id, row);
-              onRowAction?.("delete", id, row);
-            }}
-            title={deleteLabel}
-            tone="danger"
-          >
-            <LexicraftIcon name="trash" size={16} />
-          </ActionBtn>
-        )}
-      </div>
+      <>
+        {visibleActionColumns.map((action) => {
+          const hidden = !rowActions.some((a) => a.key === action.key);
+          const disabled = typeof action.disabled === "function" ? action.disabled(row) : action.disabled;
+          const tone = action.danger ? "danger" : "primary";
+          const iconName = action.icon || "view";
+
+          return (
+            <td
+              key={`action-${action.key}-${id}`}
+              className="px-3 py-3 text-center"
+              style={{ width: action.width }}
+            >
+              {!hidden && (
+                <ActionBtn
+                  onClick={() => action.onClick(row, id)}
+                  title={action.tooltip || action.header || action.key}
+                  tone={tone}
+                  disabled={Boolean(disabled)}
+                >
+                  <LexicraftIcon name={iconName} size={16} />
+                </ActionBtn>
+              )}
+            </td>
+          );
+        })}
+      </>
     );
 
     if (pos === "start") {
       if (isRTL) return null;
-      return <td className="px-4 py-3 text-center">{btns}</td>;
+      return btns;
     }
     if (!isRTL) return null;
-    return <td className="px-4 py-3 text-center">{btns}</td>;
+    return btns;
+  };
+
+  const renderGroupedRowActions = (id, row) => {
+    if (!showGroupedActions) return null;
+    const rowActions = visibleActionColumns.filter((action) =>
+      typeof action.isVisible === "function" ? Boolean(action.isVisible(row)) : true
+    );
+    if (!rowActions.length) return <td className="px-4 py-3 text-center" />;
+
+    return (
+      <td className="px-4 py-3 text-center">
+        <div className="flex items-center justify-center gap-2">
+          {rowActions.map((action) => {
+            const disabled = typeof action.disabled === "function" ? action.disabled(row) : action.disabled;
+            return (
+              <ActionBtn
+                key={`group-${id}-${action.key}`}
+                onClick={() => action.onClick(row, id)}
+                title={action.tooltip || action.header || action.key}
+                tone={action.danger ? "danger" : "primary"}
+                disabled={Boolean(disabled)}
+              >
+                <LexicraftIcon name={action.icon || "view"} size={16} />
+              </ActionBtn>
+            );
+          })}
+        </div>
+      </td>
+    );
   };
 
   const colAlignClass = (h, fallback) => {
@@ -561,7 +629,7 @@ export default function TableComponent({
                           "animate-in fade-in duration-200"
                         )}
                       >
-                        {renderRowActions("start", id, row)}
+                        {showActionColumns ? renderRowActions("start", id, row) : !isRTL && renderGroupedRowActions(id, row)}
 
                         {headers.map((h, headerIndex) => {
                           const align = colAlignClass(h, tdAlign);
@@ -571,6 +639,7 @@ export default function TableComponent({
                               key={`${id}-${h.key}`}
                               className={cx(
                                 "px-4 py-3 text-sm text-foreground",
+                                headerIndex === 0 ? (isRTL ? "sticky right-0 z-10 bg-[hsl(var(--card)/0.95)]" : "sticky left-0 z-10 bg-[hsl(var(--card)/0.95)]") : "",
                                 align,
                                 h.tdClassName
                               )}
@@ -592,7 +661,7 @@ export default function TableComponent({
                           );
                         })}
 
-                        {renderRowActions("end", id, row)}
+                        {showActionColumns ? renderRowActions("end", id, row) : isRTL && renderGroupedRowActions(id, row)}
                       </tr>
                     );
                   })}
@@ -649,44 +718,21 @@ export default function TableComponent({
                         </p>
                       </div>
 
-                      {(showView || showEdit || showDelete) && (
+                      {visibleActionColumns.length > 0 && (
                         <div className={cx("flex shrink-0 items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
-                          {showView && (
-                            <ActionBtn
-                              onClick={() => {
-                                onView(id);
-                                onRowAction?.("view", id, row);
-                              }}
-                              title={viewLabel}
-                              tone="primary"
-                            >
-                              <LexicraftIcon name="view" size={16} />
-                            </ActionBtn>
-                          )}
-                          {showEdit && (
-                            <ActionBtn
-                              onClick={() => {
-                                onEdit(id);
-                                onRowAction?.("edit", id, row);
-                              }}
-                              title={editLabel}
-                              tone="primary"
-                            >
-                              <LexicraftIcon name="edit" size={16} />
-                            </ActionBtn>
-                          )}
-                          {showDelete && (
-                            <ActionBtn
-                              onClick={() => {
-                                onDelete(id, row);
-                                onRowAction?.("delete", id, row);
-                              }}
-                              title={deleteLabel}
-                              tone="danger"
-                            >
-                              <LexicraftIcon name="trash" size={16} />
-                            </ActionBtn>
-                          )}
+                          {visibleActionColumns
+                            .filter((action) => (typeof action.isVisible === "function" ? action.isVisible(row) : true))
+                            .map((action) => (
+                              <ActionBtn
+                                key={`mobile-${id}-${action.key}`}
+                                onClick={() => action.onClick(row, id)}
+                                title={action.tooltip || action.header || action.key}
+                                tone={action.danger ? "danger" : "primary"}
+                                disabled={Boolean(typeof action.disabled === "function" ? action.disabled(row) : action.disabled)}
+                              >
+                                <LexicraftIcon name={action.icon || "view"} size={16} />
+                              </ActionBtn>
+                            ))}
                         </div>
                       )}
                     </div>
