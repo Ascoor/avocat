@@ -159,6 +159,7 @@ const en = {
       demo_title: "Demo access",
       use_demo: "Use demo credentials",
       demo_hint: "Use these credentials to explore the frontend without backend setup.",
+   
       hero: {
         badge: "Secure Client Portal",
         headline: "Welcome Back to Your Legal Hub",
