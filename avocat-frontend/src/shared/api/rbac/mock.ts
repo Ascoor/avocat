@@ -47,6 +47,13 @@ const seedDb = (): RbacMockDb => {
     createdAt: now(),
     updatedAt: now(),
   };
+  const accountant: RbacRole = {
+    id: "role_accountant",
+    name: "accountant",
+    permissionNames: rolePermissionMap.accountant,
+    createdAt: now(),
+    updatedAt: now(),
+  };
   const viewer: RbacRole = {
     id: "role_viewer",
     name: "viewer",
@@ -61,9 +68,10 @@ const seedDb = (): RbacMockDb => {
     { id: "user_lawyer", name: "Lawyer User", email: "lawyer@local", status: "active", roleIds: [lawyer.id], createdAt: now(), updatedAt: now() },
     { id: "user_assistant", name: "Assistant User", email: "assistant@local", status: "active", roleIds: [assistant.id], createdAt: now(), updatedAt: now() },
     { id: "user_viewer", name: "Viewer User", email: "viewer@local", status: "active", roleIds: [viewer.id], createdAt: now(), updatedAt: now() },
+    { id: "user_accountant", name: "Accountant User", email: "accountant@local", status: "active", roleIds: [accountant.id], createdAt: now(), updatedAt: now() },
   ];
 
-  return { users, roles: [superAdmin, admin, lawyer, assistant, viewer], permissions, currentUserId: users[0].id };
+  return { users, roles: [superAdmin, admin, lawyer, assistant, accountant, viewer], permissions, currentUserId: users[0].id };
 };
 
 const persist = (db: RbacMockDb) => {

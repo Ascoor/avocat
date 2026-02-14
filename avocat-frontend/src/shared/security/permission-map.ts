@@ -1,4 +1,8 @@
 export const permissionMap = {
+  dashboard: {
+    view: "dashboard.view",
+    search: "dashboard.search",
+  },
   legalCases: {
     view: "cases.view",
     list: "cases.list",
@@ -13,6 +17,7 @@ export const permissionMap = {
     reassign: "cases.reassign",
     attachmentsManage: "cases.attachments_manage",
     notesManage: "cases.notes_manage",
+    auditView: "cases.audit_view",
   },
   clients: {
     view: "clients.view",
@@ -35,6 +40,7 @@ export const permissionMap = {
     changeStatus: "sessions.change_status",
     assign: "sessions.assign",
     print: "sessions.print",
+    auditView: "sessions.audit_view",
   },
   procedures: {
     view: "procedures.view",
@@ -45,6 +51,8 @@ export const permissionMap = {
     delete: "procedures.delete",
     changeStatus: "procedures.change_status",
     assign: "procedures.assign",
+    print: "procedures.print",
+    auditView: "procedures.audit_view",
   },
   services: {
     view: "services.view",
@@ -56,6 +64,8 @@ export const permissionMap = {
     changeStatus: "services.change_status",
     close: "services.close",
     reopen: "services.reopen",
+    proceduresManage: "services.procedures_manage",
+    attachmentsManage: "services.attachments_manage",
   },
   courts: {
     view: "courts.view",
@@ -76,8 +86,6 @@ export const permissionMap = {
   },
   reports: {
     view: "reports.view",
-    list: "reports.list",
-    search: "reports.search",
     filter: "reports.filter",
     export: "reports.export",
     print: "reports.print",
@@ -106,9 +114,29 @@ export const permissionMap = {
     list: "permissions.list",
     search: "permissions.search",
   },
+  expenses: {
+    view: "expenses.view",
+    list: "expenses.list",
+    search: "expenses.search",
+    create: "expenses.create",
+    update: "expenses.update",
+    delete: "expenses.delete",
+    approve: "expenses.approve",
+    reject: "expenses.reject",
+    export: "expenses.export",
+  },
+  notifications: {
+    viewOwn: "notifications.view_own",
+    markRead: "notifications.mark_read",
+    send: "notifications.send",
+  },
+  events: {
+    view: "events.view",
+    create: "events.create",
+  },
   settings: {
     view: "settings.view",
-    update: "settings.update",
+    manage: "settings.manage",
   },
 } as const;
 
