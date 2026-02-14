@@ -6,19 +6,19 @@ const inputClass =
 
 const FILTER_LAYOUT = {
   cases: {
-    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
+    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
   },
   services: {
-    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'service_status']],
+    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['service_type_id', 'service_status']],
   },
   procedures: {
-    rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['procedure_type_id', 'procedure_status']],
+    rows: ['slug', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['procedure_type_id', 'procedure_status']],
   },
   sessions: {
-    rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['session_type_id', 'session_status']],
+    rows: ['slug', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['session_type_id', 'session_status']],
   },
   clients: {
-    rows: ['client_name', ['from_date', 'to_date'], ['client_type', 'client_status']],
+    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['client_type', 'client_status']],
   },
 };
 
@@ -132,7 +132,7 @@ const ReportFilters = ({ tabKey, schema, values, options, onSubmit, onReset }) =
           }
 
           const fields = Array.isArray(row) ? row : [row];
-          const colClass = fields.length > 1 ? 'grid grid-cols-1 gap-3 md:grid-cols-2' : 'grid grid-cols-1 gap-3';
+          const colClass = fields.length > 1 ? 'grid grid-cols-1 gap-3 sm:grid-cols-2' : 'grid grid-cols-1 gap-3';
           return (
             <div key={`row-${index}`} className={colClass}>
               {fields.map((name) => renderInput(name))}
