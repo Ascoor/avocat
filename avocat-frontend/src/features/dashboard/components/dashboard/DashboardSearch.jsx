@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ServicesModal from './SearchModals/ServicesModal';
 import LegCasesModal from './SearchModals/LegCasesModal';
@@ -9,30 +9,46 @@ const DashboardSearch = ({ loading, error, filteredClients }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [activeTab, setActiveTab] = useState('legCases');
 
+  const hasClients = (filteredClients?.length ?? 0) > 0;
+
   useEffect(() => {
     setSelectedClient(null);
     setActiveTab('legCases');
   }, [filteredClients]);
 
   return (
-    <div className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-custom-sm">
+    <div className="mx-auto w-full max-w-3xl space-y-4 rounded-2xl border border-border bg-card p-6 shadow-custom-sm">
       <DashboardSectionHeader
         icon="🔎"
         title="نتائج البحث"
         description="اختر موكلًا لعرض القضايا والخدمات المرتبطة به."
       />
 
-      {loading && <AuthSpinner />}
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <AuthSpinner />
+        </div>
+      ) : null}
 
-      {filteredClients?.length === 0 && (
+      {!loading && error ? (
+        <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+          {error}
+        </div>
+      ) : null}
+
+      {!loading && !error && !hasClients ? (
         <div className="rounded-xl border border-dashed border-border bg-surface-raised px-4 py-8 text-center text-sm text-muted-foreground">
           لم يتم العثور على نتائج.
         </div>
-      )}
+      ) : null}
 
-      {filteredClients.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+      {!loading && !error && hasClients ? (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          className="space-y-4"
+        >
           <div className="overflow-hidden rounded-xl border border-border">
             <table className="w-full border-collapse text-sm">
               <thead className="bg-surface-raised text-foreground">
@@ -73,43 +89,40 @@ const DashboardSearch = ({ loading, error, filteredClients }) => {
               </tbody>
             </table>
           </div>
-        </motion.div>
-      )}
 
-      {selectedClient && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4 rounded-xl border border-border bg-surface-raised p-4"
-        >
-          <div className="flex justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => setActiveTab('legCases')}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                activeTab === 'legCases'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card text-foreground hover:bg-muted'
-              }`}
-            >
-              القضايا
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('services')}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                activeTab === 'services'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card text-foreground hover:bg-muted'
-              }`}
-            >
-              الخدمات
-            </button>
-          </div>
-          <LegCasesModal selectedClient={selectedClient} activeTab={activeTab} />
-          <ServicesModal selectedClient={selectedClient} activeTab={activeTab} />
+          {selectedClient ? (
+            <div className="space-y-4 rounded-xl border border-border bg-surface-raised p-4">
+              <div className="flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('legCases')}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    activeTab === 'legCases'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-card text-foreground hover:bg-muted'
+                  }`}
+                >
+                  القضايا
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('services')}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    activeTab === 'services'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-card text-foreground hover:bg-muted'
+                  }`}
+                >
+                  الخدمات
+                </button>
+              </div>
+
+              <LegCasesModal selectedClient={selectedClient} activeTab={activeTab} />
+              <ServicesModal selectedClient={selectedClient} activeTab={activeTab} />
+            </div>
+          ) : null}
         </motion.div>
-      )}
+      ) : null}
     </div>
   );
 };
