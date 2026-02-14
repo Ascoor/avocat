@@ -84,14 +84,21 @@ const ar = {
     },
     filters: {
       title: "فلاتر التقارير",
-      subtitle: "اختر الفلاتر المناسبة للتبويب الحالي بدقة.",
+      subtitle: "تصفية دقيقة للنتائج.",
       searchButton: "بحث",
       resetButton: "إعادة تعيين",
       clearDateRange: "مسح الفترة الزمنية",
       invalidDateRange: "يجب أن يكون تاريخ النهاية بعد أو مساويًا لتاريخ البداية.",
       dateFormat: "التنسيق: يوم/شهر/سنة",
-      textPlaceholder: "اكتب للتصفية",
-      emptyOption: "الكل",
+      datePlaceholder: "يوم/شهر/سنة",
+      chooseOption: "اختر…",
+      allOption: "الكل",
+      placeholders: {
+        default: "ابحث…",
+        clientName: "ابحث بالاسم…",
+        fileNumber: "مثال: 123/2026",
+      },
+      
       groups: {
         basic: "البيانات الأساسية",
         classification: "التصنيف والحالة",

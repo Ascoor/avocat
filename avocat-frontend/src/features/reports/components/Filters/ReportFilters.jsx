@@ -11,6 +11,11 @@ import {
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { isDateRangeValid } from '@shared/utils/dateFilters';
 
+const textPlaceholderKeyByField = {
+  client_name: 'reports.filters.placeholders.clientName',
+  file_number: 'reports.filters.placeholders.fileNumber',
+};
+
 const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
   const [draft, setDraft] = useState(values);
   const { direction, t } = useLanguage();
@@ -32,7 +37,8 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
             value={draft[name] || ''}
             onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
             options={options[name] || []}
-            emptyOptionLabel={t('reports.filters.emptyOption')}
+            placeholder={t('reports.filters.chooseOption')}
+            emptyOptionLabel={t('reports.filters.allOption')}
           />
         </FormField>
       );
@@ -44,7 +50,7 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
           <TextInput
             value={draft[name] || ''}
             onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
-            placeholder={t('reports.filters.textPlaceholder')}
+            placeholder={t(textPlaceholderKeyByField[name] || 'reports.filters.placeholders.default')}
           />
         </FormField>
       );
@@ -70,15 +76,15 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
         subtitle={t('reports.filters.subtitle')}
         actions={(
           <>
-            <button type="submit" className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))]">
-              {t('reports.filters.searchButton')}
-            </button>
             <button
               type="button"
               onClick={() => setDraft(onReset())}
-              className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground"
+              className="h-10 w-full rounded-lg border border-[hsl(var(--color-border))] px-4 text-sm font-medium text-foreground sm:w-auto"
             >
               {t('reports.filters.resetButton')}
+            </button>
+            <button type="submit" className="h-10 w-full rounded-lg bg-[hsl(var(--color-primary))] px-4 text-sm font-semibold text-[hsl(var(--color-primary-foreground))] sm:w-auto">
+              {t('reports.filters.searchButton')}
             </button>
           </>
         )}
@@ -89,7 +95,12 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
           );
 
           return (
-            <FilterGroup key={group.titleKey} title={t(group.titleKey)} divider={index > 0}>
+            <FilterGroup
+              key={group.titleKey}
+              title={t(group.titleKey)}
+              divider={index > 0}
+              count={fieldNames.length + (hasDateRange && group.fields.includes('from_date') ? 2 : 0)}
+            >
               {fieldNames.length ? (
                 <FilterGrid columns={{ base: 1, md: 2, lg: 3 }}>
                   {fieldNames.map((fieldName) => renderField(fieldName))}
@@ -106,6 +117,8 @@ const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
                   helperText={t('reports.filters.dateFormat')}
                   invalidRangeText={t('reports.filters.invalidDateRange')}
                   clearText={t('reports.filters.clearDateRange')}
+                  datePlaceholder={t('reports.filters.datePlaceholder')}
+                  dir={direction}
                 />
               ) : null}
             </FilterGroup>

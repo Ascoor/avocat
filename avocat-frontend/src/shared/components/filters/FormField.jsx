@@ -1,7 +1,7 @@
 const FormField = ({ label, hint, error, required = false, children }) => (
-  <label className="space-y-1.5 text-right">
+  <label className="space-y-1 text-right">
     {label ? (
-      <span className="block text-sm font-medium text-foreground">
+      <span className="block text-xs font-medium text-foreground">
         {label}
         {required ? <span className="me-1 text-destructive">*</span> : null}
       </span>

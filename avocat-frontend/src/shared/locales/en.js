@@ -84,14 +84,21 @@ const en = {
     },
     filters: {
       title: "Report filters",
-      subtitle: "Choose exact filters for the active report tab.",
+      subtitle: "Narrow down report results.",
       searchButton: "Search",
       resetButton: "Reset",
       clearDateRange: "Clear date range",
       invalidDateRange: "End date must be on or after start date.",
       dateFormat: "Format: DD/MM/YYYY",
-      textPlaceholder: "Type to filter",
-      emptyOption: "All",
+      datePlaceholder: "DD/MM/YYYY",
+      chooseOption: "Choose…",
+      allOption: "All",
+      placeholders: {
+        default: "Search…",
+        clientName: "Search by name…",
+        fileNumber: "Example: 123/2026",
+      },
+      
       groups: {
         basic: "Basic data",
         classification: "Classification",
