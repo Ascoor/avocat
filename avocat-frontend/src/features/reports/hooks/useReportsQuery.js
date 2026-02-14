@@ -22,17 +22,24 @@ const baseDateFields = [
   { name: 'to_date', type: 'date', label: 'إلى' },
 ];
 
+const hasAnyFilterValue = (filters) =>
+  Object.values(filters || {}).some((value) => {
+    if (value == null) return false;
+    if (typeof value === 'string') return value.trim() !== '';
+    return true;
+  });
+
 export const FILTER_SCHEMA = {
   cases: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'file_number', type: 'text', label: 'رقم الملف' },
+    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
     { name: 'case_type_id', type: 'select', label: 'نوع القضية' },
     ...baseDateFields,
     { name: 'case_status', type: 'select', label: 'الحالة' },
   ],
   services: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'file_number', type: 'text', label: 'رقم الملف' },
+    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
     { name: 'case_type_id', type: 'select', label: 'نوع الخدمة' },
     ...baseDateFields,
     { name: 'service_status', type: 'select', label: 'الحالة' },
@@ -40,7 +47,7 @@ export const FILTER_SCHEMA = {
   procedures: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'lawyer_id', type: 'select', label: 'المحامي' },
-    { name: 'file_number', type: 'text', label: 'رقم الملف' },
+    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
     { name: 'procedure_type_id', type: 'select', label: 'نوع الإجراء' },
     ...baseDateFields,
     { name: 'procedure_status', type: 'select', label: 'الحالة' },
@@ -48,12 +55,13 @@ export const FILTER_SCHEMA = {
   sessions: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'lawyer_id', type: 'select', label: 'المحامي' },
-    { name: 'file_number', type: 'text', label: 'رقم الملف' },
+    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
     { name: 'session_type_id', type: 'select', label: 'نوع الجلسة' },
     ...baseDateFields,
     { name: 'session_status', type: 'select', label: 'الحالة' },
   ],
   clients: [
+    { name: 'slug', type: 'text', label: 'رقم الموكل (Slug)' },
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'client_type', type: 'select', label: 'نوع الموكل' },
     ...baseDateFields,
@@ -73,15 +81,25 @@ const toStatusOptions = (rows, tabKey) => {
 
 export const useReportsQuery = (tabKey) => {
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [hasSearched, setHasSearched] = useState(false);
   const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], procedureTypes: [], sessionTypes: [] });
   const [filters, setFilters] = useState(() => getInitialFilters(tabKey));
 
   const loadRows = useCallback(
     async (nextFilters) => {
+      if (!hasAnyFilterValue(nextFilters)) {
+        setRows([]);
+        setError('');
+        setLoading(false);
+        setHasSearched(false);
+        return;
+      }
+
       setLoading(true);
       setError('');
+      setHasSearched(true);
       try {
         const data = await fetchReportRows(tabKey, nextFilters);
         setRows(data);
@@ -98,7 +116,10 @@ export const useReportsQuery = (tabKey) => {
   useEffect(() => {
     const initial = getInitialFilters(tabKey);
     setFilters(initial);
-    loadRows(initial);
+    setRows([]);
+    setError('');
+    setHasSearched(false);
+    setLoading(false);
   }, [loadRows, tabKey]);
 
   useEffect(() => {
@@ -145,9 +166,12 @@ export const useReportsQuery = (tabKey) => {
   const resetFilters = useCallback(() => {
     const clean = getInitialFilters(tabKey);
     setFilters(clean);
-    loadRows(clean);
+    setRows([]);
+    setError('');
+    setHasSearched(false);
+    setLoading(false);
     return clean;
-  }, [loadRows, tabKey]);
+  }, [tabKey]);
 
   return {
     schema: FILTER_SCHEMA[tabKey],
@@ -155,6 +179,7 @@ export const useReportsQuery = (tabKey) => {
     rows,
     loading,
     error,
+    hasSearched,
     options,
     submitFilters,
     resetFilters,

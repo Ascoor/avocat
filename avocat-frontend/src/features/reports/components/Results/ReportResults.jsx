@@ -11,29 +11,30 @@ const getDetailLink = (tabKey, row) => {
 const REPORT_COLUMNS = {
   cases: [
     { key: 'title', label: 'عنوان القضية', value: (row) => row?.title || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.slug || row?.file_number || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || row?.file_number || '-' },
     { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || row?.clients?.[0]?.name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   services: [
     { key: 'name', label: 'الخدمة', value: (row) => row?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.file_number || row?.legcase?.slug || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
     { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   procedures: [
     { key: 'type', label: 'نوع الإجراء', value: (row) => row?.procedure_type?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
     { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   sessions: [
     { key: 'type', label: 'نوع الجلسة', value: (row) => row?.session_type?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
     { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   clients: [
+    { key: 'slug', label: 'رقم الموكل (Slug)', value: (row) => row?.slug || '-' },
     { key: 'name', label: 'اسم الموكل', value: (row) => row?.name || '-' },
     { key: 'type', label: 'نوع الموكل', value: (row) => row?.client_type || '-' },
     { key: 'phone', label: 'الهاتف', value: (row) => row?.phone || '-' },
@@ -41,7 +42,7 @@ const REPORT_COLUMNS = {
   ],
 };
 
-const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
+const ReportResults = ({ tabKey, rows, loading, error, hasSearched, onRetry }) => {
   const columns = REPORT_COLUMNS[tabKey] || [];
 
   if (loading) {
@@ -55,6 +56,14 @@ const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
         <button type="button" onClick={onRetry} className="rounded-lg border border-border/70 px-3 py-1.5">
           إعادة المحاولة
         </button>
+      </div>
+    );
+  }
+
+  if (!hasSearched) {
+    return (
+      <div className="rounded-2xl border border-dashed border-border/70 bg-[hsl(var(--card)/0.65)] p-4 text-sm">
+        أدخل أي حقل بحث واحد على الأقل ثم اضغط على "بحث" لعرض النتائج.
       </div>
     );
   }
