@@ -6,7 +6,7 @@ const inputClass =
 
 const FILTER_LAYOUT = {
   cases: {
-    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
+    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
   },
   services: {
     rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'service_status']],
