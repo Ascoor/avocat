@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'permission.guard' => \App\Http\Middleware\PermissionGuardMiddleware::class,
+            'abac.scope' => \App\Http\Middleware\AbacScopeMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

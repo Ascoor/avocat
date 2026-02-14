@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 use RuntimeException;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -23,14 +24,17 @@ class SuperAdminUserSeeder extends Seeder
         }
 
         $user = User::updateOrCreate(
-            ['email' => 'a@a.com'],
+            ['email' => env('SUPER_ADMIN_EMAIL', 'admin@domain.com')],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make($password),
             ]
         );
 
-        $user->syncRoles(['super_admin']);
+        $guardName = (string) config('permissions.guard', 'api');
+        $role = Role::findOrCreate('super_admin', $guardName);
+
+        $user->syncRoles([$role]);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
