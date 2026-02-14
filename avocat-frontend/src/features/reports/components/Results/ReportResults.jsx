@@ -4,40 +4,40 @@ import ReportStatusBadge from '@features/reports/components/Reports/ReportStatus
 const getDetailLink = (tabKey, row) => {
   if (tabKey === 'cases') return `/dashboard/legcases/${row?.id}`;
   if (tabKey === 'clients') return `/dashboard/clients/${row?.id}`;
-  const caseId = row?.legcase_id || row?.legcase?.id || row?.case_id;
+  const caseId = row?.legcase_id || row?._raw?.legcase_id || row?._raw?.leg_case_id || row?._raw?.legcase?.id || row?._raw?.legCase?.id;
   return caseId ? `/dashboard/legcases/${caseId}` : '#';
 };
 
 const REPORT_COLUMNS = {
   cases: [
     { key: 'title', label: 'عنوان القضية', value: (row) => row?.title || '-' },
-    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || row?.clients?.[0]?.name || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client_name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   services: [
-    { key: 'name', label: 'الخدمة', value: (row) => row?.name || '-' },
-    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
+    { key: 'name', label: 'الخدمة', value: (row) => row?.title || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client_name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   procedures: [
-    { key: 'type', label: 'نوع الإجراء', value: (row) => row?.procedure_type?.name || '-' },
-    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
+    { key: 'type', label: 'نوع الإجراء', value: (row) => row?.type_name || row?.title || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client_name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   sessions: [
-    { key: 'type', label: 'نوع الجلسة', value: (row) => row?.session_type?.name || '-' },
-    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.legcase?.slug || row?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
+    { key: 'type', label: 'نوع الجلسة', value: (row) => row?.type_name || row?.title || '-' },
+    { key: 'slug', label: 'رقم الملف (Slug)', value: (row) => row?.slug || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client_name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
   clients: [
     { key: 'slug', label: 'رقم الموكل (Slug)', value: (row) => row?.slug || '-' },
     { key: 'name', label: 'اسم الموكل', value: (row) => row?.name || '-' },
     { key: 'type', label: 'نوع الموكل', value: (row) => row?.client_type || '-' },
-    { key: 'phone', label: 'الهاتف', value: (row) => row?.phone || '-' },
+    { key: 'phone', label: 'الهاتف', value: (row) => row?.phone_number || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
 };

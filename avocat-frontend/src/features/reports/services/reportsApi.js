@@ -1,15 +1,23 @@
 import api from '@shared/services/api/axiosConfig';
 
+const COLLECTION_KEYS = ['data', 'rows', 'clients', 'services', 'procedures', 'legalSessions', 'sessions', 'cases', 'leg_cases'];
+
 const extractRows = (payload) => {
   if (Array.isArray(payload)) return payload;
   if (!payload || typeof payload !== 'object') return [];
-  if (Array.isArray(payload.data)) return payload.data;
-  if (Array.isArray(payload.rows)) return payload.rows;
-  if (payload.data && typeof payload.data === 'object') {
-    if (Array.isArray(payload.data.data)) return payload.data.data;
-    if (Array.isArray(payload.data.rows)) return payload.data.rows;
+
+  for (const key of COLLECTION_KEYS) {
+    if (Array.isArray(payload[key])) return payload[key];
   }
-  return [];
+
+  if (payload.data && typeof payload.data === 'object') {
+    for (const key of COLLECTION_KEYS) {
+      if (Array.isArray(payload.data[key])) return payload.data[key];
+    }
+  }
+
+  const firstArrayValue = Object.values(payload).find((value) => Array.isArray(value));
+  return Array.isArray(firstArrayValue) ? firstArrayValue : [];
 };
 
 const cleanParams = (params) =>
@@ -35,11 +43,86 @@ const inDateRange = (value, fromDate, toDate) => {
   return true;
 };
 
-const filterByTab = (rows, params) => {
+const normalizeRow = (tabKey, row) => {
+  if (tabKey === 'cases') {
+    return {
+      id: row?.id,
+      title: row?.title || '-',
+      slug: row?.slug || row?.file_number || '-',
+      client_name: row?.client?.name || row?.clients?.[0]?.name || '-',
+      status: row?.status || '-',
+      type_id: row?.case_type_id || row?.caseType?.id || row?.caseSubType?.case_type_id || '',
+      type_name: row?.caseSubType?.name || row?.caseType?.name || '-',
+      row_date: row?.created_at || row?.updated_at || null,
+      _raw: row,
+    };
+  }
+
+  if (tabKey === 'services') {
+    return {
+      id: row?.id,
+      title: row?.description || row?.serviceType?.name || '-',
+      slug: row?.slug || row?.legcase?.slug || row?.file_number || '-',
+      client_name: row?.client?.name || row?.clients?.[0]?.name || row?.unclients?.[0]?.name || '-',
+      status: row?.status || '-',
+      type_id: row?.service_type_id || row?.serviceType?.id || '',
+      type_name: row?.serviceType?.name || '-',
+      row_date: row?.created_at || row?.updated_at || null,
+      _raw: row,
+    };
+  }
+
+  if (tabKey === 'procedures') {
+    return {
+      id: row?.id,
+      title: row?.procedure_type?.name || row?.procedureType?.name || row?.job || '-',
+      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
+      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
+      status: row?.status || '-',
+      type_id: row?.procedure_type_id || row?.procedure_type?.id || row?.procedureType?.id || '',
+      type_name: row?.procedure_type?.name || row?.procedureType?.name || '-',
+      lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
+      row_date: row?.date_start || row?.date_end || row?.created_at || null,
+      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
+      _raw: row,
+    };
+  }
+
+  if (tabKey === 'sessions') {
+    return {
+      id: row?.id,
+      title: row?.session_type?.name || row?.legalSessionType?.name || row?.court_session || '-',
+      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
+      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
+      status: row?.status || '-',
+      type_id: row?.session_type_id || row?.legal_session_type_id || row?.session_type?.id || row?.legalSessionType?.id || '',
+      type_name: row?.session_type?.name || row?.legalSessionType?.name || '-',
+      lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
+      row_date: row?.session_date || row?.created_at || null,
+      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
+      _raw: row,
+    };
+  }
+
+  return {
+    id: row?.id,
+    slug: row?.slug || '-',
+    name: row?.name || '-',
+    client_name: row?.name || '-',
+    client_type: row?.client_type || '-',
+    status: row?.status || '-',
+    phone_number: row?.phone_number || row?.phone || '-',
+    row_date: row?.created_at || row?.updated_at || null,
+    _raw: row,
+  };
+};
+
+const filterRows = (rows, params) => {
   const {
     slug,
     client_name: clientName,
     case_type_id: caseTypeId,
+    service_type_id: serviceTypeId,
     lawyer_id: lawyerId,
     procedure_type_id: procedureTypeId,
     session_type_id: sessionTypeId,
@@ -54,49 +137,25 @@ const filterByTab = (rows, params) => {
   } = params;
 
   return rows.filter((row) => {
-    if (slug) {
-      const rowSlug = row?.slug || row?.file_number || row?.legcase?.slug || row?.legCase?.slug;
-      if (!includesText(rowSlug, slug)) return false;
-    }
+    if (slug && !includesText(row?.slug, slug)) return false;
+    if (clientName && !includesText(row?.client_name, clientName)) return false;
 
-    if (clientName) {
-      const rowClientName = row?.client?.name || row?.name || row?.clients?.[0]?.name || '';
-      if (!includesText(rowClientName, clientName)) return false;
-    }
+    if (caseTypeId && String(row?.type_id || '') !== String(caseTypeId)) return false;
+    if (serviceTypeId && String(row?.type_id || '') !== String(serviceTypeId)) return false;
+    if (procedureTypeId && String(row?.type_id || '') !== String(procedureTypeId)) return false;
+    if (sessionTypeId && String(row?.type_id || '') !== String(sessionTypeId)) return false;
 
-    if (caseTypeId) {
-      const rowCaseType = row?.case_type_id || row?.caseType?.id || row?.service_type_id;
-      if (String(rowCaseType || '') !== String(caseTypeId)) return false;
-    }
-
-    if (lawyerId) {
-      const rowLawyerId = row?.lawyer_id || row?.lawyer?.id;
-      if (String(rowLawyerId || '') !== String(lawyerId)) return false;
-    }
-
-    if (procedureTypeId) {
-      const rowProcedureType = row?.procedure_type_id || row?.procedure_type?.id;
-      if (String(rowProcedureType || '') !== String(procedureTypeId)) return false;
-    }
-
-    if (sessionTypeId) {
-      const rowSessionType = row?.session_type_id || row?.session_type?.id;
-      if (String(rowSessionType || '') !== String(sessionTypeId)) return false;
-    }
-
+    if (lawyerId && String(row?.lawyer_id || '') !== String(lawyerId)) return false;
     if (clientType && String(row?.client_type || '') !== String(clientType)) return false;
 
-    const rowStatus = row?.status || '';
-    if (caseStatus && String(rowStatus) !== String(caseStatus)) return false;
-    if (serviceStatus && String(rowStatus) !== String(serviceStatus)) return false;
-    if (procedureStatus && String(rowStatus) !== String(procedureStatus)) return false;
-    if (sessionStatus && String(rowStatus) !== String(sessionStatus)) return false;
-    if (clientStatus && String(rowStatus) !== String(clientStatus)) return false;
+    const status = String(row?.status || '');
+    if (caseStatus && status !== String(caseStatus)) return false;
+    if (serviceStatus && status !== String(serviceStatus)) return false;
+    if (procedureStatus && status !== String(procedureStatus)) return false;
+    if (sessionStatus && status !== String(sessionStatus)) return false;
+    if (clientStatus && status !== String(clientStatus)) return false;
 
-    if (fromDate || toDate) {
-      const rowDate = row?.created_at || row?.updated_at || row?.date;
-      if (!inDateRange(rowDate, fromDate, toDate)) return false;
-    }
+    if ((fromDate || toDate) && !inDateRange(row?.row_date, fromDate, toDate)) return false;
 
     return true;
   });
@@ -113,14 +172,15 @@ const endpoints = {
 export const fetchReportRows = async (tabKey, params = {}) => {
   const sanitizedParams = cleanParams(params);
   const response = await api.get(endpoints[tabKey], { params: sanitizedParams });
-  const rows = extractRows(response?.data);
-  return filterByTab(rows, sanitizedParams);
+  const rows = extractRows(response?.data).map((row) => normalizeRow(tabKey, row));
+  return filterRows(rows, sanitizedParams);
 };
 
 export const fetchReportsMetadata = async () => {
-  const [lawyersRes, caseTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
+  const [lawyersRes, caseTypesRes, serviceTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
     api.get('/lawyers'),
     api.get('/case_types'),
+    api.get('/service-types'),
     api.get('/procedure_types'),
     api.get('/legal_session_types'),
   ]);
@@ -128,6 +188,7 @@ export const fetchReportsMetadata = async () => {
   return {
     lawyers: extractRows(lawyersRes?.data),
     caseTypes: extractRows(caseTypesRes?.data),
+    serviceTypes: extractRows(serviceTypesRes?.data),
     procedureTypes: extractRows(procedureTypesRes?.data),
     sessionTypes: extractRows(sessionTypesRes?.data),
   };

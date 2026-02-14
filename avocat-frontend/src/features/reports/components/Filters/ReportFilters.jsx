@@ -9,7 +9,7 @@ const FILTER_LAYOUT = {
     rows: ['slug', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
   },
   services: {
-    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'service_status']],
+    rows: ['slug', 'client_name', ['from_date', 'to_date'], ['service_type_id', 'service_status']],
   },
   procedures: {
     rows: ['slug', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['procedure_type_id', 'procedure_status']],
