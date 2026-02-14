@@ -768,6 +768,11 @@ const ar = {
       title: "الأدوار", add: "إضافة دور", edit: "تعديل دور", name: "اسم الدور", permissionsCount: "عدد الصلاحيات", selectAll: "تحديد الكل", selectModule: "تحديد القسم"
     },
     permissions: { title: "الصلاحيات" },
+    management: {
+      title: "المستخدمون والأدوار والصلاحيات",
+      subtitle: "إدارة الصلاحيات من مركز تحكم موحد بتصميم حديث ومنظم."
+    },
+    tabs: { users: "المستخدمون", roles: "الأدوار", permissions: "الصلاحيات" },
     qa: { title: "فحص RBAC", switchUser: "المستخدم التجريبي" }
   },
 
