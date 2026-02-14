@@ -6,13 +6,14 @@ import { useLanguage } from '@shared/contexts/LanguageContext';
 import GlobalModal from '@shared/components/common/GlobalModal';
 import GlobalConfirmDeleteModal from '@shared/components/common/GlobalConfirmDeleteModal';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
-import { permissionMap } from '@shared/security/permission-map';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
+import RolePermissionsModal from '@features/admin/components/RolePermissionsModal';
 
 const emptyUserForm = { name: '', email: '', status: 'active', roleIds: [] };
 const emptyRoleForm = { name: '', permissionNames: [] };
+const SUPER_ADMIN_ROLE_NAME = 'super_admin';
 const allowedTabs = ['users', 'roles', 'permissions'];
 
 const AdminAccessManagementPage = () => {
@@ -38,6 +39,8 @@ const AdminAccessManagementPage = () => {
   const [roleEditorOpen, setRoleEditorOpen] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
   const [roleToDelete, setRoleToDelete] = useState(null);
+  const [permissionsModalOpen, setPermissionsModalOpen] = useState(false);
+  const [savingPermissions, setSavingPermissions] = useState(false);
 
   const [permissionsQuery, setPermissionsQuery] = useState('');
 
@@ -93,7 +96,6 @@ const AdminAccessManagementPage = () => {
     if (permissionsAcl.view) reloadPermissions();
   }, [usersAcl.view, rolesAcl.view, permissionsAcl.view]);
 
-  const allPermissions = useMemo(() => Object.values(permissionMap).flatMap((crud) => Object.values(crud)), []);
 
   const userHeaders = useMemo(() => [
     { key: 'name', text: t('rbac.users.name') },
@@ -134,6 +136,26 @@ const AdminAccessManagementPage = () => {
     await reloadRoles();
     await refreshMe();
     setRoleEditorOpen(false);
+  };
+
+  const saveRolePermissions = async (permissionNames) => {
+    setRoleForm((prev) => ({ ...prev, permissionNames }));
+
+    if (!editingRole?.id) {
+      setPermissionsModalOpen(false);
+      return;
+    }
+
+    setSavingPermissions(true);
+    try {
+      await rbacClient.syncRolePermissions(editingRole.id, permissionNames);
+      await reloadRoles();
+      await refreshMe();
+      setEditingRole((prev) => (prev ? { ...prev, permissionNames } : prev));
+      setPermissionsModalOpen(false);
+    } finally {
+      setSavingPermissions(false);
+    }
   };
 
   if (!anyViewAllowed) return <ForbiddenState moduleLabel={t('navigation.usersPermissions')} />;
@@ -243,60 +265,29 @@ const AdminAccessManagementPage = () => {
       <GlobalModal isOpen={roleEditorOpen} onClose={() => setRoleEditorOpen(false)} title={editingRole ? t('rbac.roles.edit') : t('rbac.roles.add')} titleIcon={<LexicraftIcon name="shield" size={16} />}>
         <form onSubmit={submitRole} className="grid gap-3">
           <input className="rounded border p-2" value={roleForm.name} onChange={(e) => setRoleForm((prev) => ({ ...prev, name: e.target.value }))} placeholder={t('rbac.roles.name')} />
-          <div className="max-h-72 overflow-auto rounded border p-2">
-            <div className="mb-2 flex gap-2">
-              <button type="button" className="rounded border px-2 py-1 text-xs" onClick={() => setRoleForm((prev) => ({ ...prev, permissionNames: allPermissions }))}>
-                {t('rbac.roles.selectAll')}
+          <div className="rounded-xl border border-border/70 bg-card p-3">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="font-medium">{t('access.permissionsModal.title')}</p>
+                <p className="text-xs text-muted-foreground">{t('rbac.roles.permissionsCount')}: {roleForm.permissionNames.length}</p>
+              </div>
+              <button type="button" className="rounded border px-3 py-2 text-sm" onClick={() => setPermissionsModalOpen(true)}>
+                {t('rbac.roles.assignPermissions')}
               </button>
             </div>
-            {Object.entries(permissionMap).map(([module, crud]) => {
-              const values = Object.values(crud);
-              const selectedAll = values.every((perm) => roleForm.permissionNames.includes(perm));
-              return (
-                <div key={module} className="mb-3 rounded border p-2">
-                  <div className="mb-2 flex items-center justify-between">
-                    <strong>{module}</strong>
-                    <button
-                      type="button"
-                      className="text-xs underline"
-                      onClick={() =>
-                        setRoleForm((prev) => ({
-                          ...prev,
-                          permissionNames: selectedAll
-                            ? prev.permissionNames.filter((perm) => !values.includes(perm))
-                            : Array.from(new Set([...prev.permissionNames, ...values])),
-                        }))
-                      }
-                    >
-                      {t('rbac.roles.selectModule')}
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {values.map((perm) => (
-                      <label key={perm} className="text-xs">
-                        <input
-                          type="checkbox"
-                          checked={roleForm.permissionNames.includes(perm)}
-                          onChange={() =>
-                            setRoleForm((prev) => ({
-                              ...prev,
-                              permissionNames: prev.permissionNames.includes(perm)
-                                ? prev.permissionNames.filter((item) => item !== perm)
-                                : [...prev.permissionNames, perm],
-                            }))
-                          }
-                        />{' '}
-                        {perm}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
           </div>
           <button className="rounded bg-primary px-3 py-2 text-primary-foreground">{t('common.save')}</button>
         </form>
       </GlobalModal>
+
+      <RolePermissionsModal
+        isOpen={permissionsModalOpen}
+        onClose={() => setPermissionsModalOpen(false)}
+        roleName={editingRole?.name || roleForm.name || SUPER_ADMIN_ROLE_NAME}
+        defaultPermissions={roleForm.permissionNames}
+        onSave={saveRolePermissions}
+        isSaving={savingPermissions}
+      />
 
       <GlobalConfirmDeleteModal
         isOpen={Boolean(userToDelete)}

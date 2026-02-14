@@ -766,7 +766,7 @@ const en = {
       title: "Users", add: "Add user", edit: "Edit user", name: "Name", email: "Email", status: "Status", roles: "Roles", active: "Active", inactive: "Inactive"
     },
     roles: {
-      title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", selectModule: "Toggle module"
+      title: "Roles", add: "Add role", edit: "Edit role", name: "Role name", permissionsCount: "Permissions", selectAll: "Select all", selectModule: "Toggle module", assignPermissions: "Assign permissions"
     },
     permissions: { title: "Permissions" },
     management: {
@@ -775,6 +775,37 @@ const en = {
     },
     tabs: { users: "Users", roles: "Roles", permissions: "Permissions" },
     qa: { title: "RBAC QA", switchUser: "Mock user" }
+  },
+
+  access: {
+    permissionsModal: {
+      title: "Role permissions",
+      description: "Manage permissions for this role from a responsive control panel.",
+      searchPlaceholder: "Search permissions...",
+      selectAll: "Select all",
+      deselectAll: "Deselect all",
+      selectSection: "Select section",
+      selectedCount: "{{selected}} / {{total}} selected",
+      totalSelected: "{{count}} selected"
+    },
+    sections: {
+      dashboard: "Dashboard",
+      legalCases: "Legal cases",
+      clients: "Clients",
+      sessions: "Sessions",
+      procedures: "Procedures",
+      services: "Services",
+      courts: "Courts",
+      lawyers: "Lawyers",
+      reports: "Reports",
+      adminUsers: "Users management",
+      adminRoles: "Roles management",
+      adminPermissions: "Permissions management",
+      expenses: "Expenses",
+      notifications: "Notifications",
+      events: "Events",
+      settings: "Settings"
+    }
   },
 
   finance: {
