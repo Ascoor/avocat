@@ -118,6 +118,9 @@ export type PermissionName = (typeof permissionMap)[PermissionModuleKey][keyof (
 
 export const allPermissions = Array.from(new Set(Object.values(permissionMap).flatMap((modulePermissions) => Object.values(modulePermissions))));
 
+// Legacy keys inventory (2026-02 migration): only these dashed names are still accepted via aliases.
+// TODO: remove this alias list after callers and persisted role data are fully migrated to canonical resource.action keys.
+
 export const permissionAliases: Record<string, PermissionName> = {
   "legal-cases.view": permissionMap.legalCases.view,
   "legal-cases.list": permissionMap.legalCases.list,

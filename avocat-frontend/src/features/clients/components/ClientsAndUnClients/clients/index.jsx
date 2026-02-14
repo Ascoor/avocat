@@ -9,7 +9,7 @@ import { useAlert } from "@shared/contexts/AlertContext";
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
-import { canAccessByOffice, canViewSensitiveClientFields, maskSensitive } from '@shared/security/abac';
+import { canAccessOffice, canViewSensitiveClientFields, maskSensitive } from '@shared/security/abac';
 
 const ClientList = () => {
   const { permissions, user, roles } = useSecurity();
@@ -30,7 +30,7 @@ const ClientList = () => {
   }), [user, roles, permissions]);
 
   const filteredClients = useMemo(
-    () => clients.filter((client) => canAccessByOffice(accessUser, { officeId: client.office_id ?? client.officeId })),
+    () => clients.filter((client) => canAccessOffice(accessUser, client.office_id ?? client.officeId)),
     [clients, accessUser],
   );
 

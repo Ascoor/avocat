@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canAction } from '@shared/security/permissions';
+import { permissionMap } from '@shared/security/permission-map';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 import { Tabs, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -170,8 +171,8 @@ export default function LegCaseDetails() {
   }, [legCase, fetchProcedures, fetchSessions, fetchAds]);
 
 
-  const canUpdateCase = canAction(permissions, 'legalCases', 'update');
-  const canDeleteCase = canAction(permissions, 'legalCases', 'delete');
+  const canUpdateCase = canAction(permissions, permissionMap.legalCases.update);
+  const canDeleteCase = canAction(permissions, permissionMap.legalCases.delete);
 
   const kpiCards = useMemo(() => {
     const sessionsData = sectionsState.sessions.data || [];
@@ -310,6 +311,10 @@ export default function LegCaseDetails() {
                     legCaseId={id}
                     fetchLegcaseClients={fetchLegCase}
                     legcaseClients={legcaseClients}
+                    acl={{
+                      create: canAction(permissions, permissionMap.clients.assign),
+                      delete: canAction(permissions, permissionMap.clients.delete),
+                    }}
                   />
                 )}
                 {activeTab === 'courts' && <LegalCaseCourts legCase={legCase} fetchLegCase={fetchLegCase} />}
@@ -321,6 +326,11 @@ export default function LegCaseDetails() {
                     loading={sectionsState.procedures.loading}
                     error={sectionsState.procedures.error}
                     onRefresh={() => refreshSection('procedures')}
+                    acl={{
+                      create: canAction(permissions, permissionMap.procedures.create),
+                      update: canAction(permissions, permissionMap.procedures.update),
+                      delete: canAction(permissions, permissionMap.procedures.delete),
+                    }}
                   />
                 )}
                 {activeTab === 'sessions' && (
@@ -331,6 +341,11 @@ export default function LegCaseDetails() {
                     loading={sectionsState.sessions.loading}
                     error={sectionsState.sessions.error}
                     onRefresh={() => refreshSection('sessions')}
+                    acl={{
+                      create: canAction(permissions, permissionMap.sessions.create),
+                      update: canAction(permissions, permissionMap.sessions.update),
+                      delete: canAction(permissions, permissionMap.sessions.delete),
+                    }}
                   />
                 )}
                 {activeTab === 'ads' && (

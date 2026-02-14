@@ -11,7 +11,7 @@ import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
 import PermissionGuard from '@shared/security/PermissionGuard';
 import { permissionMap } from '@shared/security/permission-map';
-import { canAccessByOffice, canLawyerAccessCase } from '@shared/security/abac';
+import { canAccessCase, canAccessOffice } from '@shared/security/abac';
 
 const AddEditLegCase = lazy(() => import('../components/LegalCases/AddEditLegCase'));
 
@@ -31,23 +31,13 @@ const LegalCasesIndex = () => {
     teamLawyerIds: user?.teamLawyerIds ?? user?.team_lawyer_ids,
   }), [user, roles]);
 
-  const isLawyer = roles.some((role) => role.name === 'lawyer');
-
   const visibleCases = useMemo(
-    () => legCases.filter((legCase) => {
-      const record = {
-        officeId: legCase.office_id ?? legCase.officeId,
-        assignedLawyerId: legCase.assigned_lawyer_id ?? legCase.lawyer_id ?? legCase.assignedLawyerId,
-        teamLawyerIds: legCase.team_lawyer_ids ?? legCase.teamLawyerIds,
-      };
-
-      if (isLawyer) {
-        return canLawyerAccessCase(accessUser, record) || canAccessByOffice(accessUser, record);
-      }
-
-      return canAccessByOffice(accessUser, record);
-    }),
-    [legCases, accessUser, isLawyer],
+    () => legCases.filter((legCase) => canAccessCase(accessUser, {
+      officeId: legCase.office_id ?? legCase.officeId,
+      assignedLawyerId: legCase.assigned_lawyer_id ?? legCase.lawyer_id ?? legCase.assignedLawyerId,
+      teamLawyerIds: legCase.team_lawyer_ids ?? legCase.teamLawyerIds,
+    }) && canAccessOffice(accessUser, legCase.office_id ?? legCase.officeId)),
+    [legCases, accessUser],
   );
 
   const fetchLegCases = useCallback(async () => {
@@ -134,7 +124,7 @@ const LegalCasesIndex = () => {
         onDelete={acl.delete ? handleDeleteCase : undefined}
         customRenderers={customRenderers}
         renderAddButton={acl.create ? (() => (
-          <PermissionGuard require={permissionMap.legalCases.create} fallback={null}>
+          <PermissionGuard permissions={permissionMap.legalCases.create} fallback={null}>
             <button onClick={() => handleAddEditModal()} className="bg-gradient-green-button hover:bg-gradient-green-dark-button text-white px-4 py-2 rounded-lg transition">+ إضافة قضية جديدة</button>
           </PermissionGuard>
         )) : undefined}

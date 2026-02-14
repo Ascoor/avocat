@@ -11,12 +11,13 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run check:security && vite build",
     "copy-dist": "cp -R dist/* /var/www/html/avocat.live/public",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx}\"",
+    "check:security": "node scripts/security-sanity.mjs"
   },
   "keywords": [
     "react",

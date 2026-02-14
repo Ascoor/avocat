@@ -18,40 +18,55 @@ export type AccessRecord = {
   status?: string | null;
 };
 
-const same = (a?: string | number | null, b?: string | number | null) =>
-  a !== undefined && a !== null && b !== undefined && b !== null && String(a) === String(b);
+const sameId = (left?: string | number | null, right?: string | number | null) => {
+  if (left === undefined || left === null || right === undefined || right === null) return false;
+  return String(left) === String(right);
+};
 
-const asSet = (arr?: Array<string | number>) => new Set((arr ?? []).map((item) => String(item)));
+const toIdSet = (arr?: Array<string | number>) => new Set((arr ?? []).map((item) => String(item)));
 
-export const canAccessByOffice = (user: AccessUser, record: AccessRecord) =>
-  same(user.officeId, record.officeId) || (user.roleNames ?? []).includes("super_admin");
+export const canAccessOffice = (user: AccessUser, officeId?: string | number | null) => {
+  if ((user.roleNames ?? []).includes("super_admin")) return true;
+  if (officeId === undefined || officeId === null) return true;
+  if (user.officeId === undefined || user.officeId === null) return true;
+  return sameId(user.officeId, officeId);
+};
 
-export const canAccessOffice = canAccessByOffice;
+export const canAccessByOffice = (user: AccessUser, record: AccessRecord) => canAccessOffice(user, record.officeId);
 
-export const canLawyerAccessCase = (user: AccessUser, record: AccessRecord) => {
-  if (!canAccessByOffice(user, record)) return false;
+export const canAccessCase = (user: AccessUser, record: AccessRecord) => {
+  if (!canAccessOffice(user, record.officeId)) return false;
+
+  const isLawyer = (user.roleNames ?? []).includes("lawyer");
+  if (!isLawyer) return true;
 
   const currentLawyerId = user.lawyerId ? String(user.lawyerId) : null;
   const assignedLawyerId = record.assignedLawyerId ? String(record.assignedLawyerId) : null;
-
   if (currentLawyerId && assignedLawyerId && currentLawyerId === assignedLawyerId) return true;
 
-  const userTeam = asSet(user.teamLawyerIds);
-  const recordTeam = asSet(record.teamLawyerIds);
-  return Array.from(userTeam).some((id) => recordTeam.has(id));
+  const userTeam = toIdSet(user.teamLawyerIds);
+  const recordTeam = toIdSet(record.teamLawyerIds);
+  if (userTeam.size && recordTeam.size && Array.from(userTeam).some((id) => recordTeam.has(id))) return true;
+
+  return !assignedLawyerId;
 };
+
+export const canLawyerAccessCase = canAccessCase;
 
 export const canAssistantMutateCaseStatus = (user: AccessUser, record: AccessRecord) => {
   const isAssistant = (user.roleNames ?? []).includes("assistant");
   if (!isAssistant) return true;
-  if (!canAccessByOffice(user, record)) return false;
+  if (!canAccessOffice(user, record.officeId)) return false;
   return record.status !== "closed";
 };
 
 export const canViewSensitiveClientFields = (user: AccessUser, record: AccessRecord) => {
   if (!record.isSensitive) return true;
   const hasSensitivePermission = hasPermission(user.permissions ?? [], permissionMap.clients.viewSensitive);
-  return hasSensitivePermission && canAccessByOffice(user, record);
+  return hasSensitivePermission && canAccessOffice(user, record.officeId);
 };
 
-export const maskSensitive = (value: string, allowed: boolean, mask = "••••••") => (allowed ? value : mask);
+export const maskSensitive = (value?: string | number | null, allowed = false, mask = "••••••") => {
+  if (value === undefined || value === null || value === "") return "-";
+  return allowed ? String(value) : mask;
+};
