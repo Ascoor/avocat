@@ -1,29 +1,14 @@
-const cleanValue = (value) => {
-  if (value == null) return null;
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    return trimmed === '' ? null : trimmed;
-  }
-  return value;
-};
+import { buildQueryParams } from '@shared/utils/buildQueryParams';
 
 export const buildReportsQueryParams = (
   { filters = {}, pagination = {} } = {},
-  allowedFilterKeys = [],
+  schema = {},
 ) => {
   const params = {
     page: Number(pagination.page || 1),
     per_page: Number(pagination.per_page || 20),
+    ...buildQueryParams(filters, schema),
   };
-
-  const allowedKeysSet = new Set(allowedFilterKeys);
-
-  Object.entries(filters || {}).forEach(([key, rawValue]) => {
-    if (allowedKeysSet.size && !allowedKeysSet.has(key)) return;
-    const value = cleanValue(rawValue);
-    if (value == null) return;
-    params[key] = value;
-  });
 
   return Object.fromEntries(
     Object.entries(params).filter(([, value]) => value != null),

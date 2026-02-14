@@ -11,7 +11,6 @@ import {
 import {
   FILTER_SCHEMA,
   getDefaultReportState,
-  getFilterKeysForTab,
 } from '@features/reports/services/reportsFilterSchema';
 
 export const REPORT_TABS = [
@@ -106,15 +105,10 @@ export const useReportsQuery = (tabKey) => {
         groups: [],
         fields: {},
         layout: [],
-        defaultValues: {},
+        defaults: {},
       },
     [tabKey],
   );
-  const allowedFilterKeys = useMemo(
-    () => getFilterKeysForTab(tabKey),
-    [tabKey],
-  );
-
   const defaults = useMemo(() => getDefaultReportState(tabKey), [tabKey]);
   const [queryState, setQueryState] = useState(() =>
     parseReportsStateFromSearch(searchParams, defaults),
@@ -175,25 +169,22 @@ export const useReportsQuery = (tabKey) => {
 
   const syncToUrl = useCallback(
     (nextState) => {
-      setSearchParams(buildReportsQueryParams(nextState, allowedFilterKeys));
+      setSearchParams(buildReportsQueryParams(nextState, tabSchema));
     },
-    [allowedFilterKeys, setSearchParams],
+    [setSearchParams, tabSchema],
   );
 
   const submitFilters = useCallback(
     (nextFilters) => {
-      const sanitizedFilters = Object.fromEntries(
-        allowedFilterKeys.map((key) => [key, nextFilters[key] ?? '']),
-      );
       const nextState = {
-        filters: sanitizedFilters,
+        filters: { ...nextFilters },
         pagination: { ...queryState.pagination, page: 1 },
       };
       setQueryState(nextState);
       syncToUrl(nextState);
       loadRows(nextState);
     },
-    [allowedFilterKeys, loadRows, queryState.pagination, syncToUrl],
+    [loadRows, queryState.pagination, syncToUrl],
   );
 
   const changePage = useCallback(
