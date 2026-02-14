@@ -11,6 +11,7 @@ use App\Models\LegalSession;
 use App\Models\LegCase;
 use App\Models\Event;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Log;
 class LegalSessionController extends Controller
 {
     public function index()
@@ -25,6 +26,7 @@ class LegalSessionController extends Controller
     public function show($id)
     {
         $legalSession = LegalSession::findOrFail($id);
+        $this->authorize('view', $legalSession);
 
         return response()->json($legalSession);
     }
@@ -83,7 +85,13 @@ class LegalSessionController extends Controller
         ]);
 
         $legalSession = LegalSession::findOrFail($id);
+        $this->authorize('update', $legalSession);
         $legalSession->update($request->all());
+
+        Log::info('audit.session.updated', [
+            'session_id' => $legalSession->id,
+            'actor_id' => optional($request->user())->id,
+        ]);
 
         // Check if the status is 'منتهي'
         if ($request->status === 'منتهي') {
@@ -167,9 +175,16 @@ class LegalSessionController extends Controller
         return response()->json($sessions);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        LegalSession::destroy($id);
+        $legalSession = LegalSession::findOrFail($id);
+        $this->authorize('delete', $legalSession);
+        $legalSession->delete();
+
+        Log::info('audit.session.deleted', [
+            'session_id' => $id,
+            'actor_id' => optional($request->user())->id,
+        ]);
 
         return response()->json(null, 204);
     }

@@ -8,6 +8,7 @@ use App\Models\{LegCase, Court, CaseType };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 class LegCaseController extends Controller
 {
@@ -114,9 +115,11 @@ class LegCaseController extends Controller
             'procedures'
         ])->find($id);
 
-        if (!$legCase) {
+        if (! $legCase) {
             return response()->json(['error' => 'LegCase not found'], 404);
         }
+
+        $this->authorize('view', $legCase);
 
         return response()->json(['leg_case' => $legCase]);
     }
@@ -145,8 +148,14 @@ class LegCaseController extends Controller
              ]);
      
              $legCase = LegCase::findOrFail($id);
+             $this->authorize('update', $legCase);
              $legCase->update($validatedData);
-     
+
+             Log::info('audit.case.updated', [
+                 'case_id' => $legCase->id,
+                 'actor_id' => optional($request->user())->id,
+             ]);
+
              return response()->json(['message' => 'Leg case updated successfully', 'data' => $legCase], 200);
          } catch (ModelNotFoundException $e) {
              return response()->json(['error' => 'LegCase not found'], 404);
@@ -323,45 +332,45 @@ public function getLegCaseSearch(Request $request)
      * @throws \Exception If an error occurs during deletion.
      * @return \Illuminate\Http\JsonResponse A JSON response indicating the result of the deletion.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $legCase = LegCase::find($id);
-    
-        if (!$legCase) {
+
+        if (! $legCase) {
             return response()->json(['error' => 'LegCase not found'], 404);
         }
-    
-        // Start a transaction
+
+        $this->authorize('delete', $legCase);
+
         DB::beginTransaction();
-    
+
         try {
-            // Detach all associated sessions if they exist
             if ($legCase->sessions()->exists()) {
                 $legCase->sessions()->detach();
             }
-    
-            // Delete associated procedures if they exist
+
             if ($legCase->procedures()->exists()) {
                 $legCase->procedures()->delete();
             }
-    
-            // Delete associated legal advertisements if they exist
+
             if ($legCase->legalAds()->exists()) {
                 $legCase->legalAds()->delete();
             }
-    
-            // Delete the leg case
+
             $legCase->delete();
-    
-            // Commit the transaction
+
             DB::commit();
-    
+
+            Log::info('audit.case.deleted', [
+                'case_id' => $id,
+                'actor_id' => optional($request->user())->id,
+            ]);
+
             return response()->json(['message' => 'LegCase and associated records deleted successfully']);
         } catch (\Exception $e) {
-            // Rollback the transaction in case of an error
             DB::rollback();
             return response()->json(['error' => 'An error occurred during deletion'], 500);
         }
-    
+
 }
 }
