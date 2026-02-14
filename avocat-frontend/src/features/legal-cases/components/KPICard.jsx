@@ -1,14 +1,6 @@
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
 
-interface KPICardProps {
-  icon: LucideIcon;
-  label: string;
-  value: string | number;
-  delay?: number;
-}
-
-const KPICard = ({ icon: Icon, label, value, delay = 0 }: KPICardProps) => (
+const KPICard = ({ icon: Icon, label, value, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}

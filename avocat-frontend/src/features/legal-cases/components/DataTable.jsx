@@ -1,19 +1,6 @@
-import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
-interface Column {
-  key: string;
-  label: string;
-  render?: (value: any, row: any) => ReactNode;
-}
-
-interface DataTableProps {
-  columns: Column[];
-  data: any[];
-  isRtl?: boolean;
-}
-
-const DataTable = ({ columns, data, isRtl }: DataTableProps) => (
+const DataTable = ({ columns, data, isRtl }) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}

@@ -1,15 +1,7 @@
 import { AlertCircle, RefreshCw, Inbox } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-interface SectionStateMessageProps {
-  type: 'error' | 'empty';
-  title?: string;
-  message: string;
-  retryLabel?: string;
-  onRetry?: () => void;
-}
-
-const SectionStateMessage = ({ type, title, message, retryLabel, onRetry }: SectionStateMessageProps) => (
+const SectionStateMessage = ({ type, title, message, retryLabel, onRetry }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}

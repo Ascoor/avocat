@@ -8,8 +8,8 @@ export const OverviewSkeleton = () => (
     </div>
     <Skeleton className="h-16 w-full" />
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {[...Array(4)].map((_, i) => (
-        <Skeleton key={i} className="h-24 rounded-xl" />
+      {Array.from({ length: 4 }, (_, i) => (
+        <div key={i}><Skeleton className="h-24 rounded-xl" /></div>
       ))}
     </div>
   </div>
@@ -27,8 +27,8 @@ export const PageSkeleton = () => (
     <OverviewSkeleton />
     <Skeleton className="h-10 w-full" />
     <div className="space-y-3">
-      {[...Array(5)].map((_, i) => (
-        <Skeleton key={i} className="h-14 w-full" />
+      {Array.from({ length: 5 }, (_, i) => (
+        <div key={i}><Skeleton className="h-14 w-full" /></div>
       ))}
     </div>
   </div>
@@ -37,8 +37,8 @@ export const PageSkeleton = () => (
 export const TableSkeleton = () => (
   <div className="space-y-3">
     <Skeleton className="h-10 w-full" />
-    {[...Array(4)].map((_, i) => (
-      <Skeleton key={i} className="h-12 w-full" />
+    {Array.from({ length: 4 }, (_, i) => (
+      <div key={i}><Skeleton className="h-12 w-full" /></div>
     ))}
   </div>
 );
