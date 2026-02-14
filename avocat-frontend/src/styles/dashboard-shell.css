@@ -9,56 +9,55 @@
 :root {
   /* ---------- Shell backgrounds (Light) ---------- */
   --shell-day-gradient: linear-gradient(
-    135deg,
-    hsl(var(--background) / 0.98),
-    hsl(var(--card) / 0.98) 55%,
-    hsl(var(--muted) / 0.92)
+    180deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--surface-raised)) 100%
   );
 
   --shell-day-overlay:
     radial-gradient(
       120% 120% at 10% 10%,
-      hsl(var(--primary) / 0.1),
+      hsl(var(--primary) / 0.06),
       transparent 60%
     ),
     radial-gradient(
       140% 140% at 90% 30%,
-      hsl(var(--accent) / 0.1),
+      hsl(var(--accent) / 0.05),
       transparent 70%
     );
 
   --shell-overlay-opacity: 1;
-  --shell-overlay-blend: screen;
+  --shell-overlay-blend: normal;
   --shell-ambient-opacity: 0;
 
   /* ---------- Shell backgrounds (Dark) ---------- */
   --shell-night-gradient: linear-gradient(
-    135deg,
-    hsl(var(--background) / 0.96),
-    hsl(var(--card) / 0.94) 45%,
-    hsl(var(--background) / 0.92)
+    180deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--surface)) 48%,
+    hsl(var(--surface-raised)) 100%
   );
 
   --shell-night-overlay:
     radial-gradient(
       120% 120% at 14% 18%,
-      hsl(var(--primary) / 0.2),
+      hsl(var(--primary) / 0.14),
       transparent 62%
     ),
     radial-gradient(
       140% 140% at 86% 18%,
-      hsl(var(--accent) / 0.18),
+      hsl(var(--accent) / 0.08),
       transparent 64%
     ),
     radial-gradient(
       120% 120% at 52% 86%,
-      hsl(var(--primary) / 0.12),
+      hsl(var(--primary) / 0.07),
       transparent 70%
     );
 
   --shell-ambient-glow: radial-gradient(
     120% 110% at 50% 70%,
-    hsl(var(--accent) / 0.16),
+    hsl(var(--primary) / 0.1),
     transparent 70%
   );
 
@@ -82,9 +81,9 @@
 .dark {
   --shell-background: var(--shell-night-gradient);
   --shell-overlay: var(--shell-night-overlay);
-  --shell-overlay-opacity: 0.9;
-  --shell-overlay-blend: lighten;
-  --shell-ambient-opacity: 1;
+  --shell-overlay-opacity: 0.65;
+  --shell-overlay-blend: normal;
+  --shell-ambient-opacity: 0.45;
 }
 
 /* Ambient motion only in dark (luxury feel) */
@@ -113,8 +112,8 @@
   color: hsl(var(--foreground));
   overflow: hidden;
   transition:
-    background 200ms ease,
-    color 200ms ease;
+    background 220ms ease,
+    color 220ms ease;
 }
 
 /* overlay gradients */
