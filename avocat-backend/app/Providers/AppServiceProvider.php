@@ -2,9 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\LegCase;
+use App\Models\LegalSession;
+use App\Policies\LegCasePolicy;
+use App\Policies\LegalSessionPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(LegCase::class, LegCasePolicy::class);
+        Gate::policy(LegalSession::class, LegalSessionPolicy::class);
+
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->input('email');
 

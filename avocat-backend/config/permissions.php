@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'guard' => 'api',
+    'guard' => 'web',
 
     'permissions' => [
         // Dashboard

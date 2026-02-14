@@ -184,7 +184,14 @@ const AuthRoutes = () => {
             }
           />
 
-          <Route path="financial-dashboard" element={<FinancialDashboard />} />
+          <Route
+            path="financial-dashboard"
+            element={
+              <Guarded require={permissionMap.expenses.view} moduleLabel="Financial Dashboard">
+                <FinancialDashboard />
+              </Guarded>
+            }
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
