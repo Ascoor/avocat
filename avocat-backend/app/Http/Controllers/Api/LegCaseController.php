@@ -17,29 +17,35 @@ class LegCaseController extends Controller
     {
     }
     /**
-     * Retrieves the last 20 active leg cases and returns them as JSON.
+     * Retrieves active legal cases for list views with lightweight relations.
      *
-     * @return JsonResponse The JSON response containing the leg cases.
+     * @return JsonResponse The JSON response containing the legal cases.
      */
     public function index()
-    {$legCases = LegCase::with([
-        'courts',
-        'clients',
-        'caseType',
-        'legalSessions',
-        'caseSubType',
-        'lawyers',
-        'createdBy',
-        'updatedBy',
-        'procedures'
-        ])
-        ->orderBy('created_at', 'desc')  // أولوية لتاريخ الإنشاء
-        ->orderBy('updated_at', 'desc')  // ثم تاريخ التحديث
-    ->whereIn('status', ['قيد التجهيز', 'متداولة'])
-    ->orderByRaw("CASE status WHEN 'قيد التجهيز' THEN 2 WHEN 'متداولة' THEN 1 ELSE 0 END DESC")
-    ->get();
-    
-    return response()->json($legCases);
+    {
+        $legCases = LegCase::query()
+            ->select([
+                'id',
+                'slug',
+                'title',
+                'client_capacity',
+                'status',
+                'case_sub_type_id',
+                'created_at',
+                'updated_at',
+            ])
+            ->with([
+                'clients:id,name',
+                'caseSubType:id,name',
+            ])
+            ->withCount(['procedures', 'legalSessions'])
+            ->whereIn('status', ['قيد التجهيز', 'متداولة'])
+            ->orderByRaw("CASE status WHEN 'قيد التجهيز' THEN 2 WHEN 'متداولة' THEN 1 ELSE 0 END DESC")
+            ->orderByDesc('created_at')
+            ->orderByDesc('updated_at')
+            ->get();
+
+        return response()->json($legCases);
     }
 
     /**
