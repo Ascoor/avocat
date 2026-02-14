@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { fetchReportRows, fetchReportsMetadata } from '@features/reports/services/reportsApi';
-
-const STATUS_KEYS = {
-  cases: 'case_status',
-  services: 'service_status',
-  procedures: 'procedure_status',
-  sessions: 'session_status',
-  clients: 'client_status',
-};
+import { buildReportsQueryParams, parseReportsStateFromSearch } from '@features/reports/services/buildReportsQueryParams';
 
 export const REPORT_TABS = [
   { key: 'cases', label: 'القضايا', icon: 'briefcase', to: '/dashboard/reports/cases' },
@@ -17,173 +11,148 @@ export const REPORT_TABS = [
   { key: 'clients', label: 'الموكلين', icon: 'client', to: '/dashboard/reports/clients' },
 ];
 
-const baseDateFields = [
-  { name: 'from_date', type: 'date', label: 'من' },
-  { name: 'to_date', type: 'date', label: 'إلى' },
-];
+const BASE_FILTERS = ['case_slug', 'file_no', 'date_from', 'date_to', 'court_id', 'status', 'lawyer_id', 'client_id', 'service_id'];
 
-const hasAnyFilterValue = (filters) =>
-  Object.values(filters || {}).some((value) => {
-    if (value == null) return false;
-    if (typeof value === 'string') return value.trim() !== '';
-    return true;
-  });
-
-export const FILTER_SCHEMA = {
-  cases: [
-    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
-    { name: 'case_type_id', type: 'select', label: 'نوع القضية' },
-    ...baseDateFields,
-    { name: 'case_status', type: 'select', label: 'الحالة' },
-  ],
-  services: [
-    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
-    { name: 'service_type_id', type: 'select', label: 'نوع الخدمة' },
-    ...baseDateFields,
-    { name: 'service_status', type: 'select', label: 'الحالة' },
-  ],
-  procedures: [
-    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'lawyer_id', type: 'select', label: 'المحامي' },
-    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
-    { name: 'procedure_type_id', type: 'select', label: 'نوع الإجراء' },
-    ...baseDateFields,
-    { name: 'procedure_status', type: 'select', label: 'الحالة' },
-  ],
-  sessions: [
-    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'lawyer_id', type: 'select', label: 'المحامي' },
-    { name: 'slug', type: 'text', label: 'رقم الملف (Slug)' },
-    { name: 'session_type_id', type: 'select', label: 'نوع الجلسة' },
-    ...baseDateFields,
-    { name: 'session_status', type: 'select', label: 'الحالة' },
-  ],
-  clients: [
-    { name: 'slug', type: 'text', label: 'رقم الموكل (Slug)' },
-    { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'client_type', type: 'select', label: 'نوع الموكل' },
-    ...baseDateFields,
-    { name: 'client_status', type: 'select', label: 'الحالة' },
-  ],
+const FILTER_REGISTRY = {
+  cases: ['case_slug', 'file_no', 'date_from', 'date_to', 'court_id', 'status', 'client_id'],
+  services: ['case_slug', 'file_no', 'date_from', 'date_to', 'status', 'lawyer_id', 'client_id', 'service_id'],
+  procedures: ['case_slug', 'file_no', 'date_from', 'date_to', 'court_id', 'status', 'lawyer_id', 'client_id'],
+  sessions: ['case_slug', 'file_no', 'date_from', 'date_to', 'court_id', 'status', 'lawyer_id', 'client_id'],
+  clients: ['file_no', 'date_from', 'date_to', 'status', 'client_id'],
 };
 
-const getInitialFilters = (tabKey) =>
-  FILTER_SCHEMA[tabKey].reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
-
-const toStatusOptions = (rows, tabKey) => {
-  const statusKey = STATUS_KEYS[tabKey];
-  if (!statusKey) return [];
-  const values = new Set((rows || []).map((row) => row?.status).filter(Boolean));
-  return [...values].map((value) => ({ value, label: value }));
+const FILTER_LABELS = {
+  case_slug: 'رقم الملف',
+  file_no: 'رقم الملف البديل',
+  date_from: 'من',
+  date_to: 'إلى',
+  court_id: 'المحكمة',
+  status: 'الحالة',
+  lawyer_id: 'المحامي',
+  client_id: 'الموكل',
+  service_id: 'الخدمة',
 };
+
+const FILTER_TYPE = (name) => (name.includes('date') ? 'date' : name.endsWith('_id') || name === 'status' ? 'select' : 'text');
+
+const getInitialFilters = (tabKey) => Object.fromEntries((FILTER_REGISTRY[tabKey] || BASE_FILTERS).map((key) => [key, '']));
 
 export const useReportsQuery = (tabKey) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [rows, setRows] = useState([]);
+  const [meta, setMeta] = useState({ page: 1, per_page: 20, total: 0, last_page: 1 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
-  const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [] });
-  const [filters, setFilters] = useState(() => getInitialFilters(tabKey));
+  const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [], courts: [] });
 
-  const loadRows = useCallback(
-    async (nextFilters) => {
-      if (!hasAnyFilterValue(nextFilters)) {
-        setRows([]);
-        setError('');
-        setLoading(false);
-        setHasSearched(false);
-        return;
-      }
-
-      setLoading(true);
-      setError('');
-      setHasSearched(true);
-      try {
-        const data = await fetchReportRows(tabKey, nextFilters);
-        setRows(data);
-      } catch (err) {
-        setRows([]);
-        setError(err?.message || 'حدث خطأ أثناء تحميل البيانات');
-      } finally {
-        setLoading(false);
-      }
-    },
+  const defaults = useMemo(
+    () => ({
+      q: '',
+      filters: getInitialFilters(tabKey),
+      sort: { sort_by: 'created_at', sort_dir: 'desc' },
+      pagination: { page: 1, per_page: 20 },
+    }),
     [tabKey],
   );
 
+  const [queryState, setQueryState] = useState(() => parseReportsStateFromSearch(searchParams, defaults));
+
   useEffect(() => {
-    const initial = getInitialFilters(tabKey);
-    setFilters(initial);
-    setRows([]);
-    setError('');
-    setHasSearched(false);
-    setLoading(false);
-  }, [loadRows, tabKey]);
+    setQueryState(parseReportsStateFromSearch(searchParams, defaults));
+  }, [defaults, searchParams, tabKey]);
 
   useEffect(() => {
     let mounted = true;
     fetchReportsMetadata()
-      .then((data) => {
-        if (mounted) setMetadata(data);
-      })
-      .catch(() => {
-        if (mounted) setMetadata({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [] });
-      });
+      .then((data) => mounted && setMetadata(data))
+      .catch(() => mounted && setMetadata({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [], courts: [] }));
     return () => {
       mounted = false;
     };
   }, []);
 
-  const options = useMemo(() => {
-    const statusOptions = toStatusOptions(rows, tabKey);
-    return {
-      case_type_id: metadata.caseTypes.map((item) => ({ value: String(item.id), label: item.name })),
-      service_type_id: metadata.serviceTypes.map((item) => ({ value: String(item.id), label: item.name })),
-      lawyer_id: metadata.lawyers.map((item) => ({ value: String(item.id), label: item.name })),
-      procedure_type_id: metadata.procedureTypes.map((item) => ({ value: String(item.id), label: item.name })),
-      session_type_id: metadata.sessionTypes.map((item) => ({ value: String(item.id), label: item.name })),
-      client_type: [
-        { value: 'without_authorization', label: 'بدون توكيل' },
-        { value: 'authorized', label: 'بوكالة' },
-      ],
-      [STATUS_KEYS.cases]: tabKey === 'cases' ? statusOptions : [],
-      [STATUS_KEYS.services]: tabKey === 'services' ? statusOptions : [],
-      [STATUS_KEYS.procedures]: tabKey === 'procedures' ? statusOptions : [],
-      [STATUS_KEYS.sessions]: tabKey === 'sessions' ? statusOptions : [],
-      [STATUS_KEYS.clients]: tabKey === 'clients' ? statusOptions : [],
-    };
-  }, [metadata, rows, tabKey]);
-
-  const submitFilters = useCallback(
-    (nextFilters) => {
-      setFilters(nextFilters);
-      loadRows(nextFilters);
-    },
-    [loadRows],
-  );
-
-  const resetFilters = useCallback(() => {
-    const clean = getInitialFilters(tabKey);
-    setFilters(clean);
-    setRows([]);
+  const loadRows = useCallback(async (nextState) => {
+    setLoading(true);
     setError('');
-    setHasSearched(false);
-    setLoading(false);
-    return clean;
+    setHasSearched(true);
+    try {
+      const result = await fetchReportRows(tabKey, nextState);
+      setRows(result.data || []);
+      setMeta(result.meta || { page: 1, per_page: 20, total: 0, last_page: 1 });
+    } catch (err) {
+      setRows([]);
+      setMeta({ page: 1, per_page: 20, total: 0, last_page: 1 });
+      setError(err?.message || 'حدث خطأ أثناء تحميل البيانات');
+    } finally {
+      setLoading(false);
+    }
   }, [tabKey]);
 
+  const syncToUrl = useCallback((nextState) => {
+    const built = buildReportsQueryParams(nextState);
+    setSearchParams(built);
+  }, [setSearchParams]);
+
+  const submitFilters = useCallback((payload) => {
+    const nextState = {
+      ...queryState,
+      q: payload.q || '',
+      filters: payload.filters,
+      sort: payload.sort,
+      pagination: { ...payload.pagination, page: 1 },
+    };
+    setQueryState(nextState);
+    syncToUrl(nextState);
+    loadRows(nextState);
+  }, [loadRows, queryState, syncToUrl]);
+
+  const changePage = useCallback((page) => {
+    const nextState = { ...queryState, pagination: { ...queryState.pagination, page } };
+    setQueryState(nextState);
+    syncToUrl(nextState);
+    loadRows(nextState);
+  }, [loadRows, queryState, syncToUrl]);
+
+  const resetFilters = useCallback(() => {
+    setQueryState(defaults);
+    setRows([]);
+    setMeta({ page: 1, per_page: 20, total: 0, last_page: 1 });
+    setHasSearched(false);
+    setError('');
+    setLoading(false);
+    setSearchParams({});
+    return defaults;
+  }, [defaults, setSearchParams]);
+
+  const schema = useMemo(
+    () =>
+      (FILTER_REGISTRY[tabKey] || BASE_FILTERS).map((name) => ({
+        name,
+        type: FILTER_TYPE(name),
+        label: FILTER_LABELS[name] || name,
+      })),
+    [tabKey],
+  );
+
+  const options = useMemo(() => ({
+    lawyer_id: metadata.lawyers.map((item) => ({ value: String(item.id), label: item.name })),
+    court_id: metadata.courts.map((item) => ({ value: String(item.id), label: item.name })),
+    status: [...new Set(rows.map((item) => item.status).filter(Boolean))].map((value) => ({ value, label: value })),
+  }), [metadata.courts, metadata.lawyers, rows]);
+
   return {
-    schema: FILTER_SCHEMA[tabKey],
-    filters,
+    schema,
+    queryState,
     rows,
+    meta,
     loading,
     error,
     hasSearched,
     options,
     submitFilters,
     resetFilters,
-    retry: () => loadRows(filters),
+    changePage,
+    retry: () => loadRows(queryState),
   };
 };

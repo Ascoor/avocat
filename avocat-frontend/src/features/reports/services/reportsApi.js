@@ -1,6 +1,16 @@
 import api from '@shared/services/api/axiosConfig';
+import { buildReportsQueryParams } from '@features/reports/services/buildReportsQueryParams';
+import { normalizeReportRow } from '@features/reports/services/reportRowNormalizer';
 
 const COLLECTION_KEYS = ['data', 'rows', 'clients', 'services', 'procedures', 'legalSessions', 'sessions', 'cases', 'leg_cases'];
+
+const REPORT_ENDPOINTS = {
+  cases: '/legal-cases',
+  services: '/services',
+  procedures: '/procedures-search',
+  sessions: '/legal_sessions',
+  clients: '/clients',
+};
 
 const extractRows = (payload) => {
   if (Array.isArray(payload)) return payload;
@@ -10,207 +20,76 @@ const extractRows = (payload) => {
     if (Array.isArray(payload[key])) return payload[key];
   }
 
-  if (payload.data && typeof payload.data === 'object') {
-    for (const key of COLLECTION_KEYS) {
-      if (Array.isArray(payload.data[key])) return payload.data[key];
-    }
-  }
-
   const firstArrayValue = Object.values(payload).find((value) => Array.isArray(value));
   return Array.isArray(firstArrayValue) ? firstArrayValue : [];
 };
 
-const cleanParams = (params) =>
-  Object.fromEntries(Object.entries(params).filter(([, value]) => value !== '' && value != null));
-
-const includesText = (source, term) => String(source || '').toLowerCase().includes(String(term || '').trim().toLowerCase());
-
-const inDateRange = (value, fromDate, toDate) => {
-  if (!value) return false;
-  const valueDate = new Date(value);
-  if (Number.isNaN(valueDate.getTime())) return false;
-
-  if (fromDate) {
-    const from = new Date(`${fromDate}T00:00:00`);
-    if (!Number.isNaN(from.getTime()) && valueDate < from) return false;
-  }
-
-  if (toDate) {
-    const to = new Date(`${toDate}T23:59:59`);
-    if (!Number.isNaN(to.getTime()) && valueDate > to) return false;
-  }
-
-  return true;
-};
-
-const normalizeRow = (tabKey, row) => {
-  if (tabKey === 'cases') {
-    return {
-      id: row?.id,
-      title: row?.title || '-',
-      slug: row?.slug || row?.file_number || '-',
-      client_name: row?.client?.name || row?.clients?.[0]?.name || '-',
-      status: row?.status || '-',
-      type_id: row?.case_type_id || row?.caseType?.id || row?.caseSubType?.case_type_id || '',
-      type_name: row?.caseSubType?.name || row?.caseType?.name || '-',
-      row_date: row?.created_at || row?.updated_at || null,
-      _raw: row,
-    };
-  }
-
-  if (tabKey === 'services') {
-    return {
-      id: row?.id,
-      title: row?.description || row?.serviceType?.name || '-',
-      slug: row?.slug || row?.legcase?.slug || row?.file_number || '-',
-      client_name: row?.client?.name || row?.clients?.[0]?.name || row?.unclients?.[0]?.name || '-',
-      status: row?.status || '-',
-      type_id: row?.service_type_id || row?.serviceType?.id || '',
-      type_name: row?.serviceType?.name || '-',
-      row_date: row?.created_at || row?.updated_at || null,
-      _raw: row,
-    };
-  }
-
-  if (tabKey === 'procedures') {
-    return {
-      id: row?.id,
-      title: row?.procedure_type?.name || row?.procedureType?.name || row?.job || '-',
-      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
-      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
-      status: row?.status || '-',
-      type_id: row?.procedure_type_id || row?.procedure_type?.id || row?.procedureType?.id || '',
-      type_name: row?.procedure_type?.name || row?.procedureType?.name || '-',
-      lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
-      row_date: row?.date_start || row?.date_end || row?.created_at || null,
-      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
-      _raw: row,
-    };
-  }
-
-  if (tabKey === 'sessions') {
-    return {
-      id: row?.id,
-      title: row?.session_type?.name || row?.legalSessionType?.name || row?.court_session || '-',
-      slug: row?.legcase?.slug || row?.legCase?.slug || row?.slug || '-',
-      client_name: row?.client?.name || row?.legcase?.clients?.[0]?.name || row?.legCase?.clients?.[0]?.name || '-',
-      status: row?.status || '-',
-      type_id: row?.session_type_id || row?.legal_session_type_id || row?.session_type?.id || row?.legalSessionType?.id || '',
-      type_name: row?.session_type?.name || row?.legalSessionType?.name || '-',
-      lawyer_id: row?.lawyer_id || row?.lawyer?.id || '',
-      row_date: row?.session_date || row?.created_at || null,
-      legcase_id: row?.legcase_id || row?.leg_case_id || row?.legCase?.id || row?.legcase?.id || null,
-      _raw: row,
-    };
-  }
-
+const extractMeta = (payload, fallbackCount, page, perPage) => {
+  const meta = payload?.meta || {};
+  const total = Number(meta.total ?? fallbackCount);
+  const safePerPage = Number(meta.per_page ?? perPage ?? 20);
+  const safePage = Number(meta.page ?? page ?? 1);
   return {
-    id: row?.id,
-    slug: row?.slug || '-',
-    name: row?.name || '-',
-    client_name: row?.name || '-',
-    client_type: row?.client_type || '-',
-    status: row?.status || '-',
-    phone_number: row?.phone_number || row?.phone || '-',
-    row_date: row?.created_at || row?.updated_at || null,
-    _raw: row,
+    page: safePage,
+    per_page: safePerPage,
+    total,
+    last_page: Number(meta.last_page ?? Math.max(1, Math.ceil(total / safePerPage))),
   };
 };
 
-const filterRows = (rows, params) => {
-  const {
-    slug,
-    client_name: clientName,
-    case_type_id: caseTypeId,
-    service_type_id: serviceTypeId,
-    lawyer_id: lawyerId,
-    procedure_type_id: procedureTypeId,
-    session_type_id: sessionTypeId,
-    client_type: clientType,
-    case_status: caseStatus,
-    service_status: serviceStatus,
-    procedure_status: procedureStatus,
-    session_status: sessionStatus,
-    client_status: clientStatus,
-    from_date: fromDate,
-    to_date: toDate,
-  } = params;
-
-  return rows.filter((row) => {
-    if (slug && !includesText(row?.slug, slug)) return false;
-    if (clientName && !includesText(row?.client_name, clientName)) return false;
-
-    if (caseTypeId && String(row?.type_id || '') !== String(caseTypeId)) return false;
-    if (serviceTypeId && String(row?.type_id || '') !== String(serviceTypeId)) return false;
-    if (procedureTypeId && String(row?.type_id || '') !== String(procedureTypeId)) return false;
-    if (sessionTypeId && String(row?.type_id || '') !== String(sessionTypeId)) return false;
-
-    if (lawyerId && String(row?.lawyer_id || '') !== String(lawyerId)) return false;
-    if (clientType && String(row?.client_type || '') !== String(clientType)) return false;
-
-    const status = String(row?.status || '');
-    if (caseStatus && status !== String(caseStatus)) return false;
-    if (serviceStatus && status !== String(serviceStatus)) return false;
-    if (procedureStatus && status !== String(procedureStatus)) return false;
-    if (sessionStatus && status !== String(sessionStatus)) return false;
-    if (clientStatus && status !== String(clientStatus)) return false;
-
-    if ((fromDate || toDate) && !inDateRange(row?.row_date, fromDate, toDate)) return false;
-
-    return true;
+const applyLocalContract = (rows, queryState) => {
+  const { sort, pagination } = queryState;
+  const direction = sort.sort_dir === 'asc' ? 1 : -1;
+  const sorted = [...rows].sort((a, b) => {
+    const left = String(a?.[sort.sort_by] ?? a?.row_date ?? '');
+    const right = String(b?.[sort.sort_by] ?? b?.row_date ?? '');
+    return left.localeCompare(right, 'ar', { numeric: true }) * direction;
   });
+
+  const total = sorted.length;
+  const start = (pagination.page - 1) * pagination.per_page;
+  const data = sorted.slice(start, start + pagination.per_page);
+  const statuses = [...new Set(rows.map((item) => item?.status).filter(Boolean))].map((value) => ({ value, label: value }));
+
+  return {
+    data,
+    meta: {
+      page: pagination.page,
+      per_page: pagination.per_page,
+      total,
+      last_page: Math.max(1, Math.ceil(total / pagination.per_page)),
+    },
+    facets: { statuses },
+  };
 };
 
-const endpoints = {
-  cases: '/legal-cases',
-  services: '/services',
-  procedures: '/procedures-search',
-  sessions: '/legal_sessions',
-  clients: '/clients',
-};
+export const fetchReportRows = async (tabKey, queryState) => {
+  const endpoint = REPORT_ENDPOINTS[tabKey];
+  const params = buildReportsQueryParams(queryState);
+  const response = await api.get(endpoint, { params });
 
-const buildBackendRequest = (tabKey, params) => {
-  if (tabKey === 'procedures') {
+  const payload = response?.data || {};
+  const normalizedRows = extractRows(payload).map((row) => normalizeReportRow(tabKey, row));
+
+  if (payload?.meta) {
     return {
-      endpoint: endpoints[tabKey],
-      params: cleanParams({
-        procedure_type_id: params.procedure_type_id,
-        lawyer_id: params.lawyer_id,
-        date_start: params.from_date,
-        date_end: params.to_date,
-      }),
+      data: normalizedRows,
+      meta: extractMeta(payload, normalizedRows.length, queryState.pagination.page, queryState.pagination.per_page),
+      facets: payload?.facets || {},
     };
   }
 
-  const BACKEND_SAFE_FILTERS = {
-    cases: ['slug', 'client_name'],
-    services: ['slug', 'client_name'],
-    sessions: [],
-    clients: ['slug', 'client_name'],
-  };
-
-  const allowedKeys = BACKEND_SAFE_FILTERS[tabKey] || [];
-  return {
-    endpoint: endpoints[tabKey],
-    params: Object.fromEntries(Object.entries(params).filter(([key]) => allowedKeys.includes(key))),
-  };
-};
-
-export const fetchReportRows = async (tabKey, params = {}) => {
-  const sanitizedParams = cleanParams(params);
-  const backendRequest = buildBackendRequest(tabKey, sanitizedParams);
-  const response = await api.get(backendRequest.endpoint, { params: backendRequest.params });
-  const rows = extractRows(response?.data).map((row) => normalizeRow(tabKey, row));
-  return filterRows(rows, sanitizedParams);
+  return applyLocalContract(normalizedRows, queryState);
 };
 
 export const fetchReportsMetadata = async () => {
-  const [lawyersRes, caseTypesRes, serviceTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
+  const [lawyersRes, caseTypesRes, serviceTypesRes, procedureTypesRes, sessionTypesRes, courtsRes] = await Promise.all([
     api.get('/lawyers'),
     api.get('/case_types'),
     api.get('/service-types'),
     api.get('/procedure_types'),
     api.get('/legal_session_types'),
+    api.get('/courts'),
   ]);
 
   return {
@@ -219,5 +98,6 @@ export const fetchReportsMetadata = async () => {
     serviceTypes: extractRows(serviceTypesRes?.data),
     procedureTypes: extractRows(procedureTypesRes?.data),
     sessionTypes: extractRows(sessionTypesRes?.data),
+    courts: extractRows(courtsRes?.data),
   };
 };
