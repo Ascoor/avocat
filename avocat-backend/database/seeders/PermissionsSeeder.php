@@ -10,8 +10,8 @@ class PermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        $guardName = (string) config('permissions.guard', 'web');
-        $catalog = config('permissions.catalog', []);
+        $guardName = (string) config('permissions.guard', 'api');
+        $catalog = config('permissions.permissions', config('permissions.catalog', []));
 
         if (! is_array($catalog)) {
             throw new \RuntimeException('Invalid permissions catalog configuration.');
