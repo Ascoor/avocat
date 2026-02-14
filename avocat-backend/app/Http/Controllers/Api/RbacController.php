@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Services\Notifications\NotificationEventService;
 
 class RbacController extends BaseApiController
 {
+    public function __construct(private readonly NotificationEventService $notificationEvents)
+    {
+    }
     public function me(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -53,6 +57,18 @@ class RbacController extends BaseApiController
 
         $user->load('roles');
 
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.user_created_title'),
+            'message' => __('notifications.user_created_message', ['entity' => $user->name, 'id' => $user->id]),
+            'entity_type' => 'user',
+            'entity_id' => $user->id,
+            'action' => 'created',
+            'url' => '/dashboard/users/'.$user->id,
+            'actor_id' => (int) optional($request->user())->id,
+            'meta' => ['notify_self' => false],
+        ]);
+
         return $this->successResponse($this->serializeUser($user), 'User created.', 201);
     }
 
@@ -72,12 +88,46 @@ class RbacController extends BaseApiController
         ], fn ($value) => $value !== null));
         $user->save();
 
+        $roleChanges = ['added' => [], 'removed' => []];
         if (array_key_exists('roleIds', $validated)) {
+            $before = $user->roles->pluck('name')->all();
             $roleNames = Role::query()->whereIn('id', $validated['roleIds'])->pluck('name')->all();
             $user->syncRoles($roleNames);
+            $roleChanges['added'] = array_values(array_diff($roleNames, $before));
+            $roleChanges['removed'] = array_values(array_diff($before, $roleNames));
         }
 
         $user->load('roles');
+
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.user_updated_title'),
+            'message' => __('notifications.user_updated_message', ['entity' => $user->name, 'id' => $user->id]),
+            'entity_type' => 'user',
+            'entity_id' => $user->id,
+            'action' => 'updated',
+            'url' => '/dashboard/users/'.$user->id,
+            'actor_id' => (int) optional($request->user())->id,
+            'meta' => ['notify_self' => false],
+        ]);
+
+        if ($roleChanges['added'] !== [] || $roleChanges['removed'] !== []) {
+            $this->notificationEvents->permissionsChanged([
+                'type' => 'user_permissions_changed',
+                'title' => __('notifications.permissions_changed_title'),
+                'message' => __('notifications.permissions_changed_message', ['actor' => optional($request->user())->name ?? 'system']),
+                'entity_type' => 'user',
+                'entity_id' => $user->id,
+                'action' => 'permission_changed',
+                'url' => '/dashboard/my-permissions',
+                'actor_id' => (int) optional($request->user())->id,
+                'meta' => [
+                    'affected_user_id' => (int) $user->id,
+                    'added_roles' => $roleChanges['added'],
+                    'removed_roles' => $roleChanges['removed'],
+                ],
+            ]);
+        }
 
         return $this->successResponse($this->serializeUser($user), 'User updated.');
     }
@@ -128,11 +178,48 @@ class RbacController extends BaseApiController
             $role->save();
         }
 
+        $permissionChanges = ['added' => [], 'removed' => []];
         if (array_key_exists('permissionNames', $validated)) {
+            $before = $role->permissions()->pluck('name')->all();
             $role->syncPermissions($validated['permissionNames']);
+            $permissionChanges['added'] = array_values(array_diff($validated['permissionNames'], $before));
+            $permissionChanges['removed'] = array_values(array_diff($before, $validated['permissionNames']));
         }
 
         $role->load('permissions');
+
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.role_updated_title'),
+            'message' => __('notifications.role_updated_message', ['entity' => $role->name, 'id' => $role->id]),
+            'entity_type' => 'role',
+            'entity_id' => $role->id,
+            'action' => 'updated',
+            'url' => '/dashboard/roles/'.$role->id,
+            'actor_id' => (int) optional($request->user())->id,
+            'meta' => ['notify_self' => false],
+        ]);
+
+        if ($permissionChanges['added'] !== [] || $permissionChanges['removed'] !== []) {
+            $affectedUsers = User::role($role->name)->get();
+            foreach ($affectedUsers as $affectedUser) {
+                $this->notificationEvents->permissionsChanged([
+                    'type' => 'user_permissions_changed',
+                    'title' => __('notifications.permissions_changed_title'),
+                    'message' => __('notifications.permissions_changed_by_role_message', ['actor' => optional($request->user())->name ?? 'system', 'role' => $role->name]),
+                    'entity_type' => 'role',
+                    'entity_id' => $role->id,
+                    'action' => 'permission_changed',
+                    'url' => '/dashboard/my-permissions',
+                    'actor_id' => (int) optional($request->user())->id,
+                    'meta' => [
+                        'affected_user_id' => (int) $affectedUser->id,
+                        'added_permissions' => $permissionChanges['added'],
+                        'removed_permissions' => $permissionChanges['removed'],
+                    ],
+                ]);
+            }
+        }
 
         return $this->successResponse($this->serializeRole($role), 'Role updated.');
     }

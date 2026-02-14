@@ -9,8 +9,15 @@ use App\Policies\LegalSessionPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Events\EntityChanged;
+use App\Events\AssignmentChanged;
+use App\Events\UserPermissionsChanged;
+use App\Listeners\NotifySuperAdmins;
+use App\Listeners\NotifyAssigneeLawyer;
+use App\Listeners\NotifyAffectedUser;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(LegCase::class, LegCasePolicy::class);
         Gate::policy(LegalSession::class, LegalSessionPolicy::class);
+
+
+        Event::listen(EntityChanged::class, NotifySuperAdmins::class);
+        Event::listen(AssignmentChanged::class, NotifyAssigneeLawyer::class);
+        Event::listen(UserPermissionsChanged::class, NotifyAffectedUser::class);
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->input('email');

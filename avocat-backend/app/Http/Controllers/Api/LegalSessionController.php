@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LegalSession;
 use App\Models\LegCase;
 use App\Models\Event;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
+use App\Services\Notifications\NotificationEventService;
 class LegalSessionController extends Controller
 {
+    public function __construct(private readonly NotificationEventService $notificationEvents)
+    {
+    }
     public function index()
     {
         $legalSessions = LegalSession::with([ 'legCase', 'lawyer', 'court','legalSessionType', 'createdBy'])
@@ -56,16 +59,33 @@ class LegalSessionController extends Controller
  $event->description = "Legal session with case ID " . $request->leg_case_id;
  $event->save();
 
-    // Create a Notification
-    $notification = new Notification();
-    $notification->user_id = $request->created_by;
-    $notification->event_id = $event->id; // Assuming Event model returns id on save
-    $notification->type = 'Legal Session'; // Example type
-    $notification->message = 'A new legal session has been created. Please check your agenda.';
-    $notification->read = false;
-    $notification->save();
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.session_created_title'),
+            'message' => __('notifications.session_created_message', ['id' => $legalSession->id]),
+            'entity_type' => 'session',
+            'entity_id' => $legalSession->id,
+            'action' => 'created',
+            'url' => '/dashboard/sessions/'.$legalSession->id,
+            'actor_id' => (int) $request->input('created_by'),
+        ]);
 
- return response()->json(['message' => 'Legal session, event, and notification created successfully']);
+        $this->notificationEvents->assignmentChanged([
+            'type' => 'assignee_changed',
+            'title' => __('notifications.assignment_created_title'),
+            'message' => __('notifications.assignment_created_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
+            'entity_type' => 'session',
+            'entity_id' => $legalSession->id,
+            'action' => 'assigned',
+            'url' => '/dashboard/sessions/'.$legalSession->id,
+            'actor_id' => (int) $request->input('created_by'),
+            'meta' => [
+                'new_lawyer_id' => (int) $request->input('lawyer_id'),
+                'entity_label' => __('notifications.entities.session'),
+            ],
+        ]);
+
+ return response()->json(['message' => 'Legal session and event created successfully']);
 }
     public function update(Request $request, $id)
     {
@@ -86,7 +106,37 @@ class LegalSessionController extends Controller
 
         $legalSession = LegalSession::findOrFail($id);
         $this->authorize('update', $legalSession);
+        $previousLawyerId = $legalSession->lawyer_id;
         $legalSession->update($request->all());
+
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.session_updated_title'),
+            'message' => __('notifications.session_updated_message', ['id' => $legalSession->id]),
+            'entity_type' => 'session',
+            'entity_id' => $legalSession->id,
+            'action' => 'updated',
+            'url' => '/dashboard/sessions/'.$legalSession->id,
+            'actor_id' => (int) $request->input('created_by'),
+        ]);
+
+        if ((int) $previousLawyerId !== (int) $request->input('lawyer_id')) {
+            $this->notificationEvents->assignmentChanged([
+                'type' => 'assignee_changed',
+                'title' => __('notifications.assignment_updated_title'),
+                'message' => __('notifications.assignment_updated_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
+                'entity_type' => 'session',
+                'entity_id' => $legalSession->id,
+                'action' => $previousLawyerId ? 'reassigned' : 'assigned',
+                'url' => '/dashboard/sessions/'.$legalSession->id,
+                'actor_id' => (int) $request->input('created_by'),
+                'meta' => [
+                    'new_lawyer_id' => (int) $request->input('lawyer_id'),
+                    'previous_lawyer_id' => $previousLawyerId,
+                    'entity_label' => __('notifications.entities.session'),
+                ],
+            ]);
+        }
 
         Log::info('audit.session.updated', [
             'session_id' => $legalSession->id,

@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Event::class);
     }
 
-    public function notifications(): HasMany
+    public function legacyNotifications(): HasMany
     {
         return $this->hasMany(Notification::class);
     }
