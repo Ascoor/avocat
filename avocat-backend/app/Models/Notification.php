@@ -14,12 +14,21 @@ class Notification extends Model
         'user_id',
         'event_id',
         'type',
+        'title',
         'message',
+        'entity_type',
+        'entity_id',
+        'action',
+        'url',
+        'actor_id',
+        'event_uuid',
+        'meta',
         'read',
     ];
 
     protected $casts = [
         'read' => 'boolean',
+        'meta' => 'array',
     ];
 
     public function user(): BelongsTo

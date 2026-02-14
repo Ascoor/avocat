@@ -3,45 +3,61 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\Notification;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    // NotificationController.php
-    public function index($userId)
+    public function index(Request $request): JsonResponse
     {
-        // Fetch notifications for the given user ID
-        $notifications = Notification::where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $user = $request->user();
+        abort_unless($user, 401);
 
-        // Return as JSON response
-        return response()->json($notifications);
+        $query = Notification::query()
+            ->where('user_id', $user->id)
+            ->when($request->filled('state'), function ($q) use ($request) {
+                return match ($request->string('state')->toString()) {
+                    'read' => $q->where('read', true),
+                    'unread' => $q->where('read', false),
+                    default => $q,
+                };
+            })
+            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->string('type')->toString()))
+            ->when($request->filled('entity_type'), fn ($q) => $q->where('entity_type', $request->string('entity_type')->toString()))
+            ->orderByDesc('created_at');
+
+        return response()->json($query->paginate((int) $request->integer('per_page', 15)));
     }
 
-    public function markAsRead($notificationId)
+    public function markRead(Request $request, int $notificationId): JsonResponse
     {
-        $notification = Notification::find($notificationId);
+        $user = $request->user();
+        abort_unless($user, 401);
 
-        if ($notification) {
-            $notification->read = true; // Assuming `read` is a boolean field in your Notification model
-            $notification->save();
+        $notification = Notification::query()->where('user_id', $user->id)->findOrFail($notificationId);
+        $notification->update(['read' => true]);
 
-            return response()->json(['status' => 'success', 'message' => 'Notification marked as read']);
-        }
-
-        return response()->json(['status' => 'error', 'message' => 'Notification not found'], 404);
+        return response()->json(['status' => 'success']);
     }
 
-    public function markRead($notificationId)
+    public function markReadAll(Request $request): JsonResponse
     {
-        return $this->markAsRead($notificationId);
+        $user = $request->user();
+        abort_unless($user, 401);
+
+        Notification::query()->where('user_id', $user->id)->where('read', false)->update(['read' => true]);
+
+        return response()->json(['status' => 'success']);
     }
 
-    public function store(Request $request)
+    public function unreadCount(Request $request): JsonResponse
     {
-        // Logic to create a new notification
+        $user = $request->user();
+        abort_unless($user, 401);
+
+        $count = Notification::query()->where('user_id', $user->id)->where('read', false)->count();
+
+        return response()->json(['unread_count' => $count]);
     }
 }

@@ -9,9 +9,13 @@ use App\Models\Expense;
 use App\Models\Notification;
 use App\Models\Procedure;
 use Illuminate\Http\Request;
+use App\Services\Notifications\NotificationEventService;
 
 class ProcedureController extends Controller
 {
+    public function __construct(private readonly NotificationEventService $notificationEvents)
+    {
+    }
     public function index()
     {
         $procedures = Procedure::with([
@@ -50,6 +54,34 @@ class ProcedureController extends Controller
         ]);
 
         $procedure = Procedure::create($validatedData);
+
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.procedure_created_title'),
+            'message' => __('notifications.procedure_created_message', ['id' => $procedure->id]),
+            'entity_type' => 'procedure',
+            'entity_id' => $procedure->id,
+            'action' => 'created',
+            'url' => '/dashboard/procedures/'.$procedure->id,
+            'actor_id' => (int) $validatedData['created_by'],
+        ]);
+
+        if (! empty($validatedData['lawyer_id'])) {
+            $this->notificationEvents->assignmentChanged([
+                'type' => 'assignee_changed',
+                'title' => __('notifications.assignment_created_title'),
+                'message' => __('notifications.assignment_created_message', ['entity' => __('notifications.entities.procedure'), 'id' => $procedure->id]),
+                'entity_type' => 'procedure',
+                'entity_id' => $procedure->id,
+                'action' => 'assigned',
+                'url' => '/dashboard/procedures/'.$procedure->id,
+                'actor_id' => (int) $validatedData['created_by'],
+                'meta' => [
+                    'new_lawyer_id' => (int) $validatedData['lawyer_id'],
+                    'entity_label' => __('notifications.entities.procedure'),
+                ],
+            ]);
+        }
 
         return response()->json(['message' => 'Procedure created successfully', 'data' => $procedure]);
     }
@@ -99,7 +131,37 @@ class ProcedureController extends Controller
             'updated_by' => 'required|exists:users,id',
         ]);
 
+        $previousLawyerId = $procedure->lawyer_id;
         $procedure->update($validatedData);
+
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.procedure_updated_title'),
+            'message' => __('notifications.procedure_updated_message', ['id' => $procedure->id]),
+            'entity_type' => 'procedure',
+            'entity_id' => $procedure->id,
+            'action' => 'updated',
+            'url' => '/dashboard/procedures/'.$procedure->id,
+            'actor_id' => (int) $validatedData['updated_by'],
+        ]);
+
+        if (($validatedData['lawyer_id'] ?? null) && (int) $previousLawyerId !== (int) $validatedData['lawyer_id']) {
+            $this->notificationEvents->assignmentChanged([
+                'type' => 'assignee_changed',
+                'title' => __('notifications.assignment_updated_title'),
+                'message' => __('notifications.assignment_updated_message', ['entity' => __('notifications.entities.procedure'), 'id' => $procedure->id]),
+                'entity_type' => 'procedure',
+                'entity_id' => $procedure->id,
+                'action' => $previousLawyerId ? 'reassigned' : 'assigned',
+                'url' => '/dashboard/procedures/'.$procedure->id,
+                'actor_id' => (int) $validatedData['updated_by'],
+                'meta' => [
+                    'new_lawyer_id' => (int) $validatedData['lawyer_id'],
+                    'previous_lawyer_id' => $previousLawyerId,
+                    'entity_label' => __('notifications.entities.procedure'),
+                ],
+            ]);
+        }
 
         return response()->json(['message' => 'Procedure updated successfully', 'data' => $procedure]);
     }

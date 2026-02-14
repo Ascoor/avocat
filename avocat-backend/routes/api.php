@@ -160,9 +160,10 @@ Route::prefix('v1')->group(function () {
         Route::get('expenses/search', [ExpenseController::class, 'searchExpenses']);
         Route::get('expense_categories', [ExpenseCategoryController::class, 'index']);
 
-        Route::get('notifications/{userId}', [NotificationController::class, 'index']);
+        Route::get('notifications', [NotificationController::class, 'index']);
         Route::post('notifications/{notificationId}/read', [NotificationController::class, 'markRead']);
-        Route::post('notification', [NotificationController::class, 'store']);
+        Route::post('notifications/read-all', [NotificationController::class, 'markReadAll']);
+        Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount']);
         Route::post('event', [EventController::class, 'store']);
         Route::get('events', [EventController::class, 'index']);
 

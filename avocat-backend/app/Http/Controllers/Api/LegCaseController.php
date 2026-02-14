@@ -10,8 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Services\Notifications\NotificationEventService;
 class LegCaseController extends Controller
 {
+    public function __construct(private readonly NotificationEventService $notificationEvents)
+    {
+    }
     /**
      * Retrieves the last 20 active leg cases and returns them as JSON.
      *
@@ -89,7 +93,17 @@ class LegCaseController extends Controller
         $legCase->created_by = $request->input('created_by');
         $legCase->save();
 
-
+        $this->notificationEvents->entityChanged([
+            'type' => 'super_admin_entity_changed',
+            'title' => __('notifications.case_created_title'),
+            'message' => __('notifications.case_created_message', ['id' => $legCase->id, 'entity' => $legCase->title]),
+            'entity_type' => 'case',
+            'entity_id' => $legCase->id,
+            'action' => 'created',
+            'url' => '/dashboard/cases/'.$legCase->id,
+            'actor_id' => (int) $request->input('created_by'),
+            'meta' => ['notify_self' => (bool) $request->boolean('notify_self', false)],
+        ]);
 
         return response()->json(['message' => 'Leg case created successfully']);
     }
@@ -150,6 +164,19 @@ class LegCaseController extends Controller
              $legCase = LegCase::findOrFail($id);
              $this->authorize('update', $legCase);
              $legCase->update($validatedData);
+
+
+             $this->notificationEvents->entityChanged([
+                 'type' => 'super_admin_entity_changed',
+                 'title' => __('notifications.case_updated_title'),
+                 'message' => __('notifications.case_updated_message', ['id' => $legCase->id, 'entity' => $legCase->title]),
+                 'entity_type' => 'case',
+                 'entity_id' => $legCase->id,
+                 'action' => 'updated',
+                 'url' => '/dashboard/cases/'.$legCase->id,
+                 'actor_id' => (int) ($validatedData['updated_by'] ?? 0),
+                 'meta' => ['notify_self' => (bool) $request->boolean('notify_self', false)],
+             ]);
 
              Log::info('audit.case.updated', [
                  'case_id' => $legCase->id,
