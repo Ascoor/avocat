@@ -11,26 +11,44 @@ const DateRange = ({
   helperText,
   invalidRangeText,
   clearText,
+  datePlaceholder,
+  dir = 'rtl',
 }) => {
   const validRange = isDateRangeValid(fromValue, toValue);
+  const hasDateValues = Boolean(fromValue || toValue);
 
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <FormField label={fromLabel} hint={helperText}>
-          <DateInput value={fromValue} max={toValue || undefined} onChange={(value) => onChange?.({ from_date: value, to_date: toValue || '' })} />
+        <FormField label={fromLabel}>
+          <DateInput
+            value={fromValue}
+            max={toValue || undefined}
+            placeholder={datePlaceholder}
+            dir={dir}
+            onChange={(value) => onChange?.({ from_date: value, to_date: toValue || '' })}
+          />
         </FormField>
-        <FormField label={toLabel} hint={helperText} error={validRange ? '' : invalidRangeText}>
-          <DateInput value={toValue} min={fromValue || undefined} onChange={(value) => onChange?.({ from_date: fromValue || '', to_date: value })} />
+        <FormField label={toLabel} error={validRange ? '' : invalidRangeText}>
+          <DateInput
+            value={toValue}
+            min={fromValue || undefined}
+            placeholder={datePlaceholder}
+            dir={dir}
+            onChange={(value) => onChange?.({ from_date: fromValue || '', to_date: value })}
+          />
         </FormField>
       </div>
-      <button
-        type="button"
-        onClick={() => onChange?.({ from_date: '', to_date: '' })}
-        className="text-xs font-medium text-muted-foreground underline underline-offset-4"
-      >
-        {clearText}
-      </button>
+      {helperText ? <p className="text-xs text-muted-foreground">{helperText}</p> : null}
+      {hasDateValues ? (
+        <button
+          type="button"
+          onClick={() => onChange?.({ from_date: '', to_date: '' })}
+          className="text-xs font-medium text-muted-foreground underline underline-offset-4"
+        >
+          {clearText}
+        </button>
+      ) : null}
     </div>
   );
 };

@@ -1,18 +1,18 @@
 const FilterShell = ({ title, subtitle, children, actions, dir = 'rtl' }) => (
   <section
     dir={dir}
-    className="space-y-5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 shadow-sm md:p-5"
+    className="space-y-4 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-3 shadow-sm md:p-4"
   >
     {(title || subtitle) && (
-      <header className="space-y-1 text-right">
-        {title ? <h2 className="text-base font-semibold text-foreground md:text-lg">{title}</h2> : null}
-        {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
+      <header className="space-y-0.5 text-right">
+        {title ? <h2 className="text-sm font-semibold text-foreground">{title}</h2> : null}
+        {subtitle ? <p className="text-xs text-muted-foreground">{subtitle}</p> : null}
       </header>
     )}
 
-    <div className="space-y-4">{children}</div>
+    <div className="space-y-3">{children}</div>
 
-    {actions ? <footer className="flex flex-wrap items-center justify-start gap-2 md:justify-end">{actions}</footer> : null}
+    {actions ? <footer className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">{actions}</footer> : null}
   </section>
 );
 
