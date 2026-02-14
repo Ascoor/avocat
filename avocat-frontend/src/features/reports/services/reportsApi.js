@@ -169,9 +169,23 @@ const endpoints = {
   clients: '/clients',
 };
 
+const BACKEND_SAFE_FILTERS = {
+  cases: ['slug', 'client_name'],
+  services: ['slug', 'client_name'],
+  procedures: [],
+  sessions: [],
+  clients: ['slug', 'client_name'],
+};
+
+const pickBackendParams = (tabKey, params) => {
+  const allowedKeys = BACKEND_SAFE_FILTERS[tabKey] || [];
+  return Object.fromEntries(Object.entries(params).filter(([key]) => allowedKeys.includes(key)));
+};
+
 export const fetchReportRows = async (tabKey, params = {}) => {
   const sanitizedParams = cleanParams(params);
-  const response = await api.get(endpoints[tabKey], { params: sanitizedParams });
+  const backendParams = pickBackendParams(tabKey, sanitizedParams);
+  const response = await api.get(endpoints[tabKey], { params: backendParams });
   const rows = extractRows(response?.data).map((row) => normalizeRow(tabKey, row));
   return filterRows(rows, sanitizedParams);
 };
