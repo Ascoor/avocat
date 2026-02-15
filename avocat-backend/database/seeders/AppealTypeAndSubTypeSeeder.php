@@ -34,19 +34,20 @@ class AppealTypeAndSubTypeSeeder extends Seeder
         ];
 
         foreach ($appealTypes as $type => $subTypes) {
-            $typeId = DB::table('appeal_types')->insertGetId([
-                'appeal_type' => $type,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('appeal_types')->updateOrInsert(
+                ['appeal_type' => $type],
+                ['updated_at' => now(), 'created_at' => now()]
+            );
+
+            $typeId = DB::table('appeal_types')
+                ->where('appeal_type', $type)
+                ->value('id');
 
             foreach ($subTypes as $subType) {
-                DB::table('appeal_sub_types')->insert([
-                    'appeal_sub_type' => $subType,
-                    'appeal_type_id' => $typeId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                DB::table('appeal_sub_types')->updateOrInsert(
+                    ['appeal_type_id' => $typeId, 'appeal_sub_type' => $subType],
+                    ['updated_at' => now(), 'created_at' => now()]
+                );
             }
         }
     }

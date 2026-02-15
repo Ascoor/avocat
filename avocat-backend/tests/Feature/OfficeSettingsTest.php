@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class OfficeSettingsTest extends TestCase
@@ -18,9 +19,9 @@ class OfficeSettingsTest extends TestCase
     {
         Permission::findOrCreate('officeSettings.manage', 'web');
 
-        Office::query()->firstOrCreate(
+        DB::table('offices')->updateOrInsert(
             ['id' => $officeId],
-            ['name' => "Office {$officeId}", 'slug' => "office-{$officeId}"]
+            ['name' => "Office {$officeId}", 'slug' => "office-{$officeId}", 'created_at' => now(), 'updated_at' => now()]
         );
 
         $user = User::factory()->create(['office_id' => $officeId]);

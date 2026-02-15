@@ -103,10 +103,7 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('users', 'office_id')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropForeign(['office_id']);
-                $table->dropColumn('office_id');
-            });
+            DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_office_id_foreign');
         }
     }
 };
