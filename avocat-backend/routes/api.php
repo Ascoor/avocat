@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\LegalSessionController;
 use App\Http\Controllers\Api\LegalSessionTypeController;
 use App\Http\Controllers\Api\LegCaseController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\OfficeSettingsController;
 use App\Http\Controllers\Api\ProcedureController;
 use App\Http\Controllers\Api\ProcedurePlaceTypeController;
 use App\Http\Controllers\Api\ProcedureSearchController;
@@ -89,6 +90,11 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('expense_categories', ExpenseCategoryController::class);
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);
+
+        Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index']);
+        Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store']);
+        Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update']);
+        Route::delete('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'destroy']);
 
         Route::get('lawyer/{lawyer}', [LawyerController::class, 'show']);
         Route::put('lawyer/{lawyer}', [LawyerController::class, 'update']);

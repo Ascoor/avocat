@@ -1,0 +1,101 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Court;
+use App\Models\CourtLevel;
+use App\Models\CourtType;
+use App\Models\Office;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Permission;
+use Tests\TestCase;
+
+class OfficeSettingsControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private function actingOfficeAdmin(int $officeId): User
+    {
+        $user = User::factory()->create(['office_id' => $officeId]);
+        Permission::findOrCreate('officeSettings.manage', 'web');
+        $user->givePermissionTo('officeSettings.manage');
+        Sanctum::actingAs($user);
+
+        return $user;
+    }
+
+    public function test_office_admin_can_crud_procedure_types_in_scope(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $created = $this->postJson("/api/v1/offices/{$office->id}/settings/procedure_types", [
+            'name' => 'Action',
+            'sort_order' => 10,
+        ]);
+
+        $created->assertCreated()->assertJsonPath('data.office_id', $office->id);
+        $id = $created->json('data.id');
+
+        $this->putJson("/api/v1/offices/{$office->id}/settings/procedure_types/{$id}", [
+            'name' => 'إجراء محدث',
+            'is_active' => true,
+        ])->assertOk()->assertJsonPath('data.name', 'إجراء محدث');
+
+        $this->getJson("/api/v1/offices/{$office->id}/settings/procedure_types")
+            ->assertOk()
+            ->assertJsonPath('meta.entity', 'procedure_types');
+
+        $this->deleteJson("/api/v1/offices/{$office->id}/settings/procedure_types/{$id}")
+            ->assertNoContent();
+    }
+
+    public function test_access_is_forbidden_for_different_office(): void
+    {
+        $officeA = Office::create(['name' => 'Office A']);
+        $officeB = Office::create(['name' => 'Office B']);
+        $this->actingOfficeAdmin($officeA->id);
+
+        $this->getJson("/api/v1/offices/{$officeB->id}/settings/procedure_types")
+            ->assertForbidden();
+    }
+
+    public function test_names_are_unique_case_insensitive_per_office(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $this->postJson("/api/v1/offices/{$office->id}/settings/procedure_types", [
+            'name' => 'Action',
+        ])->assertCreated();
+
+        $this->postJson("/api/v1/offices/{$office->id}/settings/procedure_types", [
+            'name' => 'action',
+        ])->assertStatus(422);
+    }
+
+    public function test_in_use_entity_is_disabled_instead_of_deleted(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $courtType = CourtType::create(['name' => 'Type']);
+        $courtLevel = CourtLevel::create([
+            'name' => 'Level',
+            'office_id' => $office->id,
+            'is_system' => false,
+        ]);
+
+        Court::create([
+            'name' => 'Court',
+            'court_type_id' => $courtType->id,
+            'court_level_id' => $courtLevel->id,
+        ]);
+
+        $this->deleteJson("/api/v1/offices/{$office->id}/settings/court_levels/{$courtLevel->id}")
+            ->assertStatus(409)
+            ->assertJsonPath('data.is_active', false);
+    }
+}

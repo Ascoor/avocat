@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -29,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'office_id',
         'client_id',
         'client_secret',
     ];
@@ -125,6 +127,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function createdExpenses(): HasMany
     {
         return $this->hasMany(Expense::class, 'created_by');
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class);
     }
     public function lawyerProfile(): HasOne
     {
