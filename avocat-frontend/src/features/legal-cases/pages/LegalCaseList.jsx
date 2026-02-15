@@ -20,12 +20,13 @@ const LegalCasesIndex = () => {
   const { permissions, user, roles } = useSecurity();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const acl = canCrud(permissions, 'legalCases');
-  const [legCases, setLegCases] = useState([]);
+  const acl = canCrud(permissions, 'legalCases'); 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingLegCase, setEditingLegCase] = useState(null);
-
+  const [legCases, setLegCases] = useState([]);
+  const [meta, setMeta] = useState(null);
+   
   const accessUser = useMemo(() => ({
     id: user?.id || '',
     officeId: user?.officeId ?? user?.office_id,
@@ -44,9 +45,10 @@ const LegalCasesIndex = () => {
   );
 
   const fetchLegCases = useCallback(async () => {
-    try {
-      const res = await getLegCases({ page: 1, sort: JSON.stringify({ createdAt: -1 }) });
-      setLegCases(res.data);
+    try { 
+      const res = await getLegCases({ page: 1 });
+setLegCases(res.data?.data ?? []);
+
     } catch (error) {
       console.error('Error fetching legal cases:', error);
     }

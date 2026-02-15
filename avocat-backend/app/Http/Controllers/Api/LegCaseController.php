@@ -21,32 +21,33 @@ class LegCaseController extends Controller
      *
      * @return JsonResponse The JSON response containing the legal cases.
      */
-    public function index()
-    {
-        $legCases = LegCase::query()
-            ->select([
-                'id',
-                'slug',
-                'title',
-                'client_capacity',
-                'status',
-                'case_sub_type_id',
-                'created_at',
-                'updated_at',
-            ])
-            ->with([
-                'clients:id,name',
-                'caseSubType:id,name',
-            ])
-            ->withCount(['procedures', 'legalSessions'])
-            ->whereIn('status', ['قيد التجهيز', 'متداولة'])
-            ->orderByRaw("CASE status WHEN 'قيد التجهيز' THEN 2 WHEN 'متداولة' THEN 1 ELSE 0 END DESC")
-            ->orderByDesc('created_at')
-            ->orderByDesc('updated_at')
-            ->get();
+ 
+     public function index()
+{
+    $legCases = LegCase::query()
+        ->select([
+            'id','slug','title','client_capacity','status',
+            'case_sub_type_id','created_at','updated_at',
+        ])
+        ->with([
+            'clients:id,name',
+            'caseSubType:id,name',
+        ])
+        ->withCount(['procedures', 'legalSessions'])
+        ->whereIn('status', ['قيد التجهيز', 'متداولة'])
+        ->orderByRaw("
+            CASE status
+              WHEN 'متداولة' THEN 2
+              WHEN 'قيد التجهيز' THEN 1
+              ELSE 0
+            END DESC
+        ")
+        ->orderByDesc('created_at')
+        ->cursorPaginate(30);
 
-        return response()->json($legCases);
-    }
+    return response()->json($legCases);
+}
+
 
     /**
      * Retrieves the case types along with their corresponding case subtypes.   
