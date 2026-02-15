@@ -9,19 +9,16 @@ class AppealTypeAndSubTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // إضافة الأقسام الأساسية
         $appealTypes = [
             'المبادئ الجنائية' => [
                 'الطعون الجنائية',
                 'الجنح الإقتصادية',
                 'الجنح الجنائية',
                 'طعون النقابات',
-                'الهيئة العامة للمواد الجنائية'
+                'الهيئة العامة للمواد الجنائية',
             ],
             'المبادئ المدنية' => [
                 'جميع المبادئ المدنية',
@@ -32,23 +29,26 @@ class AppealTypeAndSubTypeSeeder extends Seeder
                 'الطعون التجارية',
                 'الطعون الإقتصادية',
                 'طعون الأحوال الشخصية',
-                'الهيئة العامة للمواد المدنية'
-            ]
+                'الهيئة العامة للمواد المدنية',
+            ],
         ];
 
         foreach ($appealTypes as $type => $subTypes) {
-            // إدراج نوع الطعن في جدول appeal_types
-            DB::table('appeal_types')->insert(['type_name' => $type]);
-            $typeId = DB::getPdo()->lastInsertId();
+            DB::table('appeal_types')->updateOrInsert(
+                ['appeal_type' => $type],
+                ['updated_at' => now(), 'created_at' => now()]
+            );
 
-            // إدراج الأقسام الفرعية في جدول appeal_sub_types
+            $typeId = DB::table('appeal_types')
+                ->where('appeal_type', $type)
+                ->value('id');
+
             foreach ($subTypes as $subType) {
-                DB::table('appeal_sub_types')->insert([
-                    'sub_type_name' => $subType,
-                    'appeal_type_id' => $typeId
-                ]);
+                DB::table('appeal_sub_types')->updateOrInsert(
+                    ['appeal_type_id' => $typeId, 'appeal_sub_type' => $subType],
+                    ['updated_at' => now(), 'created_at' => now()]
+                );
             }
         }
     }
-    }
-
+}
