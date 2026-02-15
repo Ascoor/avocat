@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { AppIcon } from '@shared/ui/icons';
 
 const ReportsTabs = ({ tabs }) => (
-  <nav className="flex flex-wrap justify-end gap-2" dir="rtl">
+  <nav className="flex flex-wrap justify-start gap-2" dir="rtl">
     {tabs.map((tab) => (
       <NavLink
         key={tab.key}

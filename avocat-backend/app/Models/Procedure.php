@@ -58,6 +58,11 @@ class Procedure extends Model
         return $this->belongsTo(Lawyer::class);
     }
 
+    public function court(): BelongsTo
+    {
+        return $this->belongsTo(Court::class);
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

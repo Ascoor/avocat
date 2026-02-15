@@ -1,130 +1,161 @@
 import { useEffect, useMemo, useState } from 'react';
-import {
-  DateRange,
-  FilterGrid,
-  FilterGroup,
-  FilterShell,
-  FormField,
-  SelectInput,
-  TextInput,
-} from '@shared/components/filters';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { isDateRangeValid } from '@shared/utils/dateFilters';
 
-const textPlaceholderKeyByField = {
-  client_name: 'reports.filters.placeholders.clientName',
-  file_number: 'reports.filters.placeholders.fileNumber',
+const inputClass =
+  'h-11 w-full rounded-xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] px-3 text-sm text-foreground outline-none transition focus:ring-2 focus:ring-[hsl(var(--color-primary)/0.3)]';
+
+const FILTER_LAYOUT = {
+  cases: {
+    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
+  },
+  services: {
+    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'service_status']],
+  },
+  procedures: {
+    rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['procedure_type_id', 'procedure_status']],
+  },
+  sessions: {
+    rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['session_type_id', 'session_status']],
+  },
+  clients: {
+    rows: ['client_name', ['from_date', 'to_date'], ['client_type', 'client_status']],
+  },
 };
 
-const ReportFilters = ({ schema, values, options, onSubmit, onReset }) => {
+const formatDatePreview = (value, language) => {
+  if (!value) return '';
+  const parsedDate = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(parsedDate.getTime())) return '';
+  return new Intl.DateTimeFormat(language === 'ar' ? 'ar-EG' : 'en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(parsedDate);
+};
+
+const FieldWrapper = ({ label, isRTL, children }) => (
+  <label className="space-y-1.5">
+    <span className={`block text-sm font-medium text-foreground ${isRTL ? 'text-right' : 'text-left'}`}>{label}</span>
+    {children}
+  </label>
+);
+
+const ReportFilters = ({ tabKey, schema, values, options, onSubmit, onReset }) => {
+  const { language, isRTL } = useLanguage();
   const [draft, setDraft] = useState(values);
-  const { direction, t } = useLanguage();
 
-  useEffect(() => setDraft(values), [values]);
+  useEffect(() => {
+    setDraft(values);
+  }, [values]);
 
-  const fieldsByName = useMemo(() => schema.fields || {}, [schema.fields]);
+  const fieldMap = useMemo(() => schema.reduce((acc, field) => ({ ...acc, [field.name]: field }), {}), [schema]);
 
-  const renderField = (name) => {
-    const field = fieldsByName[name];
+  const handleFieldChange = (name, value) => {
+    setDraft((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const renderInput = (fieldName) => {
+    const field = fieldMap[fieldName];
     if (!field) return null;
-
-    const label = t(field.labelKey);
 
     if (field.type === 'select') {
       return (
-        <FormField key={name} label={label}>
-          <SelectInput
-            value={draft[name] || ''}
-            onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
-            options={options[name] || []}
-            placeholder={t('reports.filters.chooseOption')}
-            emptyOptionLabel={t('reports.filters.allOption')}
-          />
-        </FormField>
+        <FieldWrapper key={field.name} label={field.label} isRTL={isRTL}>
+          <select
+            value={draft[field.name] || ''}
+            onChange={(event) => handleFieldChange(field.name, event.target.value)}
+            className={`${inputClass} ${isRTL ? 'text-right' : 'text-left'}`}
+          >
+            <option value="">{language === 'ar' ? 'الكل' : 'All'}</option>
+            {(options[field.name] || []).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </FieldWrapper>
       );
     }
 
-    if (field.type === 'text') {
+    if (field.type === 'date') {
+      const preview = formatDatePreview(draft[field.name], language);
       return (
-        <FormField key={name} label={label}>
-          <TextInput
-            value={draft[name] || ''}
-            onChange={(value) => setDraft((prev) => ({ ...prev, [name]: value }))}
-            placeholder={t(textPlaceholderKeyByField[name] || 'reports.filters.placeholders.default')}
+        <FieldWrapper key={field.name} label={field.label} isRTL={isRTL}>
+          <input
+            type="date"
+            value={draft[field.name] || ''}
+            onChange={(event) => handleFieldChange(field.name, event.target.value)}
+            className={`${inputClass} ${isRTL ? 'text-right' : 'text-left'}`}
           />
-        </FormField>
+          <p className={`text-xs text-muted-foreground ${isRTL ? 'text-right' : 'text-left'}`}>
+            {preview ? `${language === 'ar' ? 'التاريخ' : 'Date'}: ${preview}` : ' '}
+          </p>
+        </FieldWrapper>
       );
     }
 
-    return null;
+    return (
+      <FieldWrapper key={field.name} label={field.label} isRTL={isRTL}>
+        <input
+          value={draft[field.name] || ''}
+          onChange={(event) => handleFieldChange(field.name, event.target.value)}
+          className={`${inputClass} ${isRTL ? 'text-right' : 'text-left'}`}
+        />
+      </FieldWrapper>
+    );
   };
 
-  const hasDateRange = Boolean(fieldsByName.from_date && fieldsByName.to_date);
+  const layoutRows = FILTER_LAYOUT[tabKey]?.rows || [];
 
   return (
     <form
-      dir={direction}
+      className="space-y-4 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 md:p-5"
       onSubmit={(event) => {
         event.preventDefault();
-        if (!isDateRangeValid(draft.from_date, draft.to_date)) return;
         onSubmit(draft);
       }}
+      dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <FilterShell
-        dir={direction}
-        title={t('reports.filters.title')}
-        subtitle={t('reports.filters.subtitle')}
-        actions={(
-          <>
-            <button
-              type="button"
-              onClick={() => setDraft(onReset())}
-              className="h-10 w-full rounded-lg border border-[hsl(var(--color-border))] px-4 text-sm font-medium text-foreground sm:w-auto"
-            >
-              {t('reports.filters.resetButton')}
-            </button>
-            <button type="submit" className="h-10 w-full rounded-lg bg-[hsl(var(--color-primary))] px-4 text-sm font-semibold text-[hsl(var(--color-primary-foreground))] sm:w-auto">
-              {t('reports.filters.searchButton')}
-            </button>
-          </>
-        )}
-      >
-        {(schema.groups || []).map((group, index) => {
-          const fieldNames = group.fields.filter(
-            (fieldName) => !(hasDateRange && (fieldName === 'from_date' || fieldName === 'to_date')),
-          );
+      <div className={`flex items-center justify-between border-b border-[hsl(var(--color-border))] pb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <h3 className="text-sm font-semibold text-foreground">{language === 'ar' ? 'تصفية التقارير' : 'Report filters'}</h3>
+      </div>
 
+      <div className="space-y-3 md:space-y-4">
+        {layoutRows.map((row, index) => {
+          if (Array.isArray(row) && row[0] === 'from_date' && row[1] === 'to_date') {
+            return (
+              <div key={`row-${index}`} className="space-y-2 rounded-xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-3">
+                <p className={`text-sm font-medium text-foreground ${isRTL ? 'text-right' : 'text-left'}`}>{language === 'ar' ? 'الفترة' : 'Date range'}</p>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">{row.map((name) => renderInput(name))}</div>
+              </div>
+            );
+          }
+
+          const fields = Array.isArray(row) ? row : [row];
+          const colClass = fields.length > 1 ? 'grid grid-cols-1 gap-3 md:grid-cols-2' : 'grid grid-cols-1 gap-3';
           return (
-            <FilterGroup
-              key={group.titleKey}
-              title={t(group.titleKey)}
-              divider={index > 0}
-              count={fieldNames.length + (hasDateRange && group.fields.includes('from_date') ? 2 : 0)}
-            >
-              {fieldNames.length ? (
-                <FilterGrid columns={{ base: 1, md: 2, lg: 3 }}>
-                  {fieldNames.map((fieldName) => renderField(fieldName))}
-                </FilterGrid>
-              ) : null}
-
-              {hasDateRange && group.fields.includes('from_date') ? (
-                <DateRange
-                  fromLabel={t(fieldsByName.from_date.labelKey)}
-                  toLabel={t(fieldsByName.to_date.labelKey)}
-                  fromValue={draft.from_date || ''}
-                  toValue={draft.to_date || ''}
-                  onChange={({ from_date, to_date }) => setDraft((prev) => ({ ...prev, from_date, to_date }))}
-                  helperText={t('reports.filters.dateFormat')}
-                  invalidRangeText={t('reports.filters.invalidDateRange')}
-                  clearText={t('reports.filters.clearDateRange')}
-                  datePlaceholder={t('reports.filters.datePlaceholder')}
-                  dir={direction}
-                />
-              ) : null}
-            </FilterGroup>
+            <div key={`row-${index}`} className={colClass}>
+              {fields.map((name) => renderInput(name))}
+            </div>
           );
         })}
-      </FilterShell>
+      </div>
+
+      <div className={`flex flex-wrap gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
+        <button type="submit" className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))]">
+          {language === 'ar' ? 'بحث' : 'Search'}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            const clean = onReset();
+            setDraft(clean);
+          }}
+          className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground"
+        >
+          {language === 'ar' ? 'إعادة تعيين' : 'Reset'}
+        </button>
+      </div>
     </form>
   );
 };
