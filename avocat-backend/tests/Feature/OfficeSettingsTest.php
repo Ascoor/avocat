@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CaseType;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -13,12 +14,21 @@ class OfficeSettingsTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsOfficeManager(int $officeId = 7): User
+    private function actingAsOfficeManager(int $officeId = 7, bool $withPermission = true): User
     {
         Permission::findOrCreate('officeSettings.manage', 'web');
 
+        Office::query()->firstOrCreate(
+            ['id' => $officeId],
+            ['name' => "Office {$officeId}", 'slug' => "office-{$officeId}"]
+        );
+
         $user = User::factory()->create(['office_id' => $officeId]);
-        $user->givePermissionTo('officeSettings.manage');
+
+        if ($withPermission) {
+            $user->givePermissionTo('officeSettings.manage');
+        }
+
         Sanctum::actingAs($user);
 
         return $user;
@@ -51,11 +61,45 @@ class OfficeSettingsTest extends TestCase
             ->assertJsonPath('data.0.resolved_source', 'office_override');
     }
 
+    public function test_index_hides_system_row_when_office_disables_it(): void
+    {
+        $this->actingAsOfficeManager(7);
+
+        $system = CaseType::query()->create([
+            'name' => 'تجاري',
+            'office_id' => null,
+            'is_system' => true,
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
+        CaseType::query()->create([
+            'name' => 'تجاري',
+            'office_id' => 7,
+            'is_system' => false,
+            'parent_id' => $system->id,
+            'is_active' => false,
+            'sort_order' => 1,
+        ]);
+
+        $this->getJson('/api/v1/offices/7/settings/case_types')
+            ->assertOk()
+            ->assertJsonCount(0, 'data');
+    }
+
     public function test_store_requires_office_scope_permission_match(): void
     {
         $this->actingAsOfficeManager(3);
 
         $this->postJson('/api/v1/offices/5/settings/case_types', ['name' => 'نزاع'])
+            ->assertForbidden();
+    }
+
+    public function test_store_requires_manage_permission(): void
+    {
+        $this->actingAsOfficeManager(7, false);
+
+        $this->postJson('/api/v1/offices/7/settings/case_types', ['name' => 'نزاع'])
             ->assertForbidden();
     }
 
