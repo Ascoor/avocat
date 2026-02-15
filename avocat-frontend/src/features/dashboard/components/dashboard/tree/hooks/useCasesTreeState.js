@@ -44,14 +44,15 @@ export const useCasesTreeState = ({ client, clientsPool = [], expansionMode = 's
   }, [loadCases]);
 
   const loadCaseChildren = useCallback(
-    async (caseId) => {
+    async (caseItem) => {
+      const caseId = typeof caseItem === 'object' ? caseItem?.id : caseItem;
       if (childrenCacheByCaseId[caseId] || loadingByCaseId[caseId]) return;
 
       setLoadingByCaseId((prev) => ({ ...prev, [caseId]: true }));
       setErrorByCaseId((prev) => ({ ...prev, [caseId]: '' }));
 
       try {
-        const children = await api.getCaseChildren(caseId);
+        const children = await api.getCaseChildren(caseItem);
         setChildrenCacheByCaseId((prev) => ({ ...prev, [caseId]: children }));
       } catch (error) {
         setErrorByCaseId((prev) => ({
@@ -67,6 +68,7 @@ export const useCasesTreeState = ({ client, clientsPool = [], expansionMode = 's
 
   const toggleCaseExpansion = useCallback(
     (caseId) => {
+      const caseItem = cases.find((item) => item.id === caseId);
       setSelectedCaseId(caseId);
       setExpandedCaseIds((prev) => {
         const isExpanded = prev.includes(caseId);
@@ -79,9 +81,9 @@ export const useCasesTreeState = ({ client, clientsPool = [], expansionMode = 's
         return [...prev, caseId];
       });
 
-      loadCaseChildren(caseId);
+      loadCaseChildren(caseItem || caseId);
     },
-    [expansionMode, loadCaseChildren],
+    [cases, expansionMode, loadCaseChildren],
   );
 
   return {

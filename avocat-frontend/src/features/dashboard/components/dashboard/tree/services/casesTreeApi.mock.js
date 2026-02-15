@@ -1,6 +1,15 @@
+import { getCaseProcedures, getCaseSessions } from '@shared/services/api/legalCases';
+import { getServiceProceduresByServiceId } from '@shared/services/api/services';
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const buildCasesTreeApi = ({ clients = [], delay = 450 } = {}) => {
+const asArray = (value) => {
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.data)) return value.data;
+  return [];
+};
+
+export const buildCasesTreeApi = ({ clients = [], delay = 0 } = {}) => {
   const clientsById = new Map(clients.map((client) => [String(client.id), client]));
 
   const normalizeCase = (item, entityType = 'case') => ({
@@ -9,7 +18,7 @@ export const buildCasesTreeApi = ({ clients = [], delay = 450 } = {}) => {
     title: item.title || item.name || 'بدون عنوان',
     number: item.number || item.slug || '—',
     status: item.status || 'غير محدد',
-    court: item.court || item.court_name || 'غير محدد',
+    court: item.court?.name || item.court_name || item.court || 'غير محدد',
     nextDate: item.nextDate || item.next_session_date || item.next_date || null,
     entityType,
   });
@@ -20,19 +29,21 @@ export const buildCasesTreeApi = ({ clients = [], delay = 450 } = {}) => {
     date: session.date || session.session_date || null,
     status: session.status || 'غير محدد',
     notes: session.notes || session.decision || '—',
+    court: session.court?.name || session.court_name || '—',
   });
 
   const normalizeAction = (action) => ({
     id: String(action.id),
-    caseId: String(action.caseId ?? action.leg_case_id ?? action.legCaseId ?? ''),
-    type: action.type || action.title || action.procedure_type?.name || 'إجراء',
-    date: action.date || action.start_date || null,
+    caseId: String(action.caseId ?? action.leg_case_id ?? action.legCaseId ?? action.service_id ?? ''),
+    type: action.type || action.title || action.procedure_type?.name || action.procedureType?.name || 'إجراء',
+    date: action.date || action.procedure_date || action.start_date || null,
     status: action.status || 'غير محدد',
-    assignee: action.assignee || action.assigned_to?.name || 'غير محدد',
+    assignee: action.assignee || action.lawyer?.name || action.assigned_to?.name || 'غير محدد',
   });
 
   const getCasesByClient = async (clientId) => {
-    await wait(delay);
+    if (delay) await wait(delay);
+
     const client = clientsById.get(String(clientId));
     if (!client) return [];
 
@@ -46,22 +57,31 @@ export const buildCasesTreeApi = ({ clients = [], delay = 450 } = {}) => {
     return [...legCases, ...services];
   };
 
-  const getCaseChildren = async (caseId) => {
-    await wait(delay + 250);
+  const getCaseChildren = async (caseItem) => {
+    const caseId = typeof caseItem === 'object' ? caseItem?.id : caseItem;
+    const entityType = typeof caseItem === 'object' ? caseItem?.entityType : 'case';
 
-    const foundCase = clients
-      .flatMap((client) => [...(client.leg_cases || []), ...(client.services || [])])
-      .find((item) => String(item.id) === String(caseId));
-
-    if (!foundCase) {
+    if (!caseId) {
       throw new Error('تعذر تحميل عناصر القضية، حاول مجددًا.');
     }
 
-    const sessions = (foundCase.sessions || foundCase.legal_sessions || []).map(normalizeSession);
-    const actions = (foundCase.actions || foundCase.procedures || []).map(normalizeAction);
-    const attachments = foundCase.attachments || [];
+    if (delay) await wait(delay + 120);
 
-    return { sessions, actions, attachments };
+    if (entityType === 'service') {
+      const proceduresResponse = await getServiceProceduresByServiceId(caseId);
+      const actions = asArray(proceduresResponse.data).map(normalizeAction);
+      return { sessions: [], actions, attachments: [] };
+    }
+
+    const [sessionsResponse, proceduresResponse] = await Promise.all([
+      getCaseSessions(caseId),
+      getCaseProcedures(caseId),
+    ]);
+
+    const sessions = asArray(sessionsResponse.data).map(normalizeSession);
+    const actions = asArray(proceduresResponse.data).map(normalizeAction);
+
+    return { sessions, actions, attachments: [] };
   };
 
   return { getCasesByClient, getCaseChildren };
@@ -79,12 +99,6 @@ export const mockTreeClients = [
         status: 'مفتوحة',
         court: 'محكمة جدة التجارية',
         next_session_date: '2026-03-01',
-        sessions: [
-          { id: 's-1', date: '2026-02-14', status: 'مؤجلة', notes: 'تأجيل لتبادل المذكرات' },
-        ],
-        procedures: [
-          { id: 'a-1', type: 'تقديم مذكرة رد', date: '2026-02-15', status: 'قيد التنفيذ', assignee: 'أ/ خالد' },
-        ],
       },
     ],
     services: [
@@ -94,9 +108,6 @@ export const mockTreeClients = [
         title: 'خدمة مراجعة عقد شراكة',
         status: 'نشطة',
         court: 'خدمة استشارية',
-        procedures: [
-          { id: 'a-2', type: 'مراجعة أولية', date: '2026-02-16', status: 'تم', assignee: 'أ/ ريم' },
-        ],
       },
     ],
   },

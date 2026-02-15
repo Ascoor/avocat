@@ -272,7 +272,7 @@ const CasesTreeList = ({ selectedClient, clientsPool = [], expansionMode = 'sing
               onToggle={() => toggleCaseExpansion(caseItem.id)}
               isLoading={Boolean(loadingByCaseId[caseItem.id])}
               error={errorByCaseId[caseItem.id]}
-              onRetry={() => loadCaseChildren(caseItem.id)}
+              onRetry={() => loadCaseChildren(caseItem)}
               childrenData={childrenCacheByCaseId[caseItem.id]}
               onItemSelect={setSelectedChildItem}
             />
