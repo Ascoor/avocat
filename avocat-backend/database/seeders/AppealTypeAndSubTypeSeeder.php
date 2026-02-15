@@ -9,19 +9,16 @@ class AppealTypeAndSubTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // إضافة الأقسام الأساسية
         $appealTypes = [
             'المبادئ الجنائية' => [
                 'الطعون الجنائية',
                 'الجنح الإقتصادية',
                 'الجنح الجنائية',
                 'طعون النقابات',
-                'الهيئة العامة للمواد الجنائية'
+                'الهيئة العامة للمواد الجنائية',
             ],
             'المبادئ المدنية' => [
                 'جميع المبادئ المدنية',
@@ -32,23 +29,25 @@ class AppealTypeAndSubTypeSeeder extends Seeder
                 'الطعون التجارية',
                 'الطعون الإقتصادية',
                 'طعون الأحوال الشخصية',
-                'الهيئة العامة للمواد المدنية'
-            ]
+                'الهيئة العامة للمواد المدنية',
+            ],
         ];
 
         foreach ($appealTypes as $type => $subTypes) {
-            // إدراج نوع الطعن في جدول appeal_types
-            DB::table('appeal_types')->insert(['type_name' => $type]);
-            $typeId = DB::getPdo()->lastInsertId();
+            $typeId = DB::table('appeal_types')->insertGetId([
+                'appeal_type' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-            // إدراج الأقسام الفرعية في جدول appeal_sub_types
             foreach ($subTypes as $subType) {
                 DB::table('appeal_sub_types')->insert([
-                    'sub_type_name' => $subType,
-                    'appeal_type_id' => $typeId
+                    'appeal_sub_type' => $subType,
+                    'appeal_type_id' => $typeId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
         }
     }
-    }
-
+}
