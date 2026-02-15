@@ -5,9 +5,9 @@ namespace Tests\Feature;
 use App\Models\CaseType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class OfficeSettingsTest extends TestCase
@@ -20,7 +20,12 @@ class OfficeSettingsTest extends TestCase
 
         DB::table('offices')->updateOrInsert(
             ['id' => $officeId],
-            ['name' => "Office {$officeId}", 'slug' => "office-{$officeId}", 'created_at' => now(), 'updated_at' => now()]
+            [
+                'name' => "Office {$officeId}",
+                'slug' => "office-{$officeId}",
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         );
 
         $user = User::factory()->create(['office_id' => $officeId]);
@@ -102,7 +107,8 @@ class OfficeSettingsTest extends TestCase
         $this->putJson("/api/v1/offices/7/settings/case_types/{$system->id}", [
             'name' => 'أحوال شخصية - مكتب',
             'sort_order' => 5,
-        ])->assertOk()
+        ])
+            ->assertOk()
             ->assertJsonPath('data.parent_id', $system->id)
             ->assertJsonPath('data.office_id', 7);
     }
@@ -131,7 +137,6 @@ class OfficeSettingsTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-
     public function test_store_requires_office_scope_permission_match(): void
     {
         $this->actingAsOfficeManager(3);
@@ -159,7 +164,7 @@ class OfficeSettingsTest extends TestCase
             'is_active' => true,
         ]);
 
-        \DB::table('case_sub_types')->insert([
+        DB::table('case_sub_types')->insert([
             'name' => 'فرعي مستخدم',
             'case_type_id' => $row->id,
             'office_id' => 7,
