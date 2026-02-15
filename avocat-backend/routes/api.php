@@ -91,6 +91,11 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);
 
+        Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index']);
+        Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store']);
+        Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update']);
+        Route::delete('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'destroy']);
+
         Route::get('lawyer/{lawyer}', [LawyerController::class, 'show']);
         Route::put('lawyer/{lawyer}', [LawyerController::class, 'update']);
         Route::delete('lawyer/{lawyer}', [LawyerController::class, 'destroy']);
