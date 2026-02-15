@@ -23,6 +23,12 @@ return new class extends Migration
             });
         }
 
+        if (Schema::hasTable('offices') && Schema::hasColumn('users', 'office_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreign('office_id')->references('id')->on('offices')->nullOnDelete();
+            });
+        }
+
         foreach (array_merge($this->systemOverrideTables, $this->officeSpecificTables) as $tableName) {
             if (! Schema::hasTable($tableName)) {
                 continue;
@@ -33,7 +39,7 @@ return new class extends Migration
                     $table->unsignedBigInteger('office_id')->nullable()->index()->after('id');
                 }
                 if (! Schema::hasColumn($tableName, 'is_system')) {
-                    $table->boolean('is_system')->default(false)->index()->after('office_id');
+                    $table->boolean('is_system')->default(true)->index()->after('office_id');
                 }
                 if (! Schema::hasColumn($tableName, 'parent_id')) {
                     $table->unsignedBigInteger('parent_id')->nullable()->index()->after('is_system');
@@ -42,7 +48,7 @@ return new class extends Migration
                     $table->boolean('is_active')->default(true)->index()->after('parent_id');
                 }
                 if (! Schema::hasColumn($tableName, 'sort_order')) {
-                    $table->integer('sort_order')->nullable()->after('is_active');
+                    $table->integer('sort_order')->default(0)->after('is_active');
                 }
                 if (! Schema::hasColumn($tableName, 'is_locked')) {
                     $table->boolean('is_locked')->default(false)->after('sort_order');
@@ -64,12 +70,45 @@ return new class extends Migration
                     ->update(['is_system' => false]);
             }
 
-            DB::statement("UPDATE {$tableName} SET sort_order = id WHERE sort_order IS NULL");
+            DB::table($tableName)
+                ->whereNotNull('office_id')
+                ->update(['is_system' => false]);
+
+            DB::statement("UPDATE {$tableName} SET sort_order = 0 WHERE sort_order IS NULL");
 
             $nameColumn = 'name';
-            if ($tableName === 'search_degrees') {
-                $nameColumn = 'degree_name';
-            }
+
+            DB::statement(<<<SQL
+                WITH ranked AS (
+                    SELECT id,
+                           ROW_NUMBER() OVER (PARTITION BY office_id, lower({$nameColumn}) ORDER BY id) AS row_num
+                    FROM {$tableName}
+                    WHERE office_id IS NOT NULL AND deleted_at IS NULL
+                )
+                UPDATE {$tableName} t
+                SET deleted_at = NOW(),
+                    is_active = false,
+                    updated_at = NOW()
+                FROM ranked
+                WHERE t.id = ranked.id
+                  AND ranked.row_num > 1
+            SQL);
+
+            DB::statement(<<<SQL
+                WITH ranked AS (
+                    SELECT id,
+                           ROW_NUMBER() OVER (PARTITION BY lower({$nameColumn}) ORDER BY id) AS row_num
+                    FROM {$tableName}
+                    WHERE office_id IS NULL AND deleted_at IS NULL
+                )
+                UPDATE {$tableName} t
+                SET deleted_at = NOW(),
+                    is_active = false,
+                    updated_at = NOW()
+                FROM ranked
+                WHERE t.id = ranked.id
+                  AND ranked.row_num > 1
+            SQL);
 
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_active_idx ON {$tableName} (office_id, is_active)");
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_sort_idx ON {$tableName} (office_id, sort_order)");
@@ -100,9 +139,7 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('users', 'office_id')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('office_id');
-            });
+            DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_office_id_foreign');
         }
     }
 };
