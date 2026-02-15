@@ -1,3 +1,6 @@
+// =========================
+// LegCaseDetails.jsx
+// =========================
 import {
   useCallback,
   useEffect,
@@ -14,7 +17,17 @@ import { permissionMap } from '@shared/security/permission-map';
 import { LexicraftIcon } from '@shared/icons/lexicraft';
 import { Tabs, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Calendar, Scale, FileText } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Landmark,
+  FileText,
+  Calendar,
+  Megaphone,
+  Briefcase,
+  Scale,
+} from 'lucide-react';
+
 import {
   deleteLegCase,
   getCaseDetails,
@@ -22,11 +35,14 @@ import {
   getCaseSessions,
   getLegalAdsByLegCaseId,
 } from '@shared/services/api/legalCases';
+
 import {
   fetchWithCaseCache,
   invalidateCaseFetchCache,
 } from '@shared/utils/caseFetchCache';
+
 import { formatDate } from '@shared/i18n/formatters';
+
 import KPICard from '../KPICard';
 import StatusBadge from '../StatusBadge';
 import SectionStateMessage from '../SectionStateMessage';
@@ -37,9 +53,7 @@ const LegalSession = lazy(() => import('./LegalCaseTools/LegalCaseSessions'));
 const LegalCaseAds = lazy(() => import('./LegalCaseTools/LegalCaseAds'));
 const LegCaseClients = lazy(() => import('./LegalCaseTools/LegalCaseClients'));
 const LegalCaseCourts = lazy(() => import('./LegalCaseTools/LegCaseCourts'));
-const LegalCaseOverview = lazy(
-  () => import('./LegalCaseTools/LegalCaseOverview'),
-);
+const LegalCaseOverview = lazy(() => import('./LegalCaseTools/LegalCaseOverview'));
 const AddEditLegCase = lazy(() => import('./AddEditLegCase'));
 
 export default function LegCaseDetails() {
@@ -61,6 +75,18 @@ export default function LegCaseDetails() {
     sessions: { data: [], loading: false, error: '' },
     ads: { data: [], loading: false, error: '' },
   });
+
+  const tabsConfig = useMemo(
+    () => [
+      { key: 'overview', icon: LayoutDashboard, labelKey: 'legalCaseDetails.tabs.overview' },
+      { key: 'clients', icon: Users, labelKey: 'legalCaseDetails.tabs.clients' },
+      { key: 'courts', icon: Landmark, labelKey: 'legalCaseDetails.tabs.courts' },
+      { key: 'procedures', icon: FileText, labelKey: 'legalCaseDetails.tabs.procedures' },
+      { key: 'sessions', icon: Calendar, labelKey: 'legalCaseDetails.tabs.sessions' },
+      { key: 'ads', icon: Megaphone, labelKey: 'legalCaseDetails.tabs.ads' },
+    ],
+    [],
+  );
 
   const updateSectionState = useCallback((key, updater) => {
     setSectionsState((prev) => ({
@@ -105,6 +131,7 @@ export default function LegCaseDetails() {
     async (key, fetcher) => {
       if (!id) return;
       updateSectionState(key, (p) => ({ ...p, loading: true, error: '' }));
+
       try {
         const data = await fetchWithCaseCache({
           key: `legal-case:${id}:${key}`,
@@ -170,7 +197,6 @@ export default function LegCaseDetails() {
     Promise.allSettled([fetchProcedures(), fetchSessions(), fetchAds()]);
   }, [legCase, fetchProcedures, fetchSessions, fetchAds]);
 
-
   const canUpdateCase = canAction(permissions, permissionMap.legalCases.update);
   const canDeleteCase = canAction(permissions, permissionMap.legalCases.delete);
 
@@ -213,6 +239,7 @@ export default function LegCaseDetails() {
     if (!id) return;
     const confirmed = window.confirm(t('legalCaseDetails.actions.confirmDelete'));
     if (!confirmed) return;
+
     try {
       await deleteLegCase(id);
       navigate('/dashboard/legcases');
@@ -238,31 +265,44 @@ export default function LegCaseDetails() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="max-w-7xl mx-auto p-4 md:p-6 space-y-6"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <motion.header
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         className="rounded-3xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface))] p-4 md:p-6"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+          <div className={isRTL ? 'text-right' : 'text-left'}>
             <h1 className="text-xl md:text-2xl font-bold text-[hsl(var(--color-text))]">
               {legCase?.title || t('legalCaseDetails.titleFallback')}
             </h1>
-            <div className="mt-2 flex items-center gap-2">
+            <div className={['mt-2 flex items-center gap-2', isRTL ? 'justify-end' : 'justify-start'].join(' ')}>
               <StatusBadge status={legCase?.status} lang={language === 'ar' ? 'ar' : 'en'} />
-              <span className="text-sm text-[hsl(var(--color-muted))]">{legCase?.slug || legCase?.id || '-'}</span>
+              <span className="text-sm text-[hsl(var(--color-muted))]">
+                {legCase?.slug || legCase?.id || '-'}
+              </span>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+
+          <div className={['flex flex-wrap gap-2', isRTL ? 'justify-start' : 'justify-end'].join(' ')}>
             {canUpdateCase && (
-              <button onClick={() => setEditModalOpen(true)} className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
+              <button
+                onClick={() => setEditModalOpen(true)}
+                className="pressable inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold"
+              >
                 <LexicraftIcon name="tool" size={16} />
                 {t('legalCaseDetails.actions.edit')}
               </button>
             )}
+
             {canDeleteCase && (
-              <button onClick={handleDeleteCase} className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive">
+              <button
+                onClick={handleDeleteCase}
+                className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive"
+              >
                 <LexicraftIcon name="shield" size={16} />
                 {t('legalCaseDetails.actions.delete')}
               </button>
@@ -273,15 +313,32 @@ export default function LegCaseDetails() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {kpiCards.map((card, idx) => (
-          <KPICard key={card.label} icon={card.icon} label={card.label} value={card.value} delay={idx * 0.05} />
+          <KPICard
+            key={card.label}
+            icon={card.icon}
+            label={card.label}
+            value={card.value}
+            delay={idx * 0.05}
+          />
         ))}
       </section>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
         <TabsList className="flex w-full flex-wrap gap-1.5 rounded-2xl border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))]/50 p-1.5">
-          {['overview', 'clients', 'courts', 'procedures', 'sessions', 'ads'].map((tab) => (
-            <TabsTrigger key={tab} value={tab} className="relative rounded-xl px-4 py-2.5 text-sm font-medium capitalize">
-              {t(`legalCaseDetails.tabs.${tab}`)}
+          {tabsConfig.map(({ key, icon: Icon, labelKey }) => (
+            <TabsTrigger
+              key={key}
+              value={key}
+              className={[
+                'relative rounded-xl px-4 py-2.5 text-sm font-medium',
+                'inline-flex items-center gap-2',
+                isRTL ? 'flex-row-reverse' : 'flex-row',
+              ].join(' ')}
+            >
+              <Icon className="h-4 w-4 opacity-80" />
+              <span className={isRTL ? 'text-right' : 'text-left'}>
+                {t(labelKey)}
+              </span>
             </TabsTrigger>
           ))}
         </TabsList>
@@ -306,6 +363,7 @@ export default function LegCaseDetails() {
                     onOpenTab={(tab) => setActiveTab(tab)}
                   />
                 )}
+
                 {activeTab === 'clients' && (
                   <LegCaseClients
                     legCaseId={id}
@@ -317,7 +375,11 @@ export default function LegCaseDetails() {
                     }}
                   />
                 )}
-                {activeTab === 'courts' && <LegalCaseCourts legCase={legCase} fetchLegCase={fetchLegCase} />}
+
+                {activeTab === 'courts' && (
+                  <LegalCaseCourts legCase={legCase} fetchLegCase={fetchLegCase} />
+                )}
+
                 {activeTab === 'procedures' && (
                   <Procedure
                     legCaseId={id}
@@ -333,6 +395,7 @@ export default function LegCaseDetails() {
                     }}
                   />
                 )}
+
                 {activeTab === 'sessions' && (
                   <LegalSession
                     legCaseId={id}
@@ -348,6 +411,7 @@ export default function LegCaseDetails() {
                     }}
                   />
                 )}
+
                 {activeTab === 'ads' && (
                   <LegalCaseAds
                     legCaseId={id}

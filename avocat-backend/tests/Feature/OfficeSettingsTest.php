@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CaseType;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
