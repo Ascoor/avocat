@@ -19,7 +19,7 @@ class CaseSubTypesTableSeeder extends Seeder
 
         DB::table('case_sub_types')->delete();
         
-        DB::table('case_sub_types')->insert(array (
+        $caseSubTypes = array (
             0 => 
             array (
                 'id' => 1,
@@ -500,8 +500,22 @@ class CaseSubTypesTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-        ));
-        
-        
+        );
+
+        $uniqueCaseSubTypes = [];
+        $seenNames = [];
+
+        foreach ($caseSubTypes as $caseSubType) {
+            $normalizedName = mb_strtolower($caseSubType['name']);
+
+            if (isset($seenNames[$normalizedName])) {
+                continue;
+            }
+
+            $seenNames[$normalizedName] = true;
+            $uniqueCaseSubTypes[] = $caseSubType;
+        }
+
+        DB::table('case_sub_types')->insert($uniqueCaseSubTypes);
     }
 }
