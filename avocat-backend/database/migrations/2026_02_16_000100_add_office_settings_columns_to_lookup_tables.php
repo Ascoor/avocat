@@ -23,7 +23,11 @@ return new class extends Migration
             });
         }
 
-        if (Schema::hasTable('offices') && Schema::hasColumn('users', 'office_id')) {
+        if (
+            Schema::hasTable('offices')
+            && Schema::hasColumn('users', 'office_id')
+            && ! $this->foreignKeyExists('users', 'users_office_id_foreign')
+        ) {
             Schema::table('users', function (Blueprint $table) {
                 $table->foreign('office_id')->references('id')->on('offices')->nullOnDelete();
             });
@@ -213,5 +217,14 @@ return new class extends Migration
         if (Schema::hasColumn('users', 'office_id')) {
             DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_office_id_foreign');
         }
+    }
+
+    private function foreignKeyExists(string $tableName, string $constraintName): bool
+    {
+        return DB::table('information_schema.table_constraints')
+            ->where('table_name', $tableName)
+            ->where('constraint_name', $constraintName)
+            ->where('constraint_type', 'FOREIGN KEY')
+            ->exists();
     }
 };
