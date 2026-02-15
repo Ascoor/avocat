@@ -3,140 +3,72 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\OfficeSettingStoreRequest;
-use App\Http\Requests\OfficeSettingUpdateRequest;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Requests\OfficeSettingUpsertRequest;
+use App\Http\Resources\OfficeSettingResource;
+use App\Support\OfficeSettings\OfficeSettingsManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OfficeSettingsController extends Controller
 {
+    public function __construct(private readonly OfficeSettingsManager $manager)
+    {
+    }
+
     public function index(Request $request, int $officeId, string $entity): JsonResponse
     {
-        $this->authorizeAccess($request, $officeId);
-        $modelClass = $this->resolveModel($entity);
-
-        $includeInactive = $request->boolean('include_inactive');
-
-        $system = $modelClass::query()->whereNull('office_id');
-        $office = $modelClass::query()->where('office_id', $officeId);
-
-        if (! $includeInactive) {
-            $system->where('is_active', true);
-            $office->where('is_active', true);
-        }
-
-        $systemRecords = $system->orderBy('sort_order')->orderBy('name')->get()->keyBy('id');
-        $officeRecords = $office->orderBy('sort_order')->orderBy('name')->get();
-
-        $hiddenSystemIds = $officeRecords
-            ->filter(fn (Model $item) => ! $item->is_active && $item->parent_id)
-            ->pluck('parent_id')
-            ->all();
-
-        foreach ($hiddenSystemIds as $hiddenSystemId) {
-            $systemRecords->forget($hiddenSystemId);
-        }
-
-        foreach ($officeRecords as $officeRecord) {
-            if ($officeRecord->parent_id) {
-                $systemRecords->forget($officeRecord->parent_id);
-            }
-        }
-
-        $merged = $systemRecords->values()->merge($officeRecords)->sortBy([
-            ['sort_order', 'asc'],
-            ['name', 'asc'],
-        ])->values();
+        $this->authorizeScope($request, $officeId);
+        $records = $this->manager->list($officeId, $entity);
 
         return response()->json([
-            'data' => $merged,
-            'meta' => [
-                'entity' => $entity,
-                'office_id' => $officeId,
-            ],
+            'data' => OfficeSettingResource::collection($records),
+            'meta' => ['office_id' => $officeId, 'entity' => $entity],
         ]);
     }
 
-    public function store(OfficeSettingStoreRequest $request, int $officeId, string $entity): JsonResponse
+    public function store(OfficeSettingUpsertRequest $request, int $officeId, string $entity): JsonResponse
     {
-        $this->authorizeAccess($request, $officeId);
-        $modelClass = $this->resolveModel($entity);
+        $this->authorizeScope($request, $officeId);
+        $record = $this->manager->store($officeId, $entity, $request->validated());
 
-        $payload = $request->validated();
-        $payload['office_id'] = $officeId;
-        $payload['is_system'] = false;
-
-        $setting = $modelClass::create($payload);
-
-        return response()->json(['data' => $setting], 201);
+        return response()->json([
+            'message' => 'Setting created successfully.',
+            'data' => new OfficeSettingResource($record),
+        ], 201);
     }
 
-    public function update(OfficeSettingUpdateRequest $request, int $officeId, string $entity, int $id): JsonResponse
+    public function update(OfficeSettingUpsertRequest $request, int $officeId, string $entity, int $id): JsonResponse
     {
-        $this->authorizeAccess($request, $officeId);
-        $modelClass = $this->resolveModel($entity);
+        $this->authorizeScope($request, $officeId);
+        $record = $this->manager->update($officeId, $entity, $id, $request->validated());
 
-        $setting = $modelClass::query()->where('office_id', $officeId)->findOrFail($id);
-        $setting->fill($request->validated());
-        $setting->save();
-
-        return response()->json(['data' => $setting]);
+        return response()->json([
+            'message' => 'Setting updated successfully.',
+            'data' => new OfficeSettingResource($record),
+        ]);
     }
 
     public function destroy(Request $request, int $officeId, string $entity, int $id): JsonResponse
     {
-        $this->authorizeAccess($request, $officeId);
-        $modelClass = $this->resolveModel($entity);
+        $this->authorizeScope($request, $officeId);
+        $result = $this->manager->destroy($officeId, $entity, $id);
 
-        $setting = $modelClass::query()->where('office_id', $officeId)->findOrFail($id);
-
-        if ($this->isInUse($entity, $setting)) {
-            $setting->is_active = false;
-            $setting->save();
-
-            return response()->json([
-                'message' => 'لا يمكن حذف القيمة لأنها مستخدمة. تم تعطيلها بدلًا من ذلك.',
-                'data' => [
-                    'id' => $setting->id,
-                    'is_active' => false,
-                ],
-            ], 409);
-        }
-
-        $setting->delete();
-
-        return response()->json([], 204);
+        return response()->json([
+            'message' => $result['deleted'] ? 'Setting deleted successfully.' : 'Setting deactivated instead of deletion.',
+            'deleted' => $result['deleted'],
+            'deactivated' => $result['deactivated'],
+            'data' => new OfficeSettingResource($result['record']),
+        ]);
     }
 
-    private function resolveModel(string $entity): string
-    {
-        $model = config("office_settings.entities.{$entity}.model");
-
-        abort_unless(is_string($model), 404, 'Unsupported office settings entity.');
-
-        return $model;
-    }
-
-    private function isInUse(string $entity, Model $model): bool
-    {
-        $check = config("office_settings.entities.{$entity}.in_use");
-
-        if (is_callable($check)) {
-            return (bool) $check($model);
-        }
-
-        return false;
-    }
-
-    private function authorizeAccess(Request $request, int $officeId): void
+    private function authorizeScope(Request $request, int $officeId): void
     {
         $user = $request->user();
+        abort_unless($user, 401, 'Unauthenticated.');
 
-        abort_unless($user, 401);
+        $canManage = $user->can('officeSettings.manage') || $user->hasRole('admin') || $user->hasRole('super_admin');
+        abort_unless($canManage, 403, 'Missing permission officeSettings.manage.');
 
-        $hasPermission = $user->can('officeSettings.manage') || $user->can('settings.manage') || $user->hasRole('admin');
-        abort_unless($hasPermission, 403, 'Unauthorized office settings action.');
-        abort_unless((int) $user->office_id === $officeId, 403, 'You are not allowed to access this office settings scope.');
+        abort_unless(isset($user->office_id) && (int) $user->office_id === $officeId, 403, 'ABAC office scope mismatch.');
     }
 }

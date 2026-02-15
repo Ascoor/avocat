@@ -43,7 +43,7 @@ class LegalAd extends Model
 
     public function legCase(): BelongsTo
     {
-        return $this->belongsTo(LegCase::class);
+        return $this->belongsTo(LegCase::class); 
     }
 
     public function court(): BelongsTo
@@ -51,6 +51,13 @@ class LegalAd extends Model
         return $this->belongsTo(Court::class);
     }
 
+    public function lawyerSend() {
+        return $this->belongsTo(Lawyer::class, 'lawyer_send_id');
+    }
+    
+    public function lawyerReceive() {
+        return $this->belongsTo(Lawyer::class, 'lawyer_receive_id');
+    }
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

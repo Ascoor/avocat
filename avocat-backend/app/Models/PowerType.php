@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Office extends Model
+class PowerType extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'slug',
+        'office_id',
+        'is_system',
+        'parent_id',
+        'is_active',
+        'sort_order',
+        'is_locked',
+        'deleted_at',
     ];
-
-    public function users(): HasMany
-    {
-        return $this->hasMany(User::class);
-    }
 }

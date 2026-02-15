@@ -166,6 +166,12 @@ Route::prefix('v1')->group(function () {
         Route::get('expenses/search', [ExpenseController::class, 'searchExpenses']);
         Route::get('expense_categories', [ExpenseCategoryController::class, 'index']);
 
+
+        Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index'])->middleware('permission.guard:settings.manage,officeSettings.manage');
+        Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store'])->middleware('permission.guard:officeSettings.manage');
+        Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update'])->middleware('permission.guard:officeSettings.manage');
+        Route::delete('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'destroy'])->middleware('permission.guard:officeSettings.manage');
+
         Route::get('notifications', [NotificationController::class, 'index']);
         Route::post('notifications/{notificationId}/read', [NotificationController::class, 'markRead']);
         Route::post('notifications/read-all', [NotificationController::class, 'markReadAll']);
