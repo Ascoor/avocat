@@ -55,6 +55,6 @@ class OfficeSettingUpsertRequest extends FormRequest
             $rules[$column] = ['required', 'integer'];
         }
 
-        return $rules;
+        return array_merge($rules, $config['rules'] ?? []);
     }
 }
