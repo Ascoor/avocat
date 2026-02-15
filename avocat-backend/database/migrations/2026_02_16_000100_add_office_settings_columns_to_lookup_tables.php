@@ -58,22 +58,65 @@ return new class extends Migration
                 }
             });
 
+            // system defaults
             if (in_array($tableName, $this->systemOverrideTables, true)) {
                 DB::table($tableName)
                     ->whereNull('office_id')
                     ->update(['is_system' => true]);
             }
 
+            // office-specific defaults (when office_id is null, it is NOT system)
             if (in_array($tableName, $this->officeSpecificTables, true)) {
                 DB::table($tableName)
                     ->whereNull('office_id')
                     ->update(['is_system' => false]);
             }
 
+            // any record with office_id is NOT system
+            DB::table($tableName)
+                ->whereNotNull('office_id')
+                ->update(['is_system' => false]);
+
+            // normalize sort_order nulls
             DB::statement("UPDATE {$tableName} SET sort_order = 0 WHERE sort_order IS NULL");
 
             $nameColumn = 'name';
 
+            // soft-delete duplicates per office (case-insensitive name)
+            DB::statement(<<<SQL
+                WITH ranked AS (
+                    SELECT id,
+                           ROW_NUMBER() OVER (PARTITION BY office_id, lower({$nameColumn}) ORDER BY id) AS row_num
+                    FROM {$tableName}
+                    WHERE office_id IS NOT NULL AND deleted_at IS NULL
+                )
+                UPDATE {$tableName} t
+                SET deleted_at = NOW(),
+                    is_active = false,
+                    updated_at = NOW()
+                FROM ranked
+                WHERE t.id = ranked.id
+                  AND ranked.row_num > 1
+            SQL);
+
+            // soft-delete duplicates for system/global rows (office_id null, case-insensitive name)
+            DB::statement(<<<SQL
+                WITH ranked AS (
+                    SELECT id,
+                           ROW_NUMBER() OVER (PARTITION BY lower({$nameColumn}) ORDER BY id) AS row_num
+                    FROM {$tableName}
+                    WHERE office_id IS NULL AND deleted_at IS NULL
+                )
+                UPDATE {$tableName} t
+                SET deleted_at = NOW(),
+                    is_active = false,
+                    updated_at = NOW()
+                FROM ranked
+                WHERE t.id = ranked.id
+                  AND ranked.row_num > 1
+            SQL);
+
+            // indexes
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_active_idx ON {$tableName} (office_id, is_active)");
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_sort_idx ON {$tableName} (office_id, sort_order)");
             DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$tableName}_office_lower_name_uniq ON {$tableName} (office_id, lower({$nameColumn})) WHERE deleted_at IS NULL");
