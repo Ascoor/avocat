@@ -46,7 +46,7 @@ return [
         'permissions.view', 'permissions.list', 'permissions.search',
 
         // Settings/Profile
-        'settings.view', 'settings.manage', 'profile.view_own', 'profile.update_own',
+        'settings.view', 'settings.manage', 'officeSettings.manage', 'profile.view_own', 'profile.update_own',
 
         // Finance
         'expenses.view', 'expenses.list', 'expenses.search', 'expenses.create', 'expenses.update', 'expenses.delete',

@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
+        'office_id',
         'name',
         'email',
         'password',
@@ -54,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'office_id' => 'integer',
         ];
     }
 
