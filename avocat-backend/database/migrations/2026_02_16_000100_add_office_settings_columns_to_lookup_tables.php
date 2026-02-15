@@ -82,45 +82,108 @@ return new class extends Migration
 
             $nameColumn = 'name';
 
-            // soft-delete duplicates per office (case-insensitive name)
-            DB::statement(<<<SQL
-                WITH ranked AS (
-                    SELECT id,
-                           ROW_NUMBER() OVER (PARTITION BY office_id, lower({$nameColumn}) ORDER BY id) AS row_num
-                    FROM {$tableName}
-                    WHERE office_id IS NOT NULL AND deleted_at IS NULL
-                )
-                UPDATE {$tableName} t
-                SET deleted_at = NOW(),
-                    is_active = false,
-                    updated_at = NOW()
-                FROM ranked
-                WHERE t.id = ranked.id
-                  AND ranked.row_num > 1
-            SQL);
+            if ($tableName === 'case_sub_types') {
+                DB::statement(<<<SQL
+                    WITH ranked AS (
+                        SELECT id,
+                               ROW_NUMBER() OVER (
+                                   PARTITION BY office_id, case_type_id, lower({$nameColumn})
+                                   ORDER BY id
+                               ) AS row_num
+                        FROM {$tableName}
+                        WHERE office_id IS NOT NULL AND deleted_at IS NULL
+                    )
+                    UPDATE {$tableName} t
+                    SET deleted_at = NOW(),
+                        is_active = false,
+                        updated_at = NOW()
+                    FROM ranked
+                    WHERE t.id = ranked.id
+                      AND ranked.row_num > 1
+                SQL);
 
-            // soft-delete duplicates for system/global rows (office_id null, case-insensitive name)
-            DB::statement(<<<SQL
-                WITH ranked AS (
-                    SELECT id,
-                           ROW_NUMBER() OVER (PARTITION BY lower({$nameColumn}) ORDER BY id) AS row_num
-                    FROM {$tableName}
-                    WHERE office_id IS NULL AND deleted_at IS NULL
-                )
-                UPDATE {$tableName} t
-                SET deleted_at = NOW(),
-                    is_active = false,
-                    updated_at = NOW()
-                FROM ranked
-                WHERE t.id = ranked.id
-                  AND ranked.row_num > 1
-            SQL);
+                DB::statement(<<<SQL
+                    WITH ranked AS (
+                        SELECT id,
+                               ROW_NUMBER() OVER (
+                                   PARTITION BY case_type_id, lower({$nameColumn})
+                                   ORDER BY id
+                               ) AS row_num
+                        FROM {$tableName}
+                        WHERE office_id IS NULL AND deleted_at IS NULL
+                    )
+                    UPDATE {$tableName} t
+                    SET deleted_at = NOW(),
+                        is_active = false,
+                        updated_at = NOW()
+                    FROM ranked
+                    WHERE t.id = ranked.id
+                      AND ranked.row_num > 1
+                SQL);
+            } else {
+                // soft-delete duplicates per office (case-insensitive name)
+                DB::statement(<<<SQL
+                    WITH ranked AS (
+                        SELECT id,
+                               ROW_NUMBER() OVER (PARTITION BY office_id, lower({$nameColumn}) ORDER BY id) AS row_num
+                        FROM {$tableName}
+                        WHERE office_id IS NOT NULL AND deleted_at IS NULL
+                    )
+                    UPDATE {$tableName} t
+                    SET deleted_at = NOW(),
+                        is_active = false,
+                        updated_at = NOW()
+                    FROM ranked
+                    WHERE t.id = ranked.id
+                      AND ranked.row_num > 1
+                SQL);
 
-            // indexes
+                // soft-delete duplicates for system/global rows (office_id null, case-insensitive name)
+                DB::statement(<<<SQL
+                    WITH ranked AS (
+                        SELECT id,
+                               ROW_NUMBER() OVER (PARTITION BY lower({$nameColumn}) ORDER BY id) AS row_num
+                        FROM {$tableName}
+                        WHERE office_id IS NULL AND deleted_at IS NULL
+                    )
+                    UPDATE {$tableName} t
+                    SET deleted_at = NOW(),
+                        is_active = false,
+                        updated_at = NOW()
+                    FROM ranked
+                    WHERE t.id = ranked.id
+                      AND ranked.row_num > 1
+                SQL);
+            }
+
+            $isCaseSubTypes = ($tableName === 'case_sub_types');
+            $officeUniqIndex = $isCaseSubTypes
+                ? "{$tableName}_office_case_type_lower_name_uniq"
+                : "{$tableName}_office_lower_name_uniq";
+
+            $systemUniqIndex = $isCaseSubTypes
+                ? "{$tableName}_system_case_type_lower_name_uniq"
+                : "{$tableName}_system_lower_name_uniq";
+
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_active_idx ON {$tableName} (office_id, is_active)");
             DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_sort_idx ON {$tableName} (office_id, sort_order)");
-            DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$tableName}_office_lower_name_uniq ON {$tableName} (office_id, lower({$nameColumn})) WHERE deleted_at IS NULL");
-            DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$tableName}_system_lower_name_uniq ON {$tableName} (lower({$nameColumn})) WHERE office_id IS NULL AND deleted_at IS NULL");
+
+            if ($tableName === 'case_sub_types') {
+                DB::statement(<<<SQL
+                    CREATE UNIQUE INDEX IF NOT EXISTS {$officeUniqIndex}
+                    ON {$tableName} (office_id, case_type_id, lower({$nameColumn}))
+                    WHERE deleted_at IS NULL
+                SQL);
+
+                DB::statement(<<<SQL
+                    CREATE UNIQUE INDEX IF NOT EXISTS {$systemUniqIndex}
+                    ON {$tableName} (case_type_id, lower({$nameColumn}))
+                    WHERE office_id IS NULL AND deleted_at IS NULL
+                SQL);
+            } else {
+                DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$officeUniqIndex} ON {$tableName} (office_id, lower({$nameColumn})) WHERE deleted_at IS NULL");
+                DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$systemUniqIndex} ON {$tableName} (lower({$nameColumn})) WHERE office_id IS NULL AND deleted_at IS NULL");
+            }
         }
     }
 
@@ -135,6 +198,8 @@ return new class extends Migration
             DB::statement("DROP INDEX IF EXISTS {$tableName}_office_sort_idx");
             DB::statement("DROP INDEX IF EXISTS {$tableName}_office_lower_name_uniq");
             DB::statement("DROP INDEX IF EXISTS {$tableName}_system_lower_name_uniq");
+            DB::statement("DROP INDEX IF EXISTS case_sub_types_office_case_type_lower_name_uniq");
+            DB::statement("DROP INDEX IF EXISTS case_sub_types_system_case_type_lower_name_uniq");
 
             Schema::table($tableName, function (Blueprint $table) use ($tableName) {
                 foreach (['office_id', 'is_system', 'parent_id', 'is_active', 'sort_order', 'is_locked', 'deleted_at'] as $column) {
