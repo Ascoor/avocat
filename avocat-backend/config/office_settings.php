@@ -43,6 +43,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('leg_cases')->where('case_type_id', $id)->exists() || DB::table('case_sub_types')->where('case_type_id', $id)->exists(),
         ],
         'case_sub_types' => [
@@ -50,6 +51,8 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'required_columns' => ['case_type_id'],
+            'rules' => ['case_type_id' => ['required', 'integer', 'exists:case_types,id']],
             'in_use_checker' => static fn (int $id): bool => DB::table('leg_cases')->where('case_sub_type_id', $id)->exists(),
         ],
         'service_types' => [
@@ -64,6 +67,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('procedures')->where('procedure_type_id', $id)->exists(),
         ],
         'procedure_place_types' => [
@@ -71,6 +75,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('procedures')->where('procedure_place_type_id', $id)->exists(),
         ],
         'legal_session_types' => [
@@ -78,6 +83,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('legal_sessions')->where('legal_session_type_id', $id)->exists(),
         ],
         'legal_ad_types' => [
@@ -85,6 +91,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('legal_ads')->where('legal_ad_type_id', $id)->exists(),
         ],
         'revenue_categories' => [
@@ -113,6 +120,7 @@ return [
             'name_column' => 'name',
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
+            'rules' => ['case_type_id' => ['prohibited']],
             'in_use_checker' => static fn (int $id): bool => DB::table('courts')->where('court_level_id', $id)->exists(),
         ],
         'court_types' => [
