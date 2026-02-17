@@ -20,7 +20,7 @@ class LegCasesTableSeeder extends Seeder
 
         DB::table('leg_cases')->where('is_deleted', false)->delete();
         
-        DB::table('leg_cases')->insert(array (
+        DB::table('leg_cases')->insertOrIgnore(array (
             0 => 
             array (
                 'id' => 2,
