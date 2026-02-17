@@ -16,7 +16,11 @@ class LegCasesTableSeeder extends Seeder
      */
     public function run()
     {
-        
+        // Ensure reference tables exist when this seeder is run in isolation.
+        $this->call([
+            CaseTypesTableSeeder::class,
+            CaseSubTypesTableSeeder::class,
+        ]);
 
         DB::table('leg_cases')->where('is_deleted', false)->delete();
         
