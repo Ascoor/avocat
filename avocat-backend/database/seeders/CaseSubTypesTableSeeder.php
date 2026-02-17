@@ -502,20 +502,6 @@ class CaseSubTypesTableSeeder extends Seeder
             ),
         );
 
-        $uniqueCaseSubTypes = [];
-        $seenNames = [];
-
-        foreach ($caseSubTypes as $caseSubType) {
-            $normalizedName = mb_strtolower($caseSubType['name']);
-
-            if (isset($seenNames[$normalizedName])) {
-                continue;
-            }
-
-            $seenNames[$normalizedName] = true;
-            $uniqueCaseSubTypes[] = $caseSubType;
-        }
-
-        DB::table('case_sub_types')->insert($uniqueCaseSubTypes);
+        DB::table('case_sub_types')->insert($caseSubTypes);
     }
 }
