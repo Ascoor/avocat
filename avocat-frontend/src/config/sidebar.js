@@ -97,18 +97,27 @@ export const sidebarGroups = [
         ],
       },
       {
-        key: "court_search",
-        labelKey: "navigation.courtSearch",
-        icon: Landmark,
-        path: "/dashboard/court-search",
-        requiredPermission: permissionMap.reports.view,
+        key: "follow_work",
+        labelKey: "navigation.followWork",
+        icon: Folder,
+        requiredPermission: permissionMap.followWork.view,
+        children: [
+          {
+            key: "court_search",
+            labelKey: "navigation.courtSearch",
+            icon: Landmark,
+            path: "/dashboard/court-search",
+            requiredPermission: permissionMap.reports.view,
+          },
+          {
+            key: "archive",
+            labelKey: "navigation.archive",
+            icon: Archive,
+            path: "/dashboard/archive",
+          },
+        ],
       },
-      {
-        key: "archive",
-        labelKey: "navigation.archive",
-        icon: Archive,
-        path: "/dashboard/archive",
-      },
+     
     ],
   },
   {

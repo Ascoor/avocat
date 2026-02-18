@@ -146,6 +146,16 @@ export const permissionMap = {
     view: "events.view",
     create: "events.create",
   },
+  
+  followWork: {
+    view: "followWork.view",
+    list: "followWork.list",
+    search: "followWork.search",
+    create: "followWork.create",
+    update: "followWork.update",
+    delete: "followWork.delete",
+    assign: "followWork.assign",
+  },
   settings: {
     view: "settings.view",
     manage: "settings.manage",
