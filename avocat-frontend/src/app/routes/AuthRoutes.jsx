@@ -63,10 +63,22 @@ const AuthRoutes = () => {
           <Route index element={<Home />} />
 
           <Route
+            path="customer-service"
+            element={<Navigate to="/dashboard/clients" replace />}
+          />
+          <Route
             path="clients"
             element={
               <Guarded require={permissionMap.clients.list} moduleLabel="Clients">
-                <ClientsAndUnClients />
+                <ClientsAndUnClients defaultTab="clients" />
+              </Guarded>
+            }
+          />
+          <Route
+            path="non-clients"
+            element={
+              <Guarded require={permissionMap.clients.list} moduleLabel="Non Clients">
+                <ClientsAndUnClients defaultTab="unclients" />
               </Guarded>
             }
           />

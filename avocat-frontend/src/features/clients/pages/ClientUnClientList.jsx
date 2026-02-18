@@ -1,15 +1,23 @@
-import React, { useState, lazy, Suspense, useMemo } from "react";
-import { FaUserTie, FaUserAltSlash } from "react-icons/fa"; 
+import React, { lazy, Suspense, useMemo } from "react";
+import { useLocation } from "react-router-dom";
+import { FaUserAltSlash, FaUserTie } from "react-icons/fa";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 import GlobalSpinner from "@shared/components/common/Spinners/GlobalSpinner";
-import SectionHeader from "@shared/components/common/SectionHeader"; 
+import SectionHeader from "@shared/components/common/SectionHeader";
 
 const ClientList = lazy(() => import("../components/ClientsAndUnClients/clients/index.jsx"));
 const UnClientList = lazy(() => import("../components/ClientsAndUnClients/unclients/index.jsx"));
 
-const ClientUnclientList = () => {
-  const [activeTab, setActiveTab] = useState("clients");
+const ClientUnclientList = ({ defaultTab = "clients" }) => {
+  const location = useLocation();
+
+  const activeTab = useMemo(() => {
+    if (location.pathname.endsWith("/non-clients")) return "unclients";
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    return tab === "non-clients" ? "unclients" : defaultTab;
+  }, [defaultTab, location.pathname, location.search]);
 
   const tabs = useMemo(
     () => [
@@ -19,19 +27,19 @@ const ClientUnclientList = () => {
     [],
   );
 
+  const currentTab = tabs.find((tab) => tab.key === activeTab);
+
   return (
     <div className="w-full">
       <div className="p-6">
         <SectionHeader
-
           listName="العملاء"
-          subtitle="إدارة العملاء حسب نوع الوكالة"
+          subtitle={currentTab?.label || "إدارة العملاء حسب نوع الوكالة"}
           showBack
           icon={<LexicraftIcon name="client" size={20} />}
-
           sticky={false}
         />
- 
+
         <Suspense
           fallback={
             <div className="mt-8 flex justify-center">
