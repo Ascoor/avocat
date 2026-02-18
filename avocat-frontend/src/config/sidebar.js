@@ -98,7 +98,7 @@ export const sidebarGroups = [
       },
       {
         key: "follow_work",
-        labelKey: "navigation.followWork",
+        labelKey: "navigation.workFollowUp",
         icon: Folder,
         requiredPermission: permissionMap.followWork.view,
         children: [

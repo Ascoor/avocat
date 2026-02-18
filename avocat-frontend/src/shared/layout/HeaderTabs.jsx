@@ -55,7 +55,8 @@ const HeaderTabs = ({ className }) => {
       'customer_service',
       'cases',
       'services',
-      'work_follow',
+      'follow_work',
+      'reports',
       'settings',
     ];
     const orderMap = new Map(preferredOrder.map((key, index) => [key, index]));
