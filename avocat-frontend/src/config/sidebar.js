@@ -48,12 +48,12 @@ export const sidebarGroups = [
         requiredPermission: permissionMap.clients.list,
         children: [
           { key: "clients", labelKey: "navigation.clients", icon: Briefcase, path: "/dashboard/clients", requiredPermission: permissionMap.clients.list },
-          { key: "clients_no_agency", labelKey: "navigation.clientsNoAgency", icon: Users, path: "/dashboard/clients", requiredPermission: permissionMap.clients.list },
+          { key: "clients_no_agency", labelKey: "navigation.clientsNoAgency", icon: Users, path: "/dashboard/unclients", requiredPermission: permissionMap.clients.list },
           { key: "archive", labelKey: "navigation.archive", icon: Archive, path: "/dashboard/archive" },
           { key: "court_search", labelKey: "navigation.courtSearch", icon: Landmark, path: "/dashboard/court-search", requiredPermission: permissionMap.reports.view },
         ],
       },
-    ],
+    ], 
   },
   {
     key: "system",

@@ -26,6 +26,7 @@ const ProceduresReport = lazy(() => import('@features/reports/pages/ProceduresRe
 const ClientsReport = lazy(() => import('@features/reports/pages/ClientsReport'));
 const CasesReport = lazy(() => import('@features/reports/pages/CasesReport'));
 const ServicesReport = lazy(() => import('@features/reports/pages/ServicesReport'));
+const UnClients = lazy(() => import('@features/clients/components/ClientsAndUnClients/unclients/index.jsx'));
 
 /**
  * Backward/forward compatible wrapper:
@@ -69,7 +70,16 @@ const AuthRoutes = () => {
                 <ClientsAndUnClients />
               </Guarded>
             }
+          /> 
+            <Route
+            path="unclients"
+            element={
+              <Guarded require={permissionMap.unclients.list} moduleLabel="UnClients">
+                <UnClients />
+              </Guarded>
+            }
           />
+
           <Route
             path="legcase-services"
             element={

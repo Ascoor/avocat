@@ -17,6 +17,7 @@ class Unclient extends Model
         'email',
         'phone_number',
         'address',
+        'status',
         'work',
         'emergency_number',
         'date_of_birth',

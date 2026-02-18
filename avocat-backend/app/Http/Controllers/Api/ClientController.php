@@ -49,7 +49,7 @@ class ClientController extends Controller
 
         if ($request->has('status') && $client->status !== $request->status) {
             $client->status = $request->status;
-            $client->save();
+            $client->save(); 
 
             return response()->json(['message' => 'تم تعديل حالة العميل بنجاح']);
         }

@@ -105,7 +105,17 @@ class UnclientController extends Controller
  
          $unclient->update($validatedData);
          return response()->json($unclient);
-     }
+         
+         if ($request->has('status') && $client->status !== $request->status) {
+            $client->status = $request->status;
+            $client->save(); 
+
+            return response()->json(['message' => 'تم تعديل حالة العميل بنجاح']);
+        }
+
+        return response()->json(['message' => 'تم تحديث حالة العميل بنجاح']);
+    }
+     
     /**
      * Search for unclient by name or phone number
      *

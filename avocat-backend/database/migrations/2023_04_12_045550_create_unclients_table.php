@@ -27,6 +27,8 @@ class CreateUnclientsTable extends Migration
             $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
             $table->enum('religion', ['مسلم', 'مسيحي']) ->nullable();
             $table->string('identity_number', 14)->unique();
+            
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
