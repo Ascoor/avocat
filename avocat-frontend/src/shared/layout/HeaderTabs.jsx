@@ -72,10 +72,7 @@ const HeaderTabs = ({ className }) => {
       <div className="header-tabs" dir={direction}>
         {orderedItems.map((item) => {
           const Icon = item.icon;
-          const labelKey = item.key === 'customer_service'
-            ? 'navigation.clients'
-            : item.labelKey;
-          const label = t(labelKey);
+          const label = t(item.labelKey);
           if (!item.children?.length) {
             return (
               <PillLink

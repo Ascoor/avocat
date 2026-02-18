@@ -26,7 +26,6 @@ const ProceduresReport = lazy(() => import('@features/reports/pages/ProceduresRe
 const ClientsReport = lazy(() => import('@features/reports/pages/ClientsReport'));
 const CasesReport = lazy(() => import('@features/reports/pages/CasesReport'));
 const ServicesReport = lazy(() => import('@features/reports/pages/ServicesReport'));
-const UnClients = lazy(() => import('@features/clients/components/ClientsAndUnClients/unclients/index.jsx'));
 
 /**
  * Backward/forward compatible wrapper:
@@ -64,21 +63,16 @@ const AuthRoutes = () => {
           <Route index element={<Home />} />
 
           <Route
-            path="clients"
+            path="customer-service"
             element={
-              <Guarded require={permissionMap.clients.list} moduleLabel="Clients">
+              <Guarded require={permissionMap.clients.list} moduleLabel="Customer Service">
                 <ClientsAndUnClients />
               </Guarded>
             }
-          /> 
-            <Route
-            path="unclients"
-            element={
-              <Guarded require={permissionMap.unclients.list} moduleLabel="UnClients">
-                <UnClients />
-              </Guarded>
-            }
           />
+
+          <Route path="clients" element={<Navigate to="/dashboard/customer-service?tab=clients" replace />} />
+          <Route path="unclients" element={<Navigate to="/dashboard/customer-service?tab=unclients" replace />} />
 
           <Route
             path="legcase-services"
