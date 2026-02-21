@@ -1,73 +1,92 @@
-import React, { useState, Suspense } from 'react';
+import { useMemo } from 'react';
+import { useAuth } from '@shared/contexts/AuthContext';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import LookupManager from '../components/OfficeSettings/LookupManager';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
 
-const Lawyers = React.lazy(() => import('./LawyerList'));
-const CourtSetting = React.lazy(
-  () => import('@features/courts/components/Courts/court_index.component'),
-);
-const Procedures = React.lazy(() => import('./ProceduresList'));
-const ServiceTypes = React.lazy(
-  () => import('../components/Settings/ServiceTypes'),
-);
-const ExpenseCategorys = React.lazy(
-  () => import('../components/Settings/ExpenseCategorys'),
-);
+const lookupEntities = [
+  { value: 'case_types', titleKey: 'settings.lookups.entities.caseTypes' },
+  {
+    value: 'case_sub_types',
+    titleKey: 'settings.lookups.entities.caseSubTypes',
+  },
+  {
+    value: 'procedure_types',
+    titleKey: 'settings.lookups.entities.procedureTypes',
+  },
+  {
+    value: 'procedure_place_types',
+    titleKey: 'settings.lookups.entities.procedurePlaceTypes',
+  },
+  {
+    value: 'legal_session_types',
+    titleKey: 'settings.lookups.entities.legalSessionTypes',
+  },
+  {
+    value: 'legal_ad_types',
+    titleKey: 'settings.lookups.entities.legalAdTypes',
+  },
+  {
+    value: 'revenue_categories',
+    titleKey: 'settings.lookups.entities.revenueCategories',
+  },
+  {
+    value: 'expense_categories',
+    titleKey: 'settings.lookups.entities.expenseCategories',
+  },
+  {
+    value: 'service_types',
+    titleKey: 'settings.lookups.entities.serviceTypes',
+  },
+];
 
 const ManagementSettings = () => {
-  const [activeTab, setActiveTab] = useState('lawyers');
+  const { user } = useAuth();
+  const { t } = useLanguage();
+  const officeId = user?.officeId ?? user?.office_id;
 
-  const tabs = [
-    { label: 'المحامون', value: 'lawyers', icon: '👨‍⚖️' },
-    { label: 'المحاكم', value: 'courts', icon: '⚖️' },
-    { label: 'الإجراءات', value: 'procedures', icon: '📝' },
-    { label: 'تصنيف القضايا', value: 'case-types', icon: '📝' },
-    { label: 'أنواع الخدمات', value: 'service-types', icon: '📝' },
-    { label: 'أنواع المصروفات', value: 'expense-categories', icon: '📝' },
-  ];
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'lawyers':
-        return <Lawyers />;
-      case 'courts':
-        return <CourtSetting />;
-      case 'procedures':
-        return <Procedures />;
-      case 'case-types':
-        return <div>محتوى تصنيف القضايا</div>;
-      case 'service-types':
-        return <ServiceTypes />;
-      case 'expense-categories':
-        return <ExpenseCategorys />;
-      default:
-        return null;
-    }
-  };
+  const fields = useMemo(
+    () => [
+      { name: 'name_ar', labelKey: 'settings.lookups.fields.nameAr' },
+      { name: 'name_en', labelKey: 'settings.lookups.fields.nameEn' },
+      {
+        name: 'sort_order',
+        labelKey: 'settings.lookups.fields.sortOrder',
+        type: 'number',
+      },
+      {
+        name: 'is_active',
+        labelKey: 'settings.lookups.fields.active',
+        type: 'checkbox',
+      },
+    ],
+    [],
+  );
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center tracking-wide">
-        إدارة المكتب
-      </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-6 py-4 transition-transform transform hover:scale-105 ${
-              activeTab === tab.value ? 'bg-blue-500 text-white' : ''
-            }`}
-          >
-            <span className="text-3xl mr-3">{tab.icon}</span>
-            {tab.label}
-          </button>
+    <section className="space-y-4 p-4 sm:p-6">
+      <h1 className="text-2xl font-bold">{t('settings.lookups.title')}</h1>
+      <Tabs defaultValue={lookupEntities[0].value} className="space-y-4">
+        <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
+          {lookupEntities.map((entity) => (
+            <TabsTrigger key={entity.value} value={entity.value}>
+              {t(entity.titleKey)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {lookupEntities.map((entity) => (
+          <TabsContent key={entity.value} value={entity.value}>
+            <LookupManager
+              officeId={officeId}
+              entity={entity.value}
+              titleKey={entity.titleKey}
+              fields={fields}
+              allowDeactivateWhenInUse
+            />
+          </TabsContent>
         ))}
-      </div>
-      <div className="w-full max-w-5xl p-4 bg-white dark:bg-gray-700 rounded-lg shadow-lg">
-        {}
-        <Suspense fallback={<div>جار التحميل...</div>}>
-          {renderTabContent()}
-        </Suspense>
-      </div>
+      </Tabs>
     </section>
   );
 };
