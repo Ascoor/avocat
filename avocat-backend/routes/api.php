@@ -83,18 +83,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('court_types', CourtTypeController::class);
         Route::apiResource('court_levels', CourtLevelController::class);
         Route::apiResource('legal-cases', LegCaseController::class);
-        Route::apiResource('case_types', CaseTypeController::class);
-        Route::apiResource('case_sub_types', CaseSubTypeController::class);
-        Route::apiResource('procedure_types', ProcedureTypeController::class);
-        Route::apiResource('procedure_place_types', ProcedurePlaceTypeController::class);
-        Route::apiResource('expense_categories', ExpenseCategoryController::class);
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);
-
-        Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index']);
-        Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store']);
-        Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update']);
-        Route::delete('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'destroy']);
 
         Route::get('lawyer/{lawyer}', [LawyerController::class, 'show']);
         Route::put('lawyer/{lawyer}', [LawyerController::class, 'update']);
@@ -123,8 +113,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('legal-ads', [LegalAdController::class, 'index']);
         Route::get('legal_ads', [LegalAdController::class, 'index']);
-        Route::get('legal_ad_types', [LegalAdTypeController::class, 'index']);
-        Route::post('legal_ad_types', [LegalAdTypeController::class, 'store']);
         Route::get('legal-ads/{legCaseId}', [LegalAdController::class, 'getByLegCaseId']);
         Route::post('legal-ads', [LegalAdController::class, 'store']);
         Route::put('legal-ads/{legalAdId}', [LegalAdController::class, 'update']);
@@ -165,8 +153,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('expenses/search', [ExpenseController::class, 'searchExpenses']);
         Route::get('expense_categories', [ExpenseCategoryController::class, 'index']);
-
-
         Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index'])->middleware('permission.guard:settings.manage,officeSettings.manage');
         Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store'])->middleware('permission.guard:officeSettings.manage');
         Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update'])->middleware('permission.guard:officeSettings.manage');
