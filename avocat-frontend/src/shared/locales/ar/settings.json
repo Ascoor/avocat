@@ -1,0 +1,49 @@
+{
+  "settings": {
+    "lookups": {
+      "title": "إعدادات القوائم المرجعية",
+      "entities": {
+        "caseTypes": "تصنيفات القضايا",
+        "caseSubTypes": "التصنيفات الفرعية للقضايا",
+        "procedureTypes": "أنواع الإجراءات",
+        "procedurePlaceTypes": "أماكن الإجراءات",
+        "legalSessionTypes": "أنواع الجلسات",
+        "legalAdTypes": "أنواع الإعلانات",
+        "revenueCategories": "فئات الإيرادات",
+        "expenseCategories": "فئات المصروفات",
+        "serviceTypes": "أنواع الخدمات"
+      },
+      "fields": {
+        "nameAr": "الاسم بالعربية",
+        "nameEn": "الاسم بالإنجليزية",
+        "sortOrder": "الترتيب",
+        "active": "نشط"
+      },
+      "columns": {
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "add": "إضافة سجل",
+        "edit": "تعديل سجل"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "messages": {
+        "empty": "لا توجد بيانات",
+        "loadError": "تعذر تحميل البيانات",
+        "saveError": "تعذر حفظ البيانات",
+        "deleteError": "تعذر حذف العنصر",
+        "created": "تمت الإضافة بنجاح",
+        "updated": "تم التعديل بنجاح",
+        "deleted": "تم الحذف بنجاح",
+        "deactivatedInUse": "لا يمكن الحذف لأنه مستخدم، تم تعطيله بدلاً من ذلك",
+        "deleteConfirmTitle": "تأكيد الحذف",
+        "deleteConfirmDescription": "هل أنت متأكد من حذف هذا العنصر؟"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "settings": {
+    "lookups": {
+      "title": "Lookup Settings",
+      "entities": {
+        "caseTypes": "Case Types",
+        "caseSubTypes": "Case Sub Types",
+        "procedureTypes": "Procedure Types",
+        "procedurePlaceTypes": "Procedure Place Types",
+        "legalSessionTypes": "Session Types",
+        "legalAdTypes": "Legal Ad Types",
+        "revenueCategories": "Revenue Categories",
+        "expenseCategories": "Expense Categories",
+        "serviceTypes": "Service Types"
+      },
+      "fields": {
+        "nameAr": "Arabic Name",
+        "nameEn": "English Name",
+        "sortOrder": "Sort Order",
+        "active": "Active"
+      },
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "actions": {
+        "add": "Add Record",
+        "edit": "Edit Record"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "messages": {
+        "empty": "No records found",
+        "loadError": "Failed to load data",
+        "saveError": "Failed to save data",
+        "deleteError": "Failed to delete record",
+        "created": "Record created successfully",
+        "updated": "Record updated successfully",
+        "deleted": "Record deleted successfully",
+        "deactivatedInUse": "Cannot delete because it is in use, it has been deactivated instead",
+        "deleteConfirmTitle": "Delete confirmation",
+        "deleteConfirmDescription": "Are you sure you want to delete this record?"
+      }
+    }
+  }
+}
