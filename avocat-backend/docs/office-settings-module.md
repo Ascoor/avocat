@@ -48,6 +48,23 @@ Migration: `2026_02_16_000100_add_office_settings_columns_to_lookup_tables.php`
 - `PUT    /api/v1/offices/{officeId}/settings/{entity}/{id}`
 - `DELETE /api/v1/offices/{officeId}/settings/{entity}/{id}`
 
+### الرسمية (Official)
+- جميع عمليات CRUD الخاصة بالـ lookups يجب أن تستخدم حصرياً:
+  - `GET    /api/v1/offices/{officeId}/settings/{entity}`
+  - `POST   /api/v1/offices/{officeId}/settings/{entity}`
+  - `PUT    /api/v1/offices/{officeId}/settings/{entity}/{id}`
+  - `DELETE /api/v1/offices/{officeId}/settings/{entity}/{id}`
+
+### Deprecated/Removed legacy CRUD endpoints
+- تم إلغاء تعريف CRUD routes القديمة التالية من `routes/api.php`:
+  - `/api/v1/case_types`
+  - `/api/v1/case_sub_types`
+  - `/api/v1/procedure_types`
+  - `/api/v1/procedure_place_types`
+  - `/api/v1/expense_categories`
+  - `/api/v1/legal_ad_types` (CRUD)
+- للانتقال: استبدل المسار القديم بالمسار الرسمي مع تمرير `officeId` و`entity` الموافق.
+
 ### Core files
 - `config/office_settings.php`
 - `app/Support/OfficeSettings/OfficeSettingsManager.php`

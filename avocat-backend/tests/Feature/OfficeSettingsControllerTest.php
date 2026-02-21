@@ -49,7 +49,9 @@ class OfficeSettingsControllerTest extends TestCase
             ->assertJsonPath('meta.entity', 'procedure_types');
 
         $this->deleteJson("/api/v1/offices/{$office->id}/settings/procedure_types/{$id}")
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJsonPath('deleted', true)
+            ->assertJsonPath('deactivated', false);
     }
 
     public function test_access_is_forbidden_for_different_office(): void
@@ -96,6 +98,8 @@ class OfficeSettingsControllerTest extends TestCase
 
         $this->deleteJson("/api/v1/offices/{$office->id}/settings/court_levels/{$courtLevel->id}")
             ->assertStatus(409)
+            ->assertJsonPath('deactivated', true)
+            ->assertJsonPath('deleted', false)
             ->assertJsonPath('data.is_active', false);
     }
 }
