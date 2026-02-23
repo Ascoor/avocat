@@ -14,9 +14,9 @@ import {
 const ManagementSettings = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const [activeSection, setActiveSection] = useState('case_settings');
-  const [currentEntity, setCurrentEntity] = useState(lookupEntities[0].value);
-  const [currentCourtEntity, setCurrentCourtEntity] = useState(courtSettingEntities[0].value);
+  const [activeSectionTab, setActiveSectionTab] = useState('case_settings');
+  const [activeLookupTab, setActiveLookupTab] = useState(lookupEntities[0].value);
+  const [activeCourtTab, setActiveCourtTab] = useState(courtSettingEntities[0].value);
   const officeId = user?.officeId ?? user?.office_id;
 
   return (
@@ -26,8 +26,8 @@ const ManagementSettings = () => {
         <p className="text-sm text-muted-foreground">{t('settings.lookups.subtitle')}</p>
       </div>
 
-      <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-        <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
+      <Tabs value={activeSectionTab} onValueChange={setActiveSectionTab} className="space-y-4">
+        <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
           <TabsTrigger value="case_settings">
             {t('settings.lookups.sectionTabs.caseSettings')}
           </TabsTrigger>
@@ -51,8 +51,8 @@ const ManagementSettings = () => {
             </p>
           </div>
 
-          <Tabs value={currentEntity} onValueChange={setCurrentEntity} className="space-y-4">
-            <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
+          <Tabs value={activeLookupTab} onValueChange={setActiveLookupTab} className="space-y-4">
+            <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
               {lookupEntities.map((entity) => (
                 <TabsTrigger key={entity.value} value={entity.value}>
                   {t(entity.titleKey)}
@@ -82,11 +82,11 @@ const ManagementSettings = () => {
           </div>
 
           <Tabs
-            value={currentCourtEntity}
-            onValueChange={setCurrentCourtEntity}
+            value={activeCourtTab}
+            onValueChange={setActiveCourtTab}
             className="space-y-4"
           >
-            <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
+            <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
               {courtSettingEntities.map((entity) => (
                 <TabsTrigger key={entity.value} value={entity.value}>
                   {t(entity.titleKey)}
