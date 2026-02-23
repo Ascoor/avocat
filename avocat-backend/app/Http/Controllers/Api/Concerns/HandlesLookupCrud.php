@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 
 trait HandlesLookupCrud
 {
-    protected string $lookupModel;
+    protected function lookupModelClass(): string
+    {
+        return $this->lookupModel;
+    }
 
     public function index(Request $request): JsonResponse
     {
-        $model = $this->lookupModel;
+        $model = $this->lookupModelClass();
         $query = $model::query()->whereNull('deleted_at');
 
         if ($term = $request->string('q')->toString()) {
@@ -26,7 +29,7 @@ trait HandlesLookupCrud
     {
         $request->validate(['name' => 'required|string|max:255', 'office_id' => 'nullable|integer']);
 
-        $model = $this->lookupModel;
+        $model = $this->lookupModelClass();
         $duplicate = $model::query()
             ->whereRaw('LOWER(name) = ?', [mb_strtolower($request->string('name')->toString())])
             ->where('office_id', $request->input('office_id'))
@@ -48,7 +51,7 @@ trait HandlesLookupCrud
     public function update(Request $request, int $id): JsonResponse
     {
         $request->validate(['name' => 'required|string|max:255']);
-        $model = $this->lookupModel;
+        $model = $this->lookupModelClass();
         /** @var Model $record */
         $record = $model::findOrFail($id);
 
@@ -63,7 +66,7 @@ trait HandlesLookupCrud
 
     public function destroy(int $id): JsonResponse
     {
-        $model = $this->lookupModel;
+        $model = $this->lookupModelClass();
         /** @var Model $record */
         $record = $model::findOrFail($id);
 
