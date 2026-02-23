@@ -14,11 +14,7 @@ class ProcedureTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        
-
-        \DB::table('procedure_types')->delete();
-        
-        \DB::table('procedure_types')->insert(array (
+        $records = array (
             0 => 
             array (
                 'id' => 1,
@@ -292,8 +288,29 @@ class ProcedureTypesTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
-        ));
-        
-        
+        );
+
+        $now = now();
+
+        $normalizedRecords = array_map(static function (array $record) use ($now): array {
+            return [
+                'id' => $record['id'],
+                'name' => $record['name'],
+                'office_id' => null,
+                'is_system' => true,
+                'is_active' => true,
+                'sort_order' => 0,
+                'is_locked' => false,
+                'deleted_at' => null,
+                'created_at' => $record['created_at'] ?? $now,
+                'updated_at' => $now,
+            ];
+        }, $records);
+
+        \DB::table('procedure_types')->upsert(
+            $normalizedRecords,
+            ['id'],
+            ['name', 'office_id', 'is_system', 'is_active', 'sort_order', 'is_locked', 'deleted_at', 'updated_at']
+        );
     }
 }

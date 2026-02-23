@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Office;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OfficeSettingUpsertRequest;
 use App\Http\Resources\OfficeSettingResource;
@@ -88,8 +89,19 @@ class LookupController extends Controller
         abort_unless($canManage, 403, 'Missing permission officeSettings.manage.');
 
         $officeId = (int) ($user->office_id ?? 0);
-        abort_if($officeId <= 0, 403, 'Missing user office scope.');
 
-        return $officeId;
+        if ($officeId > 0) {
+            return $officeId;
+        }
+
+        // Backward-compatible fallback for environments with legacy users missing office_id.
+        // Only applied when there is exactly one office to avoid cross-office data leakage.
+        $singleOffice = Office::query()->select('id')->limit(2)->pluck('id');
+
+        if ($singleOffice->count() === 1) {
+            return (int) $singleOffice->first();
+        }
+
+        abort(403, 'Missing user office scope.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -23,11 +24,17 @@ class SuperAdminUserSeeder extends Seeder
             }
         }
 
+        $defaultOffice = Office::firstOrCreate(
+            ['slug' => 'default-office'],
+            ['name' => 'Default Office']
+        );
+
         $user = User::updateOrCreate(
             ['email' => env('SUPER_ADMIN_EMAIL', 'admin@domain.com')],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make($password),
+                'office_id' => $defaultOffice->id,
             ]
         );
 

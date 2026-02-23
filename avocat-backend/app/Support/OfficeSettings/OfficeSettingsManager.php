@@ -36,10 +36,13 @@ class OfficeSettingsManager
                 $query->where('is_active', true);
             }
 
-            return $query
+            $records = $query
                 ->orderByRaw("{$nameColumn} ASC")
-                ->get()
-                ->map(fn (Model $model) => $this->decorate($model, 'system_only', null));
+                ->get();
+
+            $records->each(fn (Model $model) => $this->decorate($model, 'system_only', null));
+
+            return $records;
         }
 
         if ($mode === 'office_specific') {
@@ -51,11 +54,14 @@ class OfficeSettingsManager
                 $query->where('is_active', true);
             }
 
-            return $query
+            $records = $query
                 ->orderByRaw('sort_order asc nulls last')
                 ->orderBy($nameColumn)
-                ->get()
-                ->map(fn (Model $model) => $this->decorate($model, 'office', null));
+                ->get();
+
+            $records->each(fn (Model $model) => $this->decorate($model, 'office', null));
+
+            return $records;
         }
 
         $systemRows = $modelClass::query()
@@ -72,7 +78,7 @@ class OfficeSettingsManager
         $overrides = $officeRows->whereNotNull('parent_id')->keyBy('parent_id');
         $officeAdded = $officeRows->whereNull('parent_id');
 
-        $resolved = collect();
+        $resolved = new Collection();
         foreach ($systemRows as $systemRow) {
             $override = $overrides->get($systemRow->id);
             if ($override instanceof Model) {
@@ -95,12 +101,14 @@ class OfficeSettingsManager
             }
         }
 
-        return $resolved
+        $sorted = $resolved
             ->sortBy([
                 fn (Model $row) => $row->sort_order ?? PHP_INT_MAX,
                 fn (Model $row) => mb_strtolower((string) $row->{$nameColumn}),
             ])
             ->values();
+
+        return new Collection($sorted->all());
     }
 
     public function store(int $officeId, string $entity, array $payload): Model
