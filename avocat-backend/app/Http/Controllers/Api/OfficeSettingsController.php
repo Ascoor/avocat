@@ -20,8 +20,9 @@ class OfficeSettingsController extends Controller
         $this->authorizeScope($request, $officeId);
 
         $includeInactive = $request->boolean('include_inactive', false);
+        $filters = $request->except('include_inactive');
 
-        $records = $this->manager->list($officeId, $entity, $includeInactive);
+        $records = $this->manager->list($officeId, $entity, $includeInactive, $filters);
 
         return response()->json([
             'data' => OfficeSettingResource::collection($records),

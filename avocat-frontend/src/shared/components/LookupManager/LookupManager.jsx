@@ -30,7 +30,16 @@ const mapInitialForm = (fields, item) =>
     return acc;
   }, {});
 
-const LookupManager = ({ officeId, entity, titleKey, fields }) => {
+const LookupManager = ({
+  officeId,
+  entity,
+  titleKey,
+  fields,
+  listParams = {},
+  preparePayload,
+  disabled = false,
+  disabledMessageKey,
+}) => {
   const { t, language, isRTL } = useLanguage();
   const { triggerAlert } = useAlert();
 
@@ -50,7 +59,7 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
   const loadItems = async () => {
     setLoading(true);
     try {
-      const list = await getLookups({ entity, officeId });
+      const list = await getLookups({ entity, officeId, params: listParams });
       setItems(list);
     } catch (error) {
       triggerAlert('error', t('settings.lookups.messages.loadError'));
@@ -61,7 +70,7 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
 
   useEffect(() => {
     loadItems();
-  }, [entity, officeId]);
+  }, [entity, officeId, JSON.stringify(listParams)]);
 
   const visibleItems = useMemo(() => {
     const token = search.trim().toLowerCase();
@@ -76,15 +85,17 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
+      const payload = preparePayload ? preparePayload(formState, editingItem) : formState;
+
       if (editingItem?.id) {
         await updateLookup({
           entity,
           officeId,
           id: editingItem.id,
-          payload: formState,
+          payload,
         });
       } else {
-        await createLookup({ entity, officeId, payload: formState });
+        await createLookup({ entity, officeId, payload });
       }
       triggerAlert('success', t('settings.lookups.messages.saved'));
       setOpenForm(false);
@@ -130,12 +141,20 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
   };
 
   const openCreate = () => {
+    if (disabled) {
+      return;
+    }
+
     setEditingItem(null);
     setFormState(mapInitialForm(fields));
     setOpenForm(true);
   };
 
   const openEdit = (item) => {
+    if (disabled) {
+      return;
+    }
+
     if (item.is_locked) {
       triggerAlert('info', t('settings.lookups.messages.locked'));
       return;
@@ -149,7 +168,7 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-3">
         <CardTitle>{t(titleKey)}</CardTitle>
-        <Button onClick={openCreate}>{t('settings.lookups.actions.add')}</Button>
+        <Button onClick={openCreate} disabled={disabled}>{t('settings.lookups.actions.add')}</Button>
       </CardHeader>
       <CardContent className="space-y-4">
         <Input
@@ -158,6 +177,12 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
           placeholder={t('settings.lookups.searchPlaceholder')}
           aria-label={t('settings.lookups.searchPlaceholder')}
         />
+
+        {disabled && (
+          <p className="text-sm text-muted-foreground">
+            {disabledMessageKey ? t(disabledMessageKey) : t('settings.lookups.messages.empty')}
+          </p>
+        )}
 
         <div className="overflow-x-auto rounded-xl border border-border/60">
           <table className="w-full text-sm" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -203,10 +228,10 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
                   </td>
                   <td className="p-3">
                     <div className="flex flex-wrap gap-2">
-                      <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
+                      <Button size="sm" variant="outline" onClick={() => openEdit(item)} disabled={disabled}>
                         {t('common.edit')}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleToggleActive(item)}>
+                      <Button size="sm" variant="outline" onClick={() => handleToggleActive(item)} disabled={disabled}>
                         {item.is_active
                           ? t('settings.lookups.actions.disable')
                           : t('settings.lookups.actions.enable')}
@@ -215,7 +240,7 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDelete(item)}
-                        disabled={item.is_locked}
+                        disabled={item.is_locked || disabled}
                       >
                         {t('common.delete')}
                       </Button>
@@ -273,7 +298,7 @@ const LookupManager = ({ officeId, entity, titleKey, fields }) => {
               <Button type="button" variant="outline" onClick={() => setOpenForm(false)}>
                 {t('common.cancel')}
               </Button>
-              <Button type="submit">{t('common.save')}</Button>
+              <Button type="submit" disabled={disabled}>{t('common.save')}</Button>
             </DialogFooter>
           </form>
         </DialogContent>

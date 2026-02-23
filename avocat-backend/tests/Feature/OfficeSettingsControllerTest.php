@@ -135,4 +135,43 @@ class OfficeSettingsControllerTest extends TestCase
             ->assertJsonPath('deleted', true);
     }
 
+    public function test_case_sub_types_can_be_filtered_by_case_type_and_are_unique_per_case_type(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $caseTypeOne = $this->postJson("/api/v1/offices/{$office->id}/settings/case_types", [
+            'name' => 'Type 1',
+        ])->assertCreated()->json('data.id');
+
+        $caseTypeTwo = $this->postJson("/api/v1/offices/{$office->id}/settings/case_types", [
+            'name' => 'Type 2',
+        ])->assertCreated()->json('data.id');
+
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeOne,
+        ])->assertCreated();
+
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeTwo,
+        ])->assertCreated();
+
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeOne,
+        ])->assertStatus(422)
+            ->assertJsonValidationErrors('name');
+
+        $this->getJson("/api/v1/offices/{$office->id}/settings/case_sub_types?case_type_id={$caseTypeOne}")
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.name', 'محكمة الجنح');
+
+        $this->getJson("/api/v1/offices/{$office->id}/settings/case_sub_types")
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
+
 }
