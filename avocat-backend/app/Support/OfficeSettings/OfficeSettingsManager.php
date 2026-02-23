@@ -4,6 +4,7 @@ namespace App\Support\OfficeSettings;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
@@ -22,7 +23,7 @@ class OfficeSettingsManager
         return $config;
     }
 
-    public function list(int $officeId, string $entity): Collection
+    public function list(int $officeId, string $entity, bool $includeInactive = false): Collection
     {
         $config = $this->validateEntity($entity);
         $modelClass = $config['model'];
@@ -30,16 +31,27 @@ class OfficeSettingsManager
         $mode = $config['mode'] ?? 'system_overrides';
 
         if ($mode === 'system_only') {
-            return $modelClass::query()
+            $query = $modelClass::query();
+            if (! $includeInactive && $this->hasColumn($modelClass, 'is_active')) {
+                $query->where('is_active', true);
+            }
+
+            return $query
                 ->orderByRaw("{$nameColumn} ASC")
                 ->get()
                 ->map(fn (Model $model) => $this->decorate($model, 'system_only', null));
         }
 
         if ($mode === 'office_specific') {
-            return $modelClass::query()
+            $query = $modelClass::query()
                 ->where('office_id', $officeId)
-                ->whereNull('deleted_at')
+                ->whereNull('deleted_at');
+
+            if (! $includeInactive && $this->hasColumn($modelClass, 'is_active')) {
+                $query->where('is_active', true);
+            }
+
+            return $query
                 ->orderByRaw('sort_order asc nulls last')
                 ->orderBy($nameColumn)
                 ->get()
@@ -64,7 +76,7 @@ class OfficeSettingsManager
         foreach ($systemRows as $systemRow) {
             $override = $overrides->get($systemRow->id);
             if ($override instanceof Model) {
-                if (! $override->is_active) {
+                if (! $includeInactive && ! $override->is_active) {
                     continue;
                 }
 
@@ -72,11 +84,15 @@ class OfficeSettingsManager
                 continue;
             }
 
-            $resolved->push($this->decorate($systemRow, 'system', $systemRow->id));
+            if ($includeInactive || ! $this->hasColumn($modelClass, 'is_active') || $systemRow->is_active) {
+                $resolved->push($this->decorate($systemRow, 'system', $systemRow->id));
+            }
         }
 
         foreach ($officeAdded as $officeRow) {
-            $resolved->push($this->decorate($officeRow, 'office', null));
+            if ($includeInactive || ! $this->hasColumn($modelClass, 'is_active') || $officeRow->is_active) {
+                $resolved->push($this->decorate($officeRow, 'office', null));
+            }
         }
 
         return $resolved
@@ -242,5 +258,12 @@ class OfficeSettingsManager
         $model->setAttribute('resolved_from_system_id', $resolvedFrom);
 
         return $model;
+    }
+
+    private function hasColumn(string $modelClass, string $column): bool
+    {
+        $model = new $modelClass();
+
+        return Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), $column);
     }
 }

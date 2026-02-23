@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\LegalAdTypeController;
 use App\Http\Controllers\Api\LegalDocArchiveController;
 use App\Http\Controllers\Api\LegalDocToolsController;
 use App\Http\Controllers\Api\LegalSessionController;
+use App\Http\Controllers\Api\LookupController;
 use App\Http\Controllers\Api\LegalSessionTypeController;
 use App\Http\Controllers\Api\LegCaseController;
 use App\Http\Controllers\Api\NotificationController;
@@ -158,6 +159,12 @@ Route::prefix('v1')->group(function () {
         Route::post('finance/ledger', [FinanceLedgerController::class, 'store']);
         Route::get('finance/cases/{id}/summary', [FinanceLedgerController::class, 'caseSummary']);
         Route::get('expense_categories', [ExpenseCategoryController::class, 'index']);
+
+        Route::get('lookups/{entity}', [LookupController::class, 'index'])->middleware('permission.guard:settings.manage,officeSettings.manage');
+        Route::post('lookups/{entity}', [LookupController::class, 'store'])->middleware('permission.guard:officeSettings.manage');
+        Route::put('lookups/{entity}/{id}', [LookupController::class, 'update'])->middleware('permission.guard:officeSettings.manage');
+        Route::delete('lookups/{entity}/{id}', [LookupController::class, 'destroy'])->middleware('permission.guard:officeSettings.manage');
+
         Route::post('expense_categories', [ExpenseCategoryController::class, 'store']);
         Route::put('expense_categories/{id}', [ExpenseCategoryController::class, 'update']);
         Route::delete('expense_categories/{id}', [ExpenseCategoryController::class, 'destroy']);
