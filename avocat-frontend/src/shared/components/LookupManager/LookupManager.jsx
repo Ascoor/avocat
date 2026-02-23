@@ -26,6 +26,7 @@ const mapInitialForm = (fields, item) =>
       acc[field.name] = Boolean(item?.[field.name] ?? true);
       return acc;
     }
+
     acc[field.name] = item?.[field.name] ?? '';
     return acc;
   }, {});
@@ -44,27 +45,45 @@ const LookupManager = ({
   const { triggerAlert } = useAlert();
 
   const [items, setItems] = useState([]);
+  const [relations, setRelations] = useState({});
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formState, setFormState] = useState(mapInitialForm(fields));
 
-  const localizedLabel = (item) =>
-    (language === 'ar' ? item.name_ar : item.name_en) ||
-    item.name ||
-    item.name_ar ||
-    item.name_en;
+  const localizedLabel = (item) => item.name || item.name_ar || item.name_en;
 
   const loadItems = async () => {
     setLoading(true);
     try {
       const list = await getLookups({ entity, officeId, params: listParams });
       setItems(list);
-    } catch (error) {
+    } catch {
       triggerAlert('error', t('settings.lookups.messages.loadError'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRelations = async () => {
+    const relationFields = fields.filter((field) => field.type === 'entity-select');
+    if (relationFields.length === 0) {
+      setRelations({});
+      return;
+    }
+
+    try {
+      const pairs = await Promise.all(
+        relationFields.map(async (field) => {
+          const records = await getLookups({ entity: field.optionsEntity, officeId });
+          return [field.name, records];
+        }),
+      );
+
+      setRelations(Object.fromEntries(pairs));
+    } catch {
+      triggerAlert('error', t('settings.lookups.messages.loadError'));
     }
   };
 
@@ -80,10 +99,25 @@ const LookupManager = ({
         .toLowerCase()
         .includes(token),
     );
-  }, [items, search, language]);
+  }, [items, search]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
+
+    const payload = fields.reduce((acc, field) => {
+      const value = formState[field.name];
+
+      if (field.type === 'number') {
+        acc[field.name] = value === '' ? null : Number(value);
+      } else if (field.type === 'entity-select') {
+        acc[field.name] = value === '' ? null : Number(value);
+      } else {
+        acc[field.name] = value;
+      }
+
+      return acc;
+    }, {});
+
     try {
       const payload = preparePayload ? preparePayload(formState, editingItem) : formState;
 
@@ -102,7 +136,7 @@ const LookupManager = ({
       setEditingItem(null);
       setFormState(mapInitialForm(fields));
       loadItems();
-    } catch (error) {
+    } catch {
       triggerAlert('error', t('settings.lookups.messages.saveError'));
     }
   };
@@ -112,12 +146,19 @@ const LookupManager = ({
       triggerAlert('info', t('settings.lookups.messages.locked'));
       return;
     }
+
     try {
       await updateLookup({
         entity,
         officeId,
         id: item.id,
-        payload: { is_active: !item.is_active },
+        payload: {
+          ...fields.reduce((acc, field) => {
+            if (field.name in item) acc[field.name] = item[field.name];
+            return acc;
+          }, {}),
+          is_active: !item.is_active,
+        },
       });
       triggerAlert('success', t('settings.lookups.messages.saved'));
       loadItems();
@@ -159,6 +200,7 @@ const LookupManager = ({
       triggerAlert('info', t('settings.lookups.messages.locked'));
       return;
     }
+
     setEditingItem(item);
     setFormState(mapInitialForm(fields, item));
     setOpenForm(true);
@@ -214,8 +256,8 @@ const LookupManager = ({
                 <tr key={item.id} className="border-t">
                   <td className="p-3">{localizedLabel(item)}</td>
                   <td className="p-3">
-                    <Badge variant={item.scope === 'system' ? 'secondary' : 'outline'}>
-                      {item.scope === 'system'
+                    <Badge variant={item.is_system ? 'secondary' : 'outline'}>
+                      {item.is_system
                         ? t('settings.lookups.scope.system')
                         : t('settings.lookups.scope.office')}
                     </Badge>
@@ -279,6 +321,25 @@ const LookupManager = ({
                       }
                     />
                   </div>
+                ) : field.type === 'entity-select' ? (
+                  <select
+                    value={formState[field.name] ?? ''}
+                    onChange={(event) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        [field.name]: event.target.value,
+                      }))
+                    }
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    required
+                  >
+                    <option value="">{t('common.selectOption')}</option>
+                    {(relations[field.name] ?? []).map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {localizedLabel(option)}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
                   <Input
                     type={field.type || 'text'}

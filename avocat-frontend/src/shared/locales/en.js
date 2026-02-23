@@ -24,6 +24,7 @@ const en = {
     or: "or",
     save: "Save",
     cancel: "Cancel",
+    selectOption: "Select an option",
     delete: "Delete",
 
     view: "View",
@@ -771,6 +772,64 @@ const en = {
     },
   },
   settings: {
+    lookups: {
+      title: "Lookup settings",
+      subtitle: "Manage office lookup values.",
+      courtsSectionTitle: "Court settings",
+      courtsSectionSubtitle: "Manage court levels, court types, courts, and divisions through official office settings routes.",
+      searchPlaceholder: "Search by name...",
+      columns: {
+        name: "Name",
+        scope: "Scope",
+        sortOrder: "Sort order",
+        status: "Status",
+        actions: "Actions"
+      },
+      fields: {
+        name: "Name",
+        sortOrder: "Sort order",
+        active: "Active",
+        courtLevel: "Court level",
+        courtType: "Court type",
+        court: "Court"
+      },
+      entities: {
+        procedureTypes: "Procedure types",
+        procedurePlaceTypes: "Procedure place types",
+        legalSessionTypes: "Session types",
+        legalAdTypes: "Announcement types",
+        serviceTypes: "Service types",
+        expenseCategories: "Expense categories",
+        revenueCategories: "Revenue categories",
+        courtLevels: "Court levels",
+        courtTypes: "Court types",
+        courts: "Courts",
+        divisions: "Divisions"
+      },
+      scope: {
+        system: "System",
+        office: "Office"
+      },
+      status: {
+        active: "Active",
+        inactive: "Inactive"
+      },
+      actions: {
+        add: "Add",
+        edit: "Edit",
+        disable: "Disable",
+        enable: "Enable"
+      },
+      messages: {
+        loadError: "Failed to load data.",
+        saveError: "Failed to save data.",
+        deleteError: "Failed to delete record.",
+        saved: "Saved successfully.",
+        deleted: "Deleted successfully.",
+        empty: "No data found.",
+        locked: "This record is locked and cannot be edited."
+      }
+    },
     serviceTypes: {
       title: "Service Types",
       addButton: "Add Service Type",

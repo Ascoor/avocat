@@ -24,6 +24,7 @@ const ar = {
     or: "أو",
     save: "حفظ",
     cancel: "إلغاء",
+    selectOption: "اختر قيمة",
     delete: "حذف",
 
     view: "عرض",
@@ -770,6 +771,64 @@ const ar = {
     },
   },
   settings: {
+    lookups: {
+      title: "إعدادات القيم المرجعية",
+      subtitle: "إدارة القيم المرجعية العامة الخاصة بالمكتب.",
+      courtsSectionTitle: "إعدادات المحاكم",
+      courtsSectionSubtitle: "إدارة درجات المحاكم وأنواعها والمحاكم والدوائر من المسار الرسمي.",
+      searchPlaceholder: "ابحث بالاسم...",
+      columns: {
+        name: "الاسم",
+        scope: "النطاق",
+        sortOrder: "الترتيب",
+        status: "الحالة",
+        actions: "الإجراءات"
+      },
+      fields: {
+        name: "الاسم",
+        sortOrder: "الترتيب",
+        active: "نشط",
+        courtLevel: "درجة المحكمة",
+        courtType: "نوع المحكمة",
+        court: "المحكمة"
+      },
+      entities: {
+        procedureTypes: "أنواع الإجراءات",
+        procedurePlaceTypes: "أنواع أماكن الإجراءات",
+        legalSessionTypes: "أنواع الجلسات",
+        legalAdTypes: "أنواع الإعلانات",
+        serviceTypes: "أنواع الخدمات",
+        expenseCategories: "فئات المصروفات",
+        revenueCategories: "فئات الإيرادات",
+        courtLevels: "درجات المحاكم",
+        courtTypes: "أنواع المحاكم",
+        courts: "المحاكم",
+        divisions: "الدوائر"
+      },
+      scope: {
+        system: "النظام",
+        office: "المكتب"
+      },
+      status: {
+        active: "نشط",
+        inactive: "غير نشط"
+      },
+      actions: {
+        add: "إضافة",
+        edit: "تعديل",
+        disable: "تعطيل",
+        enable: "تفعيل"
+      },
+      messages: {
+        loadError: "تعذر تحميل البيانات.",
+        saveError: "تعذر حفظ البيانات.",
+        deleteError: "تعذر حذف السجل.",
+        saved: "تم حفظ البيانات بنجاح.",
+        deleted: "تم حذف السجل.",
+        empty: "لا توجد بيانات.",
+        locked: "هذا السجل مقفل ولا يمكن تعديله."
+      }
+    },
     serviceTypes: {
       title: "أنواع الخدمات",
       addButton: "إضافة نوع خدمة",

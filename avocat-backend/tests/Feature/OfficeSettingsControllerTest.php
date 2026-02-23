@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Court;
 use App\Models\CourtLevel;
 use App\Models\CourtType;
+use App\Models\Division;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

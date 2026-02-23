@@ -18,6 +18,11 @@ class OfficeSettingResource extends JsonResource
             'is_active' => (bool) ($this->is_active ?? true),
             'sort_order' => $this->sort_order,
             'is_locked' => (bool) ($this->is_locked ?? false),
+            'court_level_id' => $this->court_level_id,
+            'court_type_id' => $this->court_type_id,
+            'court_id' => $this->court_id,
+            'case_type_id' => $this->case_type_id,
+            'doc_type_id' => $this->doc_type_id,
             'resolved_source' => $this->resolved_source,
             'resolved_from_system_id' => $this->resolved_from_system_id,
             'meta' => [

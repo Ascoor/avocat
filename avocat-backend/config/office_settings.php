@@ -136,6 +136,10 @@ return [
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
             'required_columns' => ['court_type_id', 'court_level_id'],
+            'rules' => [
+                'court_type_id' => ['required', 'integer', 'exists:court_types,id'],
+                'court_level_id' => ['required', 'integer', 'exists:court_levels,id'],
+            ],
             'in_use_checker' => static fn (int $id): bool => DB::table('legal_sessions')->where('court_id', $id)->exists() || DB::table('legal_ads')->where('court_id', $id)->exists() || DB::table('leg_case_court')->where('court_id', $id)->exists() || DB::table('divisions')->where('court_id', $id)->exists(),
         ],
         'divisions' => [
@@ -144,6 +148,9 @@ return [
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
             'required_columns' => ['court_id'],
+            'rules' => [
+                'court_id' => ['required', 'integer', 'exists:courts,id'],
+            ],
             'in_use_checker' => static fn (int $id): bool => false,
         ],
         'doc_types' => [
