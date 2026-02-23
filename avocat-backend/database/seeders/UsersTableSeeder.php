@@ -4,12 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Office;
 use App\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
     public function run()
     {
+        $defaultOffice = Office::firstOrCreate(
+            ['slug' => 'default-office'],
+            ['name' => 'Default Office']
+        );
+
         $users = [
             [
                 'name' => 'عبدالحميد عسكر',
@@ -39,6 +45,7 @@ class UsersTableSeeder extends Seeder
                     'name' => $u['name'],
                     'password' => Hash::make($u['password']),
                     'role' => $u['role'],
+                    'office_id' => $defaultOffice->id,
                 ]
             );
 
