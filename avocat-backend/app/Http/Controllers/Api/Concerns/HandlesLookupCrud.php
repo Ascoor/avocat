@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 trait HandlesLookupCrud
 {
-    protected function lookupModelClass(): string
-    {
-        return $this->lookupModel;
-    }
+    abstract protected function lookupModelClass(): string;
 
     public function index(Request $request): JsonResponse
     {
