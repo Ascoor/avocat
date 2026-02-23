@@ -774,8 +774,14 @@ const ar = {
     lookups: {
       title: "إعدادات القيم المرجعية",
       subtitle: "إدارة القيم المرجعية العامة الخاصة بالمكتب.",
+      sharedLookupsSubtitle: "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
       courtsSectionTitle: "إعدادات المحاكم",
       courtsSectionSubtitle: "إدارة درجات المحاكم وأنواعها والمحاكم والدوائر من المسار الرسمي.",
+      sectionTabs: {
+        caseSettings: "القضايا وتصنيفاتها",
+        sharedLookups: "إدارة المتغيرات والقوائم المرجعية",
+        courts: "إعدادات المحاكم"
+      },
       searchPlaceholder: "ابحث بالاسم...",
       columns: {
         name: "الاسم",
