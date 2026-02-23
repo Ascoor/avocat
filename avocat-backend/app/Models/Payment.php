@@ -30,8 +30,45 @@ class Payment extends Model
     protected static function booted(): void
     {
         static::saved(function (Payment $payment): void {
-            $payment->invoice?->updateStatus();
+            $invoice = $payment->invoice;
+            $invoice?->updateStatus();
+
+            if (! $invoice) {
+                return;
+            }
+
+            FinancialTransaction::updateOrCreate(
+                [
+                    'source_type' => self::class,
+                    'source_id' => $payment->id,
+                    'type' => 'payment',
+                ],
+                [
+                    'amount' => $payment->amount,
+                    'occurred_at' => $payment->payment_date,
+                    'description' => 'Payment received',
+                    'leg_case_id' => $invoice->leg_case_id,
+                    'service_id' => $invoice->service_id,
+                ]
+            );
+
+            if ($invoice->leg_case_id) {
+                app(\App\Services\Finance\FinancialTransactionService::class)->syncCaseTotals((int) $invoice->leg_case_id);
+            }
+        });
+
+        static::deleted(function (Payment $payment): void {
+            FinancialTransaction::where('source_type', self::class)
+                ->where('source_id', $payment->id)
+                ->where('type', 'payment')
+                ->delete();
+
+            $invoice = $payment->invoice;
+            $invoice?->updateStatus();
+
+            if ($invoice?->leg_case_id) {
+                app(\App\Services\Finance\FinancialTransactionService::class)->syncCaseTotals((int) $invoice->leg_case_id);
+            }
         });
     }
 }
-
