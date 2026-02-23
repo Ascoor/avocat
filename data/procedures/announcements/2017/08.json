@@ -1,0 +1,40 @@
+[
+  {
+    "procedure_place": "اول المنصوره",
+    "date_start": "21/08/2017",
+    "date_end": "21/08/2017",
+    "cost1": "١٠٠",
+    "cost2": "٠",
+    "cost3": "٠",
+    "cost4": "٠",
+    "cost5": "٠",
+    "cost6": "١٦",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "أيمن البلتاجي",
+    "order_details": "تسليم اعلان بالحكم",
+    "resultes": "تم استلام الاعلان",
+    "notes": "",
+    "case_slug": "191",
+    "procedure_type": "اعلان"
+  },
+  {
+    "procedure_place": "اول المنصوره",
+    "date_start": "21/08/2017",
+    "date_end": "21/08/2017",
+    "cost1": "١٠٠",
+    "cost2": "٠",
+    "cost3": "٠",
+    "cost4": "٠",
+    "cost5": "٠",
+    "cost6": "١٦",
+    "procedure_place_type": "داخلى",
+    "status": "تمت",
+    "lawyer_name": "أيمن البلتاجي",
+    "order_details": "",
+    "resultes": "تم استلام الاعلان وتم اعلان محضري قسم تان المنصوره",
+    "notes": "",
+    "case_slug": "216",
+    "procedure_type": "اعلان"
+  }
+]
