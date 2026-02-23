@@ -1,0 +1,64 @@
+{
+  "finance": {
+    "terms": {
+      "expense": "Expense",
+      "revenue": "Revenue",
+      "payment": "Payment",
+      "invoice": "Invoice",
+      "category": "Category"
+    },
+    "actions": {
+      "search": "Search",
+      "reset": "Reset",
+      "createTransaction": "Create Transaction"
+    },
+    "filters": {
+      "kindAll": "All Kinds",
+      "caseId": "Case ID",
+      "serviceId": "Service ID",
+      "categoryId": "Category ID"
+    },
+    "ledger": {
+      "title": "Ledger",
+      "subtitle": "All financial transactions (expense, revenue, payment).",
+      "columns": {
+        "date": "Date",
+        "kind": "Kind",
+        "case": "Case",
+        "category": "Category",
+        "amount": "Amount",
+        "note": "Note"
+      }
+    },
+    "summary": {
+      "title": "Case Finance Summary",
+      "subtitle": "Totals and recent transactions by case.",
+      "caseIdPlaceholder": "Enter case ID",
+      "expenses": "Total Expenses",
+      "revenues": "Total Revenues",
+      "paid": "Paid",
+      "outstanding": "Outstanding"
+    },
+    "create": {
+      "title": "Create Transaction",
+      "subtitle": "Add expense or revenue and link it to related legal records."
+    },
+    "form": {
+      "amount": "Amount",
+      "categoryId": "Category ID",
+      "caseId": "Case ID",
+      "serviceId": "Service ID",
+      "sessionId": "Session ID",
+      "adId": "Ad ID",
+      "procedureId": "Procedure ID",
+      "note": "Note"
+    },
+    "messages": {
+      "loadLedgerError": "Failed to load ledger",
+      "loadSummaryError": "Failed to load case summary",
+      "created": "Transaction created successfully",
+      "createError": "Failed to create transaction"
+    },
+    "empty": "No transactions found"
+  }
+}

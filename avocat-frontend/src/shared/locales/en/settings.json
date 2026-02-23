@@ -1,13 +1,15 @@
 {
   "settings": {
     "lookups": {
-      "title": "Lookup Settings",
+      "title": "Lookup & Reference Lists",
+      "subtitle": "Manage reusable variables for procedures, sessions, ads, services, and accounting categories.",
+      "searchPlaceholder": "Search lookup values...",
       "entities": {
         "caseTypes": "Case Types",
         "caseSubTypes": "Case Sub Types",
         "procedureTypes": "Procedure Types",
         "procedurePlaceTypes": "Procedure Place Types",
-        "legalSessionTypes": "Session Types",
+        "legalSessionTypes": "Legal Session Types",
         "legalAdTypes": "Legal Ad Types",
         "revenueCategories": "Revenue Categories",
         "expenseCategories": "Expense Categories",
@@ -21,12 +23,20 @@
       },
       "columns": {
         "name": "Name",
+        "scope": "Scope",
+        "sortOrder": "Order",
         "status": "Status",
         "actions": "Actions"
       },
       "actions": {
-        "add": "Add Record",
-        "edit": "Edit Record"
+        "add": "Add Lookup",
+        "edit": "Edit Lookup",
+        "enable": "Enable",
+        "disable": "Disable"
+      },
+      "scope": {
+        "system": "System",
+        "office": "Office"
       },
       "status": {
         "active": "Active",
@@ -36,13 +46,10 @@
         "empty": "No records found",
         "loadError": "Failed to load data",
         "saveError": "Failed to save data",
+        "saved": "Saved successfully",
         "deleteError": "Failed to delete record",
-        "created": "Record created successfully",
-        "updated": "Record updated successfully",
         "deleted": "Record deleted successfully",
-        "deactivatedInUse": "Cannot delete because it is in use, it has been deactivated instead",
-        "deleteConfirmTitle": "Delete confirmation",
-        "deleteConfirmDescription": "Are you sure you want to delete this record?"
+        "locked": "This lookup is locked and cannot be edited or deleted"
       }
     }
   }

@@ -5,6 +5,8 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "search": "Search"
+    "search": "Search",
+    "loading": "Loading...",
+    "saving": "Saving..."
   }
 }

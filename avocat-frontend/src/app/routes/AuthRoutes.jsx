@@ -20,8 +20,14 @@ const CourtSearch = lazy(
 const CaseTypeSet = lazy(
   () => import('@features/courts/components/Courts/case_index.component'),
 );
-const FinancialDashboard = lazy(
-  () => import('@features/finance/components/Financially/index'),
+const FinanceLedgerPage = lazy(
+  () => import('@features/finance/pages/FinanceLedgerPage'),
+);
+const CaseFinanceSummaryPage = lazy(
+  () => import('@features/finance/pages/CaseFinanceSummaryPage'),
+);
+const CreateTransactionPage = lazy(
+  () => import('@features/finance/pages/CreateTransactionPage'),
 );
 const LegalCasesIndex = lazy(
   () => import('@features/legal-cases/pages/LegalCaseList'),
@@ -295,16 +301,31 @@ const AuthRoutes = () => {
           />
 
           <Route
-            path="financial-dashboard"
+            path="finance/ledger"
             element={
-              <Guarded
-                require={permissionMap.expenses.view}
-                moduleLabel="Financial Dashboard"
-              >
-                <FinancialDashboard />
+              <Guarded require={permissionMap.expenses.view} moduleLabel="Finance Ledger">
+                <FinanceLedgerPage />
               </Guarded>
             }
           />
+          <Route
+            path="finance/case-summary"
+            element={
+              <Guarded require={permissionMap.expenses.view} moduleLabel="Case Finance Summary">
+                <CaseFinanceSummaryPage />
+              </Guarded>
+            }
+          />
+          <Route
+            path="finance/create-transaction"
+            element={
+              <Guarded require={permissionMap.expenses.create} moduleLabel="Create Finance Transaction">
+                <CreateTransactionPage />
+              </Guarded>
+            }
+          />
+
+          <Route path="financial-dashboard" element={<Navigate to="/dashboard/finance/ledger" replace />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

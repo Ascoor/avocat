@@ -62,6 +62,7 @@ const en = {
     courtSearch: "Court search",
     settings: "Settings",
     officeSettings: "Office settings",
+    finance: "Finance",
     courtSettings: "Court settings",
     lawyers: "Lawyers",
     usersPermissions: "Users & permissions",

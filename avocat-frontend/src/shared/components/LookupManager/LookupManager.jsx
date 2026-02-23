@@ -1,0 +1,285 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { useAlert } from '@shared/contexts/AlertContext';
+import {
+  createLookup,
+  deleteLookup,
+  getLookups,
+  updateLookup,
+} from '@shared/services/api/lookups';
+import { Card, CardContent, CardHeader, CardTitle } from '@shared/ui/card';
+import { Badge } from '@shared/ui/badge';
+import { Button } from '@shared/ui/button';
+import { Input } from '@shared/ui/input';
+import { Checkbox } from '@shared/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@shared/ui/dialog';
+
+const mapInitialForm = (fields, item) =>
+  fields.reduce((acc, field) => {
+    if (field.type === 'checkbox') {
+      acc[field.name] = Boolean(item?.[field.name] ?? true);
+      return acc;
+    }
+    acc[field.name] = item?.[field.name] ?? '';
+    return acc;
+  }, {});
+
+const LookupManager = ({ officeId, entity, titleKey, fields }) => {
+  const { t, language, isRTL } = useLanguage();
+  const { triggerAlert } = useAlert();
+
+  const [items, setItems] = useState([]);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [formState, setFormState] = useState(mapInitialForm(fields));
+
+  const localizedLabel = (item) =>
+    (language === 'ar' ? item.name_ar : item.name_en) ||
+    item.name ||
+    item.name_ar ||
+    item.name_en;
+
+  const loadItems = async () => {
+    setLoading(true);
+    try {
+      const list = await getLookups({ entity, officeId });
+      setItems(list);
+    } catch (error) {
+      triggerAlert('error', t('settings.lookups.messages.loadError'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadItems();
+  }, [entity, officeId]);
+
+  const visibleItems = useMemo(() => {
+    const token = search.trim().toLowerCase();
+    if (!token) return items;
+    return items.filter((item) =>
+      String(localizedLabel(item) ?? '')
+        .toLowerCase()
+        .includes(token),
+    );
+  }, [items, search, language]);
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      if (editingItem?.id) {
+        await updateLookup({
+          entity,
+          officeId,
+          id: editingItem.id,
+          payload: formState,
+        });
+      } else {
+        await createLookup({ entity, officeId, payload: formState });
+      }
+      triggerAlert('success', t('settings.lookups.messages.saved'));
+      setOpenForm(false);
+      setEditingItem(null);
+      setFormState(mapInitialForm(fields));
+      loadItems();
+    } catch (error) {
+      triggerAlert('error', t('settings.lookups.messages.saveError'));
+    }
+  };
+
+  const handleToggleActive = async (item) => {
+    if (item.is_locked) {
+      triggerAlert('info', t('settings.lookups.messages.locked'));
+      return;
+    }
+    try {
+      await updateLookup({
+        entity,
+        officeId,
+        id: item.id,
+        payload: { is_active: !item.is_active },
+      });
+      triggerAlert('success', t('settings.lookups.messages.saved'));
+      loadItems();
+    } catch {
+      triggerAlert('error', t('settings.lookups.messages.saveError'));
+    }
+  };
+
+  const handleDelete = async (item) => {
+    if (item.is_locked) {
+      triggerAlert('info', t('settings.lookups.messages.locked'));
+      return;
+    }
+    try {
+      await deleteLookup({ entity, officeId, id: item.id });
+      triggerAlert('success', t('settings.lookups.messages.deleted'));
+      loadItems();
+    } catch {
+      triggerAlert('error', t('settings.lookups.messages.deleteError'));
+    }
+  };
+
+  const openCreate = () => {
+    setEditingItem(null);
+    setFormState(mapInitialForm(fields));
+    setOpenForm(true);
+  };
+
+  const openEdit = (item) => {
+    if (item.is_locked) {
+      triggerAlert('info', t('settings.lookups.messages.locked'));
+      return;
+    }
+    setEditingItem(item);
+    setFormState(mapInitialForm(fields, item));
+    setOpenForm(true);
+  };
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between gap-3">
+        <CardTitle>{t(titleKey)}</CardTitle>
+        <Button onClick={openCreate}>{t('settings.lookups.actions.add')}</Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Input
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder={t('settings.lookups.searchPlaceholder')}
+          aria-label={t('settings.lookups.searchPlaceholder')}
+        />
+
+        <div className="overflow-x-auto rounded-xl border border-border/60">
+          <table className="w-full text-sm" dir={isRTL ? 'rtl' : 'ltr'}>
+            <thead className="bg-muted/40">
+              <tr>
+                <th className="p-3 text-start">{t('settings.lookups.columns.name')}</th>
+                <th className="p-3 text-start">{t('settings.lookups.columns.scope')}</th>
+                <th className="p-3 text-start">{t('settings.lookups.columns.sortOrder')}</th>
+                <th className="p-3 text-start">{t('settings.lookups.columns.status')}</th>
+                <th className="p-3 text-start">{t('settings.lookups.columns.actions')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading && (
+                <tr>
+                  <td className="p-4 text-center text-muted-foreground" colSpan={5}>
+                    {t('common.loading')}
+                  </td>
+                </tr>
+              )}
+              {!loading && visibleItems.length === 0 && (
+                <tr>
+                  <td className="p-4 text-center text-muted-foreground" colSpan={5}>
+                    {t('settings.lookups.messages.empty')}
+                  </td>
+                </tr>
+              )}
+              {visibleItems.map((item) => (
+                <tr key={item.id} className="border-t">
+                  <td className="p-3">{localizedLabel(item)}</td>
+                  <td className="p-3">
+                    <Badge variant={item.scope === 'system' ? 'secondary' : 'outline'}>
+                      {item.scope === 'system'
+                        ? t('settings.lookups.scope.system')
+                        : t('settings.lookups.scope.office')}
+                    </Badge>
+                  </td>
+                  <td className="p-3">{item.sort_order ?? '-'}</td>
+                  <td className="p-3">
+                    {item.is_active === false
+                      ? t('settings.lookups.status.inactive')
+                      : t('settings.lookups.status.active')}
+                  </td>
+                  <td className="p-3">
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
+                        {t('common.edit')}
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleToggleActive(item)}>
+                        {item.is_active
+                          ? t('settings.lookups.actions.disable')
+                          : t('settings.lookups.actions.enable')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(item)}
+                        disabled={item.is_locked}
+                      >
+                        {t('common.delete')}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+
+      <Dialog open={openForm} onOpenChange={setOpenForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editingItem
+                ? t('settings.lookups.actions.edit')
+                : t('settings.lookups.actions.add')}
+            </DialogTitle>
+          </DialogHeader>
+
+          <form className="space-y-4" onSubmit={onSubmit}>
+            {fields.map((field) => (
+              <label key={field.name} className="block space-y-2 text-sm">
+                <span>{t(field.labelKey)}</span>
+                {field.type === 'checkbox' ? (
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={Boolean(formState[field.name])}
+                      onCheckedChange={(value) =>
+                        setFormState((prev) => ({
+                          ...prev,
+                          [field.name]: Boolean(value),
+                        }))
+                      }
+                    />
+                  </div>
+                ) : (
+                  <Input
+                    type={field.type || 'text'}
+                    value={formState[field.name]}
+                    onChange={(event) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        [field.name]: event.target.value,
+                      }))
+                    }
+                  />
+                )}
+              </label>
+            ))}
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setOpenForm(false)}>
+                {t('common.cancel')}
+              </Button>
+              <Button type="submit">{t('common.save')}</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  );
+};
+
+export default LookupManager;

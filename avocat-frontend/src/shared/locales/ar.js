@@ -62,6 +62,7 @@ const ar = {
     courtSearch: "البحث بالمحاكم",
     settings: "الإعدادات",
     officeSettings: "إعدادات المكتب",
+    finance: "المالية",
     courtSettings: "إعدادات المحاكم",
     lawyers: "المحامون",
     usersPermissions: "المستخدمون والصلاحيات",
