@@ -30,18 +30,26 @@ class OfficeSettingUpsertRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                function (string $attribute, mixed $value, \Closure $fail) use ($table, $officeId, $id, $nameColumn) {
+                function (string $attribute, mixed $value, \Closure $fail) use ($table, $officeId, $id, $nameColumn, $entity) {
                     $query = DB::table($table)
                         ->whereNull('deleted_at')
                         ->where('office_id', $officeId)
                         ->whereRaw("lower({$nameColumn}) = lower(?)", [(string) $value]);
+
+                    if ($entity === 'case_sub_types') {
+                        $query->where('case_type_id', (int) $this->input('case_type_id'));
+                    }
 
                     if ($id) {
                         $query->where('id', '!=', $id);
                     }
 
                     if ($query->exists()) {
-                        $fail('The name has already been taken in this office scope.');
+                        $message = $entity === 'case_sub_types'
+                            ? 'The name has already been taken for this case type in this office scope.'
+                            : 'The name has already been taken in this office scope.';
+
+                        $fail($message);
                     }
                 },
             ],

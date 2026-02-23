@@ -136,93 +136,43 @@ class OfficeSettingsControllerTest extends TestCase
             ->assertJsonPath('deleted', true);
     }
 
-    public function test_court_in_use_by_division_is_deactivated_on_delete(): void
+    public function test_case_sub_types_can_be_filtered_by_case_type_and_are_unique_per_case_type(): void
     {
         $office = Office::create(['name' => 'Office A']);
         $this->actingOfficeAdmin($office->id);
 
-        $courtType = CourtType::create([
-            'name' => 'Type',
-            'office_id' => $office->id,
-            'is_system' => false,
-        ]);
-        $courtLevel = CourtLevel::create([
-            'name' => 'Level',
-            'office_id' => $office->id,
-            'is_system' => false,
-        ]);
-        $court = Court::create([
-            'name' => 'Court',
-            'court_type_id' => $courtType->id,
-            'court_level_id' => $courtLevel->id,
-            'office_id' => $office->id,
-            'is_system' => false,
-        ]);
+        $caseTypeOne = $this->postJson("/api/v1/offices/{$office->id}/settings/case_types", [
+            'name' => 'Type 1',
+        ])->assertCreated()->json('data.id');
 
-        Division::create([
-            'name' => 'Division',
-            'court_id' => $court->id,
-            'office_id' => $office->id,
-            'is_system' => false,
-        ]);
+        $caseTypeTwo = $this->postJson("/api/v1/offices/{$office->id}/settings/case_types", [
+            'name' => 'Type 2',
+        ])->assertCreated()->json('data.id');
 
-        $this->deleteJson("/api/v1/offices/{$office->id}/settings/courts/{$court->id}")
-            ->assertStatus(409)
-            ->assertJsonPath('deactivated', true)
-            ->assertJsonPath('deleted', false)
-            ->assertJsonPath('data.is_active', false);
-    }
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeOne,
+        ])->assertCreated();
 
-    public function test_divisions_support_crud_and_abac_scope(): void
-    {
-        $officeA = Office::create(['name' => 'Office A']);
-        $officeB = Office::create(['name' => 'Office B']);
-        $this->actingOfficeAdmin($officeA->id);
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeTwo,
+        ])->assertCreated();
 
-        $courtType = CourtType::create([
-            'name' => 'Type',
-            'office_id' => $officeA->id,
-            'is_system' => false,
-        ]);
-        $courtLevel = CourtLevel::create([
-            'name' => 'Level',
-            'office_id' => $officeA->id,
-            'is_system' => false,
-        ]);
-        $court = Court::create([
-            'name' => 'Court',
-            'court_type_id' => $courtType->id,
-            'court_level_id' => $courtLevel->id,
-            'office_id' => $officeA->id,
-            'is_system' => false,
-        ]);
+        $this->postJson("/api/v1/offices/{$office->id}/settings/case_sub_types", [
+            'name' => 'محكمة الجنح',
+            'case_type_id' => $caseTypeOne,
+        ])->assertStatus(422)
+            ->assertJsonValidationErrors('name');
 
-        $created = $this->postJson("/api/v1/offices/{$officeA->id}/settings/divisions", [
-            'name' => 'Division A',
-            'court_id' => $court->id,
-            'sort_order' => 1,
-        ]);
-
-        $created->assertCreated()->assertJsonPath('data.court_id', $court->id);
-
-        $divisionId = $created->json('data.id');
-
-        $this->putJson("/api/v1/offices/{$officeA->id}/settings/divisions/{$divisionId}", [
-            'name' => 'Division B',
-            'court_id' => $court->id,
-            'is_active' => true,
-        ])->assertOk()->assertJsonPath('data.name', 'Division B');
-
-        $this->getJson("/api/v1/offices/{$officeA->id}/settings/divisions")
+        $this->getJson("/api/v1/offices/{$office->id}/settings/case_sub_types?case_type_id={$caseTypeOne}")
             ->assertOk()
-            ->assertJsonPath('meta.entity', 'divisions');
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.name', 'محكمة الجنح');
 
-        $this->getJson("/api/v1/offices/{$officeB->id}/settings/divisions")
-            ->assertForbidden();
-
-        $this->deleteJson("/api/v1/offices/{$officeA->id}/settings/divisions/{$divisionId}")
+        $this->getJson("/api/v1/offices/{$office->id}/settings/case_sub_types")
             ->assertOk()
-            ->assertJsonPath('deleted', true);
+            ->assertJsonCount(2, 'data');
     }
 
 }

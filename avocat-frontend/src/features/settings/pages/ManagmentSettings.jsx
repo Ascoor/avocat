@@ -3,6 +3,7 @@ import { useAuth } from '@shared/contexts/AuthContext';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import LookupManager from '@shared/components/LookupManager/LookupManager';
+import CaseSettingsPanel from '../components/CaseSettingsPanel';
 import {
   courtSettingEntities,
   courtSettingFieldsByEntity,
@@ -23,6 +24,9 @@ const ManagementSettings = () => {
         <h1 className="text-2xl font-bold">{t('settings.lookups.title')}</h1>
         <p className="text-sm text-muted-foreground">{t('settings.lookups.subtitle')}</p>
       </div>
+
+
+      <CaseSettingsPanel officeId={officeId} />
 
       <Tabs value={currentEntity} onValueChange={setCurrentEntity} className="space-y-4">
         <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">

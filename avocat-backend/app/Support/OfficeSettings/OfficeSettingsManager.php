@@ -23,15 +23,18 @@ class OfficeSettingsManager
         return $config;
     }
 
-    public function list(int $officeId, string $entity, bool $includeInactive = false): Collection
+    public function list(int $officeId, string $entity, bool $includeInactive = false, array $filters = []): Collection
     {
         $config = $this->validateEntity($entity);
         $modelClass = $config['model'];
         $nameColumn = $config['name_column'];
         $mode = $config['mode'] ?? 'system_overrides';
+        $safeFilters = $this->safeFilters($config, $filters);
 
         if ($mode === 'system_only') {
             $query = $modelClass::query();
+            $this->applyFilters($query, $safeFilters);
+
             if (! $includeInactive && $this->hasColumn($modelClass, 'is_active')) {
                 $query->where('is_active', true);
             }
@@ -49,6 +52,8 @@ class OfficeSettingsManager
             $query = $modelClass::query()
                 ->where('office_id', $officeId)
                 ->whereNull('deleted_at');
+
+            $this->applyFilters($query, $safeFilters);
 
             if (! $includeInactive && $this->hasColumn($modelClass, 'is_active')) {
                 $query->where('is_active', true);
@@ -68,11 +73,13 @@ class OfficeSettingsManager
             ->where('is_system', true)
             ->whereNull('office_id')
             ->whereNull('deleted_at')
+            ->when($safeFilters !== [], fn ($query) => $this->applyFilters($query, $safeFilters))
             ->get();
 
         $officeRows = $modelClass::query()
             ->where('office_id', $officeId)
             ->whereNull('deleted_at')
+            ->when($safeFilters !== [], fn ($query) => $this->applyFilters($query, $safeFilters))
             ->get();
 
         $overrides = $officeRows->whereNotNull('parent_id')->keyBy('parent_id');
@@ -273,5 +280,22 @@ class OfficeSettingsManager
         $model = new $modelClass();
 
         return Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), $column);
+    }
+
+    private function safeFilters(array $config, array $filters): array
+    {
+        $allowedColumns = $config['required_columns'] ?? [];
+
+        return collect($filters)
+            ->only($allowedColumns)
+            ->reject(static fn ($value) => $value === null || $value === '')
+            ->all();
+    }
+
+    private function applyFilters($query, array $filters): void
+    {
+        foreach ($filters as $column => $value) {
+            $query->where($column, $value);
+        }
     }
 }
