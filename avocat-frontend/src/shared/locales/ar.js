@@ -772,8 +772,8 @@ const ar = {
   },
   settings: {
     lookups: {
-      title: "إعدادات القيم المرجعية",
-      subtitle: "إدارة القيم المرجعية العامة الخاصة بالمكتب.",
+      title: "إدارة المتغيرات والقوائم المرجعية",
+      subtitle: "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
       sharedLookupsSubtitle: "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
       courtsSectionTitle: "إعدادات المحاكم",
       courtsSectionSubtitle: "إدارة درجات المحاكم وأنواعها والمحاكم والدوائر من المسار الرسمي.",
@@ -800,12 +800,12 @@ const ar = {
       },
       entities: {
         procedureTypes: "أنواع الإجراءات",
-        procedurePlaceTypes: "أنواع أماكن الإجراءات",
+        procedurePlaceTypes: "أماكن الإجراءات",
         legalSessionTypes: "أنواع الجلسات",
         legalAdTypes: "أنواع الإعلانات",
         serviceTypes: "أنواع الخدمات",
-        expenseCategories: "فئات المصروفات",
-        revenueCategories: "فئات الإيرادات",
+        expenseCategories: "تصنيفات المصروف",
+        revenueCategories: "تصنيفات الإيراد",
         courtLevels: "درجات المحاكم",
         courtTypes: "أنواع المحاكم",
         courts: "المحاكم",
