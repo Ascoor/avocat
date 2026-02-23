@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Facades\DB;
 
-class LegCasesTableSeeder extends Seeder
+class CourtsTableSeeder extends Seeder
 {
 
     /**
