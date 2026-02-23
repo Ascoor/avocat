@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Court;
 use App\Models\CourtLevel;
 use App\Models\CourtType;
+use App\Models\Division;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -131,6 +132,95 @@ class OfficeSettingsControllerTest extends TestCase
         ])->assertOk()->assertJsonPath('data.name', 'Lookup Procedure Updated');
 
         $this->deleteJson("/api/v1/lookups/procedure_types/{$id}")
+            ->assertOk()
+            ->assertJsonPath('deleted', true);
+    }
+
+    public function test_court_in_use_by_division_is_deactivated_on_delete(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $courtType = CourtType::create([
+            'name' => 'Type',
+            'office_id' => $office->id,
+            'is_system' => false,
+        ]);
+        $courtLevel = CourtLevel::create([
+            'name' => 'Level',
+            'office_id' => $office->id,
+            'is_system' => false,
+        ]);
+        $court = Court::create([
+            'name' => 'Court',
+            'court_type_id' => $courtType->id,
+            'court_level_id' => $courtLevel->id,
+            'office_id' => $office->id,
+            'is_system' => false,
+        ]);
+
+        Division::create([
+            'name' => 'Division',
+            'court_id' => $court->id,
+            'office_id' => $office->id,
+            'is_system' => false,
+        ]);
+
+        $this->deleteJson("/api/v1/offices/{$office->id}/settings/courts/{$court->id}")
+            ->assertStatus(409)
+            ->assertJsonPath('deactivated', true)
+            ->assertJsonPath('deleted', false)
+            ->assertJsonPath('data.is_active', false);
+    }
+
+    public function test_divisions_support_crud_and_abac_scope(): void
+    {
+        $officeA = Office::create(['name' => 'Office A']);
+        $officeB = Office::create(['name' => 'Office B']);
+        $this->actingOfficeAdmin($officeA->id);
+
+        $courtType = CourtType::create([
+            'name' => 'Type',
+            'office_id' => $officeA->id,
+            'is_system' => false,
+        ]);
+        $courtLevel = CourtLevel::create([
+            'name' => 'Level',
+            'office_id' => $officeA->id,
+            'is_system' => false,
+        ]);
+        $court = Court::create([
+            'name' => 'Court',
+            'court_type_id' => $courtType->id,
+            'court_level_id' => $courtLevel->id,
+            'office_id' => $officeA->id,
+            'is_system' => false,
+        ]);
+
+        $created = $this->postJson("/api/v1/offices/{$officeA->id}/settings/divisions", [
+            'name' => 'Division A',
+            'court_id' => $court->id,
+            'sort_order' => 1,
+        ]);
+
+        $created->assertCreated()->assertJsonPath('data.court_id', $court->id);
+
+        $divisionId = $created->json('data.id');
+
+        $this->putJson("/api/v1/offices/{$officeA->id}/settings/divisions/{$divisionId}", [
+            'name' => 'Division B',
+            'court_id' => $court->id,
+            'is_active' => true,
+        ])->assertOk()->assertJsonPath('data.name', 'Division B');
+
+        $this->getJson("/api/v1/offices/{$officeA->id}/settings/divisions")
+            ->assertOk()
+            ->assertJsonPath('meta.entity', 'divisions');
+
+        $this->getJson("/api/v1/offices/{$officeB->id}/settings/divisions")
+            ->assertForbidden();
+
+        $this->deleteJson("/api/v1/offices/{$officeA->id}/settings/divisions/{$divisionId}")
             ->assertOk()
             ->assertJsonPath('deleted', true);
     }

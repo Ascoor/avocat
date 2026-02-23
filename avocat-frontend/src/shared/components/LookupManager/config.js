@@ -21,8 +21,7 @@ export const lookupEntities = [
 ];
 
 export const lookupFields = [
-  { name: 'name_ar', labelKey: 'settings.lookups.fields.nameAr' },
-  { name: 'name_en', labelKey: 'settings.lookups.fields.nameEn' },
+  { name: 'name', labelKey: 'settings.lookups.fields.name' },
   {
     name: 'sort_order',
     labelKey: 'settings.lookups.fields.sortOrder',
@@ -34,3 +33,41 @@ export const lookupFields = [
     type: 'checkbox',
   },
 ];
+
+export const courtSettingEntities = [
+  { value: 'court_levels', titleKey: 'settings.lookups.entities.courtLevels' },
+  { value: 'court_types', titleKey: 'settings.lookups.entities.courtTypes' },
+  { value: 'courts', titleKey: 'settings.lookups.entities.courts' },
+  { value: 'divisions', titleKey: 'settings.lookups.entities.divisions' },
+];
+
+export const courtSettingFieldsByEntity = {
+  court_levels: lookupFields,
+  court_types: lookupFields,
+  courts: [
+    { name: 'name', labelKey: 'settings.lookups.fields.name' },
+    {
+      name: 'court_level_id',
+      labelKey: 'settings.lookups.fields.courtLevel',
+      type: 'entity-select',
+      optionsEntity: 'court_levels',
+    },
+    {
+      name: 'court_type_id',
+      labelKey: 'settings.lookups.fields.courtType',
+      type: 'entity-select',
+      optionsEntity: 'court_types',
+    },
+    ...lookupFields.filter((field) => field.name !== 'name'),
+  ],
+  divisions: [
+    { name: 'name', labelKey: 'settings.lookups.fields.name' },
+    {
+      name: 'court_id',
+      labelKey: 'settings.lookups.fields.court',
+      type: 'entity-select',
+      optionsEntity: 'courts',
+    },
+    ...lookupFields.filter((field) => field.name !== 'name'),
+  ],
+};

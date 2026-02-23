@@ -7,56 +7,28 @@ use Illuminate\Support\Facades\DB;
 
 class CourtTypesTableSeeder extends Seeder
 {
-
-    /**
-     * Auto generated seed file
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        
+        $defaults = [
+            ['id' => 1, 'name' => 'مدنية'],
+            ['id' => 2, 'name' => 'أسرة'],
+            ['id' => 3, 'name' => 'جنائية'],
+            ['id' => 4, 'name' => 'إدارية'],
+            ['id' => 5, 'name' => 'إقتصادية'],
+        ];
 
-        DB::table('court_types')->delete();
-        
-       DB::table('court_types')->insert(array (
-            0 => 
-            array (
-                'id' => 1,
-                'name' => 'مدنية',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            1 => 
-            array (
-                'id' => 2,
-                'name' => 'أسرة',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            2 => 
-            array (
-                'id' => 3,
-                'name' => 'جنائية',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            3 => 
-            array (
-                'id' => 4,
-                'name' => 'إدارية',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            4 => 
-            array (
-                'id' => 5,
-                'name' => 'إقتصادية',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-        ));
-        
-        
+        $rows = array_map(static function (array $row): array {
+            return array_merge($row, [
+                'office_id' => null,
+                'is_system' => true,
+                'updated_at' => now(),
+            ]);
+        }, $defaults);
+
+        DB::table('court_types')->upsert(
+            $rows,
+            ['id'],
+            ['name', 'office_id', 'is_system', 'updated_at']
+        );
     }
 }
