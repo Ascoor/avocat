@@ -4,6 +4,8 @@ import enCommon from '@shared/locales/en/common.json';
 import arCommon from '@shared/locales/ar/common.json';
 import enSettings from '@shared/locales/en/settings.json';
 import arSettings from '@shared/locales/ar/settings.json';
+import enFinance from '@shared/locales/en/finance.json';
+import arFinance from '@shared/locales/ar/finance.json';
 
 type LanguageCode = 'en' | 'ar';
 
@@ -39,8 +41,8 @@ const deepMerge = <T extends Record<string, any>>(
 };
 
 const translations: Record<LanguageCode, TranslationTable> = {
-  en: deepMerge(en, enCommon, enSettings),
-  ar: deepMerge(ar, arCommon, arSettings),
+  en: deepMerge(en, enCommon, enSettings, enFinance),
+  ar: deepMerge(ar, arCommon, arSettings, arFinance),
 };
 
 const getNestedValue = (source: Record<string, any>, key: string) =>

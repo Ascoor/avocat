@@ -1,7 +1,9 @@
 {
   "settings": {
     "lookups": {
-      "title": "إعدادات القوائم المرجعية",
+      "title": "إدارة المتغيرات والقوائم المرجعية",
+      "subtitle": "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
+      "searchPlaceholder": "ابحث داخل المتغيرات...",
       "entities": {
         "caseTypes": "تصنيفات القضايا",
         "caseSubTypes": "التصنيفات الفرعية للقضايا",
@@ -9,8 +11,8 @@
         "procedurePlaceTypes": "أماكن الإجراءات",
         "legalSessionTypes": "أنواع الجلسات",
         "legalAdTypes": "أنواع الإعلانات",
-        "revenueCategories": "فئات الإيرادات",
-        "expenseCategories": "فئات المصروفات",
+        "revenueCategories": "تصنيفات الإيراد",
+        "expenseCategories": "تصنيفات المصروف",
         "serviceTypes": "أنواع الخدمات"
       },
       "fields": {
@@ -21,12 +23,20 @@
       },
       "columns": {
         "name": "الاسم",
+        "scope": "النطاق",
+        "sortOrder": "الترتيب",
         "status": "الحالة",
         "actions": "الإجراءات"
       },
       "actions": {
-        "add": "إضافة سجل",
-        "edit": "تعديل سجل"
+        "add": "إضافة متغير",
+        "edit": "تعديل متغير",
+        "enable": "تفعيل",
+        "disable": "تعطيل"
+      },
+      "scope": {
+        "system": "النظام",
+        "office": "المكتب"
       },
       "status": {
         "active": "نشط",
@@ -36,13 +46,10 @@
         "empty": "لا توجد بيانات",
         "loadError": "تعذر تحميل البيانات",
         "saveError": "تعذر حفظ البيانات",
+        "saved": "تم الحفظ بنجاح",
         "deleteError": "تعذر حذف العنصر",
-        "created": "تمت الإضافة بنجاح",
-        "updated": "تم التعديل بنجاح",
         "deleted": "تم الحذف بنجاح",
-        "deactivatedInUse": "لا يمكن الحذف لأنه مستخدم، تم تعطيله بدلاً من ذلك",
-        "deleteConfirmTitle": "تأكيد الحذف",
-        "deleteConfirmDescription": "هل أنت متأكد من حذف هذا العنصر؟"
+        "locked": "هذا المتغير مقفل ولا يمكن تعديله أو حذفه"
       }
     }
   }

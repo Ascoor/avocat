@@ -1,0 +1,64 @@
+{
+  "finance": {
+    "terms": {
+      "expense": "مصروف",
+      "revenue": "إيراد",
+      "payment": "دفعة",
+      "invoice": "فاتورة",
+      "category": "تصنيف"
+    },
+    "actions": {
+      "search": "بحث",
+      "reset": "إعادة تعيين",
+      "createTransaction": "إنشاء حركة مالية"
+    },
+    "filters": {
+      "kindAll": "كل الأنواع",
+      "caseId": "رقم القضية",
+      "serviceId": "رقم الخدمة",
+      "categoryId": "رقم التصنيف"
+    },
+    "ledger": {
+      "title": "دفتر الأستاذ",
+      "subtitle": "كل الحركات المالية (مصروف / إيراد / دفعة).",
+      "columns": {
+        "date": "التاريخ",
+        "kind": "النوع",
+        "case": "القضية",
+        "category": "التصنيف",
+        "amount": "المبلغ",
+        "note": "ملاحظة"
+      }
+    },
+    "summary": {
+      "title": "ملخص مالية القضية",
+      "subtitle": "إجماليات القضية وآخر الحركات المالية.",
+      "caseIdPlaceholder": "أدخل رقم القضية",
+      "expenses": "إجمالي المصروف",
+      "revenues": "إجمالي الإيراد",
+      "paid": "المدفوع",
+      "outstanding": "المتبقي"
+    },
+    "create": {
+      "title": "إنشاء حركة مالية",
+      "subtitle": "أضف مصروف أو إيراد واربطه بالقضية/الخدمة/الجلسة/الإعلان/الإجراء."
+    },
+    "form": {
+      "amount": "المبلغ",
+      "categoryId": "رقم التصنيف",
+      "caseId": "رقم القضية",
+      "serviceId": "رقم الخدمة",
+      "sessionId": "رقم الجلسة",
+      "adId": "رقم الإعلان",
+      "procedureId": "رقم الإجراء",
+      "note": "ملاحظة"
+    },
+    "messages": {
+      "loadLedgerError": "تعذر تحميل دفتر الأستاذ",
+      "loadSummaryError": "تعذر تحميل ملخص القضية",
+      "created": "تم إنشاء الحركة المالية بنجاح",
+      "createError": "تعذر إنشاء الحركة المالية"
+    },
+    "empty": "لا توجد حركات مالية"
+  }
+}
