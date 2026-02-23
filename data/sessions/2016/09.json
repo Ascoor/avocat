@@ -1,0 +1,25 @@
+[
+  {
+    "court_name": "جنح قسم اول المنصورة",
+    "court_session": "الجنح",
+    "session_date": "02/09/2016",
+    "session_roll": null,
+    "cost1": "٠",
+    "cost2": "٠",
+    "cost3": "٠",
+    "دمغة": "٠",
+    "أخرى": "٠",
+    "مصروفات بدون مستندات": "٠",
+    "حتي تاريخ": null,
+    "وصف التنبيه": null,
+    "session_type_name": "محاكمة",
+    "status": "تمت",
+    "lawyer_name": "أيمن البلتاجي",
+    "orders": "جلسه",
+    "result": "حبس المتهم سنه وكفاله 1000 جنيه وتعويض مدني 10001",
+    "judgment_operative": null,
+    "notes": null,
+    "procedure_type": "جلسة",
+    "case_file_number": "292"
+  }
+]

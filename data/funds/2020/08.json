@@ -1,0 +1,2352 @@
+[
+  {
+    "date": "01/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سمير خليل حسين اسماعيل 106/2020 عمل محضر اتلاف(30 موصلات-50 امين شرطه-30 (الجزار)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "سمير خليل حسين اسماعيل",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "تامر عبد العزيز (ملف ابراهيم مسعد)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "ابراهيم مسعد",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ريد بول",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "السلاسل (25موصلات -25فك السلاسل)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "بن احمد",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٥٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "فودافون كاش 1500-30 رسوم",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "سمير خليل حسين معاينه 106/2020 -20 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "سمير خليل حسين",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٩٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مني الدسوقي 103/2020 جلسه-جيهان يونس 89/2020 استلام انذار -احمد البيومي 46/2018جلسه-محمد عبد الرحمن برهام 23/2020 اطلاع-ابراهيم فتوح 179/2019 تصوير واطلاع-فاطمه ماهر 57/2020 اطلاع-ابراهيم محمد نجيب-صابر عبد الرحيم ابو المجد (تصوير قضايا) 20 موصلات-100 تصوير-40 تصوير- القضايا-تصوير قضيه ايبراهيم فتوح 30",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مني الدسوقي -جيهان يونس-احمد البيومي-عبد الرحمن برهام-ابراهيم فتوح-فاطمه ماهر-ابراهيم محمد نجيب-صباح عبد الرحيم ابو المجد",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "2 دفتر ورق-2 علبه سجاير-ولاعات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمود السيد عبد الحميد 50/2018 جلسه تحقيق-محمد السيد صقر 92/2020 اعلان-حسام العدل 148/2018 قرار(20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "محمود السيد عبد الحميد ابو نمره-محمد السيد صقر-حسام الدين العدل",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "بيبسي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "دينا حسين 98/2019 اعلان (35 موصلات-5 رسوم)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "دينا حسين",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد مصطفي عاطف 170/2019 استلام اعلان -ابراهيم فتوح 179/2019 تصوير-محمد البلقاسي عمل محضر-ايمن عبد الخالق انذار ايجار(30 موصلات 10 تصوير ورسوم الانذار (1600  المبلغ بالرسوم)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد مصطفي الشوبكي-ابراهيم فتوح-محمد البلقاسي-ايمن عبد الخالق",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٨٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد مصطفي الشوبكي 170/2019 استلام اعلان-سمير خليل 106/2020 تصوير تقرير المعاينه-اطلاع -عبد المجيد وجدي 161/2019 شهادات جدول(30 موصلات-50 منصور الحلو-5 رسوم شهادات) ساره الحلو",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "محمد مصطفي الشوبكي-سمير خليل-عبد المجيد وجدي 0ساره الحلو)",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "ابراهيم مسعد بركات -تامر عبد العزيزملف 136/2019 ايداع مذكره نقض (1500 موصلات ورسوم محاماه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "ابراهيم مسعد-تامر عبد العزيز",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "مني الدسوقي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "ابراهيم فتوح 179/2019 جلسه-شيماء زكي 83/2020 اطلاع-عياد خليل 30/2019 طلب وقف عقوبه (40 موصلات-5 دمغه محاماه) ساره الحلو",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "ابراهيم فتوح-شيماء ذكي-عياد خليل(ساره الحلو)",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "بيبسي-كولا -كرتونه مياه-موصلات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "موصلات النادي",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "كولا",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "شريف شتا",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل (القسم)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ا/عبد الحميد",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "احمد عسكر",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "علي رمضان",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد المعطي عبد المعطي 192/2020 اطلاع(15 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "عبد المعطي عبد المعطي",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "من استاذ ايمن",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "شكولاته وبسكوت",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٩٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سجاير",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 13 صور رسميه من الحكم-معارضه استئنافيه 48/2020(25 موصلات-11 تصوير-50 ماجده-6 تقديم شهادات-18 رسوم صوره طبق الاصل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "عياد خليل",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد علي رمضان 50/2020 محمد صقر 71/2020-احمد الشهاوي 27/2020 جلسات-استلام اعلان -ناصف علي سليمان اطلاع(20 موصلات-5 دمغه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "علي رمضان -محمد السيد صقر-احمد الشهاوي-ناصف",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "60زيت شعر-30 موصلات-25 شحن موبيل",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد سيد عبد العزيز",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 15/2020-16/2020-17/2020 48/2020 شهادات جدول -عبد المجيد وجدي 161/2019 شهادات جدول(10 موصلات-20 رسوم الشهادات 10 نموذج شهاده-12 تصوير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "عياد خليل-عبد المجيد وجدي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "علي رمضان عمل محضر حيازه ومحضر استيلاء (20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "علي رمضان",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ابراهيم نجيب جلسه رقم 862لسنه 2020-ابراهيم فتوح 179/2019-علي رمضان 50/2020-محمد السيد صقر71/2020 -احمد الشهاوي 27/2020 قرارات-وائل الحمادي 131/2019حكم وعريضه (18 موصلات-14 رسوم وتصوير",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "ابراهيم نجيب-ابراهيم فتوح-محمد السيد صقر-علي رمضان-احمد الشهاوي -وائل رمضان",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "2700 ايجار المنزل-100 استكمال فلوس ا/عبد الحميد-200 مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار قرار 226-نرمين صالح شهادات جدول 39/2020-40/2020 (20 موصلات-20 شهادت ونماذج شرعي ومدني)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "مصطفي عمار-نرمين صالح",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبده عبد الرازق 197/2019 تخليص جواب الضرايب-عياد خليل استعلام امني(40 موصلات-30 امين شرطه -استعلام امني)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عبده عبد الرازق-عياد خليل",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين صالح 101/2020 جلسه-مني الدسوقي تسويه-فاطمه الزهراء 132/2019 استعلام-محمد المحمدي 205/2019 اطلاع -احمد ربيع جنح س اول شهادات(18 موصلات-10 دمغه محاماه-3 رسوم شهادتي)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "نرمين صالح-مني الدسوقي-فاطمه الزهراء--محمد المحمدي-احمد ربيع ناجح",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "اليافطه والبوابه",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "حجاره قلم",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "15بسكوتات-25اكل حمام",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل استعلام عن الامضاء علبي نموذج الحبس والنقض-عبده عبد الرازق197/2019 تسليم جواب ضرايب-محمد عباس استلام عقد (30 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل-عبده عبد الرازق-محمد عباس",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "علبه سجاير-ولاعه",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ريد بول-حاجه ساقعه",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "رسوم فودافون كاش",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد الحميد عسكر تصوير رول الجنايات(20 موصلات-10 تصوير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عبد الحميد -زينب صبري",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "2 بخاخ كمبيوتر-دبابيس-كركديه -تاكس للمكتب",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "(1000 من المكتب-3000 من ا/عبد الحميد )لاستكمال جزء من الايجار",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "زينب صبري (ابراهيم العش) تصوير جنايه  (35 المختلط -البحر-حي غرب )يوم 11/8-40 البحر -الاستاد -حي غرب 13/8-75 تصوير الجنايه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "زينب صبري",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "كوك دور",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سجاير-اكل حمام",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "١٬٦٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "متبقي من شهر 7",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "01/08/2020",
+    "amount": "٢٬٢٩٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 1/8/2020",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد الشهاوي اعلان 27/2020-ابراهيم محمد نجيب -صباح عبد الرحيم  تصوير قضايا 20 موصلات-55 للمحضر -للسكرتير-تصوير المحاضر",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "احمد الشهاوي-ابراهيم محمد نجيب-صباح عبد الرحيم",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 30/2019 عمل نقض(20 موصلات)-اكرم استلام شيكات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل-اكرم عبد الفتاح",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٥٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين صالح 199/2019-31/2020 جلسات-شركه الحريه(50 موصلات)-5 دمغه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "نرمين صالح-شركه الحريه",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "إيرادات",
+    "description": "مدام ناهد(صحه توقيع خالد)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "إيرادات",
+    "description": "شركه الحريه",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٧٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 30/2019 نقض -احمد نادر اطلاع (198/2019 )20 موصلات-753 مصاريف النقض(235 رسوم النقض-200 محمد عبد السلام -100 موظف النقض-10 ملف نقض-15 اشكال وتصوير-10 دمغه اشكال -100دمغه-50 ا/رضا-16 رسوم الاشكال)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل-احمد نادر",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد الشوبكي 170/2019 اعلان-وائل الحمادي 131/2019 اعلان-(18 موصلات-5 اعلان بالحكم)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "محمد مصطفي الشوبكي-وائل الحمادي",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد المعطي 192/2019-193/2019 حضور جلسات(20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "عبد المعطي عبد المعطي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ورثه احمد حسني 52/2020 جلسه-اطلاع 51/2020-حسام العدل 48/2018-عبد الرحمن عادل 100/2020 غرامه-ابراهيم صالح 341 اطلاع-شيماء زكي 83/2020 -محمد مصطفي الشوبكي 170/2019 اطلاعاستعلام(18 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "ورثه احمد حسني عبد الرحمن عادل-ابراهيم صالح-شيماء زكي-حسام العدل",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "موصلات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "2دفتر ورق",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٬٧٥٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "ايجار شهر 8 (ا/شريف)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "عبد المعطي عبد المعطي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "شحن رصيد موبيل (ا/عبد الحميد)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ا/عبد الحميد (عياد خليل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٥٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "من الايجار",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ورثه احمد محمد حسني 51/2020 جلسه -ناهد توكل ابراهيم السيد-خالد وجيه ابو الفتوح -فوزي محروص 82/2019-احمد طلبه 75/2020 -76/2020 -نرمين صالح 31/2020 -199/2019 قرارات-جيهان رجب 89/2020 رفع دعوي- رفع دعوي ولايه تعليميه(20 موصلات-194 رسوم الدعوي الخلع-الولايه التعليميه-20 دمغه محاماه-6 رول ومحضر جلسه)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "ورثه احمد حسني-ناهد توكل ابراهيم-خالد وجيه-نرمين صالح-احمد طلبه-جيهان يونس-فوزي محروص",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ديناحسين محي الدين98/2019 جلسه(25 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "دينا حسين محي الدين",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٧٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "145 نت البيت-145 نت المكتب -780 فاتوره الاتصالات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "بسمه السبع",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ديسك توب-300 جيهان",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 30/2019 اشكال(20 موصلات-100 طارق)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل عياد",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 476 استئناف وشهادات جدول(20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد فؤاد درويش 25/2020 جلسه-محمد البيومي 21/2020جلسه-سعد القللي 97/2020 صوره رسميه-فاطمه ماهر 57/2020 قرار(20 موصلات-15 رسوم وتصوير-3 رسم صوره رسميه -14ميكرفلم-10 خالد(حفظ)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "احمد فؤاد درويش-محمد البيومي-سعد القللي -فاطمه ماهر",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٠٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين صالح 111/2020 جلسه وشهاده من الجدول في دعوي الطلاق-ناهد توكل 112/2020 خالد وجيه تصوير قضايا(20 موصلات-85تصوير 4 قضايا",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "نرمين صالح-ناهد توكل-خالد وجيه",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٨٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "مياه (ايصال شهرين)",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "ابراهيم العش",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "ا/عبد الحميد",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٩٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "30 موصلات-25 صابون سايل-15 اكل حمام-سكر-ساعه",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٥٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد البيومي 21/2020 -جمال سليمان 13/2020 قرار-شيماء احمد احمد 83/2020 اطلاع)-25 موصلات-30 مشوار ا/عبد الحميد",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "محمد البيومي-جمال سليمان-شيماء زكي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "استاذ عبد الحميد(مشوار ساره)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين صالح  111/2020 -فوزي محروص 83/2019 اعلانات-اشرف عبد الفتاح 353 اطلاع-محمد جمال عبد العاطي 206/2019 -عبد العظيم 9/2020 معارضه استئنافيه (20 موصلات-10 دمغه محاماه(20 موصلات-10 دمغه محاماه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "نرمين صالح-فوزي محروص-اشرف عبد الفتاح محمد جمال -عبد العظيم",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ا/عبد الحميد600-500احمد عبدالله",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٬١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل ملف 30/2019",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "2500النقض(تامر عبد العزيز-ابراهيم مسعد)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ابراهيم نجيب 93/2019 جلسات-مني الدسوقي 103/2020 قرار-مصطفي الشوبكي 170/2019 اعلان-جيهان يونس 81/2020 استعلام-اطلاع(النيابه الحسبيه)18 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "ابراهيم نجيب-مني الدسوقي-مصطفي الشوبكي-جيهان يونس",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "ورق طباعه-ملفات-دوسيهات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "موصلات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سجاير-اكل حمام",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "صينيه شاي",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٨٬١٠٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه 14/8/2020",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "احمد الشهاوي-ابراهيم محمد نجيب-صباح عبد الرحيم",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل-اكرم عبد الفتاح",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "شحن رصيد موبيل (ا/عبد الحميد)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٢٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "ورثه احمد محمد حسني 51/2020 جلسه -ناهد توكل ابراهيم السيد-خالد وجيه ابو الفتوح -فوزي محروص 82/2019-احمد طلبه 75/2020 -76/2020 -نرمين صالح 31/2020 -199/2019 قرارات-جيهان رجب 89/2020 رفع دعوي- رفع دعوي ولايه تعليميه(20 موصلات-194 رسوم الدعوي الخلع-الولايه التعليميه-20 دمغه محاماه-6 رول ومحضر جلسه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد فؤاد درويش 25/2020 جلسه-محمد البيومي 21/2020جلسه-سعد القللي 97/2020 صوره رسميه-فاطمه ماهر 57/2020 قرار(20 موصلات-15 رسوم وتصوير-3 رسم صوره رسميه -14ميكرفلم-10 خالد(حفظ)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/08/2020",
+    "amount": "١٨٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "مياه (ايصال شهرين)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٦٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "20بليدج-25 شحن رصيد مكتب-20 اكل حمام",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبده عبد الرازق 197/2019تسليم جواب ضرايب-عياد خليل 15/2020-16/2020-17/2020 (30 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عبده عبد الرازق-عياد خليل",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "نجاح الصعيدي 33/2020 قرار -عادل الرفاعي 5/2020 تصوير(60 موصلات-12 تصوير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "نجاح الصعيدي -عادل الرفاعي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد مصطفي الشوبكي 170/2019 -حسام العدل 148/2018 جلسات-حامد فرحات 119/2019 صوره رسميه-شيماء زكي 83/2020 استعلام-متولي جمال متولي 53/2020 قرار (18 موصلات-10تصوير الحكم صورتين-5 فرق رسم علي الطلب)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "محمد مصطفي الشوبكي-حسام الدين محمد العدل -حامد فرحات-شيماء زكي-متولي جمال",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "خاص من خليل (تحت حساب عياد)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ريد بول",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٦٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "20موصلات-30 بن عادي ساده فاتح",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "تحت حساب موتور(متبقي 1500)",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات مكتب",
+    "description": "150 المصنعيه-170 من طلابات مكمله للموتور",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبده عبد الرازق 197/2019 استلام كفاله-عياد خليل استخراج شهادتي ميلاد (هاني -عبد المنعم)30 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عبده عبد الرازق -عياد خليل",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين صالح 39/2020-40/2020 صور رسميه من الحكم-شيماء احمد زكي 114/2020 اطلاع(25 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "نرمين عبدالله صالح-شيماء زكي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "شاشه كمبيوتر",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "وصله شحن",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "ساره درويش 141/2019-محمد علاء 99/2020-علي رمضان 109/2020 -110/2020 -ابراهيم فتوح 179/2019 اطلاعات-ايمن عبد الخالق عوضين استلام انذار 460-مني فتحي 104/2020 اطلاع-حسن عبدالله اطلاع(20 موصلات-50 امين الشرطه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "ساره درويش-محمد علاء-علي رمضان-ابراهيم فتوح-ايمن عبد الخالق عوضين-مني فتحي عبد الهادي-حسن عبدالله محمد عبدالله",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "اشرف عبد الفتاح 94/2020 جلسه-عياد خليل 15/2020-16/2020-17/2020 قرار-عادل الرفاعي دفع رسم-محمد الشوبكي 7/2020 تقديم طلب تصحيح حكم-نرمين صالح 111/2020 استلام اعلان(35 موصلات-220 رسم عادل الرفاعي)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "اشرف عبد الفتاح-عياد خليل-عادل الرفاعي-محمد الشوبكي-نرمين صالح",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله محمد عبدالله عمل معارضات-علي رمضان 109/2020 -110/2020 -50/2020 اطلاعات-محمد السيد عبد العزيز(40 موصلات-30 رسوم ودمغهمارضات حسن-100 امناء شرطه القسم والنيابه محمد السيد عبد العزيز)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله محمد عبدالله-علي رمضان-محمد السيد عبد العزيز",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "كوك دور",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد المقدم",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٬٦٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "احمد عبدالله",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "شيماء زكي 114/2020 تصوير-السيده اسامه 203/2019 صوره رسميه-نرمين صالح 199/2019 استئناف دعوي مدنيه-اشرف عبد الفتاح 94/2020 اعاده اعلان-نرمين صالح 111/2020 جلسه(35 موصلات-128 رسم الدعوي المدنيه-4 تصوير -5 رسم حكم السيده)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "شيماء زكي-السيده اسامه-نرمين صالح-اشرف عبد الفتاح",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٠٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "فودافون كاش(د/دينا)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٦٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله استخراج شهادات-احمد البيومي 46/2020 جلسه-احمد ابو حس استعلام(30 موصلات-20 شهادات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله -احمد البيومي-احمد ابو حسن",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "فاطمه الزهراء 180/2019 جلسه-شيماء زكي 83/2020 اطلاع-صوره دعوي برقم 2163 لسنه 2020 م ك (20 موصلات-5 تصوير",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "فاطمه الزهراء-شيماء زكي",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "سائل للنمل",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سجاير-ولاعات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عادل الرفاعي تصوير ميكرفلم 45/2020-استلام ايصال5/2020-اشرف عبد الفتاح 94/2020 تسليم اعاده اعلان-عنرمين صالح 111/2020-احمد فؤاد 25/2020 -جمال سليمان قرار(35 موصلات-10 ميكرفلم)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "عادل الرفاعي-اشرف عبد الفتاح-احمد فؤاد -جمال سليمان",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله كشف امني 119-120-121-122-123-124-124/2020 تصوير 115/2020-116/2020-117/2020 (30 موصلات-200 امين شرطه -110 تصوير القضايا-30 دمغه-30 رسوم -20 سعد فوده-5 تصوير)-ابراهيم نجيب محضر جلسه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله محمد-ابراهيم نجيب",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "موصلات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٥٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "500 من تمن الموتور و60 تمن الخلاط-متبقي 1000 من تمن الموتور",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله محمد عبدالله 112/2020 -121/2020-120/2020-119/2020 (20 موصلات-130 تصوير رضا واسماعيل وتصوير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله  محمد عبد الله",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد ابو حسن 39/2018 عمل اعلان-دعاء شتا استئنافات(165 موصلات-40 رسوم الاستئناف-20 دمغه -10 تصوير +رسم اعلانات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "احمد ابو حسن-دعاء شتا",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "اهل الشام",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/08/2020",
+    "amount": "٤٬٠٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 20/8/2020",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "25/08/2020",
+    "amount": "٥٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "ابراهيم نجيب",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "26/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد البيومي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "26/08/2020",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد السيد عبد العزيز من قضيه الضرب متبقي 2500",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله 125/2020 تصوير -اطلاع 121/2020-احمد ابو حسم 67/2020 جلسه-شيماء زكي 83/2020 اطلاع(20 موصلات)-40 تصوير-10 الحاجب",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله -احمد ابو حسن-شيماء زكي",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "فوزي محروص 82/2019 -جيهان يونس 89/2020 اعلان-81/2020 استعلام-مني الدسوقي جواب تسويه(20 موصلات-5 تصوير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "فوزي محروص-جيهان يونس-من الدسوقي",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "محمود نبيه 34/2020 اطلاع-محمد علاء 155/2019 صرف كفاله(35 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "محمود نبيه-محمد علاء",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١٢٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات مكتب",
+    "description": "ريد بول-كولا-فانتا-تانج -ماء شعير",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٢٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسن عبدالله  121/2020  عمل تمكين من معارضه -محمد علاء 155/2019 استخراج جواب ضرايب(استخراج جواب الضرايب) 20 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "حسن عبدالله-محمد علاء",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد جمال(1000 كفاله-1500 قضيتين محم ومحمود-500 حساب قديم خال محمد جمال)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "كفاله محمد جمال",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "نرمين عبدالله31/2020-مصطفي صبري 225 اطلاع-محمود نبيه 29/2020 شهاده جدول-كامل احمد عبد العزيز اطلاع(20 وصلات-8 رسوم شهاده)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "نرمين صالح-مصطفي عمار-محمود نبيه-كامل احمد عبد العزيز",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "فوزي محروص 64/2020 اطلاع-احمد ابوحسن استلام عقد-حسن عبداللهه 124م2020-123/2020-125/2020 شهادات جدول -عبد الرحمن ابو الدهب 196/2020 قرار (25 موصلات-7 شهاده تجديد من الجدول-15 شهادات جدول)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "فوزي محروص -احمد ابو حسن-حسن عبدالله-عبد الرحمن ابو الدهب",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١٬٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "إيرادات",
+    "description": "نرمين صالح",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "إيرادات",
+    "description": "نشات العلامي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "جمال عبد العاطي 103/2019 -جمال عبد العاطي 168/2019 -ورثه احمد حسني 51/2020 قرار-محمد شاكر 181/2019 استعلام-ناهد توكل -خالد وجيه-احمد صبري اطلاعات(1 موصلات-10 تصوير مكتب امامي)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "جمال عبد العاطي-ورثه احمد حسني-محمد شاكر-ناهد توكل-خالد وجيه-احمد صبري",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٨٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "السياره",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد علاء 155/2019 تخليص الضرايب (30 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد علاء",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١١٥",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "مصروفات موكل",
+    "description": "سمير خليل 106/2020 اطلاع-مجدي البحقيري 136/2020 تصوير -احمد صبري 184/2020 اطلاع(35 موصلات-80 رسوم تصوير الجنايه )",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "وليد نجاح",
+    "expense_type": "أتعاب ا/ وليد",
+    "description": "سمير خليل-مجدي الجعفري-احمد صبري",
+    "notes": null,
+    "fund_type": "أتعاب ا/ وليد"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد جمال 206/2019 سداد كفاله-احمد نادر 198/2019 قرار-احمد حسني 135/2019)18 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب رشا عبدالنبي",
+    "description": "محمد جمال عبد العاطي-احمد نادر-احمد حسني",
+    "notes": null,
+    "fund_type": "أتعاب رشا عبدالنبي"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد ابو حسن 14/2018 استلام العقد-محمد الشوبكي 7/2020 طلب تصحيح حكم-احمد طلبه 78/2020 شهاده من التنفيذ -نرمين عبدالله 199/2019 استعلام عن جلسه الاستئناف-عبد الرحمن عمر 73/2020 تصوير-محمد علاء 99/2020 استعلام-محمد عبد الرحمن برهام 23/2020 قرار-حامد عبدالله 116/2019(20 موصلات-50 ايمن حفظ-20 سعد السكرتير-18 تصوير (محضر عبد الرحمن-اوراق عماد السكرتير)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "أتعاب ا/ ساره الحلو",
+    "description": "احمد ابو حسن-محمد الشوبكي-احمد طلبه-نرمين صالح-عبد الرحمن عمر-محمد علاء-محمد عبد الرحمن برهام-حامد عبدالله",
+    "notes": null,
+    "fund_type": "أتعاب ا/ ساره الحلو"
+  },
+  {
+    "date": "30/08/2020",
+    "amount": "٣٤٥",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 30/8/2020",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "31/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "عبد الرحمن عمر عبد الرحمن",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "31/08/2020",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "رشا عبدالنبي",
+    "expense_type": "إيرادات",
+    "description": "محمد السيد عبد العزيز",
+    "notes": null,
+    "fund_type": "إيرادات"
+  }
+]

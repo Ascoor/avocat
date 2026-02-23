@@ -1,0 +1,1992 @@
+[
+  {
+    "date": "02/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار 16/2018 -359 استعلام-محمد عصمت 516-منصور سعد 493 استخراج عقد وحكم وعريضه-رضا عبد الجواد 513 استعلام-نيفين الشافعي 546 استعلام -محمد محسن طه 536 دعوي فرعيه(55 دعوي مدنيه محمد محسن-65 محمد عصمت عقد واتعاب محاماه-65 منصور اتعاب محاماه وحكم وعريضه-20 الحفظ-20 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "٣٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "طقم مفارش 230-50 طفايات-30 ورد-30 فرشه وطقم امشاط-مناديل مبلله-20 موصلات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار-محمد عصمت -منصور سعد عبد العزيز -محمد علاء -رضاعبد الجواد-نيفين مصطفي عبد الخالق-محمد محسن طه",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "٢٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "بسمه السبع",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "٥٬٨٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "المتبقي من شهر 2",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "١٬٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رواتب",
+    "description": "700 ايمن-300 شريف-300اسلام",
+    "notes": null,
+    "fund_type": "رواتب"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مكافاه ايمن 50-شريف 50 -اسلام 50",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "١٬١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رواتب",
+    "description": "جيهان",
+    "notes": null,
+    "fund_type": "رواتب"
+  },
+  {
+    "date": "02/03/2018",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ساره درويش",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "الحاج فوزي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "الحاج فوزي مصاريف الجنايه (حرز سلاح ناري)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "مدام ايمان",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٨٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "شريف عرفه 500 مرتب جيهان-370 مصروفات مكتب",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار-منصور سعد عبد العزيز-محمد علاء-فوزي محروص-اشرف محمود رشاد-ايمن عبد الخالق-محمد ابراهيم سالم",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "١٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار شهاده بعدم حصول استئناف 351-359 استعلام-منصور سعد 493 شهاده بعدم حصول استئناف-محمد علاء 206 استخراج حكم وعريضه-فوزي محروص 453 جلسه-اشرف محمود رشاد 234-235عمل اعلان -ايمن عبدالخالق عوضين 20/2018استعلام وتصوير-محمد ابراهيم سالم6/2018 100 شغل -70 (20 تصوير -20 موصلات -20 شهادات -10 اعلان اشرف)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سها عبد الفتاح522",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٩٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "50 محمد المتولي (تصوير وتسليم التقرير)-10 فوزي محروص -10 موصلات-20 شغل",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "ماضي ابراهيم عوض-خالد زياده",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "03/03/2018",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "ماضي ابراهيم عوض 535 استئناف-خالد زياده 8693لسنه 2016 استعلام (25 شغل -20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ادويه",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٣٬٧٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "مصطفي عمار شهر 2",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٣٬٧٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "ايجار شهر 2",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "سكر",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "بديل الزيت",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "رفع الشيكات (3 محمد الوصيف-1صالح عبدالله)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حماده نصحي 511-نيفين الشافعي 546",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حماده نصحي شهاده جدول 511-نيفين الشافعي 546 شهاده جدول (30 شهادات-20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد\n ابراهيم 6/2018 -عبد العزيز سامي استئناف 543-مصطفي عمار استئناف 543-محمد علاء 206 عمل اعلان بالحكم (30 دمغه ومصاريف استئناف-10 اعلان -10 موصلات)50 شغل",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "04/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد ابراهيم سالم6/2018-عبد العزيز سامي 543-مصطفي عمار 543-محمد علاء 206",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "جمعه عبد الجواد-منصور سعد عبد العزيز-مصطفي عمار",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "جمعه عبد الجواد 528 استخرا ج 2 شهاده جدول-منصور سعد عبد العزيز 493 شهاده بعدم حصول استئناف-مصطفي عمار 351 شهاده بعدم حصول استئناف (30 مصروفات -20 شهادات جمعه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد عبدالله الوصيف-صالح عبدالله صالح-ايمن عبد الخالق -اكرم عبد الفتاح",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد الوصيف 25/2018 -26/2018 تحرير محض ين للشيكات-صالح عبدالله صالح 21/2018 رفع ايصال امانه -ايمن عبد الخالق استئناف546-اكرم عبد الفتاح 413 استعلام (220 مصروفات -30 موصلات)تم دفع مبلغ 200 يوم 4/3",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٣١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "نجاح نجاح حسن (عمل توكيل بيع في الشهر العقاري)رسوم 40-20 موصلات-نجاح 200-50 اتعاب",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "استاذ عبد الحميد",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "علا علي ابراهيم الطمان",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "علا الطمان (تصوير مستندات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "05/03/2018",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "موصلات فودافون كاش",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "عموله فودافون",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٣٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "مكرم عبيد",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "زيت شعر",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "معطر",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "علا ابراهيم طمان 27/2018  -محموديسري البيومي استعلام عن قضايا (لايوجد قضايا)-محمود عبد المعطي سمك (يوجد قضيه برقم 756 لسنه 2013)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "البيومي محمد البيومي -اشرف محمود رشاد-منصور سعد عبد العزيز",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "البيومي محمد البيومي 11384 حضور جلسه-اشرف محمود رشاد 234-235 استلام اعلان-منصور سعداستلام اربع عقود مشالركه (20 موصلات -10 تصوير ودمغه-70 شغل )",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "06/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "ايمان صالح",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار 226-ايمن عبد الخالق547- جمعه عبد الجواد 496 -260",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "١٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "النت",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "200 (اشرف 200 ملفات 234-235)-200ملفات جمعه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار 226 -ايمن عوضين 547 استعلام -جمعه عبد الجواد 496عمل 2 شهاده جدول-260 استعلام (50 شغل -20 موصلات-10 دمغه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد طلبه (شركه المياه)10 تصوير طلبات وبطايق ووصلات مياه -100 مصاريف -70 اتعاب",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد الموافي 530-531",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "07/03/2018",
+    "amount": "١٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد الموافي 530 (2شهاده جدول)-531 (2شهاده جدول)40 شغل-75 المرسي مصروفات-15 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "08/03/2018",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي كمال-شركه الراتنجات-مصطفي عمار",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "08/03/2018",
+    "amount": "٤٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي كمال الدين 34/2018 استعلام وتصوير وشهر عقاري-شركه الراتنجات استعلام وتصوير 31/2018-32/2018 (375 تصوير -25 موصلات-50شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "08/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "شركه الراتنجات -ايمان عبدالله صالح -جمعه عبد الجواد-محمد عبدالله الوصيف",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "08/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "شركه الراتنجات رفع دعوي33/2018-جمعه عبد الجواد 497-526 شهادات بريد-ايمان عبدالله 30/2018-محمد الوصيف تحرير شيك(100 الشيك والايصال-160 رسوم الشهادات-60 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "٢٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد طلبه (عدادات المياه)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "١٬٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "القاهره (احمد حلمي) جلسه",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد حلمي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "عمرو كتب",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "اشرف (مشوار نيفين)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "09/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "اسلام (رفع شيك الوصيف)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "10/03/2018",
+    "amount": "٢١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمود محمد ابراهيم523-محمد محسن طه 536",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "10/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد طلبه-ورثه مصطفي كمال-محمد محسن-مصطفي عمار -جمعه عبد الجواد",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "10/03/2018",
+    "amount": "٩٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد طلبه 232 استعلام -ورثه مصطفي كمال 34/2018تقديم علي عقود-محمد محسن 536 استلام اعلان-مصطفي صبري 378 استعلام -جمعه عبد الجواد 36/2018 استعلام وتصوير (30 تصوير -20 موصلات -40 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "10/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "شاي -بن غامق وفانح",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "10/03/2018",
+    "amount": "٣٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد حلمي (200 موصلات-180 مصروفات احمد حلمي )",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "11/03/2018",
+    "amount": "١٬٣٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "شريف عرفه (الايجار )خصم 500 جنيه",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "11/03/2018",
+    "amount": "٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "دهان جزم -طفايه-لمبه",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "11/03/2018",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "امل عبد المنعم 525 سحب العقود بعدم التجديد من الشطب-احمد البيومي11/2018 استعلام (30 امل عبد المنعم -20 موصلات-25 شغل)",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "11/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "امل عبد المنعم-احمد البيومي",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار -محمود محمد ابراهيم-محمد محسن طه -الطاف نجيب-ايمن عبد الخالق",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "موصلات المجزر",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "١٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "وصل الكهربا",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "١٬٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "ابراهيم العش (متبقي 1000 جنيه)",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي صبري 378 جلسه-محمود محمد ابراهيم523 استعلام-محمد محسن طه 536 استعلام-الطاف نجيب استعلام عن المحضر -ايمن عبد الخالق استخراج توكيل 547(30 موصلات-45 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "الحباره",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصطفي عمار",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار 347 متابعه-10/2018 (20 موصلات -20 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد العزي سامي-ايمن عبد الخالق-محمد مصطفي كمال",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد العزيز سامي 368-ايمن عبد الخالق 547 جلسه-محمد مصطفي كمال الدين34/2018 (10دمغه-20 موصلات-40 شغل )-30 متبقي من كشف احمد حلمي(11/3)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "نص كيلو بن (الممتاز)",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "12/03/2018",
+    "amount": "٢٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد حلمي متبقي 500 جنيه",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "13/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "13/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار جلسه 240-استعلام 378 (25 شغل -25 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "13/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد محمود الهلالي",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "13/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد حلمي اخلاء سبيل",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "13/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد حلمي اخلاء سبيل 200",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "تصليح ادوات الصيد",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "علبه سجاير",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "حماده نصحي -نيفين مصطفي -مصطفي صبري",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حماده نصحي 705 استخراج 2 شهاده جدول-نيفين مصطفي 45053 استخراج 2 شهاده جدول-مصطفي عمار استعلام 428-374 (25 ماجده-25 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٣٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد محمود الهلالي(تحقيق نيابه)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "تحقيق نيابه (محمد محمود الهلالي)",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد ابراهيم سالم-مصطفي عمار -محمد مصطفي كمال الدين",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "14/03/2018",
+    "amount": "٢٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد ابراهيم سالم 7/2018تصوير عريضه واستعلام-مصطفي عمار 375 استعلام-محمد مصطفي كمال الدين 34/2018 (190 مصروفات 20 موصلات-20 عماد مدني-40 باركينج عبد الحميد-100 محمد عطوه -5 تصوير",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "15/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "15/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "جمعه عبد الجواد-محمد محسن طه",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "15/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "526 جمعه عبد الجواد شهاده بريد-536محمد محسن طه تسليم اعلان (40 مصروفات-10 تسليم اعلان)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٦٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "الموافي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٣٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "150 ورق طباعه(3لفات)-كيلو اكياس زباله 38-مناديل (6لفات)65-15 ليف واريال-50 اقلام ازرق واحمر واسود-15 مناديل مبلله-20 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٦٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "منزل التوابتي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مكافأه ايمن",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "١٬٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "حماده نصحي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٢٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "الوكاله",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "باقي حساب السجاد",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "استعلام من المرور مصطفي عمار ملف 361",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "16/03/2018",
+    "amount": "٦٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسام الرفاعي تحقيق نيابه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "اشرف عبد الفتاح (دمياط)استعلام امني عن السيارات -محضر ايصال امانه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "سكر-ريد بول",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "حماده نصحي",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "نيفين",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد محسن طه جلسه -جمعه عبد الجواد-الطاف نجيب",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "١٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "536 محمد محسن طه -526جمعه عبد الجواد معارضه وتصوير-36/2018 استئناف-497 استئناف-الطاف نجيب 136 استعلام عن المحضر(65 شغل -50 دمغه ومصاريف الاستئناف والمعارضه -30 تصوير القضيه -20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "تصليح ادوات الصيد)اشرف",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "الاسترجي",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "اشرف عبد الفتاح (دمياط)",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "17/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمود احمد سعد الغوالي (3493-1274-7261)استعلام (محكمه دمياط)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "18/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محكمه دمياط(محمود احمد سعد الغوالي)",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "18/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "شاي -استيك ساعه",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "١٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "اكل (استاذ عبد الحجميد)",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "برواز شهاده",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد الناصر مرسي686 لسنه 2010-اكرم عبد الفتاح 398-397-399-413-اشرف محمد عبد الفتاح 512- محمد الوصيف 26/2018-مصطفي صبري 431 استعلامات (20 موصلات-40 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "19/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد الناصر مرسي-اكرم عبد الفتاح- اشرف عبد الفتاح -محمد الوصيف- مصطفي عمار",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٢٬٥٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "كرسي مكتب-نقل 75",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "علبه سجاير",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٣٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "فاتوره الاتصالات(320-20 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار 223-431 -ابراهيم صالح 509-محمد محسن طه 536-عبد الفتاح  الزلطه استعلامات -30 موصلات الترعه -الخبرا المحكمه-30 شغل",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي عمار -ابراهيم صالح-محمد ابراهيم سالم -محمد محسن -عبد الفتاح الزلطه",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عبد العزيز سامي-اشرف عبد الفتاح -عبدالله حامد شيماء حسانين-محمد محمد صقر -محمد محسن طه",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "20/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد العزيز سامي 521-اشرف عبد الفتاح 512-195-عبدالله حامد 283-شيماء حسانين 292-محمد السيد صقر 329-محمد محسن طه 036 استعلام عن اخر ماتم -25 موصلات-35 شغل",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٤٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "محمد طلبه ملف 216",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٣٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "كوكو دور",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار223 (استعلام الاقتصاديه -المختلط)-محمد ابراهيم سالم 6/2018 اطلاع علي التقرير -احمد ابو الحسن عمل بطاقه",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "مصطفي صبري -محمد ابراهيم سالم -احمد ابو الحسن",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عبد الفتاح الزلطه (اعلان)4142-10 مصاريف- 20 موصلات-20 اتعاب",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٦٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سجاير -حاجه ساقعه",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "الحاج فوزي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "طارق الالفي -نعيمه محمد عطيه -وفاء محمد عطيه",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "طارق الالفي (استلام خريطه )5/2018-نعيمه محمد عطيه -وفاء محمد عطيه استعلام فهرس -تصوير ميكروفيلم (20 موصلات-60 تصوير )",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "مصطفي عمار 364 استعلام (ميت غمر )-محمد عبد السلام 388 استعلام",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "21/03/2018",
+    "amount": "٤٬٢٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 21/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "22/03/2018",
+    "amount": "١٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "مقدم الازاز (متبقي 270)",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "22/03/2018",
+    "amount": "١٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "50 ملفات بلاستيك (قلم وكبسوله)-15 اظرف طويله-25 اسنان نص ملي-15 حجاره صغيره-20حجاره كبيره-25 موصلات",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "22/03/2018",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "سلفه علي عوض",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "الحاج فوزي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٢٬٧٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "حساب المطعم (نادي الحوار)ايهاب فوده-محمودفوزي-محمد عصام-محمد المعداوي-السيد التهامي-عبد الحميد عسكر",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "مصروف شخصي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "اشرف محمود234-235 -رضا عبد الجواد 513-عفا ف مسعد 348-محمد الموافي 335-محمد طلبه 216-مصطفي عمار368-احمد ابو الحسن-محمد علاء 206(50شغل-30 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "اشرف محمود-رضا عبد الجواد-عفاف مسعد-محمد الموافي-مصطفي صبري-احمد ابو الحسن-محمد علاء مصطفي",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد الوصيف 73 احوال -صالح عبدالله21/2018-ايمن عبد الخالق 547 استعلام (20 موصلات-15 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "الوصيف- صالح عبدالله-ايمن عبد الخالق",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٥٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "الازاز",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "23/03/2018",
+    "amount": "٥٬٠٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 23/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٤٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "طارق نور (العزومه)نادي الحوار",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٢٨٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "باقي الازاز",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "احمد ابو الحسن(علي عوض)38/2018-39/2018",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "10تاكسي-10 سكر-15 ينسون",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "١٥٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "فاتوره الارضي",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٣٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سها عبد الفتاح 522-الفاروق عمر احمد 16/2018-محمد طلبه 19/2018(اطلاعات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٤٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "اهل الشام",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "عياد خليل- محمد طلبه-محمود محمد ابراهيم -السيده اسامه-حسام الرفاعي -امال طه زايد -ناجي احمد متولي-مصطفي عمار -علي عوض",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٣٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "عياد خليل 471 استعلام-محمد طلبه 19/2018 تصوير حكم واستعلام--216 استعلام- محمود محمد ابراهيم 523 استعلام-السيده عبد الرحيم 465 استعلام-حسام الرفاعي 37/2018 استعلام-امال طه زايد 44 استلام اعلان-عمل اعلان جديد-ناجي متولي استعلام-مصطفي عمار استعلام-علي عوض عمل اعلان (200 سعد جنايات-10 تصوير -20 جراج فتح الله-30 موصلات-70 شغل",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سها عبد الفتاح-محمد نصر-صالح عبدالله صالح",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سها عبد الفتاح 522 استعلام-محمد نصر 199 اعلان-صالح عبدالله صالح (25 شغل -25 موصلات)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "جيهان محمود تصوير-محمد طلبه استعلام(20 موصلات-25 تصوير -5 استعلام)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "جيهان محمود -محمد طلبه",
+    "notes": null,
+    "fund_type": "أتعاب أ/ إسلام عوض"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٤٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رواتب",
+    "description": "شريف اسامه",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "ايمن البلتاجي",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "24/03/2018",
+    "amount": "٣٬١٦٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 24/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "25/03/2018",
+    "amount": "٧٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "جمعه عبد الجواد 526-عفاف مسعد 348-ايمن عبد الخالق 547 (20 موصلات-50 بتاع محضر الاستئناف)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "25/03/2018",
+    "amount": "١١٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "ايمن عوضين-جمعه عبد الجواد-عفاف مسعد",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "25/03/2018",
+    "amount": "٢٬٩٨٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 25/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "26/03/2018",
+    "amount": "٤٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "استاذ عبد الحميد-30 موصلات400 من البيت للنادي ومن النادي لمركز الانتخاب",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "27/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "حسام العدل-محمد البيومي",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "27/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "حسام العدل 515 استعلام-احمد محمد البيومي 46/2018 جلسه 30  موصلات-20 شغل",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "29/03/2018",
+    "amount": "٣٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "فلاش-معطر",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  },
+  {
+    "date": "30/03/2018",
+    "amount": "١٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "خاص عبدالحميد",
+    "description": "الانتخابات",
+    "notes": null,
+    "fund_type": "خاص عبدالحميد"
+  },
+  {
+    "date": "30/03/2018",
+    "amount": "٢٤٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "عربون الكهربائي",
+    "notes": null,
+    "fund_type": null
+  },
+  {
+    "date": "30/03/2018",
+    "amount": "٧٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رواتب",
+    "description": "مرتب ايمن",
+    "notes": null,
+    "fund_type": "رواتب"
+  },
+  {
+    "date": "30/03/2018",
+    "amount": "٦٢٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "اخر يوم 30/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "محمود ابراهيم -اشرف محمود رشاد- محمد الوصيف -ايمان عبدالله- احمد البيومي-علاطمان-حسام الدين العدل",
+    "notes": null,
+    "fund_type": "أتعاب ا/شريف"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "١٢٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمود محمد ابراهيم طلب استخراج صوره رسميه 17083-اشرف محمود رشاد صوره ميكروفيلم 234-235-محمد الوصيف 35/2018-25/2018 استعلام-ايمان صالح 30/2018 استعلام -احمد البيومي 46/2018 استعلام-علا طمان 27/2018 كشف امني-حسام الدين استعلام(30 موصلات -20 تصوير -75 شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "٧٥",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "اتعاب ا/ أيمن",
+    "description": "محمد ابراهيم سالم-ابرهيم صالح-اشرف محمود رشاد-ايمن عبد الخالق-محمود سمك-اكرم عبد الفتاح-احمد عبدالله",
+    "notes": null,
+    "fund_type": "اتعاب ا/ أيمن"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد ابراهيم سالم 7/2018 جلسه-ابراهيم صالح 509 استعلام-اشرف محمود رشاد 285 استعلام-221 استخراج حكم-ايمن عوضين 20/2018 استعلام-محمود سمك(علا طمان)استعلام ملف 28/2018-اكرم عبدالفتاح 397 استعلام-احمد مصطفي عبدالله 44/2018 (30 موصلات-15 تصوير حكم-55شغل)",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "رصيد يومي",
+    "description": "نهايه يوم 31/3/2018",
+    "notes": null,
+    "fund_type": "رصيد يومي"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "١٠٬٠٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "احمد طلبه قضيه الجنايات",
+    "notes": null,
+    "fund_type": "إيرادات"
+  },
+  {
+    "date": "31/03/2018",
+    "amount": "٢٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات مكتب",
+    "description": "100 باقي حساب طلبات الكهربا(بريزه -لمبه-3 ترنس-3لمبه طويله--دوايه-لفه شريط-افزان -150الشغل",
+    "notes": null,
+    "fund_type": "مصروفات مكتب"
+  }
+]

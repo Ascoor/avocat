@@ -1,0 +1,2040 @@
+[
+    {
+        "id": 1,
+        "name": "محكمة استئناف القاهرة",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 2,
+        "name": "محكمة إستئناف الاسكندرية",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "name": "محكمة أستئناف المنصورة",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 4,
+        "name": "محكمة أستئناف طنطا",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 5,
+        "name": "محكمة استئناف الاسماعيلية",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 6,
+        "name": "محكمة استئناف اسيوط",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 7,
+        "name": "محكمة إستئناف قنا",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 8,
+        "name": "مامورية استئناف مطروح",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 9,
+        "name": "مامورية استئناف بورسعيد",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 10,
+        "name": "مامورية استئناف السويس",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 11,
+        "name": "مامورية استئناف التل الكبير",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 12,
+        "name": "مامورية استئناف الطور",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 13,
+        "name": "محكمة استئناف اسرة الاسماعليلية",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 14,
+        "name": "مامورية استئناف اسرة بورسعيد",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 15,
+        "name": "ماموريه استئناف الفيوم",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 16,
+        "name": "مامورية استئناف البحر الاحمر",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 17,
+        "name": "ماموريه استئناف شمال القاهره",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 18,
+        "name": "محكمه استناف اسره القاهره",
+        "court_type_id": 2,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 19,
+        "name": "ماموريه استئناف التجمع لشئون الاسره",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 20,
+        "name": "ماموريه استئناف المحله",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 21,
+        "name": "ماموريه استئناف دمياط",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 22,
+        "name": "ماموريه استئناف الزقازيق",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 23,
+        "name": "مأموريه استئناف دمنهور",
+        "court_type_id": 1,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 24,
+        "name": "محكمة شمال القاهرة الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 25,
+        "name": "محكمة جنوب القاهرة الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 26,
+        "name": "محكمة شمال الجيزة الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 27,
+        "name": "محكمة شرق اسكندرية الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 28,
+        "name": "محكمة شمال دمنهور الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 29,
+        "name": "محكمة غرب طنطا الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 30,
+        "name": "محكمة الاسماعيلية الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 31,
+        "name": "محكمة جنوب الزقازيق الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 32,
+        "name": "محكمة جنوب المنصورة الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 33,
+        "name": "محكمة السويس الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 34,
+        "name": "محكمة كفر الشيخ الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 35,
+        "name": "محكمة شمال بنها الأبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 36,
+        "name": "محكمة شبين الكوم الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 37,
+        "name": "محكمة الفيوم الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 38,
+        "name": "محكمة بنى سويف الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 39,
+        "name": "محكمة المنيا الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 40,
+        "name": "محكمة سوهاج الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 41,
+        "name": "محكمة شمال سيناء الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 42,
+        "name": "محكمة جنوب سيناء الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 43,
+        "name": "محكمة حلوان الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 44,
+        "name": "محكمة القاهرة الجديدة الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 45,
+        "name": "محكمه جنوب الجيزة الابتدائيه",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 46,
+        "name": "محكمة جنوب بنها الأبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 47,
+        "name": "محكمة شمال الزقازيق الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 48,
+        "name": "محكمة غرب اسكندرية الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 49,
+        "name": "محكمة مرسى مطروح الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 50,
+        "name": "محكمة شرق طنطا الأبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 51,
+        "name": "محكمة بورسعيد الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 52,
+        "name": "محكمة البحر الاحمر الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 53,
+        "name": "محكمة الوادى الجديد الابتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 54,
+        "name": "محكمة المنتزة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 55,
+        "name": "محكمة العطارين الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 56,
+        "name": "محكمة الرمل الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 57,
+        "name": "محكمة محرم بك الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 58,
+        "name": "محكمة الدخيلة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 59,
+        "name": "محكمة العامرية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 60,
+        "name": "محكمة برج العرب الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 61,
+        "name": "محكمة المنشية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 62,
+        "name": "محكمة سيدى جابر الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 63,
+        "name": "محكمة كرموز الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 64,
+        "name": "محكمة مينا البصل الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 65,
+        "name": "محكمة الجمرك الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 66,
+        "name": "محكمة باب شرقى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 67,
+        "name": "محكمة حوش عيسى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 68,
+        "name": "محكمة بندر دمنهور الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 69,
+        "name": "محكمة الوايلى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 70,
+        "name": "محكمة الازبكية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 71,
+        "name": "محكمة شبرا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 72,
+        "name": "محكمة الزيتون الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 73,
+        "name": "محكمة مصر الجديدة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 74,
+        "name": "محكمة مدينة نصرالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 75,
+        "name": "محكمة بولاق الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 76,
+        "name": "محكمة روض الفرج الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 77,
+        "name": "المحكمة التجارية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 78,
+        "name": "محكمة عين شمس الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 79,
+        "name": "محكمة الشرابية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 80,
+        "name": "محكمة القاهرة الجديدة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 81,
+        "name": "محكمة المطريةالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 82,
+        "name": "محكمة المرج الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 83,
+        "name": "محكمة السلام الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 84,
+        "name": "محكمة الدرب الاحمر الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 85,
+        "name": "محكمة الخليفة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 86,
+        "name": "محكمة مصر القديمة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 87,
+        "name": "محكمة السيدة زينب الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 88,
+        "name": "محكمة باب الشعريةالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 89,
+        "name": "محكمة الموسكى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 90,
+        "name": "محكمة الامور المستعجلة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 91,
+        "name": "محكمة الجمالية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 92,
+        "name": "محكمة المعادى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 93,
+        "name": "محكمة عابدين الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 94,
+        "name": "محكمة حلوان الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 95,
+        "name": "محكمة التبين و15 مايوالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 96,
+        "name": "محكمة بندر امبابة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 97,
+        "name": "محكمة الدقى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 98,
+        "name": "محكمة العجوزة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 99,
+        "name": "محكمة الوراق الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 100,
+        "name": "محكمة كرداسة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 101,
+        "name": "محكمة اوسيم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 102,
+        "name": "محكمة مركز امبابة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 103,
+        "name": "محكمة العمرانية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 104,
+        "name": "محكمة الهرم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 105,
+        "name": "محكمة 6 اكتوبرالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 106,
+        "name": "محكمة البدرشين الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 107,
+        "name": "محكمة الصف الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 108,
+        "name": "مأمورية الصف الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 109,
+        "name": "محكمة بندر الاسماعيلية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 110,
+        "name": "محكمة مركزالاسماعيلية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 111,
+        "name": "محكمة التل الكبير الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 112,
+        "name": "محكمة فايد الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 113,
+        "name": "محكمة القنطرة غرب الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 114,
+        "name": "محكمة قنطرة شرق الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 115,
+        "name": "محكمة بندر الزقازيق الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 116,
+        "name": "محكمة مركزالزقازيق الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 117,
+        "name": "محكمة ههيا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 118,
+        "name": "محكمة الحسينيةالجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 119,
+        "name": "محكمة شرم الشيخ الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 120,
+        "name": "محكمة بندر الجيزة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 121,
+        "name": "مأمورية أبشوى الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 122,
+        "name": "مأمورية طامية الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 123,
+        "name": "محكمة سنورس الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 124,
+        "name": "محكمة بندر الفيوم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 125,
+        "name": "محكمة مركز الفيوم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 126,
+        "name": "محكمة اطسا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 127,
+        "name": "محكمة ابشواى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 128,
+        "name": "محكمة طامية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 129,
+        "name": "محكمة الاربعين الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 130,
+        "name": "محكمة اللبان الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 131,
+        "name": "محكمة مرسى مطروح الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 132,
+        "name": "محكمة ابو تيج الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 133,
+        "name": "محكمة التنفيذ الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 134,
+        "name": "محكمة مركز دمنهور الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 135,
+        "name": "محكمة حوش عيسى الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 136,
+        "name": "محكمة بندر شبين الكوم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 137,
+        "name": "محكمة زفتى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 138,
+        "name": "محكمة الوسطى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 139,
+        "name": "محكمة اول طنطا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 140,
+        "name": "محكمة التنفيذ غرب الاسكندرية الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 141,
+        "name": "المحكمة التجارية الجزئية غرب اسكندرية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 142,
+        "name": "محكمة شبين القناطر الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 143,
+        "name": "محكمة ميناء بورسعيد الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 144,
+        "name": "محكمة بندر كفر الشيخ الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 145,
+        "name": "محكمة الضواحى الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 146,
+        "name": "محكمة طوخ الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 147,
+        "name": "محكمة مركز كفر الشيخ الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 148,
+        "name": "محكمة بندر بنها الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 149,
+        "name": "محكمة مركز بنها الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 150,
+        "name": "محكمة ثانى طنطا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 151,
+        "name": "محكمة مركز طنطا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 152,
+        "name": "محكمة السنطة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 153,
+        "name": "محكمة السنطة الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 154,
+        "name": "محكمة كفر الزيات الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 155,
+        "name": "محكمة كفر الزيات الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 156,
+        "name": "محكمة بسيون الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 157,
+        "name": "محكمة زفتى الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 158,
+        "name": "محكمة الغردقة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 159,
+        "name": "محكمة التل الكبير الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 160,
+        "name": "محكمة الطور الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 161,
+        "name": "محكمة الخانكة الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 162,
+        "name": "محكمة العريش الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 163,
+        "name": "محكمة السويس الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 164,
+        "name": "محكمة شرم الشيخ الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 165,
+        "name": "محكمة راس سدر الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 166,
+        "name": "محكمة بورسعيد الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 167,
+        "name": "محكمة ناصر الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 168,
+        "name": "محكمة اهناسيا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 169,
+        "name": "محكمة الداخلة الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 170,
+        "name": "محكمة الداخلة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 171,
+        "name": "محكمة الخارجة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 172,
+        "name": "محكمة نصر النوبة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 173,
+        "name": "محكمة دراو الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 174,
+        "name": "محكمة السلوم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 175,
+        "name": "محكمة نويبع الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 176,
+        "name": "محكمة العلمين الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 177,
+        "name": "محكمة الفشن الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 178,
+        "name": "محكمة اخميم الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 179,
+        "name": "محكمة اخميم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 180,
+        "name": "محكمة مركز سوهاج الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 181,
+        "name": "محكمة بندر سوهاج الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 182,
+        "name": "محكمة بندر بنى سويف الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 183,
+        "name": "محكمة ابوتيج الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 184,
+        "name": "محكمة سمسطا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 185,
+        "name": "محكمة مركز المنيا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 186,
+        "name": "محكمة مركز بنى سويف الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 187,
+        "name": "محكمة سمالوط الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 188,
+        "name": "محكمة بنى مزار الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 189,
+        "name": "محكمة مغاغة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 190,
+        "name": "محكمة مغاغة الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 191,
+        "name": "محكمة ملوى الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 192,
+        "name": "محكمة منوف الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 193,
+        "name": "محكمة قويسنا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 194,
+        "name": "محكمة مركز شبين الكوم الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 195,
+        "name": "محكمة قسم ثانى المنصورة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 196,
+        "name": "محكمة قسم اول المنصورة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 197,
+        "name": "محكمة مركز المنصورة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 198,
+        "name": "محكمة الخانكة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 199,
+        "name": "محكمة شبرا الخيمة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 200,
+        "name": "محكمة دسوق الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 201,
+        "name": "محكمة قليوب الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 202,
+        "name": "محكمة بندر المنيا الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 203,
+        "name": "محكمه راس غارب الجزئيه",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 204,
+        "name": "محكمه القصير الجزئيه",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 205,
+        "name": "مامورية سفاجا الكلية",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 206,
+        "name": "محكمة دمياط الجديدة الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 207,
+        "name": "محكمة العبور الجزئية",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 208,
+        "name": "جنح مستأنف البحر الاحمر",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 209,
+        "name": "جنح الغردقة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 210,
+        "name": "جنح مستأنف ثان",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 211,
+        "name": "محكمة أسرة أول المنصورة",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 212,
+        "name": "محكمة أسرة اول مدينة نصر",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 213,
+        "name": "محكمة أسرة بورسعيد",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 214,
+        "name": "محكمة أسرة ثان المنصورة",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 215,
+        "name": "محكمة أسرة جزئي",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 216,
+        "name": "محكمة أسرة دكرنس",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 217,
+        "name": "محكمة أسرة أول المنصورة",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 218,
+        "name": "محكمة أسرة ثان المنصورة",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 219,
+        "name": "محكمة أسرة مركز المنصورة",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 220,
+        "name": "محكمة أسرة مستأنف",
+        "court_type_id": 2,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 221,
+        "name": "محكمة أسرة مستانف",
+        "court_type_id": 2,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 222,
+        "name": "محكمة جنح مستأنف ثان",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 223,
+        "name": "محكمة جنح مستأنف أول",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 224,
+        "name": "محكمة جنح مستأنف أول المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 225,
+        "name": "محكمة جنح مستأنف ثان المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 226,
+        "name": "محكمة جنح مستأنف جنوب المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 227,
+        "name": "محكمة جنح مستأنف دمياط",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 228,
+        "name": "محكمة جنح مستانف",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 229,
+        "name": "محكمة جنح مستانف أول المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 230,
+        "name": "محكمة جنح مستانف اول مدينه نصر",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 231,
+        "name": "محكمة جنح مستانف تان المنصورره",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 232,
+        "name": "محكمة جنح مستانف ثان المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 233,
+        "name": "محكمة جنح مستانف مركز المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 234,
+        "name": "محكمة مدني كلي",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 235,
+        "name": "محكمة مدني كلي اسكندرية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 236,
+        "name": "محكمة مدني مستأنف بلقاس",
+        "court_type_id": 1,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 237,
+        "name": "محكمة جنح ميت غمر",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 238,
+        "name": "محكمة جنح السنبلاوين",
+        "court_type_id": 3,
+        "court_level_id": 4,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 239,
+        "name": "محكمة المنصورة الإبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "240",
+        "name": "محكمة دكرنس الجزئية المنصورة الإبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "241",
+        "name": "محكمة المنصورة الإبتدائية د/3 ايجارات",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "242",
+        "name": "محكمة دكرنس الإبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "243",
+        "name": "محكمة جنح مستأنف ثان المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "244",
+        "name": "محكمة جنح مستأنف جنوب المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "245",
+        "name": "محكمة جنح جنح مستأنف ثان",
+        "court_type_id": 3,
+        "court_level_id": 2
+    },
+    {
+        "id": "246",
+        "name": "محكمة مدني مستأنف بلقاس",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "247",
+        "name": "محكمة جنح مستأنف أول المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "248",
+        "name": "محكمة أسرة مستأنف",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "249",
+        "name": "محكمة المنصورة الإبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "250",
+        "name": "محكمة حلوان الإبتدائية",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "251",
+        "name": "محكمة جنج مستأنف ثان المنصورة",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "252",
+        "name": "محكمة حلوان محكمة المنصورة الإبتدائية (محكمة المنصورة الإبتدائية) - القاهرة",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "253",
+        "name": "محكمة جنح مستأنف أول",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "254",
+        "name": "محكمة المنصورة الإبتدائية محكمة جنح أول المنصورة",
+        "court_type_id": 1,
+        "court_level_id": 3,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "255",
+        "name": "محكمة جنح مستأنف دمياط",
+        "court_type_id": 3,
+        "court_level_id": 2,
+        "created_at": null,
+        "updated_at": null
+    }
+]

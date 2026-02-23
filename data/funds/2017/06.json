@@ -1,0 +1,52 @@
+[
+  {
+    "date": "30/06/2017",
+    "amount": "١٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سالي ثروت 233-اشرف محمود رشاد234-235-مصطفي عمار 373-محمود سامي 380 استعلامات -جمعه عبد الجواد 257مصطفي عمار 310 شهادات جدول -عادل عبد المعطي 385-جمعه عبد الجواد 286 عياد خليل 290 استعلامات",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/06/2017",
+    "amount": "٥٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "سالي  -مصطفي عمار  - جمعه عبد الجواد -عادل عبد المعطي - محمد الموافي  - عياد خليل -اشرف محمود رشاد  -محمود سامي",
+    "notes": null,
+    "fund_type": "اتعاب"
+  },
+  {
+    "date": "30/06/2017",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "محمد علاء206-ايمن عبد الخالق 460",
+    "notes": null,
+    "fund_type": "اتعاب"
+  },
+  {
+    "date": "30/06/2017",
+    "amount": "٣٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "مصروفات موكل",
+    "description": "جلسه محمد علاء صحه توقيع- ايمن عبد الخالق 460 تسليم انذار",
+    "notes": null,
+    "fund_type": "مصروفات موكل"
+  },
+  {
+    "date": "30/06/2017",
+    "amount": "٢٠٠",
+    "invoice_number": null,
+    "lawyer_name": "أيمن البلتاجي",
+    "expense_type": "إيرادات",
+    "description": "الحاج فوزي",
+    "notes": null,
+    "fund_type": "إيرادات"
+  }
+]
