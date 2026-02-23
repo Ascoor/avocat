@@ -12,6 +12,20 @@ class ExpenseCategory extends Model
 
     protected $fillable = [
         'name',
+        'office_id',
+        'is_system',
+        'parent_id',
+        'is_active',
+        'sort_order',
+        'is_locked',
+        'deleted_at',
+    ];
+
+    protected $casts = [
+        'is_system' => 'boolean',
+        'is_active' => 'boolean',
+        'is_locked' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
 
     public function expenses(): HasMany

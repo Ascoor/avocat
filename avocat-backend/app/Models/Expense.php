@@ -15,6 +15,7 @@ class Expense extends Model
         'leg_case_id',
         'created_by',
         'legal_session_id',
+        'legal_ad_id',
         'expense_category_id',
         'client_id',
         'unclients_id',
@@ -28,6 +29,18 @@ class Expense extends Model
         'expense_date' => 'date',
         'amount' => 'array',
     ];
+
+    public function setAmountAttribute($value): void
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $value = $decoded;
+            }
+        }
+
+        $this->attributes['amount'] = is_array($value) ? json_encode($value) : $value;
+    }
 
     public function service(): BelongsTo
     {
@@ -47,6 +60,11 @@ class Expense extends Model
     public function legalSession(): BelongsTo
     {
         return $this->belongsTo(LegalSession::class);
+    }
+
+    public function legalAd(): BelongsTo
+    {
+        return $this->belongsTo(LegalAd::class);
     }
 
     public function expenseCategory(): BelongsTo

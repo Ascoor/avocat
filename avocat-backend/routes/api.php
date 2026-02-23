@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\CourtSearchController;
 use App\Http\Controllers\Api\CourtTypeController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\FinanceLedgerController;
 use App\Http\Controllers\Api\ExpenseCategoryController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\HomeController;
@@ -152,7 +153,14 @@ Route::prefix('v1')->group(function () {
         Route::get('get-case-details', [CaseStatusController::class, 'getCaseDetails']);
 
         Route::get('expenses/search', [ExpenseController::class, 'searchExpenses']);
+
+        Route::get('finance/ledger', [FinanceLedgerController::class, 'index']);
+        Route::post('finance/ledger', [FinanceLedgerController::class, 'store']);
+        Route::get('finance/cases/{id}/summary', [FinanceLedgerController::class, 'caseSummary']);
         Route::get('expense_categories', [ExpenseCategoryController::class, 'index']);
+        Route::post('expense_categories', [ExpenseCategoryController::class, 'store']);
+        Route::put('expense_categories/{id}', [ExpenseCategoryController::class, 'update']);
+        Route::delete('expense_categories/{id}', [ExpenseCategoryController::class, 'destroy']);
         Route::get('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'index'])->middleware('permission.guard:settings.manage,officeSettings.manage');
         Route::post('offices/{officeId}/settings/{entity}', [OfficeSettingsController::class, 'store'])->middleware('permission.guard:officeSettings.manage');
         Route::put('offices/{officeId}/settings/{entity}/{id}', [OfficeSettingsController::class, 'update'])->middleware('permission.guard:officeSettings.manage');
