@@ -15,10 +15,10 @@ const requestWithFallback = async (primary, fallback) => {
 
 export const getLookups = async ({ entity, officeId, params = {} }) => {
   const response = await requestWithFallback(
-    () => api.get(`/lookups/${entity}`, { params }),
     officeId
       ? () => api.get(`/offices/${officeId}/settings/${entity}`, { params })
-      : undefined,
+      : () => api.get(`/lookups/${entity}`, { params }),
+    officeId ? () => api.get(`/lookups/${entity}`, { params }) : undefined,
   );
 
   const payload = resolvePayload(response);
@@ -27,24 +27,24 @@ export const getLookups = async ({ entity, officeId, params = {} }) => {
 
 export const createLookup = ({ entity, officeId, payload }) =>
   requestWithFallback(
-    () => api.post(`/lookups/${entity}`, payload),
     officeId
       ? () => api.post(`/offices/${officeId}/settings/${entity}`, payload)
-      : undefined,
+      : () => api.post(`/lookups/${entity}`, payload),
+    officeId ? () => api.post(`/lookups/${entity}`, payload) : undefined,
   );
 
 export const updateLookup = ({ entity, officeId, id, payload }) =>
   requestWithFallback(
-    () => api.put(`/lookups/${entity}/${id}`, payload),
     officeId
       ? () => api.put(`/offices/${officeId}/settings/${entity}/${id}`, payload)
-      : undefined,
+      : () => api.put(`/lookups/${entity}/${id}`, payload),
+    officeId ? () => api.put(`/lookups/${entity}/${id}`, payload) : undefined,
   );
 
 export const deleteLookup = ({ entity, officeId, id }) =>
   requestWithFallback(
-    () => api.delete(`/lookups/${entity}/${id}`),
     officeId
       ? () => api.delete(`/offices/${officeId}/settings/${entity}/${id}`)
-      : undefined,
+      : () => api.delete(`/lookups/${entity}/${id}`),
+    officeId ? () => api.delete(`/lookups/${entity}/${id}`) : undefined,
   );

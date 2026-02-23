@@ -7,49 +7,27 @@ use Illuminate\Support\Facades\DB;
 
 class CourtLevelsTableSeeder extends Seeder
 {
-
-    /**
-     * Auto generated seed file
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        
+        $defaults = [
+            ['id' => 1, 'name' => 'نقض'],
+            ['id' => 2, 'name' => 'إستئناف'],
+            ['id' => 3, 'name' => 'إبتدائى'],
+            ['id' => 4, 'name' => 'جزئي'],
+        ];
 
-       DB::table('court_levels')->delete();
-        
-       DB::table('court_levels')->insert(array (
-            0 => 
-            array (
-                'id' => 1,
-                'name' => 'نقض',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            1 => 
-            array (
-                'id' => 2,
-                'name' => 'إستئناف',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            2 => 
-            array (
-                'id' => 3,
-                'name' => 'إبتدائى',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            3 => 
-            array (
-                'id' => 4,
-                'name' => 'جزئي',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-        ));
-        
-        
+        $rows = array_map(static function (array $row): array {
+            return array_merge($row, [
+                'office_id' => null,
+                'is_system' => true,
+                'updated_at' => now(),
+            ]);
+        }, $defaults);
+
+        DB::table('court_levels')->upsert(
+            $rows,
+            ['id'],
+            ['name', 'office_id', 'is_system', 'updated_at']
+        );
     }
 }
