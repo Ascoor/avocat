@@ -102,4 +102,37 @@ class OfficeSettingsControllerTest extends TestCase
             ->assertJsonPath('deleted', false)
             ->assertJsonPath('data.is_active', false);
     }
+
+    public function test_lookup_routes_resolve_office_scope_from_authenticated_user(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $created = $this->postJson('/api/v1/lookups/procedure_types', [
+            'name' => 'Lookup Procedure',
+            'sort_order' => 1,
+        ]);
+
+        $created
+            ->assertCreated()
+            ->assertJsonPath('data.office_id', $office->id)
+            ->assertJsonPath('meta.office_id', $office->id)
+            ->assertJsonPath('meta.entity', 'procedure_types');
+
+        $id = $created->json('data.id');
+
+        $this->getJson('/api/v1/lookups/procedure_types')
+            ->assertOk()
+            ->assertJsonPath('meta.office_id', $office->id)
+            ->assertJsonPath('meta.entity', 'procedure_types');
+
+        $this->putJson("/api/v1/lookups/procedure_types/{$id}", [
+            'name' => 'Lookup Procedure Updated',
+        ])->assertOk()->assertJsonPath('data.name', 'Lookup Procedure Updated');
+
+        $this->deleteJson("/api/v1/lookups/procedure_types/{$id}")
+            ->assertOk()
+            ->assertJsonPath('deleted', true);
+    }
+
 }

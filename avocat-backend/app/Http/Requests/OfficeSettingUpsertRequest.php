@@ -22,7 +22,7 @@ class OfficeSettingUpsertRequest extends FormRequest
 
         $nameColumn = $config['name_column'];
         $table = (new $config['model']())->getTable();
-        $officeId = (int) $this->route('officeId');
+        $officeId = (int) ($this->route('officeId') ?? $this->user()?->office_id ?? 0);
         $id = $this->route('id') ? (int) $this->route('id') : null;
 
         $rules = [
