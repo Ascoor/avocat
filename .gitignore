@@ -15,6 +15,7 @@ secrets.*
 logs/
 tmp/
 .cache/
+data/
 
 # OS / Editors
 .DS_Store
@@ -77,6 +78,21 @@ search-api/myenv/
 search-api/venv/
 search-api/.venv/
 search-api/env/
+
+
+data/__pycache__/
+data/**/__pycache__/
+data/*.pyc
+data/*.pyo
+data/*.pyd
+data/*.db
+data/*.sqlite
+data/.pytest_cache/
+data/.mypy_cache/
+data/myenv/
+data/venv/
+data/.venv/
+data/env/
 
 ########################################
 # Production output (if you don't want it on GitHub)

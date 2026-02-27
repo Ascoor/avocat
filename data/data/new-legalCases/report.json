@@ -1,0 +1,266 @@
+{
+  "total_input_rows": 3527,
+  "header_rows_skipped": 8,
+  "unique_slugs": 363,
+  "duplicates_count": 1393,
+  "missing_rows_count": 2,
+  "missing_case_types_top": [
+    [
+      "جنايي",
+      16
+    ]
+  ],
+  "missing_case_sub_types_top": [],
+  "duplicates_sample": [
+    {
+      "slug": "202",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "341",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "312",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "351",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "212",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "287",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "260",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "353",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "0052",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "198",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "216",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "00567856786",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "439",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "59/2020",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "457",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "489",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "492",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "509",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "522",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "292",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "8/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "0011214",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "17/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "39/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "42/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "57/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "83/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "84/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "170/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "171/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "108/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "144/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "158/2018",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "2/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "001447441",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "57/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "59/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "003756",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "73/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "84/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "85/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "90/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "93/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "95/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "98/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "103/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "104/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "490",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "128/2019",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_2.json"
+    },
+    {
+      "slug": "202",
+      "kept_from": "legalCases/cases_batch_1.json",
+      "dropped_from": "legalCases/cases_batch_3.json"
+    }
+  ]
+}

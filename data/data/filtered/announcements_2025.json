@@ -1,0 +1,163 @@
+[
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/02.json",
+    "case_slug": "216",
+    "leg_case_id": 2449,
+    "date_start": "2025-02-11",
+    "date_end": "2025-02-11",
+    "procedure_place": "المختلط",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "اعاده اعلان للاستئنافين",
+    "result": "تم عمل اعاده اعلان باق الخصوم المدخلين في الاستئناف الاصلي رقم 3314 لسنه 74 ق وتم سداد الرسم والتصوير بالحاسب الالي وختمه وتم عمل اعاده اعلان باق الخصوم المدخلين في الاستئناف المقابل رقم 5275 لسنه 75 ق وتم سداد الرسم والتصوير بالحاسب الالي وختمه وتم تسليم الاعلانين الستاذ سامي لاعلانهم بالمحضرين",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "75"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/03.json",
+    "case_slug": "79/2023",
+    "leg_case_id": 359,
+    "date_start": "2025-03-02",
+    "date_end": "2025-03-02",
+    "procedure_place": "الاستاد",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "اعلان بورود التقرير",
+    "result": "تم عمل اعلان بورود التقرير والتاشير عليه من السكرتير وسداد الرسم وختمه",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "30"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/05.json",
+    "case_slug": "46/2023",
+    "leg_case_id": 2496,
+    "date_start": "2025-05-06",
+    "date_end": "2025-05-06",
+    "procedure_place": "المختلط-البحر",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "عمل اعلان-تسليم الاعلان",
+    "result": "تم عمل اعاده اعلان وتم سداد الرسم والتصوير المميكن وختمه وتم تسليمه لمحضرين تان المنصوره",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "50"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/05.json",
+    "case_slug": "34/2023",
+    "leg_case_id": 2499,
+    "date_start": "2025-05-13",
+    "date_end": "2025-05-13",
+    "procedure_place": "الاستاد",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "اعلان لصق وبيع",
+    "result": "تم استلام اوراق البيع من محضرين التنفيذ باسره تان المنصوره وتم عمل اعلان لصق وبيع بباق المبلغ وتم سدادالرسم وتسليم اعلان اللصق والبيع لمحضرين التنفيذ باسره تان وتحدد معاد اللبيع يوم 15/6/2025",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "30"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/05.json",
+    "case_slug": "24/2023",
+    "leg_case_id": 2497,
+    "date_start": "2025-05-26",
+    "date_end": "2025-05-26",
+    "procedure_place": "الاستاد-مجمع البحر",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "عمل اعلانين-تسليم الاعلانات",
+    "result": "تم عمل اعلان بالاحاله في الدعوي الفرعيه للمدعي عليه الاول محمد محمد علي ربيع وتم سداد الرسم وختمه وتسليمه لمحضرين تان المنصوره وتم عمل اعلان بالاحاله في الدعوي الفرعيه للمدعي عليه التاني مصطفي لطفي احمد محمود وتم التأشير عليهم من السكرتير وسداد الرسم وختمه وتسليمه لمحضرين مركز المنصوره",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "50"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/06.json",
+    "case_slug": "46/2023",
+    "leg_case_id": 2496,
+    "date_start": "2025-06-11",
+    "date_end": "2025-06-11",
+    "procedure_place": "االمختلط",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "رشا عبدالنبي",
+    "description": "استلام الاعلان",
+    "result": "تم استلام اعاده اعلان منفذ من محضرين تان المنصوره رقم الاعلان 12113 بتاريخ 7/5/2025",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "35"
+    }
+  },
+  {
+    "legacy_kind": "announcement",
+    "legacy_source": "procedures/2025/07.json",
+    "case_slug": "186/2021",
+    "leg_case_id": 1892,
+    "date_start": "2025-07-22",
+    "date_end": "2025-07-22",
+    "procedure_place": "الاستاد-مجمع البحر",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "عبدالحميد عسكر",
+    "description": "اعاده اعلان",
+    "result": "تم عمل الاعلان",
+    "note": null,
+    "cost1": "0",
+    "cost2": "0",
+    "cost3": "0",
+    "extra_costs": {
+      "cost4": "0",
+      "cost5": "0",
+      "cost6": "0"
+    }
+  }
+]

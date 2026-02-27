@@ -1,0 +1,40 @@
+[
+  {
+    "procedure_place": "محكمة المنصورة الإبتدائية",
+    "date_start": "13/03/2017",
+    "date_end": "13/03/2017",
+    "cost1": "٠",
+    "cost2": "٠",
+    "cost3": "٠",
+    "cost4": "٠",
+    "cost5": "٠",
+    "cost6": "٢٥",
+    "procedure_type": "اعلان",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "أيمن البلتاجي",
+    "order_details": "عمل إعلان بالدعوي الفرعيه",
+    "decision_or_result": "تم عمل عمل الإعلان",
+    "notes": "",
+    "case_slug": "233"
+  },
+  {
+    "procedure_place": "مجمع المحاكم",
+    "date_start": "29/03/2017",
+    "date_end": "29/03/2017",
+    "cost1": "٠",
+    "cost2": "٠",
+    "cost3": "٠",
+    "cost4": "٠",
+    "cost5": "٠",
+    "cost6": "٢٠",
+    "procedure_type": "اعلان",
+    "procedure_place_type": "محاكم",
+    "status": "تمت",
+    "lawyer_name": "أيمن البلتاجي",
+    "order_details": "اعاده تقديم اعلان صحه توقيع",
+    "decision_or_result": "",
+    "notes": "",
+    "case_slug": "199"
+  }
+]
