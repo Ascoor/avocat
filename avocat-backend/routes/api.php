@@ -84,6 +84,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('courts', CourtController::class);
         Route::apiResource('court_types', CourtTypeController::class);
         Route::apiResource('court_levels', CourtLevelController::class);
+        Route::apiResource('case_types', CaseTypeController::class);
+        Route::apiResource('procedure_types', ProcedureTypeController::class);
         Route::apiResource('legal-cases', LegCaseController::class);
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);

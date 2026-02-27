@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\Notification;
 use App\Models\Procedure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use App\Services\Notifications\NotificationEventService;
 
 class ProcedureController extends Controller
@@ -18,15 +19,20 @@ class ProcedureController extends Controller
     }
     public function index()
     {
-        $procedures = Procedure::with([
+        $with = [
             'procedureType',
             'legCase',
             'procedurePlaceType',
             'lawyer',
-            'event',
             'createdBy',
             'updatedBy'
-        ])->get();
+        ];
+
+        if (Schema::hasTable('events')) {
+            $with[] = 'event';
+        }
+
+        $procedures = Procedure::with($with)->get();
 
         return response()->json($procedures);
     }
