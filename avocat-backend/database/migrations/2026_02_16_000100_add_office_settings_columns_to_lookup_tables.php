@@ -87,77 +87,31 @@ return new class extends Migration
             $nameColumn = 'name';
 
             if ($tableName === 'case_sub_types') {
-                DB::statement(<<<SQL
-                    WITH ranked AS (
-                        SELECT id,
-                               ROW_NUMBER() OVER (
-                                   PARTITION BY office_id, case_type_id, lower({$nameColumn})
-                                   ORDER BY id
-                               ) AS row_num
-                        FROM {$tableName}
-                        WHERE office_id IS NOT NULL AND deleted_at IS NULL
-                    )
-                    UPDATE {$tableName} t
-                    SET deleted_at = NOW(),
-                        is_active = false,
-                        updated_at = NOW()
-                    FROM ranked
-                    WHERE t.id = ranked.id
-                      AND ranked.row_num > 1
-                SQL);
+                $this->softDeleteDuplicates(
+                    $tableName,
+                    "office_id, case_type_id, lower({$nameColumn})",
+                    'office_id IS NOT NULL AND deleted_at IS NULL'
+                );
 
-                DB::statement(<<<SQL
-                    WITH ranked AS (
-                        SELECT id,
-                               ROW_NUMBER() OVER (
-                                   PARTITION BY case_type_id, lower({$nameColumn})
-                                   ORDER BY id
-                               ) AS row_num
-                        FROM {$tableName}
-                        WHERE office_id IS NULL AND deleted_at IS NULL
-                    )
-                    UPDATE {$tableName} t
-                    SET deleted_at = NOW(),
-                        is_active = false,
-                        updated_at = NOW()
-                    FROM ranked
-                    WHERE t.id = ranked.id
-                      AND ranked.row_num > 1
-                SQL);
+                $this->softDeleteDuplicates(
+                    $tableName,
+                    "case_type_id, lower({$nameColumn})",
+                    'office_id IS NULL AND deleted_at IS NULL'
+                );
             } else {
                 // soft-delete duplicates per office (case-insensitive name)
-                DB::statement(<<<SQL
-                    WITH ranked AS (
-                        SELECT id,
-                               ROW_NUMBER() OVER (PARTITION BY office_id, lower({$nameColumn}) ORDER BY id) AS row_num
-                        FROM {$tableName}
-                        WHERE office_id IS NOT NULL AND deleted_at IS NULL
-                    )
-                    UPDATE {$tableName} t
-                    SET deleted_at = NOW(),
-                        is_active = false,
-                        updated_at = NOW()
-                    FROM ranked
-                    WHERE t.id = ranked.id
-                      AND ranked.row_num > 1
-                SQL);
+                $this->softDeleteDuplicates(
+                    $tableName,
+                    "office_id, lower({$nameColumn})",
+                    'office_id IS NOT NULL AND deleted_at IS NULL'
+                );
 
                 // soft-delete duplicates for system/global rows (office_id null, case-insensitive name)
-                DB::statement(<<<SQL
-                    WITH ranked AS (
-                        SELECT id,
-                               ROW_NUMBER() OVER (PARTITION BY lower({$nameColumn}) ORDER BY id) AS row_num
-                        FROM {$tableName}
-                        WHERE office_id IS NULL AND deleted_at IS NULL
-                    )
-                    UPDATE {$tableName} t
-                    SET deleted_at = NOW(),
-                        is_active = false,
-                        updated_at = NOW()
-                    FROM ranked
-                    WHERE t.id = ranked.id
-                      AND ranked.row_num > 1
-                SQL);
+                $this->softDeleteDuplicates(
+                    $tableName,
+                    "lower({$nameColumn})",
+                    'office_id IS NULL AND deleted_at IS NULL'
+                );
             }
 
             $isCaseSubTypes = ($tableName === 'case_sub_types');
@@ -240,5 +194,29 @@ return new class extends Migration
             ->where('constraint_name', $constraintName)
             ->where('constraint_type', 'FOREIGN KEY')
             ->exists();
+    }
+
+    private function softDeleteDuplicates(string $tableName, string $partitionBy, string $whereClause): void
+    {
+        $timestampExpression = $this->currentTimestampExpression();
+
+        DB::statement(<<<SQL
+            WITH ranked AS (
+                SELECT id,
+                       ROW_NUMBER() OVER (PARTITION BY {$partitionBy} ORDER BY id) AS row_num
+                FROM {$tableName}
+                WHERE {$whereClause}
+            )
+            UPDATE {$tableName}
+            SET deleted_at = {$timestampExpression},
+                is_active = false,
+                updated_at = {$timestampExpression}
+            WHERE id IN (SELECT id FROM ranked WHERE row_num > 1)
+        SQL);
+    }
+
+    private function currentTimestampExpression(): string
+    {
+        return DB::getDriverName() === 'sqlite' ? 'CURRENT_TIMESTAMP' : 'NOW()';
     }
 };
