@@ -66,6 +66,20 @@ return new class extends Migration
 
     private function foreignKeyExists(string $tableName, string $constraintName): bool
     {
+        if (DB::getDriverName() === 'sqlite') {
+            if ($tableName === 'users' && $constraintName === 'users_office_id_foreign') {
+                $foreignKeys = DB::select("PRAGMA foreign_key_list({$tableName})");
+
+                foreach ($foreignKeys as $foreignKey) {
+                    if (($foreignKey->from ?? null) === 'office_id' && ($foreignKey->table ?? null) === 'offices') {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         return DB::table('information_schema.table_constraints')
             ->where('table_name', $tableName)
             ->where('constraint_name', $constraintName)
