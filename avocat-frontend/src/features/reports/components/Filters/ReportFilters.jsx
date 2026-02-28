@@ -9,7 +9,7 @@ const FILTER_LAYOUT = {
     rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'case_status']],
   },
   services: {
-    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['case_type_id', 'service_status']],
+    rows: ['file_number', 'client_name', ['from_date', 'to_date'], ['service_type_id', 'service_status']],
   },
   procedures: {
     rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['procedure_type_id', 'procedure_status']],
@@ -18,7 +18,7 @@ const FILTER_LAYOUT = {
     rows: ['file_number', 'client_name', ['lawyer_id'], ['from_date', 'to_date'], ['session_type_id', 'session_status']],
   },
   clients: {
-    rows: ['client_name', ['from_date', 'to_date'], ['client_type', 'client_status']],
+    rows: ['client_name', ['from_date', 'to_date'], ['client_status']],
   },
 };
 

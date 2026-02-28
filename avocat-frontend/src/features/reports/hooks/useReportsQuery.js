@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchReportRows, fetchReportsMetadata } from '@features/reports/services/reportsApi';
+import { fetchReportRows, getReportsMetadata } from '@features/reports/services/reportsApi';
 
 const STATUS_KEYS = {
   cases: 'case_status',
@@ -55,7 +55,6 @@ export const FILTER_SCHEMA = {
   ],
   clients: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
-    { name: 'client_type', type: 'select', label: 'نوع الموكل' },
     ...baseDateFields,
     { name: 'client_status', type: 'select', label: 'الحالة' },
   ],
@@ -103,7 +102,7 @@ export const useReportsQuery = (tabKey) => {
 
   useEffect(() => {
     let mounted = true;
-    fetchReportsMetadata()
+    getReportsMetadata()
       .then((data) => {
         if (mounted) setMetadata(data);
       })
@@ -123,10 +122,6 @@ export const useReportsQuery = (tabKey) => {
       lawyer_id: metadata.lawyers.map((item) => ({ value: String(item.id), label: item.name })),
       procedure_type_id: metadata.procedureTypes.map((item) => ({ value: String(item.id), label: item.name })),
       session_type_id: metadata.sessionTypes.map((item) => ({ value: String(item.id), label: item.name })),
-      client_type: [
-        { value: 'without_authorization', label: 'بدون توكيل' },
-        { value: 'authorized', label: 'بوكالة' },
-      ],
       [STATUS_KEYS.cases]: tabKey === 'cases' ? statusOptions : [],
       [STATUS_KEYS.services]: tabKey === 'services' ? statusOptions : [],
       [STATUS_KEYS.procedures]: tabKey === 'procedures' ? statusOptions : [],
