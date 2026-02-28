@@ -12,16 +12,48 @@ const getDetailLink = (tabKey, row) => {
 // Column definitions for different report types
 const REPORT_COLUMNS = {
   services: [
-    { key: 'name', label: 'الخدمة', value: (row) => row?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.file_number || row?.legcase?.slug || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.clients?.map(client => client.name).join(", ") || '-' }, // Join multiple clients if present
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+    { 
+      key: 'name', 
+      label: 'الخدمة', 
+      value: (row) => row.service_type?.name || '-' 
+    },
+    { 
+      key: 'file_number', 
+      label: 'رقم الملف', 
+      value: (row) => row?.file_number || row.slug || '-' 
+    },
+    { 
+      key: 'client_name', 
+      label: 'اسم الموكل', 
+      value: (row) => row?.clients?.map(client => client.name).join(", ") || '-'  // Join client names if there are multiple clients
+    },
+    { 
+      key: 'status', 
+      label: 'الحالة', 
+      value: (row) => row?.status || '-' 
+    },
   ],
   procedures: [
-    { key: 'type', label: 'نوع الإجراء', value: (row) => row?.procedure_type?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.clients?.name || '-' },
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+    { 
+      key: 'type', 
+      label: 'نوع الإجراء', 
+      value: (row) => row?.procedure_type?.name || '-' 
+    },
+    { 
+      key: 'file_number', 
+      label: 'رقم الملف', 
+      value: (row) => row?.leg_case?.slug || row?.file_number || '-' 
+    },
+    { 
+      key: 'client_names', 
+      label: 'اسماء الموكلين', 
+      value: (row) => row?.leg_case?.clients?.map(client => client.name).join(", ") || '-'  // Join client names if there are multiple clients
+    },
+    { 
+      key: 'status', 
+      label: 'الحالة', 
+      value: (row) => row?.status || '-' 
+    },
   ],
   sessions: [
     { key: 'session_date', label: 'تاريخ الجلسة', value: (row) => new Date(row?.session_date).toLocaleDateString() || '-' },
@@ -38,9 +70,14 @@ const REPORT_COLUMNS = {
   cases: [
     { key: 'title', label: 'عنوان القضية', value: (row) => row?.title || '-' },
     { key: 'file_number', label: 'رقم الملف', value: (row) => row?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || row?.clients?.[0]?.name || '-' },
+    { 
+      key: 'client_name', 
+      label: 'اسم الموكل',    
+      value: (row) => row?.clients?.map(client => client.name).join(", ") || '-' // Display client names
+    },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
+
 };
 
 // Main component for displaying report results

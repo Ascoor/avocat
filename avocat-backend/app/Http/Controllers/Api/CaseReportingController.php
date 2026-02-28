@@ -20,26 +20,40 @@ class CaseReportingController extends Controller
         'procedures',
         'procedures.procedureType',
         'procedures.lawyer',
-        'clients',
+        'clients',  // Ensure clients are included
         'services',
         'courts',
         'caseType',
         'caseSubType',
     ];
 
+    /**
+     * Defining allowed fields for sorting.
+     */
+    private const SORT_ALLOWLIST = [
+        'created_at' => 'leg_cases.created_at',
+        'updated_at' => 'leg_cases.updated_at',
+        'case_slug' => 'leg_cases.slug',
+        'title' => 'leg_cases.title',
+        'file_no' => 'leg_cases.file_no',
+    ];
+
+    /**
+     * Sorting alias map (optional).
+     */
     private const SORT_ALIASES = [
         'createdAt' => 'created_at',
-        'dateStart' => 'date_start',
-        'dateEnd' => 'date_end',
+        'updatedAt' => 'updated_at',
         'fileNo' => 'file_no',
         'caseSlug' => 'case_slug',
-        'slug' => 'case_slug',
-    ]; 
+    ];
+
     /**
-     * Show a case along with related entities based on request parameters
+     * Show a case along with related entities based on request parameters.
      */
     public function show(Request $request, int $caseId): JsonResponse
     {
+        // Ensure clients are loaded explicitly
         $case = LegCase::with($this->resolveIncludes($request))
             ->find($caseId);
 
@@ -51,37 +65,7 @@ class CaseReportingController extends Controller
     }
 
     /**
-     * Generalized method to return related entities for the case
-     */
-    private function caseRelationResponse(Request $request, int $caseId, string $relation): JsonResponse
-    {
-        $with = [$relation];
-
-        if ($relation === 'legalSessions') {
-            $with = array_merge($with, ['legalSessions.legalSessionType', 'legalSessions.court', 'legalSessions.lawyer']);
-        }
-
-        if ($relation === 'procedures') {
-            $with = array_merge($with, ['procedures.procedureType', 'procedures.lawyer']);
-        }
-
-        $case = LegCase::with($with)->find($caseId);
-
-        if (!$case) {
-            return response()->json(['message' => 'Case not found.'], 404);
-        }
-
-        return response()->json([
-            'data' => $case->{$relation},
-            'meta' => [
-                'case_id' => $caseId,
-                'count' => $case->{$relation}->count(),
-            ],
-        ]);
-    }
-
-    /**
-     * Search function to filter cases based on query parameters
+     * Search function to filter cases based on query parameters.
      */
     public function search(Request $request): JsonResponse
     {
@@ -106,7 +90,7 @@ class CaseReportingController extends Controller
         // Apply search filters dynamically
         $this->applySearchFilters($query, $validated);
 
-        // Apply sorting
+        // Apply sorting logic
         $sortBy = $this->resolveSortBy($validated['sort_by'] ?? null);
         $sortDir = $validated['sort_dir'] ?? 'desc';
         $sortColumn = self::SORT_ALLOWLIST[$sortBy] ?? self::SORT_ALLOWLIST['created_at'];
@@ -115,6 +99,9 @@ class CaseReportingController extends Controller
         // Pagination
         $shouldPaginate = filter_var($validated['paginate'] ?? true, FILTER_VALIDATE_BOOL);
         $perPage = $validated['per_page'] ?? 15;
+
+        // Ensure clients are included in the response
+        $query->with('clients');
 
         if ($shouldPaginate) {
             $result = $query->paginate($perPage)->appends($request->query());
@@ -125,7 +112,7 @@ class CaseReportingController extends Controller
     }
 
     /**
-     * Apply search filters to the query dynamically
+     * Apply search filters to the query dynamically.
      */
     private function applySearchFilters($query, $filters)
     {
@@ -146,19 +133,17 @@ class CaseReportingController extends Controller
                 $courtQuery->where('leg_case_court.case_number', $caseNumber);
             });
         });
-
-        // Add additional filter logic...
     }
 
     /**
-     * Resolves the 'include' query for eager loading related entities
+     * Resolves the 'include' query for eager loading related entities.
      */
     private function resolveIncludes(Request $request): array
     {
         $rawIncludes = $request->query('include', ''); // Default to empty string
 
         if (empty($rawIncludes)) {
-            return ['legalSessions', 'procedures', 'clients', 'services', 'courts'];
+            return ['legalSessions', 'procedures', 'clients', 'services', 'courts'];  // Ensure clients are included here
         }
 
         $requested = collect(explode(',', $rawIncludes))
@@ -172,14 +157,17 @@ class CaseReportingController extends Controller
                          ->all() ?: ['legalSessions', 'procedures', 'clients', 'services'];
     }
 
-private function resolveSortBy(?string $sortBy): string
-{
-    if (! is_string($sortBy) || trim($sortBy) === '') {
-        return 'created_at';
+    /**
+     * Resolves sort-by query and returns the correct field.
+     */
+    private function resolveSortBy(?string $sortBy): string
+    {
+        if (! is_string($sortBy) || trim($sortBy) === '') {
+            return 'created_at'; // Default sort field
+        }
+
+        $normalized = self::SORT_ALIASES[$sortBy] ?? $sortBy;
+
+        return array_key_exists($normalized, self::SORT_ALLOWLIST) ? $normalized : 'created_at';
     }
-
-    $normalized = self::SORT_ALIASES[$sortBy] ?? $sortBy;
-
-    return array_key_exists($normalized, self::SORT_ALLOWLIST) ? $normalized : 'created_at';
-}
 }
