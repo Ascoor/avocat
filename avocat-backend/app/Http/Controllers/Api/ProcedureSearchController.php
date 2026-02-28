@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ class ProcedureSearchController extends Controller
         'status' => 'procedures.status',
         'file_no' => 'leg_cases.slug',
         'case_slug' => 'leg_cases.slug',
+        'updated_at' => 'procedures.updated_at',  // Added
     ];
 
     // Search function to handle filtering and sorting
@@ -49,10 +51,10 @@ class ProcedureSearchController extends Controller
             'date_to' => $validated['date_end'] ?? null,
             'lawyer_id' => $validated['lawyer_id'] ?? null,
             'status' => $validated['status'] ?? null,
-        ]), fn ($value) => $value !== null && trim((string) $value) !== '');
+        ]), fn ($value) => !is_null($value) && trim((string) $value) !== '');
 
         // Determine sorting parameters
-        $sortBy = $validated['sort_by'] ?? 'created_at';
+        $sortBy = $this->resolveSortBy($validated['sort_by'] ?? null);
         $sortDir = $validated['sort_dir'] ?? 'desc';
         $perPage = (int) ($validated['per_page'] ?? 20);
         $search = trim((string) ($validated['q'] ?? ''));
@@ -148,4 +150,17 @@ class ProcedureSearchController extends Controller
             ],
         ]);
     }
+    
+
+    private function resolveSortBy(?string $sortBy): string
+    {
+        if (! is_string($sortBy) || trim($sortBy) === '') {
+            return 'created_at';
+        }
+
+        $normalized = self::SORT_ALIASES[$sortBy] ?? $sortBy;
+
+        return array_key_exists($normalized, self::SORT_ALLOWLIST) ? $normalized : 'created_at';
+    }
+
 }
