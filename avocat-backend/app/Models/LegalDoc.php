@@ -18,6 +18,8 @@ class LegalDoc extends Model
         'description',
         'doc_type_id',
         'doc_sub_type_id',
+        'power_of_attorney_id',
+        'leg_case_id',
     ];
 
     public function docType(): BelongsTo
@@ -29,4 +31,14 @@ class LegalDoc extends Model
     {
         return $this->belongsTo(DocSubType::class);
     }
+    public function powerOfAttorney(): BelongsTo
+    {
+        return $this->belongsTo(PowerOfAttorney::class);
+    }
+
+    public function legCase(): BelongsTo
+    {
+        return $this->belongsTo(LegCase::class);
+    }
 }
+

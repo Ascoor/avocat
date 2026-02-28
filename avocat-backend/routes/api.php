@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\OfficeSettingsController;
 use App\Http\Controllers\Api\ProcedureController;
 use App\Http\Controllers\Api\ProcedurePlaceTypeController;
 use App\Http\Controllers\Api\ProcedureSearchController;
+use App\Http\Controllers\Api\PowerOfAttorneyController;
 use App\Http\Controllers\Api\ProcedureTypeController;
 use App\Http\Controllers\Api\RbacController;
 use App\Http\Controllers\Api\ServiceController;
@@ -92,6 +93,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('legal-cases', LegCaseController::class);
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);
+        Route::apiResource('power-of-attorneys', PowerOfAttorneyController::class);
 
         Route::get('lawyer/{lawyer}', [LawyerController::class, 'show']);
         Route::put('lawyer/{lawyer}', [LawyerController::class, 'update']);

@@ -50,6 +50,11 @@ class Lawyer extends Model
         return $this->hasMany(LegalSession::class);
     }
 
+    public function powerOfAttorneys(): HasMany
+    {
+        return $this->hasMany(PowerOfAttorney::class);
+    }
+
     public function serviceProcedures(): HasMany
     {
         return $this->hasMany(ServiceProcedure::class);
