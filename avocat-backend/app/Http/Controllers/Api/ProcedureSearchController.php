@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class ProcedureSearchController extends Controller
 {
+    private const SORT_ALIASES = [
+        'createdAt' => 'created_at',
+        'dateStart' => 'date_start',
+        'dateEnd' => 'date_end',
+        'fileNo' => 'file_no',
+        'caseSlug' => 'case_slug',
+        'slug' => 'case_slug',
+        'updatedAt' => 'updated_at',
+    ];
+
     // Defining allowed fields for sorting
     private const SORT_ALLOWLIST = [
         'created_at' => 'procedures.created_at',
