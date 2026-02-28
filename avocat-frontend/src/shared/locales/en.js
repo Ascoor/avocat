@@ -1021,6 +1021,42 @@ const en = {
     }
   },
 
+
+  customerService: {
+    subtitle: "Manage clients and non-agency clients in one workspace.",
+    tabs: {
+      clients: "Agency clients",
+      unclients: "Clients without agency"
+    }
+  },
+
+  documents: {
+    title: "Documents Center",
+    subtitle: "Browse documents by category, search quickly, and upload files.",
+    searchPlaceholder: "Search by document name or path...",
+    empty: "No matching documents found.",
+    categories: {
+      all: "All categories",
+      power_of_attorney: "Power of attorney",
+      leg_case: "Cases",
+      service: "Services",
+      client: "Clients",
+      general: "General"
+    },
+    upload: {
+      title: "Upload zone",
+      action: "Upload document",
+      namePlaceholder: "Document title (optional)",
+      dropzone: "Drag & drop file here or click to browse",
+      supported: "Single file upload supported"
+    },
+    messages: {
+      loadTabsError: "Failed to load categories.",
+      loadDocumentsError: "Failed to load documents.",
+      uploadError: "Upload failed."
+    }
+  },
+
   finance: {
     searchPlaceholder: "Search invoices or clients...",
     addInvoice: "Add Invoice",

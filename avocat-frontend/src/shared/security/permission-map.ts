@@ -30,18 +30,7 @@ export const permissionMap = {
     assign: "clients.assign",
     viewSensitive: "clients.view_sensitive",
   },
-  
-  unclients: {
-    view: "clients.view",
-    list: "clients.list",
-    search: "clients.search",
-    create: "clients.create",
-    update: "clients.update",
-    delete: "clients.delete",
-    changeStatus: "clients.change_status",
-    assign: "clients.assign",
-    viewSensitive: "clients.view_sensitive",
-  },
+
   sessions: {
     view: "sessions.view",
     list: "sessions.list",

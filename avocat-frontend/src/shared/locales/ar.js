@@ -1026,6 +1026,42 @@ const ar = {
     }
   },
 
+
+  customerService: {
+    subtitle: "إدارة العملاء وعملاء بدون وكالة من شاشة موحّدة.",
+    tabs: {
+      clients: "عملاء بوكالة",
+      unclients: "عملاء بدون وكالة"
+    }
+  },
+
+  documents: {
+    title: "مركز المستندات",
+    subtitle: "استعرض المستندات حسب التصنيف وابحث بسرعة وارفع الملفات.",
+    searchPlaceholder: "ابحث باسم المستند أو المسار...",
+    empty: "لا توجد مستندات مطابقة.",
+    categories: {
+      all: "كل التصنيفات",
+      power_of_attorney: "التوكيلات",
+      leg_case: "القضايا",
+      service: "الخدمات",
+      client: "العملاء",
+      general: "عام"
+    },
+    upload: {
+      title: "منطقة الرفع",
+      action: "رفع مستند",
+      namePlaceholder: "اسم المستند (اختياري)",
+      dropzone: "اسحب الملف هنا أو اضغط للاختيار",
+      supported: "يدعم رفع ملف واحد"
+    },
+    messages: {
+      loadTabsError: "تعذر تحميل التصنيفات.",
+      loadDocumentsError: "تعذر تحميل المستندات.",
+      uploadError: "فشل رفع الملف."
+    }
+  },
+
   finance: {
     searchPlaceholder: "ابحث عن الفواتير أو العملاء...",
     addInvoice: "إضافة فاتورة",

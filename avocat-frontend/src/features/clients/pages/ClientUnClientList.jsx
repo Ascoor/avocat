@@ -5,19 +5,21 @@ import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 import GlobalSpinner from "@shared/components/common/Spinners/GlobalSpinner";
 import SectionHeader from "@shared/components/common/SectionHeader"; 
+import { useLanguage } from "@shared/contexts/LanguageContext";
 
 const ClientList = lazy(() => import("../components/ClientsAndUnClients/clients/index.jsx"));
 const UnClientList = lazy(() => import("../components/ClientsAndUnClients/unclients/index.jsx"));
 
 const ClientUnclientList = () => {
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tabs = useMemo(
     () => [
-      { key: "clients", label: "عملاء بوكالة", icon: <FaUserTie /> },
-      { key: "unclients", label: "عملاء بدون وكالة", icon: <FaUserAltSlash /> },
+      { key: "clients", label: t("customerService.tabs.clients"), icon: <FaUserTie /> },
+      { key: "unclients", label: t("customerService.tabs.unclients"), icon: <FaUserAltSlash /> },
     ],
-    [],
+    [t],
   );
 
   const allowedTabs = useMemo(() => tabs.map((tab) => tab.key), [tabs]);
@@ -44,8 +46,8 @@ const ClientUnclientList = () => {
       <div className="p-6">
         <SectionHeader
 
-          listName="خدمة العملاء"
-          subtitle="إدارة العملاء وعملاء بدون وكالة من شاشة موحّدة"
+          listName={t("navigation.customerService")}
+          subtitle={t("customerService.subtitle")}
           showBack
           icon={<LexicraftIcon name="client" size={20} />}
 

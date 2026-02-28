@@ -21,6 +21,9 @@
     "ledger": {
       "title": "Ledger",
       "subtitle": "All financial transactions (expense, revenue, payment).",
+      "kpi": {
+        "transactions": "Transactions"
+      },
       "columns": {
         "date": "Date",
         "kind": "Kind",

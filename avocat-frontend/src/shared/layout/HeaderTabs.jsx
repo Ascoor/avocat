@@ -54,11 +54,13 @@ const HeaderTabs = ({ className }) => {
       'dashboard',
       'customer_service',
       'documents',
+      'finance',
       'cases',
       'services',
       'follow_work',
       'reports',
       'settings',
+      'admin_access',
     ];
     const orderMap = new Map(preferredOrder.map((key, index) => [key, index]));
 
