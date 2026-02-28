@@ -24,10 +24,23 @@ class PowerOfAttorneyController extends Controller
                 });
             })
             ->when($request->filled('status'), fn ($builder) => $builder->where('status', $request->string('status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('attorney_date', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('attorney_date', '<=', $request->date('to_date')))
+            ->when($request->filled('leg_case_id'), function ($builder) use ($request) {
+                $builder->whereHas('legCases', fn ($subQuery) => $subQuery->where('leg_cases.id', $request->integer('leg_case_id')));
+            })
+            ->when($request->filled('expiring_in_days'), function ($builder) use ($request) {
+                $days = max(0, $request->integer('expiring_in_days'));
+                $builder->whereNotNull('expires_at')
+                    ->whereDate('expires_at', '>=', now()->toDateString())
+                    ->whereDate('expires_at', '<=', now()->addDays($days)->toDateString());
+            })
             ->orderByDesc('attorney_date')
             ->orderByDesc('id');
 
-        return response()->json(['data' => $query->get()]);
+        $perPage = min(100, max(1, $request->integer('per_page', 15)));
+
+        return response()->json($query->paginate($perPage));
     }
 
     public function store(Request $request)

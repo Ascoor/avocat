@@ -3,65 +3,54 @@ import api from '@shared/api/axiosConfig';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 
-const DOCUMENT_SOURCES = {
-  documents: '/document-center/documents',
-  power_of_attorneys: '/document-center/power-of-attorneys',
-  cases: '/document-center/cases',
-  services: '/document-center/services',
-};
-
-const DEFAULT_TABS = [
-  { key: 'documents', labelAr: 'المستندات', labelEn: 'Documents', source: 'documents' },
-  { key: 'power_of_attorneys', labelAr: 'التوكيلات', labelEn: 'Power of Attorneys', source: 'power_of_attorneys' },
-  { key: 'cases', labelAr: 'القضايا', labelEn: 'Cases', source: 'cases' },
-  { key: 'services', labelAr: 'الخدمات', labelEn: 'Services', source: 'services' },
+const TAB_TYPES = [
+  { value: 'power_of_attorney', label: 'Power of Attorney' },
+  { value: 'leg_case', label: 'Legal Case' },
+  { value: 'service', label: 'Service' },
+  { value: 'client', label: 'Client' },
+  { value: 'general', label: 'General' },
 ];
-
-const LOCAL_STORAGE_KEY = 'documents.customTabs.v1';
 
 const DocumentsHubPage = () => {
   const { language } = useLanguage();
-  const [tabs, setTabs] = useState(DEFAULT_TABS);
-  const [activeTab, setActiveTab] = useState(DEFAULT_TABS[0].key);
+  const [tabs, setTabs] = useState([]);
+  const [activeTab, setActiveTab] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
   const [newTabLabelAr, setNewTabLabelAr] = useState('');
   const [newTabLabelEn, setNewTabLabelEn] = useState('');
-  const [newTabSource, setNewTabSource] = useState('documents');
+  const [newTabType, setNewTabType] = useState('general');
+
+  const [name, setName] = useState('');
+  const [file, setFile] = useState(null);
+
+  const selectedTab = useMemo(() => tabs.find((tab) => String(tab.id) === activeTab), [tabs, activeTab]);
+
+  const loadTabs = async () => {
+    const { data } = await api.get('/document-tabs');
+    setTabs(Array.isArray(data) ? data : []);
+    if (Array.isArray(data) && data.length > 0 && !activeTab) {
+      setActiveTab(String(data[0].id));
+    }
+  };
 
   useEffect(() => {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setTabs(parsed);
-          setActiveTab(parsed[0].key);
-        }
-      } catch {
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
-      }
-    }
+    loadTabs().catch(() => setError(language === 'ar' ? 'تعذر تحميل التبويبات.' : 'Failed to load tabs.'));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tabs));
-  }, [tabs]);
+    if (!activeTab) return;
 
-  const selectedTab = useMemo(() => tabs.find((tab) => tab.key === activeTab) ?? tabs[0], [tabs, activeTab]);
-
-  useEffect(() => {
     const loadRows = async () => {
-      if (!selectedTab) return;
-      const endpoint = DOCUMENT_SOURCES[selectedTab.source] ?? DOCUMENT_SOURCES.documents;
       setLoading(true);
       setError('');
       try {
-        const { data } = await api.get(endpoint);
+        const { data } = await api.get('/documents', { params: { document_tab_id: activeTab } });
         setRows(Array.isArray(data) ? data : []);
       } catch {
-        setError(language === 'ar' ? 'تعذر تحميل البيانات.' : 'Failed to load data.');
+        setError(language === 'ar' ? 'تعذر تحميل الوثائق.' : 'Failed to load documents.');
         setRows([]);
       } finally {
         setLoading(false);
@@ -69,85 +58,86 @@ const DocumentsHubPage = () => {
     };
 
     loadRows();
-  }, [selectedTab, language]);
+  }, [activeTab, language]);
 
-  const addTab = () => {
-    if (!newTabLabelAr.trim()) return;
-    const key = `custom_${Date.now()}`;
-    const nextTab = {
-      key,
-      labelAr: newTabLabelAr.trim(),
-      labelEn: newTabLabelEn.trim() || newTabLabelAr.trim(),
-      source: newTabSource,
-    };
-    setTabs((prev) => [...prev, nextTab]);
-    setActiveTab(key);
+  const addTab = async () => {
+    if (!newTabLabelAr.trim() || !newTabLabelEn.trim()) return;
+    const { data } = await api.post('/document-tabs', {
+      name_ar: newTabLabelAr.trim(),
+      name_en: newTabLabelEn.trim(),
+      tab_type: newTabType,
+    });
+
+    setTabs((prev) => [...prev, data]);
+    setActiveTab(String(data.id));
     setNewTabLabelAr('');
     setNewTabLabelEn('');
-    setNewTabSource('documents');
+    setNewTabType('general');
   };
 
-  const renameTab = (tabKey, value) => {
-    setTabs((prev) => prev.map((tab) => (tab.key === tabKey ? { ...tab, labelAr: value } : tab)));
+  const uploadDocument = async (event) => {
+    event.preventDefault();
+    if (!file || !selectedTab) return;
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('file', file);
+    formData.append('document_tab_id', String(selectedTab.id));
+
+    await api.post('/documents', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    setName('');
+    setFile(null);
+
+    const { data } = await api.get('/documents', { params: { document_tab_id: selectedTab.id } });
+    setRows(Array.isArray(data) ? data : []);
   };
 
-  const deleteTab = (tabKey) => {
-    const next = tabs.filter((tab) => tab.key !== tabKey);
-    setTabs(next.length ? next : DEFAULT_TABS);
-    if (activeTab === tabKey) {
-      setActiveTab((next[0] || DEFAULT_TABS[0]).key);
-    }
-  };
-
-  const toLabel = (tab) => (language === 'ar' ? tab.labelAr : tab.labelEn);
+  const toLabel = (tab) => (language === 'ar' ? tab.name_ar : tab.name_en);
 
   return (
     <div className="space-y-6 p-4">
       <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
         <h1 className="mb-2 text-xl font-bold">{language === 'ar' ? 'قسم الوثائق' : 'Documents Center'}</h1>
-        <p className="text-sm text-muted-foreground">
-          {language === 'ar'
-            ? 'يمكنك إضافة وتعديل تبويبات الوثائق وربط كل تبويب بنوع البيانات المناسب.'
-            : 'Add, edit and map document tabs to dynamic data sources.'}
-        </p>
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold">{language === 'ar' ? 'إدارة التبويبات' : 'Tabs manager'}</h2>
-        <div className="mb-4 grid gap-2 md:grid-cols-4">
+        <h2 className="mb-3 text-lg font-semibold">{language === 'ar' ? 'إضافة تبويب' : 'Create tab'}</h2>
+        <div className="grid gap-2 md:grid-cols-4">
           <input className="rounded-md border p-2" placeholder="اسم التبويب (عربي)" value={newTabLabelAr} onChange={(e) => setNewTabLabelAr(e.target.value)} />
           <input className="rounded-md border p-2" placeholder="Tab name (EN)" value={newTabLabelEn} onChange={(e) => setNewTabLabelEn(e.target.value)} />
-          <select className="rounded-md border p-2" value={newTabSource} onChange={(e) => setNewTabSource(e.target.value)}>
-            {Object.keys(DOCUMENT_SOURCES).map((source) => <option key={source} value={source}>{source}</option>)}
+          <select className="rounded-md border p-2" value={newTabType} onChange={(e) => setNewTabType(e.target.value)}>
+            {TAB_TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
           </select>
-          <button type="button" className="rounded-md bg-primary px-3 py-2 text-primary-foreground" onClick={addTab}>
-            {language === 'ar' ? 'إضافة تبويب' : 'Add tab'}
+          <button type="button" className="rounded-md bg-primary px-3 py-2 text-primary-foreground" onClick={() => addTab().catch(() => setError(language === 'ar' ? 'تعذر إضافة التبويب.' : 'Failed to create tab.'))}>
+            {language === 'ar' ? 'إضافة' : 'Create'}
           </button>
         </div>
+      </section>
 
-        <div className="space-y-2">
-          {tabs.map((tab) => (
-            <div key={tab.key} className="flex items-center gap-2">
-              <input className="w-full rounded-md border p-2" value={tab.labelAr} onChange={(e) => renameTab(tab.key, e.target.value)} />
-              {!DEFAULT_TABS.some((t) => t.key === tab.key) && (
-                <button type="button" className="rounded-md border px-3 py-2" onClick={() => deleteTab(tab.key)}>
-                  {language === 'ar' ? 'حذف' : 'Delete'}
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+      <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <h2 className="mb-3 text-lg font-semibold">{language === 'ar' ? 'رفع مستند' : 'Upload document'}</h2>
+        <form className="grid gap-2 md:grid-cols-4" onSubmit={(event) => uploadDocument(event).catch(() => setError(language === 'ar' ? 'فشل رفع المستند.' : 'Upload failed.'))}>
+          <input className="rounded-md border p-2" placeholder={language === 'ar' ? 'اسم المستند' : 'Document name'} value={name} onChange={(e) => setName(e.target.value)} required />
+          <input className="rounded-md border p-2" type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
+          <div className="rounded-md border p-2 text-sm text-muted-foreground">{selectedTab ? `${language === 'ar' ? 'التبويب الحالي' : 'Current tab'}: ${toLabel(selectedTab)}` : ''}</div>
+          <button type="submit" className="rounded-md bg-primary px-3 py-2 text-primary-foreground" disabled={!selectedTab}>
+            {language === 'ar' ? 'رفع' : 'Upload'}
+          </button>
+        </form>
       </section>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.key} value={tab.key}>{toLabel(tab)}</TabsTrigger>
+            <TabsTrigger key={tab.id} value={String(tab.id)}>{toLabel(tab)}</TabsTrigger>
           ))}
         </TabsList>
 
         {tabs.map((tab) => (
-          <TabsContent key={tab.key} value={tab.key}>
+          <TabsContent key={tab.id} value={String(tab.id)}>
             {loading ? (
               <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</div>
             ) : error ? (
@@ -158,19 +148,21 @@ const DocumentsHubPage = () => {
                   <thead className="bg-muted/50">
                     <tr>
                       <th className="p-2 text-start">#</th>
-                      <th className="p-2 text-start">{language === 'ar' ? 'البيانات' : 'Data'}</th>
+                      <th className="p-2 text-start">{language === 'ar' ? 'الاسم' : 'Name'}</th>
+                      <th className="p-2 text-start">{language === 'ar' ? 'المسار' : 'File path'}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map((row, index) => (
                       <tr key={row.id || index} className="border-t align-top">
                         <td className="p-2">{index + 1}</td>
-                        <td className="p-2"><pre className="whitespace-pre-wrap text-xs">{JSON.stringify(row, null, 2)}</pre></td>
+                        <td className="p-2">{row.name}</td>
+                        <td className="p-2">{row.file_path}</td>
                       </tr>
                     ))}
                     {rows.length === 0 && (
                       <tr>
-                        <td className="p-4 text-center text-muted-foreground" colSpan={2}>{language === 'ar' ? 'لا توجد بيانات.' : 'No data found.'}</td>
+                        <td className="p-4 text-center text-muted-foreground" colSpan={3}>{language === 'ar' ? 'لا توجد بيانات.' : 'No data found.'}</td>
                       </tr>
                     )}
                   </tbody>

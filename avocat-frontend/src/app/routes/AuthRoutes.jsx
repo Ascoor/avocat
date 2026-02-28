@@ -71,6 +71,9 @@ const ServicesReport = lazy(
 const DocumentsHubPage = lazy(
   () => import('@features/documents/pages/DocumentsHubPage'),
 );
+const PowerOfAttorneyPage = lazy(
+  () => import('@features/power-of-attorneys/pages/PowerOfAttorneyPage'),
+);
 
 /**
  * Backward/forward compatible wrapper:
@@ -230,6 +233,19 @@ const AuthRoutes = () => {
                 moduleLabel="Courts"
               >
                 <SearchCourtsApi />
+              </Guarded>
+            }
+          />
+
+
+          <Route
+            path="power-of-attorneys"
+            element={
+              <Guarded
+                require={permissionMap.legalCases.list}
+                moduleLabel="Power of Attorneys"
+              >
+                <PowerOfAttorneyPage />
               </Guarded>
             }
           />

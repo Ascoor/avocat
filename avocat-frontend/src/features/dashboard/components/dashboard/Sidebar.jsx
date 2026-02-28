@@ -14,6 +14,7 @@ import {
   FaBalanceScale,
   FaMoneyBillWave,
   FaSearch,
+  FaStamp,
 } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 
@@ -53,6 +54,7 @@ const Sidebar = () => {
       title: 'إدارة القضايا',
       items: [
         { to: '/legcases', icon: <FaFolder />, label: 'القضايا' },
+        { to: '/power-of-attorneys', icon: <FaStamp />, label: 'التوكيلات' },
         { to: '/legcase-services', icon: <FaCogs />, label: 'الخدمات' },
         { to: '/consultations', icon: <FaBalanceScale />, label: 'الاستشارات' },
         { to: '/contracts', icon: <FaBriefcase />, label: 'العقود' },
