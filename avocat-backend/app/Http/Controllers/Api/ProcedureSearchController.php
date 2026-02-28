@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -8,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ProcedureSearchController extends Controller
 {
+    // Defining allowed fields for sorting
     private const SORT_ALLOWLIST = [
         'created_at' => 'procedures.created_at',
         'date_start' => 'procedures.date_start',
@@ -20,6 +20,7 @@ class ProcedureSearchController extends Controller
 
     public function searchFilters(Request $request)
     {
+        // Validate incoming request
         $validated = $request->validate([
             'q' => 'nullable|string|max:255',
             'filters' => 'nullable|array',
@@ -35,13 +36,13 @@ class ProcedureSearchController extends Controller
             'sort_dir' => 'nullable|string|in:asc,desc',
             'page' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:100',
-            // backward compatibility
             'date_start' => 'nullable|date',
             'date_end' => 'nullable|date|after_or_equal:date_start',
             'lawyer_id' => 'nullable|integer|exists:lawyers,id',
             'status' => 'nullable|in:تمت,لم ينفذ,جاري التنفيذ',
         ]);
 
+        // Filter applied parameters
         $filters = array_filter(array_merge($validated['filters'] ?? [], [
             'date_from' => $validated['date_start'] ?? null,
             'date_to' => $validated['date_end'] ?? null,
@@ -53,6 +54,7 @@ class ProcedureSearchController extends Controller
         $perPage = (int) ($validated['per_page'] ?? 20);
         $search = trim((string) ($validated['q'] ?? ''));
 
+        // Create query for fetching procedures with join and eager loading
         $query = Procedure::query()
             ->select('procedures.*')
             ->leftJoin('leg_cases', 'leg_cases.id', '=', 'procedures.leg_case_id')
@@ -65,7 +67,8 @@ class ProcedureSearchController extends Controller
                 'procedureType:id,name',
             ]);
 
-        if (! empty($search)) {
+        // Apply search filters
+        if (!empty($search)) {
             $query->where(function ($builder) use ($search) {
                 $builder->where('procedures.job', 'like', "%{$search}%")
                     ->orWhere('procedures.note', 'like', "%{$search}%")
@@ -75,20 +78,23 @@ class ProcedureSearchController extends Controller
             });
         }
 
-        if (! empty($filters['case_slug']) || ! empty($filters['file_no'])) {
+        // Apply additional filters (case_slug, file_no, etc.)
+        if (!empty($filters['case_slug']) || !empty($filters['file_no'])) {
             $slug = $filters['case_slug'] ?? $filters['file_no'];
             $query->where('leg_cases.slug', 'like', "%{$slug}%");
         }
 
-        if (! empty($filters['date_from'])) {
+        // Apply date filters
+        if (!empty($filters['date_from'])) {
             $query->whereDate('procedures.date_start', '>=', $filters['date_from']);
         }
 
-        if (! empty($filters['date_to'])) {
+        if (!empty($filters['date_to'])) {
             $query->whereDate('procedures.date_start', '<=', $filters['date_to']);
         }
 
-        if (! empty($filters['court_id'])) {
+        // Additional filters for court, client, lawyer, and status
+        if (!empty($filters['court_id'])) {
             $query->whereExists(function ($subQuery) use ($filters) {
                 $subQuery->selectRaw('1')
                     ->from('leg_case_court')
@@ -97,7 +103,7 @@ class ProcedureSearchController extends Controller
             });
         }
 
-        if (! empty($filters['client_id'])) {
+        if (!empty($filters['client_id'])) {
             $query->whereExists(function ($subQuery) use ($filters) {
                 $subQuery->selectRaw('1')
                     ->from('leg_case_client')
@@ -106,11 +112,11 @@ class ProcedureSearchController extends Controller
             });
         }
 
-        if (! empty($filters['lawyer_id'])) {
+        if (!empty($filters['lawyer_id'])) {
             $query->where('procedures.lawyer_id', $filters['lawyer_id']);
         }
 
-        if (! empty($filters['status'])) {
+        if (!empty($filters['status'])) {
             $query->where('procedures.status', $filters['status']);
         }
 
@@ -120,8 +126,10 @@ class ProcedureSearchController extends Controller
             ->paginate($perPage)
             ->appends($request->query());
 
+        // Fetch distinct statuses for facet data
         $statuses = Procedure::query()->select('status')->distinct()->whereNotNull('status')->pluck('status')->values();
 
+        // Return the response
         return response()->json([
             'data' => $paginator->items(),
             'meta' => [
