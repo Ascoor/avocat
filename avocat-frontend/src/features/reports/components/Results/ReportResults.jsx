@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import ReportStatusBadge from '@features/reports/components/Reports/ReportStatusBadge';
 
+// Function to get the detail link for the corresponding report section (cases, clients, etc.)
 const getDetailLink = (tabKey, row) => {
   if (tabKey === 'cases') return `/dashboard/legcases/${row?.id}`;
   if (tabKey === 'clients') return `/dashboard/clients/${row?.id}`;
@@ -8,46 +9,50 @@ const getDetailLink = (tabKey, row) => {
   return caseId ? `/dashboard/legcases/${caseId}` : '#';
 };
 
+// Column definitions for different report types
 const REPORT_COLUMNS = {
+  services: [
+    { key: 'name', label: 'الخدمة', value: (row) => row?.name || '-' },
+    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.file_number || row?.legcase?.slug || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.clients?.map(client => client.name).join(", ") || '-' }, // Join multiple clients if present
+    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+  ],
+  procedures: [
+    { key: 'type', label: 'نوع الإجراء', value: (row) => row?.procedure_type?.name || '-' },
+    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
+    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.clients?.name || '-' },
+    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+  ],
+  sessions: [
+    { key: 'session_date', label: 'تاريخ الجلسة', value: (row) => new Date(row?.session_date).toLocaleDateString() || '-' },
+    { key: 'court_name', label: 'اسم المحكمة', value: (row) => row?.court?.name || '-' },
+    { key: 'orders', label: 'الأوامر', value: (row) => row?.orders || '-' },
+    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+  ],
+  clients: [
+    { key: 'name', label: 'اسم الموكل', value: (row) => row?.name || '-' },
+    { key: 'phone', label: 'الهاتف', value: (row) => row?.phone_number || '-' },
+    { key: 'address', label: 'العنوان', value: (row) => row?.address || '-' },
+    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
+  ],
   cases: [
     { key: 'title', label: 'عنوان القضية', value: (row) => row?.title || '-' },
     { key: 'file_number', label: 'رقم الملف', value: (row) => row?.slug || row?.file_number || '-' },
     { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || row?.clients?.[0]?.name || '-' },
     { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
   ],
-  services: [
-    { key: 'name', label: 'الخدمة', value: (row) => row?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.file_number || row?.legcase?.slug || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
-  ],
-  procedures: [
-    { key: 'type', label: 'نوع الإجراء', value: (row) => row?.procedure_type?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
-  ],
-  sessions: [
-    { key: 'type', label: 'نوع الجلسة', value: (row) => row?.session_type?.name || '-' },
-    { key: 'file_number', label: 'رقم الملف', value: (row) => row?.legcase?.slug || row?.file_number || '-' },
-    { key: 'client_name', label: 'اسم الموكل', value: (row) => row?.client?.name || '-' },
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
-  ],
-  clients: [
-    { key: 'name', label: 'اسم الموكل', value: (row) => row?.name || '-' },
-    { key: 'type', label: 'نوع الموكل', value: (row) => row?.client_type || '-' },
-    { key: 'phone', label: 'الهاتف', value: (row) => row?.phone || '-' },
-    { key: 'status', label: 'الحالة', value: (row) => row?.status || '-' },
-  ],
 };
 
+// Main component for displaying report results
 const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
   const columns = REPORT_COLUMNS[tabKey] || [];
 
+  // Handle loading state
   if (loading) {
     return <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-4 text-sm">جاري التحميل...</div>;
   }
 
+  // Handle error state
   if (error) {
     return (
       <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-4 text-sm" dir="rtl">
@@ -59,10 +64,12 @@ const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
     );
   }
 
+  // Handle empty data state
   if (!rows.length) {
     return <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-4 text-sm">لا توجد نتائج مطابقة.</div>;
   }
 
+  // Render report results table
   return (
     <div className="overflow-x-auto rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)]">
       <table className="min-w-full text-sm" dir="rtl">
