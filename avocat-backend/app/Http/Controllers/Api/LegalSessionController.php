@@ -17,13 +17,27 @@ class LegalSessionController extends Controller
     public function __construct(private readonly NotificationEventService $notificationEvents)
     {
     }
-    public function index()
+    public function index(Request $request)
     {
-        $legalSessions = LegalSession::with([ 'legCase', 'lawyer', 'court','legalSessionType', 'createdBy'])
-        ->get();
+        $query = LegalSession::with(['legCase.clients', 'lawyer', 'court', 'legalSessionType', 'createdBy']);
 
+        $query
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $builder->whereHas('legCase.clients', fn ($q) => $q->where('name', 'like', '%'.$request->string('client_name').'%'));
+            })
+            ->when($request->filled('lawyer_id'), fn ($builder) => $builder->where('lawyer_id', $request->integer('lawyer_id')))
+            ->when($request->filled('session_type_id'), fn ($builder) => $builder->where('legal_session_type_id', $request->integer('session_type_id')))
+            ->when($request->filled('session_status'), fn ($builder) => $builder->where('status', $request->string('session_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
 
-        return response()->json($legalSessions);
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
+
+        return response()->json($query->get());
     }
 
     public function show($id)

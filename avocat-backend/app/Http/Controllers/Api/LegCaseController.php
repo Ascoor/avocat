@@ -16,37 +16,51 @@ class LegCaseController extends Controller
     public function __construct(private readonly NotificationEventService $notificationEvents)
     {
     }
+
     /**
      * Retrieves active legal cases for list views with lightweight relations.
      *
      * @return JsonResponse The JSON response containing the legal cases.
      */
- 
-     public function index()
-{
-    $legCases = LegCase::query()
-        ->select([
-            'id','slug','title','client_capacity','status',
-            'case_sub_type_id','created_at','updated_at',
-        ])
-        ->with([
-            'clients:id,name',
-            'caseSubType:id,name',
-        ])
-        ->withCount(['procedures', 'legalSessions'])
-        ->whereIn('status', ['قيد التجهيز', 'متداولة'])
-        ->orderByRaw("
-            CASE status
-              WHEN 'متداولة' THEN 2
-              WHEN 'قيد التجهيز' THEN 1
-              ELSE 0
-            END DESC
-        ")
-        ->orderByDesc('created_at')
-        ->cursorPaginate(30);
+    public function index(Request $request)
+    {
+        $isReportMode = $request->boolean('report_mode');
 
-    return response()->json($legCases);
-}
+        $query = LegCase::query()
+            ->select([
+                'id', 'slug', 'title', 'client_capacity', 'status', 'case_type_id',
+                'case_sub_type_id', 'created_at', 'updated_at',
+            ])
+            ->with([
+                'clients:id,name',
+                'caseSubType:id,name',
+            ])
+            ->withCount(['procedures', 'legalSessions']);
+
+        if (! $isReportMode) {
+            $query->whereIn('status', ['قيد التجهيز', 'متداولة']);
+        }
+
+        $query
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $builder->whereHas('clients', function ($clientQuery) use ($request) {
+                    $clientQuery->where('name', 'like', '%'.$request->string('client_name').'%');
+                });
+            })
+            ->when($request->filled('file_number'), fn ($builder) => $builder->where('slug', 'like', '%'.$request->string('file_number').'%'))
+            ->when($request->filled('case_type_id'), fn ($builder) => $builder->where('case_type_id', $request->integer('case_type_id')))
+            ->when($request->filled('case_status'), fn ($builder) => $builder->where('status', $request->string('case_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
+
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
+
+        return response()->json($query->cursorPaginate(30));
+    }
 
 
     /**

@@ -16,19 +16,35 @@ class ProcedureController extends Controller
     public function __construct(private readonly NotificationEventService $notificationEvents)
     {
     }
-    public function index()
+    public function index(Request $request)
     {
-        $procedures = Procedure::with([
+        $query = Procedure::with([
             'procedureType',
-            'legCase',
+            'legCase.clients',
             'procedurePlaceType',
             'lawyer',
             'event',
             'createdBy',
             'updatedBy'
-        ])->get();
+        ]);
 
-        return response()->json($procedures);
+        $query
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $builder->whereHas('legCase.clients', fn ($q) => $q->where('name', 'like', '%'.$request->string('client_name').'%'));
+            })
+            ->when($request->filled('lawyer_id'), fn ($builder) => $builder->where('lawyer_id', $request->integer('lawyer_id')))
+            ->when($request->filled('procedure_type_id'), fn ($builder) => $builder->where('procedure_type_id', $request->integer('procedure_type_id')))
+            ->when($request->filled('procedure_status'), fn ($builder) => $builder->where('status', $request->string('procedure_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
+
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
+
+        return response()->json($query->get());
     }
 
     // Store a newly created resource in storage

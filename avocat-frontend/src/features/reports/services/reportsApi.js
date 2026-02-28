@@ -24,14 +24,29 @@ const endpoints = {
 };
 
 export const fetchReportRows = async (tabKey, params = {}) => {
-  const response = await api.get(endpoints[tabKey], { params: cleanParams(params) });
+  const response = await api.get(endpoints[tabKey], { params: cleanParams({ report_mode: 1, ...params }) });
   return extractRows(response?.data);
 };
 
+export const fetchReportsOverview = async () => {
+  const tabs = Object.keys(endpoints);
+  const requests = tabs.map((tabKey) =>
+    fetchReportRows(tabKey, {
+      limit: 4,
+      sort_by: 'updated_at',
+      sort_direction: 'desc',
+    }).then((rows) => [tabKey, rows]),
+  );
+
+  const entries = await Promise.all(requests);
+  return Object.fromEntries(entries);
+};
+
 export const fetchReportsMetadata = async () => {
-  const [lawyersRes, caseTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
+  const [lawyersRes, caseTypesRes, serviceTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
     api.get('/lawyers'),
     api.get('/case_types'),
+    api.get('/service-types'),
     api.get('/procedure_types'),
     api.get('/legal_session_types'),
   ]);
@@ -39,6 +54,7 @@ export const fetchReportsMetadata = async () => {
   return {
     lawyers: extractRows(lawyersRes?.data),
     caseTypes: extractRows(caseTypesRes?.data),
+    serviceTypes: extractRows(serviceTypesRes?.data),
     procedureTypes: extractRows(procedureTypesRes?.data),
     sessionTypes: extractRows(sessionTypesRes?.data),
   };

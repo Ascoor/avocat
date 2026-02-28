@@ -33,7 +33,7 @@ export const FILTER_SCHEMA = {
   services: [
     { name: 'client_name', type: 'text', label: 'اسم الموكل' },
     { name: 'file_number', type: 'text', label: 'رقم الملف' },
-    { name: 'case_type_id', type: 'select', label: 'نوع الخدمة' },
+    { name: 'service_type_id', type: 'select', label: 'نوع الخدمة' },
     ...baseDateFields,
     { name: 'service_status', type: 'select', label: 'الحالة' },
   ],
@@ -75,7 +75,7 @@ export const useReportsQuery = (tabKey) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], procedureTypes: [], sessionTypes: [] });
+  const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [] });
   const [filters, setFilters] = useState(() => getInitialFilters(tabKey));
 
   const loadRows = useCallback(
@@ -108,7 +108,7 @@ export const useReportsQuery = (tabKey) => {
         if (mounted) setMetadata(data);
       })
       .catch(() => {
-        if (mounted) setMetadata({ lawyers: [], caseTypes: [], procedureTypes: [], sessionTypes: [] });
+        if (mounted) setMetadata({ lawyers: [], caseTypes: [], serviceTypes: [], procedureTypes: [], sessionTypes: [] });
       });
     return () => {
       mounted = false;
@@ -119,6 +119,7 @@ export const useReportsQuery = (tabKey) => {
     const statusOptions = toStatusOptions(rows, tabKey);
     return {
       case_type_id: metadata.caseTypes.map((item) => ({ value: String(item.id), label: item.name })),
+      service_type_id: metadata.serviceTypes.map((item) => ({ value: String(item.id), label: item.name })),
       lawyer_id: metadata.lawyers.map((item) => ({ value: String(item.id), label: item.name })),
       procedure_type_id: metadata.procedureTypes.map((item) => ({ value: String(item.id), label: item.name })),
       session_type_id: metadata.sessionTypes.map((item) => ({ value: String(item.id), label: item.name })),
