@@ -19,16 +19,27 @@ class ProcedureController extends Controller
     }
     public function index()
     {
-        $with = [
-            'procedureType',
-            'legCase',
-            'procedurePlaceType',
-            'lawyer',
-            'createdBy',
-            'updatedBy'
-        ];
+        $with = [];
 
-        if (Schema::hasTable('events')) {
+        if (Schema::hasTable('procedure_types') && Schema::hasColumn('procedures', 'procedure_type_id')) {
+            $with[] = 'procedureType';
+        }
+        if (Schema::hasTable('leg_cases') && Schema::hasColumn('procedures', 'leg_case_id')) {
+            $with[] = 'legCase';
+        }
+        if (Schema::hasTable('procedure_place_types') && Schema::hasColumn('procedures', 'procedure_place_type_id')) {
+            $with[] = 'procedurePlaceType';
+        }
+        if (Schema::hasTable('lawyers') && Schema::hasColumn('procedures', 'lawyer_id')) {
+            $with[] = 'lawyer';
+        }
+        if (Schema::hasTable('users') && Schema::hasColumn('procedures', 'created_by')) {
+            $with[] = 'createdBy';
+        }
+        if (Schema::hasTable('users') && Schema::hasColumn('procedures', 'updated_by')) {
+            $with[] = 'updatedBy';
+        }
+        if (Schema::hasTable('events') && Schema::hasColumn('procedures', 'event_id')) {
             $with[] = 'event';
         }
 
