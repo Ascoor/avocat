@@ -40,7 +40,7 @@ const FieldWrapper = ({ label, isRTL, children }) => (
   </label>
 );
 
-const ReportFilters = ({ tabKey, schema, values, options, onSubmit, onReset }) => {
+const ReportFilters = ({ tabKey, schema, values, options, onSubmit, onReset, isLoading = false }) => {
   const { language, isRTL } = useLanguage();
   const [draft, setDraft] = useState(values);
 
@@ -142,16 +142,21 @@ const ReportFilters = ({ tabKey, schema, values, options, onSubmit, onReset }) =
       </div>
 
       <div className={`flex flex-wrap gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
-        <button type="submit" className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))]">
-          {language === 'ar' ? 'بحث' : 'Search'}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="rounded-xl bg-[hsl(var(--color-primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--color-primary-foreground))] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoading ? (language === 'ar' ? 'جارٍ التحميل...' : 'Loading...') : language === 'ar' ? 'بحث' : 'Search'}
         </button>
         <button
           type="button"
+          disabled={isLoading}
           onClick={() => {
             const clean = onReset();
             setDraft(clean);
           }}
-          className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground"
+          className="rounded-xl border border-[hsl(var(--color-border))] px-4 py-2 text-sm font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-60"
         >
           {language === 'ar' ? 'إعادة تعيين' : 'Reset'}
         </button>
