@@ -35,7 +35,7 @@ class ProcedureSearchController extends Controller
             'filters.lawyer_id' => 'nullable|integer|exists:lawyers,id',
             'filters.client_id' => 'nullable|integer|exists:clients,id',
             'filters.service_id' => 'nullable|integer',
-            'sort_by' => 'nullable|string|in:created_at,date_start,date_end,status,file_no,case_slug',
+            'sort_by' => 'nullable|string|in:'.implode(',', array_keys(self::SORT_ALLOWLIST)),
             'sort_dir' => 'nullable|string|in:asc,desc',
             'page' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:100',
