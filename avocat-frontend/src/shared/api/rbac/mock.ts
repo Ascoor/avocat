@@ -1,4 +1,5 @@
 import { allPermissions, permissionMap } from "@shared/security/permission-map";
+import { rolePermissionMap } from "@shared/security/roles";
 import type { RbacClient, RbacMockDb, RbacPermission, RbacRole, RbacUser } from "./types";
 
 const STORAGE_KEY = "RBAC_MOCK_DB";
@@ -7,8 +8,8 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 let memoryDb: RbacMockDb | null = null;
 
 const toPermissionList = (): RbacPermission[] =>
-  Object.entries(permissionMap).flatMap(([module, crud]) =>
-    Object.entries(crud).map(([action, name]) => ({
+  Object.entries(permissionMap).flatMap(([module, actions]) =>
+    Object.entries(actions).map(([action, name]) => ({
       name,
       module,
       labelEn: `${module} ${action}`,
@@ -18,29 +19,59 @@ const toPermissionList = (): RbacPermission[] =>
 
 const seedDb = (): RbacMockDb => {
   const permissions = toPermissionList();
-  const admin: RbacRole = { id: "role_admin", name: "Admin", permissionNames: [...allPermissions], createdAt: now(), updatedAt: now() };
-  const editor: RbacRole = {
-    id: "role_editor",
-    name: "Editor",
-    permissionNames: allPermissions.filter((name) => !name.endsWith(".delete") && !name.startsWith("admin-")),
+  const superAdmin: RbacRole = {
+    id: "role_super_admin",
+    name: "super_admin",
+    permissionNames: [...allPermissions],
+    createdAt: now(),
+    updatedAt: now(),
+  };
+  const admin: RbacRole = {
+    id: "role_admin",
+    name: "admin",
+    permissionNames: rolePermissionMap.admin,
+    createdAt: now(),
+    updatedAt: now(),
+  };
+  const lawyer: RbacRole = {
+    id: "role_lawyer",
+    name: "lawyer",
+    permissionNames: rolePermissionMap.lawyer,
+    createdAt: now(),
+    updatedAt: now(),
+  };
+  const assistant: RbacRole = {
+    id: "role_assistant",
+    name: "assistant",
+    permissionNames: rolePermissionMap.assistant,
+    createdAt: now(),
+    updatedAt: now(),
+  };
+  const accountant: RbacRole = {
+    id: "role_accountant",
+    name: "accountant",
+    permissionNames: rolePermissionMap.accountant,
     createdAt: now(),
     updatedAt: now(),
   };
   const viewer: RbacRole = {
     id: "role_viewer",
-    name: "Viewer",
-    permissionNames: allPermissions.filter((name) => name.endsWith(".view") && !name.startsWith("admin-")),
+    name: "viewer",
+    permissionNames: rolePermissionMap.viewer,
     createdAt: now(),
     updatedAt: now(),
   };
 
   const users: RbacUser[] = [
+    { id: "user_super_admin", name: "Super Admin", email: "superadmin@local", status: "active", roleIds: [superAdmin.id], createdAt: now(), updatedAt: now() },
     { id: "user_admin", name: "Admin User", email: "admin@local", status: "active", roleIds: [admin.id], createdAt: now(), updatedAt: now() },
-    { id: "user_editor", name: "Editor User", email: "editor@local", status: "active", roleIds: [editor.id], createdAt: now(), updatedAt: now() },
+    { id: "user_lawyer", name: "Lawyer User", email: "lawyer@local", status: "active", roleIds: [lawyer.id], createdAt: now(), updatedAt: now() },
+    { id: "user_assistant", name: "Assistant User", email: "assistant@local", status: "active", roleIds: [assistant.id], createdAt: now(), updatedAt: now() },
     { id: "user_viewer", name: "Viewer User", email: "viewer@local", status: "active", roleIds: [viewer.id], createdAt: now(), updatedAt: now() },
+    { id: "user_accountant", name: "Accountant User", email: "accountant@local", status: "active", roleIds: [accountant.id], createdAt: now(), updatedAt: now() },
   ];
 
-  return { users, roles: [admin, editor, viewer], permissions, currentUserId: users[0].id };
+  return { users, roles: [superAdmin, admin, lawyer, assistant, accountant, viewer], permissions, currentUserId: users[0].id };
 };
 
 const persist = (db: RbacMockDb) => {

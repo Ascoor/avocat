@@ -1,0 +1,67 @@
+{
+  "settings": {
+    "lookups": {
+      "title": "إدارة المتغيرات والقوائم المرجعية",
+      "subtitle": "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
+      "searchPlaceholder": "ابحث داخل المتغيرات...",
+      "entities": {
+        "caseTypes": "تصنيفات القضايا",
+        "caseSubTypes": "التصنيفات الفرعية للقضايا",
+        "procedureTypes": "أنواع الإجراءات",
+        "procedurePlaceTypes": "أماكن الإجراءات",
+        "legalSessionTypes": "أنواع الجلسات",
+        "legalAdTypes": "أنواع الإعلانات",
+        "revenueCategories": "تصنيفات الإيراد",
+        "expenseCategories": "تصنيفات المصروف",
+        "serviceTypes": "أنواع الخدمات"
+      },
+      "fields": {
+        "nameAr": "الاسم بالعربية",
+        "nameEn": "الاسم بالإنجليزية",
+        "sortOrder": "الترتيب",
+        "active": "نشط",
+        "name": "الاسم"
+      },
+      "columns": {
+        "name": "الاسم",
+        "scope": "النطاق",
+        "sortOrder": "الترتيب",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "add": "إضافة متغير",
+        "edit": "تعديل متغير",
+        "enable": "تفعيل",
+        "disable": "تعطيل"
+      },
+      "scope": {
+        "system": "النظام",
+        "office": "المكتب"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "messages": {
+        "empty": "لا توجد بيانات",
+        "loadError": "تعذر تحميل البيانات",
+        "saveError": "تعذر حفظ البيانات",
+        "saved": "تم الحفظ بنجاح",
+        "deleteError": "تعذر حذف العنصر",
+        "deleted": "تم الحذف بنجاح",
+        "locked": "هذا المتغير مقفل ولا يمكن تعديله أو حذفه"
+      },
+      "caseSubTypes": {
+        "filterTitle": "تصفية الأنواع الفرعية حسب نوع القضية",
+        "selectCaseType": "اختر نوع القضية أولاً"
+      },
+      "sharedLookupsSubtitle": "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
+      "sectionTabs": {
+        "caseSettings": "القضايا وتصنيفاتها",
+        "sharedLookups": "إدارة المتغيرات والقوائم المرجعية",
+        "courts": "إعدادات المحاكم"
+      }
+    }
+  }
+}

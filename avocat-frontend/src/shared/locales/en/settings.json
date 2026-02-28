@@ -1,0 +1,61 @@
+{
+  "settings": {
+    "lookups": {
+      "title": "Lookup & Reference Lists",
+      "subtitle": "Manage reusable variables for procedures, sessions, ads, services, and accounting categories.",
+      "searchPlaceholder": "Search lookup values...",
+      "entities": {
+        "caseTypes": "Case Types",
+        "caseSubTypes": "Case Sub Types",
+        "procedureTypes": "Procedure Types",
+        "procedurePlaceTypes": "Procedure Place Types",
+        "legalSessionTypes": "Legal Session Types",
+        "legalAdTypes": "Legal Ad Types",
+        "revenueCategories": "Revenue Categories",
+        "expenseCategories": "Expense Categories",
+        "serviceTypes": "Service Types"
+      },
+      "fields": {
+        "nameAr": "Arabic Name",
+        "nameEn": "English Name",
+        "sortOrder": "Sort Order",
+        "active": "Active",
+        "name": "Name"
+      },
+      "columns": {
+        "name": "Name",
+        "scope": "Scope",
+        "sortOrder": "Order",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "actions": {
+        "add": "Add Lookup",
+        "edit": "Edit Lookup",
+        "enable": "Enable",
+        "disable": "Disable"
+      },
+      "scope": {
+        "system": "System",
+        "office": "Office"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "messages": {
+        "empty": "No records found",
+        "loadError": "Failed to load data",
+        "saveError": "Failed to save data",
+        "saved": "Saved successfully",
+        "deleteError": "Failed to delete record",
+        "deleted": "Record deleted successfully",
+        "locked": "This lookup is locked and cannot be edited or deleted"
+      },
+      "caseSubTypes": {
+        "filterTitle": "Filter sub types by case type",
+        "selectCaseType": "Select case type first"
+      }
+    }
+  }
+}

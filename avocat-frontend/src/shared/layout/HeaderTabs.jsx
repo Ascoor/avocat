@@ -5,6 +5,8 @@ import { NavLink } from './NavLink';
 import { sidebarGroups } from '@config/sidebar';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { cn } from '@shared/lib/utils';
+import { useSecurity } from '@shared/security/SecurityContext';
+import { hasAny, hasPermission } from '@shared/security/permissions';
 
 import {
   DropdownMenu,
@@ -26,14 +28,26 @@ const PillLink = ({ to, icon: Icon, label }) => (
 
 const HeaderTabs = ({ className }) => {
   const { t, direction, isRTL } = useLanguage();
+  const { permissions } = useSecurity();
 
   const items = useMemo(() => {
+    const isAllowed = (item) => {
+      if (!item.requiredPermission) return true;
+      return Array.isArray(item.requiredPermission)
+        ? hasAny(permissions, item.requiredPermission)
+        : hasPermission(permissions, item.requiredPermission);
+    };
     const flat = [];
     for (const group of sidebarGroups) {
-      for (const item of group.items) flat.push(item);
+      for (const item of group.items) {
+        const children = item.children?.filter((child) => isAllowed(child));
+        if (isAllowed(item) && (!children || children.length > 0)) {
+          flat.push({ ...item, children });
+        }
+      }
     }
     return flat;
-  }, []);
+  }, [permissions]);
 
   const orderedItems = useMemo(() => {
     const preferredOrder = [
@@ -41,27 +55,25 @@ const HeaderTabs = ({ className }) => {
       'customer_service',
       'cases',
       'services',
-      'work_follow',
+      'follow_work',
+      'reports',
       'settings',
-    ]; 
+    ];
     const orderMap = new Map(preferredOrder.map((key, index) => [key, index]));
 
- 
     return [...items].sort((a, b) => {
       const aOrder = orderMap.get(a.key) ?? Number.MAX_SAFE_INTEGER;
       const bOrder = orderMap.get(b.key) ?? Number.MAX_SAFE_INTEGER;
       return aOrder - bOrder;
     });
   }, [items]);
+
   return (
     <div className={cn('header-tabs-wrap', className)}>
       <div className="header-tabs" dir={direction}>
         {orderedItems.map((item) => {
-          const Icon = item.icon; 
-          const labelKey = item.key === 'customer_service'
-            ? 'navigation.clients'
-            : item.labelKey;
-          const label = t(labelKey);
+          const Icon = item.icon;
+          const label = t(item.labelKey);
           if (!item.children?.length) {
             return (
               <PillLink

@@ -1,73 +1,112 @@
-import React, { useState, Suspense } from 'react';
-
-const Lawyers = React.lazy(() => import('./LawyerList'));
-const CourtSetting = React.lazy(
-  () => import('@features/courts/components/Courts/court_index.component'),
-);
-const Procedures = React.lazy(() => import('./ProceduresList'));
-const ServiceTypes = React.lazy(
-  () => import('../components/Settings/ServiceTypes'),
-);
-const ExpenseCategorys = React.lazy(
-  () => import('../components/Settings/ExpenseCategorys'),
-);
+import { useState } from 'react';
+import { useAuth } from '@shared/contexts/AuthContext';
+import { useLanguage } from '@shared/contexts/LanguageContext';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
+import LookupManager from '@shared/components/LookupManager/LookupManager';
+import CaseSettingsPanel from '../components/CaseSettingsPanel';
+import {
+  courtSettingEntities,
+  courtSettingFieldsByEntity,
+  lookupEntities,
+  lookupFields,
+} from '@shared/components/LookupManager/config';
 
 const ManagementSettings = () => {
-  const [activeTab, setActiveTab] = useState('lawyers');
-
-  const tabs = [
-    { label: 'المحامون', value: 'lawyers', icon: '👨‍⚖️' },
-    { label: 'المحاكم', value: 'courts', icon: '⚖️' },
-    { label: 'الإجراءات', value: 'procedures', icon: '📝' },
-    { label: 'تصنيف القضايا', value: 'case-types', icon: '📝' },
-    { label: 'أنواع الخدمات', value: 'service-types', icon: '📝' },
-    { label: 'أنواع المصروفات', value: 'expense-categories', icon: '📝' },
-  ];
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'lawyers':
-        return <Lawyers />;
-      case 'courts':
-        return <CourtSetting />;
-      case 'procedures':
-        return <Procedures />;
-      case 'case-types':
-        return <div>محتوى تصنيف القضايا</div>;
-      case 'service-types':
-        return <ServiceTypes />;
-      case 'expense-categories':
-        return <ExpenseCategorys />;
-      default:
-        return null;
-    }
-  };
+  const { user } = useAuth();
+  const { t } = useLanguage();
+  const [activeSectionTab, setActiveSectionTab] = useState('case_settings');
+  const [activeLookupTab, setActiveLookupTab] = useState(lookupEntities[0].value);
+  const [activeCourtTab, setActiveCourtTab] = useState(courtSettingEntities[0].value);
+  const officeId = user?.officeId ?? user?.office_id;
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center tracking-wide">
-        إدارة المكتب
-      </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-6 py-4 transition-transform transform hover:scale-105 ${
-              activeTab === tab.value ? 'bg-blue-500 text-white' : ''
-            }`}
+    <section className="space-y-6 p-4 sm:p-6">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">{t('settings.lookups.title')}</h1>
+        <p className="text-sm text-muted-foreground">{t('settings.lookups.subtitle')}</p>
+      </div>
+
+      <Tabs value={activeSectionTab} onValueChange={setActiveSectionTab} className="space-y-4">
+        <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
+          <TabsTrigger value="case_settings">
+            {t('settings.lookups.sectionTabs.caseSettings')}
+          </TabsTrigger>
+          <TabsTrigger value="shared_lookups">
+            {t('settings.lookups.sectionTabs.sharedLookups')}
+          </TabsTrigger>
+          <TabsTrigger value="courts_settings">
+            {t('settings.lookups.sectionTabs.courts')}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="case_settings">
+          <CaseSettingsPanel officeId={officeId} />
+        </TabsContent>
+
+        <TabsContent value="shared_lookups" className="space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">{t('settings.lookups.sectionTabs.sharedLookups')}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t('settings.lookups.sharedLookupsSubtitle')}
+            </p>
+          </div>
+
+          <Tabs value={activeLookupTab} onValueChange={setActiveLookupTab} className="space-y-4">
+            <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
+              {lookupEntities.map((entity) => (
+                <TabsTrigger key={entity.value} value={entity.value}>
+                  {t(entity.titleKey)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {lookupEntities.map((entity) => (
+              <TabsContent key={entity.value} value={entity.value}>
+                <LookupManager
+                  officeId={officeId}
+                  entity={entity.value}
+                  titleKey={entity.titleKey}
+                  fields={lookupFields}
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="courts_settings" className="space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">{t('settings.lookups.courtsSectionTitle')}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t('settings.lookups.courtsSectionSubtitle')}
+            </p>
+          </div>
+
+          <Tabs
+            value={activeCourtTab}
+            onValueChange={setActiveCourtTab}
+            className="space-y-4"
           >
-            <span className="text-3xl mr-3">{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      <div className="w-full max-w-5xl p-4 bg-white dark:bg-gray-700 rounded-lg shadow-lg">
-        {}
-        <Suspense fallback={<div>جار التحميل...</div>}>
-          {renderTabContent()}
-        </Suspense>
-      </div>
+            <TabsList className="flex h-auto w-full flex-nowrap justify-start gap-2 overflow-x-auto">
+              {courtSettingEntities.map((entity) => (
+                <TabsTrigger key={entity.value} value={entity.value}>
+                  {t(entity.titleKey)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {courtSettingEntities.map((entity) => (
+              <TabsContent key={entity.value} value={entity.value}>
+                <LookupManager
+                  officeId={officeId}
+                  entity={entity.value}
+                  titleKey={entity.titleKey}
+                  fields={courtSettingFieldsByEntity[entity.value]}
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
+        </TabsContent>
+      </Tabs>
     </section>
   );
 };

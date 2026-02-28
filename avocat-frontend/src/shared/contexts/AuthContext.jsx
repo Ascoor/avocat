@@ -4,10 +4,25 @@ import {
   clearStoredAuth,
   getStoredToken,
   getStoredUser,
+
   setStoredAuth,
+  DEMO_TOKEN_PREFIX,
+  isDemoToken,
 } from '../services/auth/authStorage';
 
 const AuthContext = createContext(null);
+
+const DEMO_EMAIL = import.meta.env.VITE_DEMO_LOGIN_EMAIL ?? 'demo@avocat.app';
+const DEMO_PASSWORD = import.meta.env.VITE_DEMO_LOGIN_PASSWORD ?? 'demo12345';
+const buildDemoUser = (email) => ({
+  id: 0,
+  name: 'Demo User',
+  email,
+  role: 'admin',
+});
+
+const isDemoLogin = (email, password) =>
+  email.trim().toLowerCase() === DEMO_EMAIL.toLowerCase() && password === DEMO_PASSWORD;
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getStoredToken());
@@ -35,10 +50,18 @@ export const AuthProvider = ({ children }) => {
     setUser(nextUser);
   }, []);
 
+
   const fetchMe = useCallback(async () => {
+    const currentToken = getStoredToken();
+    if (isDemoToken(currentToken)) {
+      const storedUser = getStoredUser() ?? buildDemoUser(DEMO_EMAIL);
+      setStoredAuth(storedUser, currentToken);
+      setUser(storedUser);
+      return storedUser;
+    }
+
     const response = await api.get('/me');
     const payload = response.data?.data ?? response.data;
-    const currentToken = getStoredToken();
     if (currentToken) {
       setStoredAuth(payload, currentToken);
     }
@@ -47,6 +70,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = useCallback(async (email, password) => {
+    if (isDemoLogin(email, password)) {
+      const demoUser = buildDemoUser(email.trim());
+      syncAuth(demoUser, `${DEMO_TOKEN_PREFIX}${Date.now()}`);
+      return true;
+    }
+
+
     try {
       const response = await api.post('/login', {
         email,

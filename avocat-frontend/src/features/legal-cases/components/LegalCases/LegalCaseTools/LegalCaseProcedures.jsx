@@ -14,6 +14,7 @@ const LegalCaseProcedures = ({
   loading = false,
   error = '',
   onRefresh,
+  acl = { create: true, update: true, delete: true },
 }) => {
   const { triggerAlert } = useAlert();
   const { t, isRTL } = useLanguage();
@@ -157,8 +158,8 @@ const LegalCaseProcedures = ({
         icon="document"
         title={t('legalCaseDetails.procedures.title')}
         subtitle={t('legalCaseDetails.procedures.subtitle')}
-        addLabel={t('legalCaseDetails.actions.addProcedure')}
-        onAdd={handleAddProcedure}
+        addLabel={acl.create ? t('legalCaseDetails.actions.addProcedure') : undefined}
+        onAdd={acl.create ? handleAddProcedure : undefined}
       />
 
       <TableComponent
@@ -177,15 +178,15 @@ const LegalCaseProcedures = ({
         retryLabel={t('legalCaseDetails.actions.retry')}
         onAdd={undefined}
         renderAddButton={undefined}
-        onEdit={(id) => {
+        onEdit={acl.update ? ((id) => {
           const p = procedures.find((x) => String(x.id) === String(id));
           if (p) handleEditProcedure(p);
-        }}
-        onDelete={(id) => {
+        }) : undefined}
+        onDelete={acl.delete ? ((id) => {
           const p = procedures.find((x) => String(x.id) === String(id));
           if (p) handleDeleteClick(p);
-        }}
-        permissions={{ view: false, update: true, delete: true, create: true }}
+        }) : undefined}
+        permissions={{ view: true, update: acl.update, delete: acl.delete, create: acl.create }}
         prevLabel={t('legalCaseDetails.pagination.prev')}
         nextLabel={t('legalCaseDetails.pagination.next')}
         pageLabel={t('legalCaseDetails.pagination.page')}

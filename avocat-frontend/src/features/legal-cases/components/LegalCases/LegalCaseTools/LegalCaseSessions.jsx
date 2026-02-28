@@ -17,6 +17,7 @@ const LegalCaseSessions = ({
   loading = false,
   error = '',
   onRefresh,
+  acl = { create: true, update: true, delete: true },
 }) => {
   const { triggerAlert } = useAlert();
   const { t, isRTL } = useLanguage();
@@ -168,8 +169,8 @@ const LegalCaseSessions = ({
         icon="calendar"
         title={t('legalCaseDetails.sessions.title')}
         subtitle={t('legalCaseDetails.sessions.subtitle')}
-        addLabel={t('legalCaseDetails.actions.addSession')}
-        onAdd={handleAddSession}
+        addLabel={acl.create ? t('legalCaseDetails.actions.addSession') : undefined}
+        onAdd={acl.create ? handleAddSession : undefined}
       />
 
       {/* ✅ TableComponent يتعامل مع: loading/error/empty/pagination/search/sort/mobile */}
@@ -196,16 +197,15 @@ const LegalCaseSessions = ({
           const s = sessions.find((x) => String(x.id) === String(id));
           if (s) setSelectedSession(s);
         }}
-        onEdit={(id) => {
+        onEdit={acl.update ? ((id) => {
           const s = sessions.find((x) => String(x.id) === String(id));
           if (s) handleEditSession(s);
-        }}
-        onDelete={(id) => {
+        }) : undefined}
+        onDelete={acl.delete ? ((id) => {
           const s = sessions.find((x) => String(x.id) === String(id));
           if (s) handleDeleteClick(s);
-        }}
-        // لو عندك Permissions أو ACL، مررها هنا. وإلا اتركها لتظهر الأكشنز.
-        permissions={{ view: true, update: true, delete: true, create: true }}
+        }) : undefined}
+        permissions={{ view: true, update: acl.update, delete: acl.delete, create: acl.create }}
         prevLabel={t('legalCaseDetails.pagination.prev')}
         nextLabel={t('legalCaseDetails.pagination.next')}
         pageLabel={t('legalCaseDetails.pagination.page')}

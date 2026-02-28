@@ -1,6 +1,8 @@
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
 
+export const DEMO_TOKEN_PREFIX = 'demo-token:';
+
 let inMemoryToken = null;
 let inMemoryUser = null;
 
@@ -55,3 +57,8 @@ export const clearStoredAuth = () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
 };
+
+
+
+export const isDemoToken = (candidateToken) =>
+  typeof candidateToken === 'string' && candidateToken.startsWith(DEMO_TOKEN_PREFIX);

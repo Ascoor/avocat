@@ -17,7 +17,7 @@ import LanguageToggle from '@shared/ui/language-toggle';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import useAuth from '@features/auth/components/AuthUser';
 import { cn } from '@shared/lib/utils';
-import { LandingPageImg, LogoBlue } from '@assets/images';
+import { LandingPageImg, BackgroundSvg,LogoBlue } from '@assets/images';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -214,11 +214,9 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+        <img   className="absolute z-10 -left-20 top-0 max-w-[877px]" src={BackgroundSvg} alt="Laravel background" />    
       <section className="relative overflow-hidden bg-gradient-hero text-white">
-        <div className="absolute inset-0 opacity-50">
-          <div className="absolute -top-16 right-0 h-72 w-72 rounded-full bg-[hsl(var(--gold))] blur-[140px]" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[hsl(var(--primary-glow))] blur-[140px]" />
-        </div>
+     
 
         <div className="relative z-10">
           <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
@@ -376,25 +374,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-6 py-16">
-        <div className="flex flex-col gap-6 rounded-[var(--radius-xl)] border border-border bg-[hsl(var(--card))] p-8 shadow-custom-lg md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-              {copy.trust.title}
-            </p>
-          </div>
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
-            {copy.trust.metrics.map((metric) => (
-              <div key={metric.label} className="text-center">
-                <p className="text-2xl font-semibold text-foreground">
-                  {metric.value}
-                </p>
-                <p className="text-xs text-muted-foreground">{metric.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       <section className="mx-auto w-full max-w-6xl px-6 py-16">
         <div className="mb-10 flex flex-col gap-3">
@@ -496,7 +476,25 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
+      <section className="mx-auto z-10 w-full max-w-6xl px-6 py-16">
+        <div className="flex  flex-col gap-6 rounded-[var(--radius-xl)] border border-border bg-[hsl(var(--card))] p-8 shadow-custom-lg md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+              {copy.trust.title}
+            </p>
+          </div>
+          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
+            {copy.trust.metrics.map((metric) => (
+              <div key={metric.label} className="text-center">
+                <p className="text-2xl font-semibold text-foreground">
+                  {metric.value}
+                </p>
+                <p className="text-xs text-muted-foreground">{metric.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       <footer className="border-t border-border bg-[hsl(var(--surface))]">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-10 md:flex-row md:items-center md:justify-between">
           <div>
