@@ -1,4 +1,5 @@
 import api from '@shared/services/api/axiosConfig';
+import { getLookups } from '@shared/services/api/lookups';
 
 const extractRows = (payload) => {
   if (Array.isArray(payload)) return payload;
@@ -110,20 +111,22 @@ export const fetchReportsOverview = async () => {
 };
 
 export const fetchReportsMetadata = async () => {
-  const [lawyersRes, caseTypesRes, serviceTypesRes, procedureTypesRes, sessionTypesRes] = await Promise.all([
-    api.get('/lawyers'),
-    api.get('/case_types'),
-    api.get('/service-types'),
-    api.get('/procedure_types'),
-    api.get('/legal_session_types'),
+  const requests = await Promise.allSettled([
+    api.get('/lawyers').then((res) => extractRows(res?.data)),
+    getLookups({ entity: 'case_types' }),
+    api.get('/service-types').then((res) => extractRows(res?.data)),
+    getLookups({ entity: 'procedure_types' }),
+    api.get('/legal_session_types').then((res) => extractRows(res?.data)),
   ]);
 
+  const resolveRows = (index) => (requests[index].status === 'fulfilled' ? requests[index].value : []);
+
   return {
-    lawyers: extractRows(lawyersRes?.data),
-    caseTypes: extractRows(caseTypesRes?.data),
-    serviceTypes: extractRows(serviceTypesRes?.data),
-    procedureTypes: extractRows(procedureTypesRes?.data),
-    sessionTypes: extractRows(sessionTypesRes?.data),
+    lawyers: resolveRows(0),
+    caseTypes: resolveRows(1),
+    serviceTypes: resolveRows(2),
+    procedureTypes: resolveRows(3),
+    sessionTypes: resolveRows(4),
   };
 };
 
