@@ -17,6 +17,15 @@ class ProcedureSearchController extends Controller
         'case_slug' => 'leg_cases.slug',
     ];
 
+    private const SORT_ALIASES = [
+        'createdAt' => 'created_at',
+        'dateStart' => 'date_start',
+        'dateEnd' => 'date_end',
+        'fileNo' => 'file_no',
+        'caseSlug' => 'case_slug',
+        'slug' => 'case_slug',
+    ];
+
     public function searchFilters(Request $request)
     {
         $validated = $request->validate([
@@ -31,7 +40,7 @@ class ProcedureSearchController extends Controller
             'filters.lawyer_id' => 'nullable|integer|exists:lawyers,id',
             'filters.client_id' => 'nullable|integer|exists:clients,id',
             'filters.service_id' => 'nullable|integer',
-            'sort_by' => 'nullable|string|in:created_at,date_start,date_end,status,file_no,case_slug',
+            'sort_by' => 'nullable|string|max:50',
             'sort_dir' => 'nullable|string|in:asc,desc',
             'page' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:100',
@@ -49,7 +58,7 @@ class ProcedureSearchController extends Controller
             'status' => $validated['status'] ?? null,
         ]), fn ($value) => $value !== null && trim((string) $value) !== '');
 
-        $sortBy = $validated['sort_by'] ?? 'created_at';
+        $sortBy = $this->resolveSortBy($validated['sort_by'] ?? null);
         $sortDir = $validated['sort_dir'] ?? 'desc';
         $perPage = (int) ($validated['per_page'] ?? 20);
         $search = trim((string) ($validated['q'] ?? ''));
@@ -136,5 +145,16 @@ class ProcedureSearchController extends Controller
                 'statuses' => $statuses,
             ],
         ]);
+    }
+
+    private function resolveSortBy(?string $sortBy): string
+    {
+        if (! is_string($sortBy) || trim($sortBy) === '') {
+            return 'created_at';
+        }
+
+        $normalized = self::SORT_ALIASES[$sortBy] ?? $sortBy;
+
+        return array_key_exists($normalized, self::SORT_ALLOWLIST) ? $normalized : 'created_at';
     }
 }

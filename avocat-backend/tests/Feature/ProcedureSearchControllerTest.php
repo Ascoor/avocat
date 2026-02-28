@@ -94,7 +94,18 @@ class ProcedureSearchControllerTest extends TestCase
 
         $response = $this->getJson('/api/v1/procedures-search?sort_by=unknown_field&sort_dir=asc');
 
-        $response->assertStatus(422);
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', 1);
+    }
+
+    public function test_it_accepts_sort_aliases(): void
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->getJson('/api/v1/procedures-search?sort_by=createdAt&sort_dir=asc');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', 1);
     }
 
     public function test_it_returns_pagination_meta(): void
