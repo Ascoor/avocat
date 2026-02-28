@@ -1,7 +1,7 @@
 import React from 'react';
 import Notifications from '@shared/components/common/DropdownNotifications';
 import UserMenu from '@shared/components/common/DropdownProfile';
-import ThemeToggle from '@shared/components/common/ThemeToggle';
+import ThemeToggle from '@shared/ui/ThemeToggle';
 import HeaderToggle from '@shared/components/common/HeaderToggle';
 import { useSidebar } from '@shared/contexts/SidebarContext';
 import { motion } from 'framer-motion';

@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
 } from "@shared/ui/dropdown-menu";
 
-import ThemeToggle from "@shared/ui/theme-toggle";
+import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
 import HeaderTabs from "@shared/layout/HeaderTabs";
 

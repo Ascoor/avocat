@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@shared/ui/button';
-import ThemeToggle from '@shared/ui/theme-toggle';
+import ThemeToggle from '@shared/ui/ThemeToggle';
 import LanguageToggle from '@shared/ui/language-toggle';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import useAuth from '@features/auth/components/AuthUser';
