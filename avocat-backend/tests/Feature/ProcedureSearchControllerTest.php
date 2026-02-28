@@ -88,17 +88,7 @@ class ProcedureSearchControllerTest extends TestCase
         $response->assertJsonPath('data.0.leg_case_id', 1);
     }
 
-    public function test_it_uses_sort_allowlist_fallback(): void
-    {
-        $this->withoutMiddleware();
-
-        $response = $this->getJson('/api/v1/procedures-search?sort_by=unknown_field&sort_dir=asc');
-
-        $response->assertOk();
-        $response->assertJsonPath('data.0.id', 1);
-    }
-
-    public function test_it_accepts_sort_aliases(): void
+    public function test_it_ignores_sort_by_and_uses_default_sorting(): void
     {
         $this->withoutMiddleware();
 
