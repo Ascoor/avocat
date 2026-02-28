@@ -55,6 +55,7 @@ const HeaderTabs = ({ className }) => {
       'customer_service',
       'documents',
       'cases',
+      'power_of_attorneys',
       'services',
       'follow_work',
       'reports',
