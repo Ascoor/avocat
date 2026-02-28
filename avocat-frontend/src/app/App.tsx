@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { SidebarProvider } from "@shared/utils/SidebarContext";
+import { SidebarProvider } from "@shared/contexts/SidebarContext";
 import { ThemeProvider } from "@shared/contexts/ThemeContext";
 import HomePage from "@features/home/pages/HomePage";
 import Login from "@features/auth/pages/Login";

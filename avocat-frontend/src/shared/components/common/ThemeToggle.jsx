@@ -1,26 +1,14 @@
-import { useThemeProvider } from '@shared/contexts/ThemeContext';
-import { FaSun, FaMoon } from 'react-icons/fa';
+import React from "react";
 
-export default function ThemeToggle({ size = 'md' }) {
-  const { currentTheme, changeCurrentTheme } = useThemeProvider();
+import UnifiedThemeToggle from "@shared/ui/theme-toggle";
 
-  return (
-    <button
-      onClick={() =>
-        changeCurrentTheme(currentTheme === 'light' ? 'dark' : 'light')
-      }
-      className={`flex items-center justify-center w-12 h-12 rounded-full border border-white/30 shadow-lg transition-all duration-300 
-                 ${
-                   currentTheme === 'light'
-                     ? 'bg-white/80 text-[var(--app-accent-strong)] hover:bg-white'
-                     : 'bg-white/10 text-[var(--app-accent)] hover:bg-white/20'
-                 }`}
-    >
-      {currentTheme === 'light' ? (
-        <FaSun className="w-6 h-6 transition-all duration-300" />
-      ) : (
-        <FaMoon className="w-6 h-6 transition-all duration-300" />
-      )}
-    </button>
-  );
+const sizeClassMap = {
+  sm: "h-8 w-8",
+  md: "h-9 w-9",
+  lg: "h-10 w-10",
+};
+
+export default function ThemeToggle({ size = "md", className = "", tone }) {
+  const iconSizeClass = sizeClassMap[size] ?? sizeClassMap.md;
+  return <UnifiedThemeToggle tone={tone} className={`${iconSizeClass} ${className}`.trim()} />;
 }
