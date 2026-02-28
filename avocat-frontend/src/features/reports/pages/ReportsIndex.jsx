@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import ReportPageHeader from '@features/reports/components/Reports/ReportPageHeader';
 import ReportsTabs from '@features/reports/components/Tabs/ReportsTabs';
@@ -7,9 +7,6 @@ import { REPORT_TABS } from '@features/reports/hooks/useReportsQuery';
 const ReportsIndex = () => {
   const location = useLocation();
 
-  if (location.pathname === '/dashboard/reports') {
-    return <Navigate to="/dashboard/reports/cases" replace />;
-  }
 
   return (
     <section className="space-y-4" dir="rtl">

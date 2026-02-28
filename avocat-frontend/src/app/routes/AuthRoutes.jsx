@@ -54,6 +54,7 @@ const AdminAccessManagementPage = lazy(
 );
 const QaRbacPage = lazy(() => import('@features/admin/pages/QaRbacPage'));
 const ReportsIndex = lazy(() => import('@features/reports/pages/ReportsIndex'));
+const ReportsOverview = lazy(() => import('@features/reports/pages/ReportsOverview'));
 const SessionsReport = lazy(
   () => import('@features/reports/pages/SessionsReport'),
 );
@@ -241,7 +242,7 @@ const AuthRoutes = () => {
               </Guarded>
             }
           >
-            <Route index element={<Navigate to="sessions" replace />} />
+            <Route index element={<ReportsOverview />} />
             <Route path="sessions" element={<SessionsReport />} />
             <Route path="procedures" element={<ProceduresReport />} />
             <Route path="clients" element={<ClientsReport />} />

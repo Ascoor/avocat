@@ -13,27 +13,37 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 class ServiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::with(
+        $query = Service::with([
             'clients',
             'unclients',
             'createdBy',
             'updatedBy',
             'serviceProcedures',
-            'serviceType'
+            'serviceType',
+        ]);
 
+        $query
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $name = '%'.$request->string('client_name').'%';
+                $builder->where(function ($inner) use ($name) {
+                    $inner->whereHas('clients', fn ($q) => $q->where('name', 'like', $name))
+                        ->orWhereHas('unclients', fn ($q) => $q->where('name', 'like', $name));
+                });
+            })
+            ->when($request->filled('service_type_id'), fn ($builder) => $builder->where('service_type_id', $request->integer('service_type_id')))
+            ->when($request->filled('service_status'), fn ($builder) => $builder->where('status', $request->string('service_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
 
-        
-        )
-        ->orderBy('created_at', 'desc')  // أولوية لتاريخ الإنشاء
-        ->orderBy('updated_at', 'desc')  // ثم تاريخ التحديث
-        ->orderByRaw("CASE status WHEN 'منتهية' THEN 6 WHEN 'استيفاء' THEN 5 WHEN 'لم ينفذ' THEN 4 WHEN 'متداولة' THEN 3 WHEN 'قيد التنفيذ' THEN 2 WHEN 'جارى التنفيذ' THEN 1 ELSE 0 END DESC")
-            
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
 
-    ->get();
-    
-        return response()->json(['services' => $services]);
+        return response()->json(['services' => $query->get()]);
     }
 
     public function show(Service $service)

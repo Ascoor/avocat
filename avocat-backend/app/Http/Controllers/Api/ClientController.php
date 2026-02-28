@@ -18,19 +18,30 @@ class ClientController extends Controller
     }
 
     
-    public function index()
+    public function index(Request $request)
     {
-       
-        $clients = Client::with([
-            'legCases.caseType',           // تضمين نوع القضية المرتبط بكل قضية
-            'legCases.caseSubType',        // تضمين نوع القضية الفرعي المرتبط بكل قضية 
-            'legCases.courts',            
-            'services',                  // تضمين الخدمات المرتبطة بالعميل
-            'services.serviceType',      // تضمين نوع الخدمة
-        ])->get();
+        $query = Client::with([
+            'legCases.caseType',
+            'legCases.caseSubType',
+            'legCases.courts',
+            'services',
+            'services.serviceType',
+        ]);
 
-        return response()->json(['clients' => $clients]);
-    }        
+        $query
+            ->when($request->filled('client_name'), fn ($builder) => $builder->where('name', 'like', '%'.$request->string('client_name').'%'))
+            ->when($request->filled('client_status'), fn ($builder) => $builder->where('status', $request->string('client_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
+
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
+
+        return response()->json(['clients' => $query->get()]);
+    }
 
     public function store(Request $request)
     {
