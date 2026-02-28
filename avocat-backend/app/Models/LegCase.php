@@ -83,6 +83,16 @@ class LegCase extends Model
         return $this->hasMany(LegalAd::class);
     }
 
+    public function powerOfAttorneys(): BelongsToMany
+    {
+        return $this->belongsToMany(PowerOfAttorney::class, 'leg_case_power_of_attorney');
+    }
+
+    public function legalDocs(): HasMany
+    {
+        return $this->hasMany(LegalDoc::class);
+    }
+
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'invoices', 'leg_case_id', 'service_id')
