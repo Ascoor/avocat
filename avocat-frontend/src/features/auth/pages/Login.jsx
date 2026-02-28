@@ -18,7 +18,7 @@ import {
 
 import AuthLayout from "@shared/layout/AuthLayout";
 import LanguageToggle from "@shared/ui/language-toggle";
-import ThemeToggle from "@shared/ui/theme-toggle";
+import ThemeToggle from "@shared/ui/ThemeToggle";
 import { Button } from "@shared/ui/button";
 import { Input } from "@shared/ui/input";
 import { Label } from "@shared/ui/label";

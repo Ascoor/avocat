@@ -6,7 +6,7 @@ import { Button } from "@shared/ui/button";
 import { Input } from "@shared/ui/input";
 import { Label } from "@shared/ui/label";
 import { Checkbox } from "@shared/ui/checkbox";
-import ThemeToggle from "@shared/ui/theme-toggle";
+import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
 import { cn } from "@shared/lib/utils";
 import useAuth from "@features/auth/components/AuthUser";

@@ -7,6 +7,12 @@ import { cn } from "@shared/lib/utils";
 
 import { Button } from "./button";
 
+const sizeClassMap = {
+  sm: "h-8 w-8",
+  md: "h-9 w-9",
+  lg: "h-10 w-10",
+};
+
 const themeToggleToneVariantMap = {
   hero: "glass",
   dark: "glass",
@@ -19,7 +25,7 @@ const themeToggleToneClassMap = {
   light: "border-[hsl(var(--color-border))] text-[hsl(var(--color-text))] hover:bg-[hsl(var(--color-surface-2))]",
 };
 
-const ThemeToggle = ({ tone, className }) => {
+const ThemeToggle = ({ tone, size = "md", className = "" }) => {
   const { theme, toggleTheme } = useTheme();
   const { t } = useLanguage();
   const isDark = theme === "dark";
@@ -27,6 +33,7 @@ const ThemeToggle = ({ tone, className }) => {
   const resolvedTone = tone ?? (isDark ? "dark" : "light");
   const variant = themeToggleToneVariantMap[resolvedTone];
   const toneClasses = themeToggleToneClassMap[resolvedTone];
+  const sizeClasses = sizeClassMap[size] ?? sizeClassMap.md;
 
   return (
     <Button
@@ -34,9 +41,9 @@ const ThemeToggle = ({ tone, className }) => {
       size="icon"
       onClick={toggleTheme}
       aria-label={isDark ? t("common.switchToLight") : t("common.switchToDark")}
-      className={cn("rounded-full", toneClasses, className)}
+      className={cn("rounded-full", toneClasses, sizeClasses, className)}
     >
-      {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {isDark ? <Sun className="h-4 w-4 transition-transform" /> : <Moon className="h-4 w-4 transition-transform" />}
     </Button>
   );
 };
