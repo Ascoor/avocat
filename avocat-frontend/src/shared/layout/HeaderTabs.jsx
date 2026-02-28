@@ -54,6 +54,7 @@ const HeaderTabs = ({ className }) => {
       'dashboard',
       'customer_service',
       'documents',
+      'power_of_attorney',
       'finance',
       'cases',
       'services',
@@ -77,7 +78,7 @@ const HeaderTabs = ({ className }) => {
         {orderedItems.map((item) => {
           const Icon = item.icon;
           const label = t(item.labelKey);
-          if (!item.children?.length) {
+          if (item.path) {
             return (
               <PillLink
                 key={item.key}

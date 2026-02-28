@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   Wallet,
   Scale,
+  Stamp,
   Settings,
   ShieldCheck,
   UserCog,
@@ -59,6 +60,13 @@ export const sidebarGroups = [
         requiredPermission: permissionMap.reports.view,
       },
       {
+        key: "power_of_attorney",
+        labelKey: "navigation.powerOfAttorney",
+        icon: Stamp,
+        path: "/dashboard/power-of-attorneys",
+        requiredPermission: permissionMap.legalCases.list,
+      },
+      {
         key: "finance",
         labelKey: "navigation.finance",
         icon: Wallet,
@@ -74,6 +82,7 @@ export const sidebarGroups = [
         key: "reports",
         labelKey: "navigation.reports",
         icon: Folder,
+        path: "/dashboard/reports",
         requiredPermission: permissionMap.reports.view,
         children: [
           {
