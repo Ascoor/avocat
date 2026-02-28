@@ -52,6 +52,7 @@ const en = {
     dashboard: "Dashboard",
     cases: "Cases",
     services: "Services",
+    powerOfAttorneys: "Power of Attorneys",
     workFollowUp: "Work follow-up",
     reports: "Reports",
     sessions: "Sessions",
@@ -84,6 +85,7 @@ const en = {
       clients: "Clients",
       cases: "Cases",
       services: "Services",
+    powerOfAttorneys: "Power of Attorneys",
     },
     filters: {
       title: "Report filters",
@@ -261,6 +263,7 @@ const en = {
     sections: {
       main: "Main",
       services: "Services",
+    powerOfAttorneys: "Power of Attorneys",
       system: "System",
       workFollow: "Work follow-up",
       customerService: "Customer service",
@@ -306,6 +309,7 @@ const en = {
       clients: "Clients",
       cases: "Cases",
       services: "Services",
+    powerOfAttorneys: "Power of Attorneys",
     },
     filters: {
       search: "Search report results...",
@@ -899,6 +903,7 @@ const en = {
       sessions: "Sessions",
       procedures: "Procedures",
       services: "Services",
+    powerOfAttorneys: "Power of Attorneys",
       courts: "Courts",
       lawyers: "Lawyers",
       reports: "Reports",

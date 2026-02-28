@@ -52,6 +52,7 @@ const ar = {
     dashboard: "لوحة التحكم",
     cases: "القضايا",
     services: "الخدمات",
+    powerOfAttorneys: "التوكيلات",
     workFollowUp: "متابعة الأعمال",
     reports: "التقارير",
     sessions: "الجلسات",
@@ -84,6 +85,7 @@ const ar = {
       clients: "العملاء",
       cases: "القضايا",
       services: "الخدمات",
+    powerOfAttorneys: "التوكيلات",
     },
     filters: {
       title: "فلاتر التقارير",
@@ -260,6 +262,7 @@ const ar = {
     sections: {
       main: "الرئيسية",
       services: "الخدمات",
+    powerOfAttorneys: "التوكيلات",
       system: "النظام",
       workFollow: "متابعة الأعمال",
       customerService: "خدمة العملاء",
@@ -305,6 +308,7 @@ const ar = {
       clients: "العملاء",
       cases: "القضايا",
       services: "الخدمات",
+    powerOfAttorneys: "التوكيلات",
     },
     filters: {
       search: "ابحث في نتائج التقرير...",
@@ -904,6 +908,7 @@ const ar = {
       sessions: "الجلسات",
       procedures: "الإجراءات",
       services: "الخدمات",
+    powerOfAttorneys: "التوكيلات",
       courts: "المحاكم",
       lawyers: "المحامون",
       reports: "التقارير",

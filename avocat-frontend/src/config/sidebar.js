@@ -2,8 +2,6 @@ import {
   Archive,
   Briefcase,
   Building2,
-  Calendar,
-  FileText,
   Files,
   Folder,
   Gavel,
@@ -13,8 +11,8 @@ import {
   Scale,
   Settings,
   ShieldCheck,
+  Stamp,
   UserCog,
-  Users,
 } from "lucide-react";
 import { permissionMap } from "@shared/security/permission-map";
 
@@ -42,6 +40,13 @@ export const sidebarGroups = [
         icon: Scale,
         path: "/dashboard/legcase-services",
         requiredPermission: permissionMap.services.list,
+      },
+      {
+        key: "power_of_attorneys",
+        labelKey: "navigation.powerOfAttorneys",
+        icon: Stamp,
+        path: "/dashboard/power-of-attorneys",
+        requiredPermission: permissionMap.legalCases.list,
       },
       {
         key: "customer_service",
@@ -74,44 +79,8 @@ export const sidebarGroups = [
         key: "reports",
         labelKey: "navigation.reports",
         icon: Folder,
+        path: "/dashboard/reports",
         requiredPermission: permissionMap.reports.view,
-        children: [
-          {
-            key: "sessions",
-            labelKey: "navigation.sessions",
-            icon: Calendar,
-            path: "/dashboard/reports/sessions",
-            requiredPermission: permissionMap.sessions.list,
-          },
-          {
-            key: "procedures",
-            labelKey: "navigation.procedures",
-            icon: FileText,
-            path: "/dashboard/reports/procedures",
-            requiredPermission: permissionMap.procedures.list,
-          },
-          {
-            key: "cases_reports",
-            labelKey: "navigation.cases",
-            icon: Gavel,
-            path: "/dashboard/reports/cases",
-            requiredPermission: permissionMap.legalCases.list,
-          },
-          {
-            key: "services_reports",
-            labelKey: "navigation.services",
-            icon: Scale,
-            path: "/dashboard/reports/services",
-            requiredPermission: permissionMap.services.list,
-          },
-          {
-            key: "clients_reports",
-            labelKey: "navigation.clients",
-            icon: Users,
-            path: "/dashboard/reports/clients",
-            requiredPermission: permissionMap.clients.list,
-          },
-        ],
       },
       {
         key: "follow_work",
