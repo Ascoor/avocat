@@ -3,7 +3,7 @@ import API_CONFIG from '@config/config';
 import { clearStoredAuth, getStoredToken } from '../services/auth/authStorage';
 
 const api = axios.create({
-  baseURL: `${API_CONFIG.baseURL}/api/v1`,
+  baseURL: API_CONFIG.apiBaseURL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

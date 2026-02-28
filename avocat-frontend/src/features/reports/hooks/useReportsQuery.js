@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchReportRows, fetchReportsMetadata } from '@features/reports/services/reportsApi';
+import { fetchReportRows, fetchReportsMetadata, metadataDefaults } from '@features/reports/services/reportsApi';
 
 const STATUS_KEYS = {
   cases: 'case_status',
@@ -64,10 +64,22 @@ export const FILTER_SCHEMA = {
 const getInitialFilters = (tabKey) =>
   FILTER_SCHEMA[tabKey].reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
 
+
+const toFriendlyError = (error) => {
+  const status = error?.response?.status;
+  if (status >= 500) return 'الخادم غير متاح حالياً، حاول مرة أخرى بعد قليل';
+  if (status === 403) return 'غير مسموح لك بعرض هذا التقرير';
+  if (status === 404) return 'مصدر التقرير غير متاح حالياً';
+  if (error?.code === 'ERR_NETWORK') {
+    return 'تعذر الاتصال بالخادم. تأكد من تشغيل الـ API أو إعدادات CORS/Proxy';
+  }
+  return error?.message || 'حدث خطأ أثناء تحميل البيانات';
+};
+
 const toStatusOptions = (rows, tabKey) => {
   const statusKey = STATUS_KEYS[tabKey];
   if (!statusKey) return [];
-  const values = new Set((rows || []).map((row) => row?.status).filter(Boolean));
+  const values = new Set((rows || []).map((row) => row?.displayStatus || row?.status).filter(Boolean));
   return [...values].map((value) => ({ value, label: value }));
 };
 
@@ -75,8 +87,10 @@ export const useReportsQuery = (tabKey) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [metadata, setMetadata] = useState({ lawyers: [], caseTypes: [], procedureTypes: [], sessionTypes: [] });
+  const [metadata, setMetadata] = useState(metadataDefaults);
+  const [metadataLoading, setMetadataLoading] = useState(true);
   const [filters, setFilters] = useState(() => getInitialFilters(tabKey));
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 
   const loadRows = useCallback(
     async (nextFilters) => {
@@ -85,9 +99,10 @@ export const useReportsQuery = (tabKey) => {
       try {
         const data = await fetchReportRows(tabKey, nextFilters);
         setRows(data);
+        setLastUpdatedAt(new Date().toISOString());
       } catch (err) {
         setRows([]);
-        setError(err?.message || 'حدث خطأ أثناء تحميل البيانات');
+        setError(toFriendlyError(err));
       } finally {
         setLoading(false);
       }
@@ -102,16 +117,19 @@ export const useReportsQuery = (tabKey) => {
   }, [loadRows, tabKey]);
 
   useEffect(() => {
-    let mounted = true;
+    let active = true;
+    setMetadataLoading(true);
+
     fetchReportsMetadata()
       .then((data) => {
-        if (mounted) setMetadata(data);
+        if (active) setMetadata(data);
       })
-      .catch(() => {
-        if (mounted) setMetadata({ lawyers: [], caseTypes: [], procedureTypes: [], sessionTypes: [] });
+      .finally(() => {
+        if (active) setMetadataLoading(false);
       });
+
     return () => {
-      mounted = false;
+      active = false;
     };
   }, []);
 
@@ -153,8 +171,9 @@ export const useReportsQuery = (tabKey) => {
     schema: FILTER_SCHEMA[tabKey],
     filters,
     rows,
-    loading,
+    loading: loading || metadataLoading,
     error,
+    lastUpdatedAt,
     options,
     submitFilters,
     resetFilters,
