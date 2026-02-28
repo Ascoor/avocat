@@ -109,4 +109,14 @@ class ProcedureSearchControllerTest extends TestCase
         $response->assertJsonPath('meta.total', 2);
         $response->assertJsonPath('meta.last_page', 2);
     }
+
+    public function test_it_accepts_updated_at_as_sort_field(): void
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->getJson('/api/v1/procedures-search?sort_by=updated_at&sort_dir=desc');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', 2);
+    }
 }
