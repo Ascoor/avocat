@@ -4,7 +4,7 @@ import { clearStoredAuth, getStoredToken, isDemoToken } from '../auth/authStorag
 
 
 const api = axios.create({
-  baseURL: `${API_CONFIG.baseURL}/api/v1`,
+  baseURL: API_CONFIG.apiBaseURL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',
