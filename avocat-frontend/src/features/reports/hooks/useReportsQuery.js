@@ -63,6 +63,19 @@ export const FILTER_SCHEMA = {
 const getInitialFilters = (tabKey) =>
   FILTER_SCHEMA[tabKey].reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
 
+
+const INITIAL_ROWS_QUERY = {
+  limit: 5,
+  per_page: 5,
+  sort_by: 'updated_at',
+  sort_dir: 'desc',
+};
+
+const hasActiveFilters = (filters = {}) =>
+  Object.values(filters).some((value) => value !== '' && value != null);
+
+const getRequestParams = (filters) => (hasActiveFilters(filters) ? filters : { ...filters, ...INITIAL_ROWS_QUERY });
+
 const toStatusOptions = (rows, tabKey) => {
   const statusKey = STATUS_KEYS[tabKey];
   if (!statusKey) return [];
@@ -82,7 +95,7 @@ export const useReportsQuery = (tabKey) => {
       setLoading(true);
       setError('');
       try {
-        const data = await fetchReportRows(tabKey, nextFilters);
+        const data = await fetchReportRows(tabKey, getRequestParams(nextFilters));
         setRows(data);
       } catch (err) {
         setRows([]);
