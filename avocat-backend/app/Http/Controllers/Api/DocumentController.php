@@ -12,20 +12,13 @@ use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
 {
+    private const DOCUMENT_RELATIONS = ['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links'];
+
     public function index(Request $request): JsonResponse
     {
-        $query = Document::query()->with(['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links']);
+        $query = Document::query()->with(self::DOCUMENT_RELATIONS);
 
-        $query->when($request->filled('document_tab_id'), fn ($builder) => $builder->where('document_tab_id', $request->integer('document_tab_id')))
-            ->when($request->filled('client_name'), function ($builder) use ($request) {
-                $builder->whereHas('client', function ($subQuery) use ($request) {
-                    $subQuery->where('name', 'like', '%'.$request->string('client_name').'%');
-                });
-            })
-            ->when($request->filled('leg_case_id'), fn ($builder) => $builder->where('leg_case_id', $request->integer('leg_case_id')))
-            ->when($request->filled('power_of_attorney_id'), fn ($builder) => $builder->where('power_of_attorney_id', $request->integer('power_of_attorney_id')))
-            ->when($request->filled('service_id'), fn ($builder) => $builder->where('service_id', $request->integer('service_id')))
-            ->latest('id');
+        $this->applyIndexFilters($query, $request);
 
         return response()->json($query->get());
     }
@@ -62,19 +55,19 @@ class DocumentController extends Controller
         ]);
 
         if (!empty($validated['documentable_type']) && !empty($validated['documentable_id'])) {
-            Documentable::create([
+            Documentable::firstOrCreate([
                 'document_id' => $document->id,
                 'documentable_type' => $validated['documentable_type'],
                 'documentable_id' => $validated['documentable_id'],
             ]);
         }
 
-        return response()->json($document->load(['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links']), 201);
+        return response()->json($document->load(self::DOCUMENT_RELATIONS), 201);
     }
 
     public function show(Document $document): JsonResponse
     {
-        return response()->json($document->load(['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links']));
+        return response()->json($document->load(self::DOCUMENT_RELATIONS));
     }
 
     public function update(Request $request, Document $document): JsonResponse
@@ -96,7 +89,7 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        return response()->json($document->load(['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links']));
+        return response()->json($document->load(self::DOCUMENT_RELATIONS));
     }
 
     public function destroy(Document $document): JsonResponse
@@ -105,5 +98,19 @@ class DocumentController extends Controller
         $document->delete();
 
         return response()->json(['message' => 'Document deleted successfully']);
+    }
+
+    private function applyIndexFilters($query, Request $request): void
+    {
+        $query->when($request->filled('document_tab_id'), fn ($builder) => $builder->where('document_tab_id', $request->integer('document_tab_id')))
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $builder->whereHas('client', function ($subQuery) use ($request) {
+                    $subQuery->where('name', 'like', '%'.$request->string('client_name').'%');
+                });
+            })
+            ->when($request->filled('leg_case_id'), fn ($builder) => $builder->where('leg_case_id', $request->integer('leg_case_id')))
+            ->when($request->filled('power_of_attorney_id'), fn ($builder) => $builder->where('power_of_attorney_id', $request->integer('power_of_attorney_id')))
+            ->when($request->filled('service_id'), fn ($builder) => $builder->where('service_id', $request->integer('service_id')))
+            ->latest('id');
     }
 }
