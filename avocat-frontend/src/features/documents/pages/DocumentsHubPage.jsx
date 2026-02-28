@@ -1,44 +1,45 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Search, UploadCloud, FileText } from 'lucide-react';
 import api from '@shared/api/axiosConfig';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 
-const TAB_TYPES = [
-  { value: 'power_of_attorney', label: 'Power of Attorney' },
-  { value: 'leg_case', label: 'Legal Case' },
-  { value: 'service', label: 'Service' },
-  { value: 'client', label: 'Client' },
-  { value: 'general', label: 'General' },
-];
-
 const DocumentsHubPage = () => {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const [newTabLabelAr, setNewTabLabelAr] = useState('');
-  const [newTabLabelEn, setNewTabLabelEn] = useState('');
-  const [newTabType, setNewTabType] = useState('general');
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('all');
 
   const [name, setName] = useState('');
   const [file, setFile] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef(null);
 
   const selectedTab = useMemo(() => tabs.find((tab) => String(tab.id) === activeTab), [tabs, activeTab]);
 
+  const categories = useMemo(() => {
+    const values = Array.from(new Set(tabs.map((tab) => tab.tab_type).filter(Boolean)));
+    return ['all', ...values];
+  }, [tabs]);
+
+  const toLabel = (tab) => (language === 'ar' ? tab.name_ar : tab.name_en);
+
   const loadTabs = async () => {
     const { data } = await api.get('/document-tabs');
-    setTabs(Array.isArray(data) ? data : []);
-    if (Array.isArray(data) && data.length > 0 && !activeTab) {
-      setActiveTab(String(data[0].id));
+    const list = Array.isArray(data) ? data : [];
+    setTabs(list);
+    if (list.length > 0 && !activeTab) {
+      setActiveTab(String(list[0].id));
     }
   };
 
   useEffect(() => {
-    loadTabs().catch(() => setError(language === 'ar' ? 'تعذر تحميل التبويبات.' : 'Failed to load tabs.'));
-  }, []);
+    loadTabs().catch(() => setError(t('documents.messages.loadTabsError')));
+  }, [t]);
 
   useEffect(() => {
     if (!activeTab) return;
@@ -50,7 +51,7 @@ const DocumentsHubPage = () => {
         const { data } = await api.get('/documents', { params: { document_tab_id: activeTab } });
         setRows(Array.isArray(data) ? data : []);
       } catch {
-        setError(language === 'ar' ? 'تعذر تحميل الوثائق.' : 'Failed to load documents.');
+        setError(t('documents.messages.loadDocumentsError'));
         setRows([]);
       } finally {
         setLoading(false);
@@ -58,29 +59,14 @@ const DocumentsHubPage = () => {
     };
 
     loadRows();
-  }, [activeTab, language]);
-
-  const addTab = async () => {
-    if (!newTabLabelAr.trim() || !newTabLabelEn.trim()) return;
-    const { data } = await api.post('/document-tabs', {
-      name_ar: newTabLabelAr.trim(),
-      name_en: newTabLabelEn.trim(),
-      tab_type: newTabType,
-    });
-
-    setTabs((prev) => [...prev, data]);
-    setActiveTab(String(data.id));
-    setNewTabLabelAr('');
-    setNewTabLabelEn('');
-    setNewTabType('general');
-  };
+  }, [activeTab, t]);
 
   const uploadDocument = async (event) => {
     event.preventDefault();
     if (!file || !selectedTab) return;
 
     const formData = new FormData();
-    formData.append('name', name);
+    formData.append('name', name || file.name);
     formData.append('file', file);
     formData.append('document_tab_id', String(selectedTab.id));
 
@@ -90,83 +76,125 @@ const DocumentsHubPage = () => {
 
     setName('');
     setFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
 
     const { data } = await api.get('/documents', { params: { document_tab_id: selectedTab.id } });
     setRows(Array.isArray(data) ? data : []);
   };
 
-  const toLabel = (tab) => (language === 'ar' ? tab.name_ar : tab.name_en);
+  const filteredTabs = tabs.filter((tab) => category === 'all' || tab.tab_type === category);
+
+  const visibleRows = rows.filter((row) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return String(row.name || '').toLowerCase().includes(q) || String(row.file_path || '').toLowerCase().includes(q);
+  });
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 p-4 sm:p-6">
       <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h1 className="mb-2 text-xl font-bold">{language === 'ar' ? 'قسم الوثائق' : 'Documents Center'}</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">{t('documents.title')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('documents.subtitle')}</p>
+      </section>
+
+      <section className="grid gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3">
+        <label className="relative lg:col-span-2">
+          <Search className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-muted-foreground" />
+          <input
+            className="h-11 w-full rounded-md border bg-background ps-9 pe-3 text-sm"
+            placeholder={t('documents.searchPlaceholder')}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
+
+        <select
+          className="h-11 rounded-md border bg-background px-3 text-sm"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          {categories.map((item) => (
+            <option key={item} value={item}>
+              {item === 'all' ? t('documents.categories.all') : t(`documents.categories.${item}`)}
+            </option>
+          ))}
+        </select>
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold">{language === 'ar' ? 'إضافة تبويب' : 'Create tab'}</h2>
-        <div className="grid gap-2 md:grid-cols-4">
-          <input className="rounded-md border p-2" placeholder="اسم التبويب (عربي)" value={newTabLabelAr} onChange={(e) => setNewTabLabelAr(e.target.value)} />
-          <input className="rounded-md border p-2" placeholder="Tab name (EN)" value={newTabLabelEn} onChange={(e) => setNewTabLabelEn(e.target.value)} />
-          <select className="rounded-md border p-2" value={newTabType} onChange={(e) => setNewTabType(e.target.value)}>
-            {TAB_TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
-          </select>
-          <button type="button" className="rounded-md bg-primary px-3 py-2 text-primary-foreground" onClick={() => addTab().catch(() => setError(language === 'ar' ? 'تعذر إضافة التبويب.' : 'Failed to create tab.'))}>
-            {language === 'ar' ? 'إضافة' : 'Create'}
+        <h2 className="mb-3 text-lg font-semibold">{t('documents.upload.title')}</h2>
+        <form className="grid gap-3 md:grid-cols-2" onSubmit={(event) => uploadDocument(event).catch(() => setError(t('documents.messages.uploadError')))}>
+          <input
+            className="h-11 rounded-md border bg-background px-3 text-sm"
+            placeholder={t('documents.upload.namePlaceholder')}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+          <button type="submit" className="h-11 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground" disabled={!selectedTab || !file}>
+            {t('documents.upload.action')}
           </button>
-        </div>
-      </section>
 
-      <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold">{language === 'ar' ? 'رفع مستند' : 'Upload document'}</h2>
-        <form className="grid gap-2 md:grid-cols-4" onSubmit={(event) => uploadDocument(event).catch(() => setError(language === 'ar' ? 'فشل رفع المستند.' : 'Upload failed.'))}>
-          <input className="rounded-md border p-2" placeholder={language === 'ar' ? 'اسم المستند' : 'Document name'} value={name} onChange={(e) => setName(e.target.value)} required />
-          <input className="rounded-md border p-2" type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
-          <div className="rounded-md border p-2 text-sm text-muted-foreground">{selectedTab ? `${language === 'ar' ? 'التبويب الحالي' : 'Current tab'}: ${toLabel(selectedTab)}` : ''}</div>
-          <button type="submit" className="rounded-md bg-primary px-3 py-2 text-primary-foreground" disabled={!selectedTab}>
-            {language === 'ar' ? 'رفع' : 'Upload'}
-          </button>
+          <div
+            role="button"
+            tabIndex={0}
+            className={`md:col-span-2 flex min-h-32 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed p-4 text-center transition ${
+              isDragOver ? 'border-primary bg-primary/5' : 'border-border'
+            }`}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setIsDragOver(true);
+            }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={(event) => {
+              event.preventDefault();
+              setIsDragOver(false);
+              const droppedFile = event.dataTransfer.files?.[0];
+              if (droppedFile) setFile(droppedFile);
+            }}
+          >
+            <div className="space-y-2">
+              <UploadCloud className="mx-auto h-6 w-6 text-primary" />
+              <p className="text-sm font-medium">{t('documents.upload.dropzone')}</p>
+              <p className="text-xs text-muted-foreground">{file ? file.name : t('documents.upload.supported')}</p>
+            </div>
+            <input
+              ref={fileInputRef}
+              className="hidden"
+              type="file"
+              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+            />
+          </div>
         </form>
       </section>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
-          {tabs.map((tab) => (
+          {filteredTabs.map((tab) => (
             <TabsTrigger key={tab.id} value={String(tab.id)}>{toLabel(tab)}</TabsTrigger>
           ))}
         </TabsList>
 
-        {tabs.map((tab) => (
+        {filteredTabs.map((tab) => (
           <TabsContent key={tab.id} value={String(tab.id)}>
             {loading ? (
-              <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</div>
+              <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">{t('common.loading')}</div>
             ) : error ? (
               <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive">{error}</div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border">
-                <table className="w-full min-w-[640px] text-sm">
-                  <thead className="bg-muted/50">
-                    <tr>
-                      <th className="p-2 text-start">#</th>
-                      <th className="p-2 text-start">{language === 'ar' ? 'الاسم' : 'Name'}</th>
-                      <th className="p-2 text-start">{language === 'ar' ? 'المسار' : 'File path'}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row, index) => (
-                      <tr key={row.id || index} className="border-t align-top">
-                        <td className="p-2">{index + 1}</td>
-                        <td className="p-2">{row.name}</td>
-                        <td className="p-2">{row.file_path}</td>
-                      </tr>
-                    ))}
-                    {rows.length === 0 && (
-                      <tr>
-                        <td className="p-4 text-center text-muted-foreground" colSpan={3}>{language === 'ar' ? 'لا توجد بيانات.' : 'No data found.'}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleRows.map((row, index) => (
+                  <article key={row.id || index} className="rounded-xl border border-border/70 bg-card p-4 shadow-sm">
+                    <FileText className="mb-2 h-5 w-5 text-primary" />
+                    <h3 className="truncate font-semibold">{row.name}</h3>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">{row.file_path}</p>
+                  </article>
+                ))}
+                {visibleRows.length === 0 && (
+                  <div className="col-span-full rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+                    {t('documents.empty')}
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>

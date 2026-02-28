@@ -1,6 +1,6 @@
 // 📁 services/calendarService.js
 
-import fakeEventsData from '../data/fakeEventsData';
+import fakeEventsData from '../utils/fakeEventsData';
 
 // Service to handle all calendar-related API operations
 const calendarService = {
