@@ -23,7 +23,7 @@ RUN curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php \
 WORKDIR /var/www/html
 
 # Copy only composer manifests first for cache
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock ./ 
 
 # Install deps (NO update, and keep it deterministic)
 RUN composer install \
@@ -53,7 +53,7 @@ WORKDIR /var/www/html
 
 # Copy vendor from vendor stage (fast)
 COPY --from=vendor /var/www/html/vendor ./vendor
-COPY --from=vendor /var/www/html/composer.* ./
+COPY --from=vendor /var/www/html/composer.* ./ 
 
 # Copy app code
 COPY . .

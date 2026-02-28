@@ -18,6 +18,12 @@ export COMPOSER_ALLOW_SUPERUSER=${COMPOSER_ALLOW_SUPERUSER:-1}
 export COMPOSER_CACHE_DIR=${COMPOSER_CACHE_DIR:-/tmp/composer-cache}
 mkdir -p "$COMPOSER_CACHE_DIR"
 
+# --- Install Composer if not installed ---
+if ! command -v composer &> /dev/null; then
+  echo "Composer not found, installing..."
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+fi
+
 # --- Install vendor if missing (vendor is a volume) ---
 if [ ! -f vendor/autoload.php ]; then
   echo "📦 Installing composer dependencies..."
