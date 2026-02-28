@@ -1,5 +1,9 @@
+const envBaseUrl = import.meta.env.VITE_API_BASE_URL ?? import.meta.env.VITE_API_URL ?? '';
+const normalizedBaseUrl = String(envBaseUrl).trim().replace(/\/+$/, '');
+
 const API_CONFIG = {
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
+  baseURL: normalizedBaseUrl,
+  apiBaseURL: normalizedBaseUrl ? `${normalizedBaseUrl}/api/v1` : '/api/v1',
   // baseURL: 'https://avocat.ask-ar.net/avocatapp',
 };
 

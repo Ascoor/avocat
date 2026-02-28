@@ -64,6 +64,18 @@ export const FILTER_SCHEMA = {
 const getInitialFilters = (tabKey) =>
   FILTER_SCHEMA[tabKey].reduce((acc, field) => ({ ...acc, [field.name]: '' }), {});
 
+
+const toFriendlyError = (error) => {
+  const status = error?.response?.status;
+  if (status >= 500) return 'الخادم غير متاح حالياً، حاول مرة أخرى بعد قليل';
+  if (status === 403) return 'غير مسموح لك بعرض هذا التقرير';
+  if (status === 404) return 'مصدر التقرير غير متاح حالياً';
+  if (error?.code === 'ERR_NETWORK') {
+    return 'تعذر الاتصال بالخادم. تأكد من تشغيل الـ API أو إعدادات CORS/Proxy';
+  }
+  return error?.message || 'حدث خطأ أثناء تحميل البيانات';
+};
+
 const toStatusOptions = (rows, tabKey) => {
   const statusKey = STATUS_KEYS[tabKey];
   if (!statusKey) return [];
@@ -90,7 +102,7 @@ export const useReportsQuery = (tabKey) => {
         setLastUpdatedAt(new Date().toISOString());
       } catch (err) {
         setRows([]);
-        setError(err?.message || 'حدث خطأ أثناء تحميل البيانات');
+        setError(toFriendlyError(err));
       } finally {
         setLoading(false);
       }
