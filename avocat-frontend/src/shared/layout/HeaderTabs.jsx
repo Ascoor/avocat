@@ -53,6 +53,7 @@ const HeaderTabs = ({ className }) => {
     const preferredOrder = [
       'dashboard',
       'customer_service',
+      'documents',
       'cases',
       'services',
       'follow_work',

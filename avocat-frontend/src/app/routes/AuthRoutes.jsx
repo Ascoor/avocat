@@ -68,6 +68,9 @@ const CasesReport = lazy(() => import('@features/reports/pages/CasesReport'));
 const ServicesReport = lazy(
   () => import('@features/reports/pages/ServicesReport'),
 );
+const DocumentsHubPage = lazy(
+  () => import('@features/documents/pages/DocumentsHubPage'),
+);
 
 /**
  * Backward/forward compatible wrapper:
@@ -227,6 +230,19 @@ const AuthRoutes = () => {
                 moduleLabel="Courts"
               >
                 <SearchCourtsApi />
+              </Guarded>
+            }
+          />
+
+
+          <Route
+            path="documents"
+            element={
+              <Guarded
+                require={permissionMap.reports.view}
+                moduleLabel="Documents Center"
+              >
+                <DocumentsHubPage />
               </Guarded>
             }
           />

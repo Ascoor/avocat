@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\CourtLevelController;
 use App\Http\Controllers\Api\CourtSearchController;
 use App\Http\Controllers\Api\CourtTypeController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DocumentCenterController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FinanceLedgerController;
 use App\Http\Controllers\Api\ExpenseCategoryController;
@@ -78,6 +79,11 @@ Route::prefix('v1')->group(function () {
         Route::put('doc-sub-types/{id}', [LegalDocToolsController::class, 'editDocSubType']);
 
         Route::post('legal-doc-upload', [LegalDocArchiveController::class, 'uploadLegalDoc']);
+
+        Route::get('document-center/power-of-attorneys', [DocumentCenterController::class, 'powerOfAttorneys']);
+        Route::get('document-center/documents', [DocumentCenterController::class, 'documents']);
+        Route::get('document-center/cases', [DocumentCenterController::class, 'cases']);
+        Route::get('document-center/services', [DocumentCenterController::class, 'services']);
 
         Route::apiResource('clients', ClientController::class);
         Route::apiResource('unclients', UnclientController::class);
