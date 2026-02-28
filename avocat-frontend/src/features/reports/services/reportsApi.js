@@ -15,16 +15,83 @@ const extractRows = (payload) => {
 const cleanParams = (params) =>
   Object.fromEntries(Object.entries(params).filter(([, value]) => value !== '' && value != null));
 
+const DEFAULT_SORT = {
+  sort_by: 'updated_at',
+  sort_dir: 'desc',
+};
+
 const endpoints = {
-  cases: '/legal-cases',
-  services: '/services',
-  procedures: '/procedures',
-  sessions: '/legal_sessions',
-  clients: '/clients',
+  cases: {
+    path: '/cases/search',
+    buildParams: (filters = {}) =>
+      cleanParams({
+        q: filters.file_number || filters.client_name,
+        client_name: filters.client_name,
+        status: filters.case_status,
+        from_date: filters.from_date,
+        to_date: filters.to_date,
+        procedure_type: filters.procedure_type_id,
+        session_type: filters.session_type_id,
+      }),
+  },
+  services: {
+    path: '/services',
+    buildParams: (filters = {}) =>
+      cleanParams({
+        report_mode: 1,
+        ...DEFAULT_SORT,
+        client_name: filters.client_name,
+        service_type_id: filters.service_type_id,
+        service_status: filters.service_status,
+        from_date: filters.from_date,
+        to_date: filters.to_date,
+      }),
+  },
+  procedures: {
+    path: '/procedures-search',
+    buildParams: (filters = {}) =>
+      cleanParams({
+        q: filters.client_name,
+        sort_by: 'created_at',
+        sort_dir: 'desc',
+        'filters[file_no]': filters.file_number,
+        'filters[date_from]': filters.from_date,
+        'filters[date_to]': filters.to_date,
+        'filters[lawyer_id]': filters.lawyer_id,
+        'filters[status]': filters.procedure_status,
+      }),
+  },
+  sessions: {
+    path: '/legal_sessions',
+    buildParams: (filters = {}) =>
+      cleanParams({
+        report_mode: 1,
+        ...DEFAULT_SORT,
+        client_name: filters.client_name,
+        lawyer_id: filters.lawyer_id,
+        session_type_id: filters.session_type_id,
+        session_status: filters.session_status,
+        from_date: filters.from_date,
+        to_date: filters.to_date,
+      }),
+  },
+  clients: {
+    path: '/clients',
+    buildParams: (filters = {}) =>
+      cleanParams({
+        ...DEFAULT_SORT,
+        client_name: filters.client_name,
+        client_status: filters.client_status,
+        from_date: filters.from_date,
+        to_date: filters.to_date,
+      }),
+  },
 };
 
 export const fetchReportRows = async (tabKey, params = {}) => {
-  const response = await api.get(endpoints[tabKey], { params: cleanParams({ report_mode: 1, ...params }) });
+  const endpoint = endpoints[tabKey];
+  if (!endpoint) return [];
+  const response = await api.get(endpoint.path, { params: endpoint.buildParams(params) });
   return extractRows(response?.data);
 };
 
@@ -58,4 +125,39 @@ export const fetchReportsMetadata = async () => {
     procedureTypes: extractRows(procedureTypesRes?.data),
     sessionTypes: extractRows(sessionTypesRes?.data),
   };
+};
+
+const metadataCache = {
+  data: null,
+  promise: null,
+};
+
+const defaultMetadata = {
+  lawyers: [],
+  caseTypes: [],
+  serviceTypes: [],
+  procedureTypes: [],
+  sessionTypes: [],
+};
+
+export const getReportsMetadata = async ({ force = false } = {}) => {
+  if (!force && metadataCache.data) {
+    return metadataCache.data;
+  }
+
+  if (!force && metadataCache.promise) {
+    return metadataCache.promise;
+  }
+
+  metadataCache.promise = fetchReportsMetadata()
+    .then((data) => {
+      metadataCache.data = data;
+      return data;
+    })
+    .catch(() => defaultMetadata)
+    .finally(() => {
+      metadataCache.promise = null;
+    });
+
+  return metadataCache.promise;
 };
