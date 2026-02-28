@@ -94,7 +94,20 @@ class ProcedureSearchControllerTest extends TestCase
 
         $response = $this->getJson('/api/v1/procedures-search?sort_by=unknown_field&sort_dir=asc');
 
-        $response->assertStatus(422);
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', 2);
+    }
+
+    public function test_it_supports_updated_at_sorting(): void
+    {
+        $this->withoutMiddleware();
+
+        DB::table('procedures')->where('id', 1)->update(['updated_at' => '2024-03-01 00:00:00']);
+
+        $response = $this->getJson('/api/v1/procedures-search?sort_by=updated_at&sort_dir=desc');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', 1);
     }
 
     public function test_it_returns_pagination_meta(): void

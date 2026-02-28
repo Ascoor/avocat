@@ -7,7 +7,7 @@ All reports tabs (procedures/sessions/services/cases/clients) should use one que
 - `q`: optional global search text.
 - `filters[...]`: scoped filter object.
   - common keys: `case_slug`, `file_no`, `date_from`, `date_to`, `court_id`, `status`, `lawyer_id`, `client_id`, `service_id`.
-- `sort_by`: allowed field name.
+- `sort_by`: allowed field name (`created_at`, `updated_at`, `date_start`, `date_end`, `status`, `file_no`, `case_slug`).
 - `sort_dir`: `asc` or `desc`.
 - `page`: page number (1-indexed).
 - `per_page`: page size (default 20).
@@ -37,4 +37,4 @@ Example:
 
 - Frontend normalizes snake_case/camelCase payloads via `reportRowNormalizer.js`.
 - Detail navigation uses resilient ID lookup (`leg_case_id`, nested `leg_case.id`, raw payload fallback).
-- Sorting falls back to `created_at desc` when input is invalid/missing.
+- Sorting falls back to `created_at desc` when `sort_by`/`sort_dir` input is invalid or missing.

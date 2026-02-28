@@ -10,6 +10,7 @@ class ProcedureSearchController extends Controller
 {
     private const SORT_ALLOWLIST = [
         'created_at' => 'procedures.created_at',
+        'updated_at' => 'procedures.updated_at',
         'date_start' => 'procedures.date_start',
         'date_end' => 'procedures.date_end',
         'status' => 'procedures.status',
@@ -31,8 +32,8 @@ class ProcedureSearchController extends Controller
             'filters.lawyer_id' => 'nullable|integer|exists:lawyers,id',
             'filters.client_id' => 'nullable|integer|exists:clients,id',
             'filters.service_id' => 'nullable|integer',
-            'sort_by' => 'nullable|string|in:created_at,date_start,date_end,status,file_no,case_slug',
-            'sort_dir' => 'nullable|string|in:asc,desc',
+            'sort_by' => 'nullable|string|max:255',
+            'sort_dir' => 'nullable|string|max:4',
             'page' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:100',
             // backward compatibility
@@ -49,8 +50,8 @@ class ProcedureSearchController extends Controller
             'status' => $validated['status'] ?? null,
         ]), fn ($value) => $value !== null && trim((string) $value) !== '');
 
-        $sortBy = $validated['sort_by'] ?? 'created_at';
-        $sortDir = $validated['sort_dir'] ?? 'desc';
+        $sortBy = strtolower((string) ($validated['sort_by'] ?? 'created_at'));
+        $sortDir = strtolower((string) ($validated['sort_dir'] ?? 'desc'));
         $perPage = (int) ($validated['per_page'] ?? 20);
         $search = trim((string) ($validated['q'] ?? ''));
 
@@ -116,8 +117,9 @@ class ProcedureSearchController extends Controller
         }
 
         $sortColumn = self::SORT_ALLOWLIST[$sortBy] ?? self::SORT_ALLOWLIST['created_at'];
+        $sortDirection = in_array($sortDir, ['asc', 'desc'], true) ? $sortDir : 'desc';
         $paginator = $query
-            ->orderBy($sortColumn, $sortDir)
+            ->orderBy($sortColumn, $sortDirection)
             ->orderByDesc('procedures.id')
             ->paginate($perPage)
             ->appends($request->query());
