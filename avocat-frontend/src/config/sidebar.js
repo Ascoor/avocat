@@ -4,6 +4,7 @@ import {
   Building2,
   Calendar,
   FileText,
+  Files,
   Folder,
   Gavel,
   Landmark,
@@ -48,6 +49,14 @@ export const sidebarGroups = [
         icon: Briefcase,
         path: "/dashboard/customer-service",
         requiredPermission: permissionMap.clients.list,
+      },
+
+      {
+        key: "documents",
+        labelKey: "navigation.documents",
+        icon: Files,
+        path: "/dashboard/documents",
+        requiredPermission: permissionMap.reports.view,
       },
       {
         key: "finance",

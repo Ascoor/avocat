@@ -64,6 +64,7 @@ const en = {
     settings: "Settings",
     officeSettings: "Office settings",
     finance: "Finance",
+    documents: "Documents",
     courtSettings: "Court settings",
     lawyers: "Lawyers",
     usersPermissions: "Users & permissions",
@@ -397,6 +398,7 @@ const en = {
       sessions: "Sessions",
       settings: "Settings",
       finance: "Finance",
+    documents: "Documents",
       reports: "Reports",
     },
     crud: {

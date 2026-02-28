@@ -64,6 +64,7 @@ const ar = {
     settings: "الإعدادات",
     officeSettings: "إعدادات المكتب",
     finance: "المالية",
+    documents: "الوثائق",
     courtSettings: "إعدادات المحاكم",
     lawyers: "المحامون",
     usersPermissions: "المستخدمون والصلاحيات",
@@ -396,6 +397,7 @@ const ar = {
       sessions: "الجلسات",
       settings: "الإعدادات",
       finance: "المالية",
+    documents: "الوثائق",
       reports: "التقارير",
     },
     crud: {
