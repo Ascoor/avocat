@@ -26,6 +26,7 @@ const Home = () => {
   const { clients, loading, error } = useSelector((state) => state.clients);
   const [filteredClients, setFilteredClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [counts, setCounts] = useState({
     clientCount: 0,
     legCaseCount: 0,
@@ -53,58 +54,64 @@ const Home = () => {
         serviceCount: response.data.service_count || 0,
         legalSessionCount: response.data.legal_session_count || 0,
       });
-    } catch (error) {
-      console.error('Error fetching office count:', error);
+    } catch (requestError) {
+      console.error('Error fetching office count:', requestError);
     }
   };
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
+    const debounceTimeout = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim() === '') {
       setFilteredClients([]);
       return;
     }
 
-    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
-    const result = clients.filter(
-      (client) =>
-        client.name.toLowerCase().includes(normalizedSearchTerm) ||
-        client.slug.includes(normalizedSearchTerm),
-    );
+    const normalizedSearchTerm = debouncedSearchTerm.trim().toLowerCase();
+    const result = clients.filter((client) => {
+      const name = client.name?.toLowerCase() || '';
+      const slug = String(client.slug || '').toLowerCase();
+      const phoneNumber = String(client.phone_number || '').toLowerCase();
+
+      return (
+        name.includes(normalizedSearchTerm) ||
+        slug.includes(normalizedSearchTerm) ||
+        phoneNumber.includes(normalizedSearchTerm)
+      );
+    });
 
     setFilteredClients(result.slice(0, 5));
-  }, [searchTerm, clients]);
+  }, [debouncedSearchTerm, clients]);
 
   return (
     <div className="p-4 mt-16 xl:max-w-7xl xl:mx-auto w-full">
-      {}
       <div className="flex justify-center mb-6">
-        <div className="flex w-full max-w-2xl app-panel p-4 animate-fade-in-up">
-          <button
-            onClick={() => handleSearch(searchTerm)}
-            className="px-4 py-2 bg-primary text-white rounded-r-xl hover:bg-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            بحث
-          </button>
+        <div className="flex w-full max-w-2xl app-panel p-4 animate-fade-in-up gap-2">
           <input
             type="text"
             placeholder="بحث بالإسم، رقم الهاتف، رقم الموكل"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 rounded-l-xl text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
+            className="w-full p-2 rounded-xl text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
           />
         </div>
       </div>
 
-      {}
       {searchTerm ? (
         <DashboardSearch
           filteredClients={filteredClients}
           loading={loading}
           error={error}
+          searchTerm={searchTerm}
         />
       ) : (
         <>
-          {}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pb-4 animate-fade-in-up">
             <MainCard
               count={counts.legalSessionCount}
@@ -129,7 +136,6 @@ const Home = () => {
             />
           </div>
 
-          {}
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 pb-4 animate-fade-in-up">
             <DashboardCard01 isDarkMode={isDarkMode} />
             <DashboardCard02 isDarkMode={isDarkMode} />
@@ -139,7 +145,6 @@ const Home = () => {
             <DashboardCard06 isDarkMode={isDarkMode} />
           </div>
 
-          {}
           <Suspense fallback={<HomeSpinner />}>
             <div className="mt-10">
               <CalendarPage />
