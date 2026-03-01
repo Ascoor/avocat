@@ -41,37 +41,42 @@ const SectionHeader = ({
         }}
       />
 
-      <div className={cn("relative flex items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")}>
-        {icon && (
-          <motion.div
-            initial={{ scale: 0.92, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-border/60 bg-[hsl(var(--background)/0.55)] shadow-sm sm:h-14 sm:w-14"
-          >
-            {typeof icon === "string" ? (
-              <img src={icon} alt="" className="h-7 w-7 object-contain sm:h-8 sm:w-8" />
-            ) : (
-              icon
-            )}
-          </motion.div>
-        )}
+      <div className={cn("relative flex items-start justify-between gap-3 sm:items-center sm:gap-4")}>
+        <div className={cn("min-w-0 flex flex-1 items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")}>
+          {icon && (
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border/60 bg-[hsl(var(--background)/0.62)] ring-1 ring-white/10 shadow-[0_8px_30px_hsl(var(--foreground)/0.08)] sm:h-12 sm:w-12"
+            >
+              {typeof icon === "string" ? (
+                <img src={icon} alt="" className="h-6 w-6 object-contain sm:h-7 sm:w-7" />
+              ) : (
+                icon
+              )}
+            </motion.div>
+          )}
 
-        <div className={cn("min-w-0 flex-1", isRTL ? "text-right" : "text-left")}>
-          <h2 className="truncate text-lg font-extrabold tracking-tight text-foreground sm:text-xl md:text-2xl">
-            {listName}
-          </h2>
-          {subtitle && <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{subtitle}</p>}
+          <div className={cn("min-w-0 flex-1", isRTL ? "text-right" : "text-left")}>
+            <h2 className="truncate text-lg font-extrabold tracking-tight text-foreground sm:text-xl md:text-2xl">
+              {listName}
+            </h2>
+            {subtitle && <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{subtitle}</p>}
+          </div>
         </div>
 
-        {actions && <div className={cn("hidden sm:flex items-center gap-2", isRTL && "flex-row-reverse")}>{actions}</div>}
+        {actions && <div className={cn("hidden shrink-0 sm:flex items-center gap-2", isRTL && "flex-row-reverse")}>{actions}</div>}
 
         {showBack && (
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate(-1)}
-            className={cn("shrink-0 bg-[hsl(var(--background)/0.55)]", isRTL ? "flex-row-reverse" : "flex-row")}
+            className={cn(
+              "shrink-0 rounded-xl border-border/80 bg-[hsl(var(--background)/0.65)] px-3.5 shadow-sm hover:bg-[hsl(var(--background)/0.8)]",
+              isRTL ? "flex-row-reverse" : "flex-row",
+            )}
           >
             <ArrowLeft className={cn("h-4 w-4", isRTL && "rotate-180")} />
             <span className="mx-2">{backLabel || t?.("common.back") || "رجوع"}</span>
