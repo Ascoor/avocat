@@ -1,205 +1,148 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Search, UploadCloud, FileText } from 'lucide-react';
-import api from '@shared/api/axiosConfig';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared/ui/tabs';
-import { useLanguage } from '@shared/contexts/LanguageContext';
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileText, Upload, FolderOpen, Search, Plus, Eye, Download } from "lucide-react";
+import SectionHeader from "@shared/components/common/SectionHeader";
+import { useLanguage } from "@shared/contexts/LanguageContext";
+import { cn } from "@shared/lib/utils";
+
+const MOCK_DOCUMENTS = [
+  { id: 1, name: "عقد توكيل - أحمد محمد", type: "contract", size: "2.4 MB", date: "2025-12-01", classification: "confidential" },
+  { id: 2, name: "حكم محكمة الاستئناف", type: "ruling", size: "1.8 MB", date: "2025-11-28", classification: "internal" },
+  { id: 3, name: "مذكرة دفاع - قضية 2024/345", type: "memo", size: "540 KB", date: "2025-11-15", classification: "client-ready" },
+  { id: 4, name: "إفادة شاهد - محمود علي", type: "statement", size: "320 KB", date: "2025-10-20", classification: "confidential" },
+  { id: 5, name: "تقرير خبير هندسي", type: "report", size: "4.1 MB", date: "2025-10-10", classification: "internal" },
+  { id: 6, name: "صورة بطاقة الرقم القومي", type: "identity", size: "1.2 MB", date: "2025-09-05", classification: "confidential" },
+];
+
+const CATEGORIES = ["all", "contract", "ruling", "memo", "statement", "report", "identity"];
+
+const classificationColors = {
+  confidential: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  internal: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  "client-ready": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+};
 
 const DocumentsHubPage = () => {
-  const { t, language } = useLanguage();
-  const [tabs, setTabs] = useState([]);
-  const [activeTab, setActiveTab] = useState('');
-  const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
+  const { t, isRTL } = useLanguage();
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
 
-  const [name, setName] = useState('');
-  const [file, setFile] = useState(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const fileInputRef = useRef(null);
-
-  const selectedTab = useMemo(() => tabs.find((tab) => String(tab.id) === activeTab), [tabs, activeTab]);
-
-  const categories = useMemo(() => {
-    const values = Array.from(new Set(tabs.map((tab) => tab.tab_type).filter(Boolean)));
-    return ['all', ...values];
-  }, [tabs]);
-
-  const toLabel = (tab) => (language === 'ar' ? tab.name_ar : tab.name_en);
-
-  const loadTabs = async () => {
-    const { data } = await api.get('/document-tabs');
-    const list = Array.isArray(data) ? data : [];
-    setTabs(list);
-    if (list.length > 0 && !activeTab) {
-      setActiveTab(String(list[0].id));
-    }
-  };
-
-  useEffect(() => {
-    loadTabs().catch(() => setError(t('documents.messages.loadTabsError')));
-  }, [t]);
-
-  useEffect(() => {
-    if (!activeTab) return;
-
-    const loadRows = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const { data } = await api.get('/documents', { params: { document_tab_id: activeTab } });
-        setRows(Array.isArray(data) ? data : []);
-      } catch {
-        setError(t('documents.messages.loadDocumentsError'));
-        setRows([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadRows();
-  }, [activeTab, t]);
-
-  const uploadDocument = async (event) => {
-    event.preventDefault();
-    if (!file || !selectedTab) return;
-
-    const formData = new FormData();
-    formData.append('name', name || file.name);
-    formData.append('file', file);
-    formData.append('document_tab_id', String(selectedTab.id));
-
-    await api.post('/documents', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+  const filtered = useMemo(() => {
+    return MOCK_DOCUMENTS.filter((doc) => {
+      const matchSearch = doc.name.toLowerCase().includes(search.toLowerCase());
+      const matchCategory = category === "all" || doc.type === category;
+      return matchSearch && matchCategory;
     });
-
-    setName('');
-    setFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-
-    const { data } = await api.get('/documents', { params: { document_tab_id: selectedTab.id } });
-    setRows(Array.isArray(data) ? data : []);
-  };
-
-  const filteredTabs = tabs.filter((tab) => category === 'all' || tab.tab_type === category);
-
-  const visibleRows = rows.filter((row) => {
-    if (!search.trim()) return true;
-    const q = search.toLowerCase();
-    return String(row.name || '').toLowerCase().includes(q) || String(row.file_path || '').toLowerCase().includes(q);
-  });
+  }, [search, category]);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-      <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h1 className="text-xl font-bold sm:text-2xl">{t('documents.title')}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t('documents.subtitle')}</p>
-      </section>
-
-      <section className="grid gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3">
-        <label className="relative lg:col-span-2">
-          <Search className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-muted-foreground" />
-          <input
-            className="h-11 w-full rounded-md border bg-background ps-9 pe-3 text-sm"
-            placeholder={t('documents.searchPlaceholder')}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </label>
-
-        <select
-          className="h-11 rounded-md border bg-background px-3 text-sm"
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-        >
-          {categories.map((item) => (
-            <option key={item} value={item}>
-              {item === 'all' ? t('documents.categories.all') : t(`documents.categories.${item}`)}
-            </option>
-          ))}
-        </select>
-      </section>
-
-      <section className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold">{t('documents.upload.title')}</h2>
-        <form className="grid gap-3 md:grid-cols-2" onSubmit={(event) => uploadDocument(event).catch(() => setError(t('documents.messages.uploadError')))}>
-          <input
-            className="h-11 rounded-md border bg-background px-3 text-sm"
-            placeholder={t('documents.upload.namePlaceholder')}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          <button type="submit" className="h-11 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground" disabled={!selectedTab || !file}>
-            {t('documents.upload.action')}
+    <div className="p-6 mt-12 w-full">
+      <SectionHeader
+        listName={t("documents.title")}
+        subtitle={t("documents.subtitle")}
+        icon={<FileText className="h-6 w-6 text-[hsl(var(--accent))]" />}
+        showBack
+        actions={
+          // Ensure `t()` returns a string or JSX, not an object.
+          <button className="action-btn-primary">
+            <Upload className="h-4 w-4" />
+            {t("documents.upload")} {/* Ensure this returns a string */}
           </button>
+        }
+      />
 
-          <div
-            role="button"
-            tabIndex={0}
-            className={`md:col-span-2 flex min-h-32 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed p-4 text-center transition ${
-              isDragOver ? 'border-primary bg-primary/5' : 'border-border'
-            }`}
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(event) => {
-              event.preventDefault();
-              setIsDragOver(true);
-            }}
-            onDragLeave={() => setIsDragOver(false)}
-            onDrop={(event) => {
-              event.preventDefault();
-              setIsDragOver(false);
-              const droppedFile = event.dataTransfer.files?.[0];
-              if (droppedFile) setFile(droppedFile);
-            }}
-          >
-            <div className="space-y-2">
-              <UploadCloud className="mx-auto h-6 w-6 text-primary" />
-              <p className="text-sm font-medium">{t('documents.upload.dropzone')}</p>
-              <p className="text-xs text-muted-foreground">{file ? file.name : t('documents.upload.supported')}</p>
-            </div>
-            <input
-              ref={fileInputRef}
-              className="hidden"
-              type="file"
-              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            />
-          </div>
-        </form>
-      </section>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto">
-          {filteredTabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={String(tab.id)}>{toLabel(tab)}</TabsTrigger>
-          ))}
-        </TabsList>
-
-        {filteredTabs.map((tab) => (
-          <TabsContent key={tab.id} value={String(tab.id)}>
-            {loading ? (
-              <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">{t('common.loading')}</div>
-            ) : error ? (
-              <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive">{error}</div>
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleRows.map((row, index) => (
-                  <article key={row.id || index} className="rounded-xl border border-border/70 bg-card p-4 shadow-sm">
-                    <FileText className="mb-2 h-5 w-5 text-primary" />
-                    <h3 className="truncate font-semibold">{row.name}</h3>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">{row.file_path}</p>
-                  </article>
-                ))}
-                {visibleRows.length === 0 && (
-                  <div className="col-span-full rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-                    {t('documents.empty')}
-                  </div>
-                )}
-              </div>
+      {/* Toolbar */}
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:w-80">
+          <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground", isRTL ? "right-3" : "left-3")} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("documents.searchPlaceholder")} // Ensure this returns a string
+            className={cn(
+              "w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] py-2.5 text-sm outline-none transition focus:ring-2 focus:ring-[hsl(var(--ring))]",
+              isRTL ? "pr-10 pl-3 text-right" : "pl-10 pr-3 text-left"
             )}
-          </TabsContent>
-        ))}
-      </Tabs>
+          />
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className={cn(
+                "chip-soft transition-all",
+                category === cat && "bg-[hsl(var(--accent)/0.2)] border-[hsl(var(--accent)/0.4)] text-foreground font-semibold"
+              )}
+            >
+              {t(`documents.categories.${cat}`)} {/* Ensure this returns a string */}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Upload zone */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-6 rounded-2xl border-2 border-dashed border-border bg-[hsl(var(--card)/0.5)] p-8 text-center backdrop-blur"
+      >
+        <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+        <p className="text-sm text-muted-foreground">{t("documents.dropzone")}</p>
+        <button className="mt-3 action-btn-outline text-sm">
+          <Plus className="h-4 w-4" />
+          {t("documents.browse")} {/* Ensure this returns a string */}
+        </button>
+      </motion.div>
+
+      {/* Documents grid */}
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((doc, i) => (
+            <motion.div
+              key={doc.id}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ delay: i * 0.04 }}
+              className="card-premium p-4 group cursor-pointer"
+            >
+              <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-[hsl(var(--background)/0.55)]">
+                  <FolderOpen className="h-5 w-5 text-[hsl(var(--accent))]" />
+                </div>
+                <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+                  <p className="text-sm font-semibold text-foreground truncate">{doc.name}</p>
+                  <div className="mt-1 flex items-center gap-2 flex-wrap">
+                    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium", classificationColors[doc.classification])}>
+                      {t(`documents.classification.${doc.classification}`)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{doc.size}</span>
+                    <span className="text-xs text-muted-foreground">{doc.date}</span>
+                  </div>
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <button className="p-1.5 rounded-lg hover:bg-muted transition" title={t("documents.view")}>
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                  <button className="p-1.5 rounded-lg hover:bg-muted transition" title={t("documents.download")}>
+                    <Download className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {filtered.length === 0 && (
+        <div className="mt-8 text-center text-sm text-muted-foreground">
+          {t("documents.empty")} {/* Ensure this returns a string */}
+        </div>
+      )}
     </div>
   );
 };

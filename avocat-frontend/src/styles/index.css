@@ -26,10 +26,6 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    transition:
-      background-color 220ms ease,
-      color 220ms ease,
-      border-color 220ms ease;
   }
 
   html[lang='ar'] body {
