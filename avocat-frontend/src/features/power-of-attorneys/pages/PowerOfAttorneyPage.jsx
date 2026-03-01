@@ -43,7 +43,7 @@ const PowerOfAttorneyPage = () => {
 
   const t = useMemo(
     () => ({
-      title: language === 'ar' ? 'إدارة التوكيلات' : 'Power of Attorneys Management',
+      title: language === 'ar' ? 'قسم التوكيلات' : 'Power of Attorneys Management',
       subtitle: language === 'ar' ? 'تنظيم التوكيلات القانونية في لوحة حديثة ومنسقة.' : 'Manage legal powers of attorney in a modern organized workspace.',
       loadError: language === 'ar' ? 'تعذر تحميل البيانات.' : 'Failed to load data.',
       saveError: language === 'ar' ? 'تعذر حفظ التوكيل.' : 'Failed to save record.',

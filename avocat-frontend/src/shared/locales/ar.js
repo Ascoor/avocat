@@ -63,14 +63,14 @@ const ar = {
     courtSearch: "البحث بالمحاكم",
     settings: "الإعدادات",
     officeSettings: "إعدادات المكتب",
-    finance: "المالية",
+    finance: "الحسابات",
     documents: "الوثائق",
     powerOfAttorney: "التوكيلات",
     courtSettings: "إعدادات المحاكم",
     lawyers: "المحامون",
     usersPermissions: "المستخدمون والصلاحيات",
-    adminUsers: "إدارة المستخدمين",
-    adminRoles: "إدارة الأدوار",
+    adminUsers: "قسمالمستخدمين",
+    adminRoles: "قسمالأدوار",
     adminPermissions: "الصلاحيات",
     iconsGallery: "معرض الأيقونات",
     uiQa: "اختبار الواجهة",
@@ -245,7 +245,7 @@ const ar = {
       hero: {
         badge: "ابدأ رحلتك القانونية",
         headline: "انضم إلى منصة أفوكات الآن",
-        subheadline: "أنشئ حسابك للوصول إلى فريقك القانوني وإدارة ملفاتك بسرعة وأمان.",
+        subheadline: "أنشئ حسابك للوصول إلى فريقك القانوني وقسمملفاتك بسرعة وأمان.",
         highlights: [
           { icon: "shield", text: "تهيئة فورية لملفاتك وقضاياك" },
           { icon: "user", text: "دعم مباشر من فريق الاستشارات" },
@@ -288,7 +288,7 @@ const ar = {
       Court: "المحاكم",
       Documents: "المستندات",
       Security: "الأمان",
-      Finance: "المالية",
+      Finance: "الحسابات",
       People: "الأشخاص",
       Tools: "الأدوات",
       General: "عام",
@@ -397,7 +397,7 @@ const ar = {
       procedures: "الإجراءات",
       sessions: "الجلسات",
       settings: "الإعدادات",
-      finance: "المالية",
+      finance: "الحسابات",
       documents: "الوثائق",
       powerOfAttorney: "التوكيلات",
       reports: "التقارير",
@@ -501,7 +501,7 @@ const ar = {
     },
     clients: {
       title: "الموكلون",
-      subtitle: "إضافة وإدارة الموكلين المرتبطين بالقضية.",
+      subtitle: "إضافة وقسمالموكلين المرتبطين بالقضية.",
       empty: "لا يوجد موكلون مرتبطون بهذه القضية بعد.",
       notAvailable: "غير متوفر",
       searchPlaceholder: "ابحث عن الموكلين...",
@@ -568,7 +568,7 @@ const ar = {
     },
     procedures: {
       title: "الإجراءات",
-      subtitle: "إدارة الإجراءات المرتبطة بالقضية.",
+      subtitle: "قسمالإجراءات المرتبطة بالقضية.",
       empty: "لا توجد إجراءات بعد. ابدأ بإضافة إجراء.",
       searchPlaceholder: "ابحث في الإجراءات...",
       table: {
@@ -616,7 +616,7 @@ const ar = {
     },
     sessions: {
       title: "الجلسات",
-      subtitle: "إدارة الجلسات والنتائج.",
+      subtitle: "قسمالجلسات والنتائج.",
       empty: "لا توجد جلسات بعد. ابدأ بإضافة جلسة.",
       searchPlaceholder: "ابحث في الجلسات...",
       table: {
@@ -776,14 +776,14 @@ const ar = {
   },
   settings: {
     lookups: {
-      title: "إدارة المتغيرات والقوائم المرجعية",
-      subtitle: "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
-      sharedLookupsSubtitle: "إدارة المتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
+      title: "قسمالمتغيرات والقوائم المرجعية",
+      subtitle: "قسمالمتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
+      sharedLookupsSubtitle: "قسمالمتغيرات المشتركة للإجراءات والجلسات والإعلانات والخدمات وتصنيفات الحسابات.",
       courtsSectionTitle: "إعدادات المحاكم",
-      courtsSectionSubtitle: "إدارة درجات المحاكم وأنواعها والمحاكم والدوائر من المسار الرسمي.",
+      courtsSectionSubtitle: "قسمدرجات المحاكم وأنواعها والمحاكم والدوائر من المسار الرسمي.",
       sectionTabs: {
         caseSettings: "القضايا وتصنيفاتها",
-        sharedLookups: "إدارة المتغيرات والقوائم المرجعية",
+        sharedLookups: "قسمالمتغيرات والقوائم المرجعية",
         courts: "إعدادات المحاكم"
       },
       searchPlaceholder: "ابحث بالاسم...",
@@ -869,9 +869,9 @@ const ar = {
       description: "ليس لديك صلاحية العرض لقسم {{module}}."
     },
     modules: {
-      adminUsers: "إدارة المستخدمين",
-      adminRoles: "إدارة الأدوار",
-      adminPermissions: "إدارة الصلاحيات"
+      adminUsers: "قسمالمستخدمين",
+      adminRoles: "قسمالأدوار",
+      adminPermissions: "قسمالصلاحيات"
     },
     users: {
       title: "المستخدمون", add: "إضافة مستخدم", edit: "تعديل مستخدم", name: "الاسم", email: "البريد", status: "الحالة", roles: "الأدوار", active: "نشط", inactive: "غير نشط"
@@ -882,7 +882,7 @@ const ar = {
     permissions: { title: "الصلاحيات" },
     management: {
       title: "المستخدمون والأدوار والصلاحيات",
-      subtitle: "إدارة الصلاحيات من مركز تحكم موحد بتصميم حديث ومنظم."
+      subtitle: "قسمالصلاحيات من مركز تحكم موحد بتصميم حديث ومنظم."
     },
     tabs: { users: "المستخدمون", roles: "الأدوار", permissions: "الصلاحيات" },
     qa: { title: "فحص RBAC", switchUser: "المستخدم التجريبي" }
@@ -890,8 +890,8 @@ const ar = {
 
   access: {
     permissionsModal: {
-      title: "إدارة صلاحيات الدور",
-      description: "إدارة صلاحيات هذا الدور من لوحة تحكم مرنة ومتجاوبة.",
+      title: "قسمصلاحيات الدور",
+      description: "قسمصلاحيات هذا الدور من لوحة تحكم مرنة ومتجاوبة.",
       searchPlaceholder: "ابحث داخل الصلاحيات...",
       selectAll: "تحديد الكل",
       deselectAll: "إلغاء تحديد الكل",
@@ -909,9 +909,9 @@ const ar = {
       courts: "المحاكم",
       lawyers: "المحامون",
       reports: "التقارير",
-      adminUsers: "إدارة المستخدمين",
-      adminRoles: "إدارة الأدوار",
-      adminPermissions: "إدارة الصلاحيات",
+      adminUsers: "قسمالمستخدمين",
+      adminRoles: "قسمالأدوار",
+      adminPermissions: "قسمالصلاحيات",
       expenses: "المصروفات",
       notifications: "الإشعارات",
       events: "الأحداث",
@@ -931,8 +931,8 @@ const ar = {
       cases_reopen: "إعادة فتح القضايا",
       cases_assign: "تعيين القضايا",
       cases_reassign: "إعادة التعيين القضايا",
-      cases_attachments_manage: "إدارة المرفقات القضايا",
-      cases_notes_manage: "إدارة الملاحظات القضايا",
+      cases_attachments_manage: "قسمالمرفقات القضايا",
+      cases_notes_manage: "قسمالملاحظات القضايا",
       cases_audit_view: "عرض سجل التدقيق القضايا",
       clients_view: "عرض العملاء",
       clients_list: "عرض القائمة العملاء",
@@ -972,8 +972,8 @@ const ar = {
       services_change_status: "تغيير الحالة الخدمات",
       services_close: "إغلاق الخدمات",
       services_reopen: "إعادة فتح الخدمات",
-      services_procedures_manage: "إدارة الإجراءات الخدمات",
-      services_attachments_manage: "إدارة المرفقات الخدمات",
+      services_procedures_manage: "قسمالإجراءات الخدمات",
+      services_attachments_manage: "قسمالمرفقات الخدمات",
       courts_view: "عرض المحاكم",
       courts_list: "عرض القائمة المحاكم",
       courts_search: "بحث المحاكم",
@@ -1024,13 +1024,13 @@ const ar = {
       events_view: "عرض الأحداث",
       events_create: "إنشاء الأحداث",
       settings_view: "عرض الإعدادات",
-      settings_manage: "إدارة الإعدادات"
+      settings_manage: "قسمالإعدادات"
     }
   },
 
 
   customerService: {
-    subtitle: "إدارة العملاء وعملاء بدون وكالة من شاشة موحّدة.",
+    subtitle: "قسمالعملاء وعملاء بدون وكالة من شاشة موحّدة.",
     tabs: {
       clients: "عملاء بوكالة",
       unclients: "عملاء بدون وكالة"
