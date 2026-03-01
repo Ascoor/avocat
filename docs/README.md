@@ -9,6 +9,7 @@
 3. [هيكلية الفرونت إند](./frontend-architecture-ar.md)
 4. [هيكلية الموقع العام](./website-architecture-ar.md)
 5. [هيكلية واجهة المستخدم (UI)](./user-interface-architecture-ar.md)
+6. [خطة تطوير الباكند - مهام مجزأة](./backend-development-plan-ar.md)
 
 ## ملاحظات تنظيمية
 
