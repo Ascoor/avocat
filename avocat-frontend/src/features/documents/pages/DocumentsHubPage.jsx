@@ -46,7 +46,7 @@ const DocumentsHubPage = () => {
           // Ensure `t()` returns a string or JSX, not an object.
           <button className="action-btn-primary">
             <Upload className="h-4 w-4" />
-            {t("documents.upload")} {/* Ensure this returns a string */}
+            {t("documents.upload.action")}
           </button>
         }
       />
@@ -90,10 +90,10 @@ const DocumentsHubPage = () => {
         className="mt-6 rounded-2xl border-2 border-dashed border-border bg-[hsl(var(--card)/0.5)] p-8 text-center backdrop-blur"
       >
         <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
-        <p className="text-sm text-muted-foreground">{t("documents.dropzone")}</p>
+        <p className="text-sm text-muted-foreground">{t("documents.upload.dropzone")}</p>
         <button className="mt-3 action-btn-outline text-sm">
           <Plus className="h-4 w-4" />
-          {t("documents.browse")} {/* Ensure this returns a string */}
+          {t("documents.upload.action")}
         </button>
       </motion.div>
 
