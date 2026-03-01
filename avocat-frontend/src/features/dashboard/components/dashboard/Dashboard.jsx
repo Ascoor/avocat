@@ -26,6 +26,7 @@ const Home = () => {
   const { clients, loading, error } = useSelector((state) => state.clients);
   const [filteredClients, setFilteredClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [counts, setCounts] = useState({
     clientCount: 0,
     legCaseCount: 0,
@@ -59,20 +60,28 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm.trim().toLowerCase());
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm === '') {
       setFilteredClients([]);
       return;
     }
 
-    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
     const result = clients.filter(
       (client) =>
-        client.name.toLowerCase().includes(normalizedSearchTerm) ||
-        client.slug.includes(normalizedSearchTerm),
+        client.name.toLowerCase().includes(debouncedSearchTerm) ||
+        client.slug.toLowerCase().includes(debouncedSearchTerm) ||
+        (client.phone_number || '').includes(debouncedSearchTerm),
     );
 
     setFilteredClients(result.slice(0, 5));
-  }, [searchTerm, clients]);
+  }, [debouncedSearchTerm, clients]);
 
   return (
     <div className="p-4 mt-16 xl:max-w-7xl xl:mx-auto w-full">
@@ -80,7 +89,7 @@ const Home = () => {
       <div className="flex justify-center mb-6">
         <div className="flex w-full max-w-2xl app-panel p-4 animate-fade-in-up">
           <button
-            onClick={() => handleSearch(searchTerm)}
+            type="button"
             className="px-4 py-2 bg-primary text-white rounded-r-xl hover:bg-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             بحث
