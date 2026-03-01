@@ -1,8 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { Button } from "@shared/ui/button";
 import { cn } from "@shared/lib/utils";
@@ -12,79 +11,78 @@ const SectionHeader = ({
   subtitle,
   icon,
   showBack = true,
-  backLabel = "رجوع",
+  backLabel, // إذا تم تمرير عنوان مخصص من الخارج
   actions,
   className,
 }) => {
   const navigate = useNavigate();
-  const { isRTL, t } = useLanguage();
+  const { isRTL } = useLanguage();
+  
+  // 1. متغير النص الذكي: يختار الكلمة بناءً على اتجاه اللغة
+  const dynamicBackLabel = isRTL ? "رجوع" : "Back";
+  
+  // 2. اختيار السهم الصحيح برمجياً
+  const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      // خاصية dir تضمن أن اليمين يبقى يمين واليسار يسار حسب اللغة
+      dir={isRTL ? "rtl" : "ltr"}
       className={cn(
-        "relative overflow-hidden rounded-3xl border border-border/70 bg-[hsl(var(--card)/0.82)] p-4 shadow-sm backdrop-blur sm:p-6",
-        className,
+        "relative overflow-hidden rounded-2xl border border-border/60",
+        "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--surface-overlay))]",
+        "p-4 sm:p-5 shadow-custom-lg backdrop-blur-md",
+        className
       )}
     >
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        style={{
-          background:
-            "radial-gradient(120% 120% at 10% 15%, hsl(var(--accent)/0.18), transparent 55%), radial-gradient(120% 120% at 90% 20%, hsl(var(--primary)/0.16), transparent 60%)",
-        }}
-      />
-
-      <div className={cn("relative flex items-start justify-between gap-3 sm:items-center sm:gap-4")}>
-        <div className={cn("min-w-0 flex flex-1 items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")}>
+      <div className="relative flex flex-row items-center justify-between gap-4">
+        
+        {/* الطرف الأول: الأيقونة + العنوان (متلاصقان دائماً) */}
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           {icon && (
-            <motion.div
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border/60 bg-[hsl(var(--background)/0.62)] ring-1 ring-white/10 shadow-[0_8px_30px_hsl(var(--foreground)/0.08)] sm:h-12 sm:w-12"
-            >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-background/40 shadow-gold-glow/5 sm:h-12 sm:w-12">
               {typeof icon === "string" ? (
-                <img src={icon} alt="" className="h-6 w-6 object-contain sm:h-7 sm:w-7" />
+                <img src={icon} alt="" className="h-7 w-7 object-contain" />
               ) : (
-                icon
+                <div className="text-accent">{icon}</div>
               )}
-            </motion.div>
+            </div>
           )}
 
-          <div className={cn("min-w-0 flex-1", isRTL ? "text-right" : "text-left")}>
-            <h2 className="truncate text-lg font-extrabold tracking-tight text-foreground sm:text-xl md:text-2xl">
+          <div className="flex flex-col min-w-0">
+            <h2 className="text-lg font-extrabold tracking-tight text-foreground sm:text-xl leading-tight">
               {listName}
             </h2>
-            {subtitle && <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{subtitle}</p>}
+            {subtitle && (
+              <p className="mt-1 text-xs font-medium text-muted-foreground/70 line-clamp-1">
+                {subtitle}
+              </p>
+            )}
           </div>
         </div>
 
-        {actions && <div className={cn("hidden shrink-0 sm:flex items-center gap-2", isRTL && "flex-row-reverse")}>{actions}</div>}
-
-        {showBack && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className={cn(
-              "shrink-0 rounded-xl border-border/80 bg-[hsl(var(--background)/0.65)] px-3.5 shadow-sm hover:bg-[hsl(var(--background)/0.8)]",
-              isRTL ? "flex-row-reverse" : "flex-row",
-            )}
-          >
-            <ArrowLeft className={cn("h-4 w-4", isRTL && "rotate-180")} />
-            <span className="mx-2">{backLabel || t?.("common.back") || "رجوع"}</span>
-          </Button>
-        )}
+        {/* الطرف الثاني: الأكشن + زر الرجوع */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {actions && <div className="flex items-center gap-2">{actions}</div>}
+          
+          {showBack && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="h-9 rounded-lg border-border/50 bg-background/50 px-3 hover:bg-accent/10 hover:text-accent transition-all"
+            >
+              {/* عرض المتغير الذكي هنا */}
+              <span className="text-xs font-bold">
+                {backLabel || dynamicBackLabel}
+              </span>
+              <BackIcon className={cn("h-4 w-4", isRTL ? "mr-2" : "ml-2")} />
+            </Button>
+          )}
+        </div>
       </div>
-
-      {actions && <div className={cn("relative mt-3 flex flex-wrap gap-2 sm:hidden", isRTL && "justify-end")}>{actions}</div>}
     </motion.section>
   );
 };
