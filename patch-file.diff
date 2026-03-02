@@ -1,644 +1,476 @@
-diff --git a/avocat-backend/app/Http/Controllers/Api/LegCaseController.php b/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
-index 8cf9d5d7a265301236c14d6b2c49073bd6f75174..98492a1e4fe6c089e81b26c8ea591b2a4d1d35ce 100644
---- a/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
-+++ b/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
-@@ -1,41 +1,45 @@
+diff --git a/avocat-backend/app/Http/Controllers/Api/CaseStatusController.php b/avocat-backend/app/Http/Controllers/Api/CaseStatusController.php
+index 620bc90c248c372af2ee6f82e0abccba93a86798..7eb6d6184192ae683496f23053de3f90cadb132f 100644
+--- a/avocat-backend/app/Http/Controllers/Api/CaseStatusController.php
++++ b/avocat-backend/app/Http/Controllers/Api/CaseStatusController.php
+@@ -1,62 +1,61 @@
  <?php
  
  namespace App\Http\Controllers\Api;
  
- use App\Http\Controllers\Controller;
- 
- use App\Models\{LegCase, Court, CaseType };
+-use App\Http\Controllers\Controller;
+ use GuzzleHttp\Client;
+ use Illuminate\Http\JsonResponse;
  use Illuminate\Http\Request;
- use Illuminate\Support\Facades\DB;
- use Illuminate\Validation\Rule;
- use Illuminate\Support\Facades\Log;
- use Illuminate\Database\Eloquent\ModelNotFoundException;
- use App\Services\Notifications\NotificationEventService;
-+use App\Services\CaseWorkflowService;
- class LegCaseController extends Controller
++use Illuminate\Support\Facades\Cache;
+ 
+-class CaseStatusController extends Controller
++class CaseStatusController extends BaseApiController
  {
--    public function __construct(private readonly NotificationEventService $notificationEvents)
-+    public function __construct(
-+        private readonly NotificationEventService $notificationEvents,
-+        private readonly CaseWorkflowService $caseWorkflowService,
-+    )
+     public function fetchCaseStatus(Request $request): JsonResponse
      {
+-        return response()->json($this->fetchOptions());
++        return $this->successResponse($this->fetchOptions(), 'Case status options retrieved successfully.');
      }
  
-     /**
-      * Retrieves active legal cases for list views with lightweight relations.
-      *
-      * @return JsonResponse The JSON response containing the legal cases.
-      */
-     public function index(Request $request)
+     public function index(Request $request): JsonResponse
      {
-         $isReportMode = $request->boolean('report_mode');
- 
-         $query = LegCase::query()
-             ->select([
-                 'id', 'slug', 'title', 'client_capacity', 'status', 'case_type_id',
-                 'case_sub_type_id', 'created_at', 'updated_at',
-             ])
-             ->with([
-                 'clients:id,name',
-                 'caseSubType:id,name',
-             ])
-             ->withCount(['procedures', 'legalSessions']);
- 
-         if (! $isReportMode) {
-             $query->whereIn('status', ['قيد التجهيز', 'متداولة']);
-@@ -157,55 +161,66 @@ public function show($id)
-         $this->authorize('view', $legCase);
- 
-         return response()->json(['leg_case' => $legCase]);
+         return $this->fetchCaseStatus($request);
      }
  
-     /**
-      * Update a Leg Case.
-      *
-      * @param \Illuminate\Http\Request $request The HTTP request.
-      * @param int $id The ID of the Leg Case to update.
-      * @return \Illuminate\Http\JsonResponse The JSON response.
-      */
- 
-      public function update(Request $request, $id): \Illuminate\Http\JsonResponse
-      {
-          try {
-              $validatedData = $request->validate([
-                  'slug' => ['required', 'string', 'max:255', Rule::unique('leg_cases')->ignore($id)],
-                  'title' => 'required|string|max:255',
-                  'description' => 'required|string',
-                  'case_type_id' => 'required|integer',
-                  'case_sub_type_id' => 'required|integer',
-                  'litigants_name' => 'nullable|string',
-                  'litigants_phone' => 'nullable|string',
-                  'client_capacity' => 'required|string',
-+                 'status' => ['sometimes', 'string', Rule::in([
-+                     CaseWorkflowService::STATUS_PREPARING,
-+                     CaseWorkflowService::STATUS_IN_PROGRESS,
-+                     CaseWorkflowService::STATUS_COMPLETED,
-+                     CaseWorkflowService::STATUS_SUSPENDED,
-+                 ])],
-                  'updated_by' => 'required|integer',
-              ]);
-      
-              $legCase = LegCase::findOrFail($id);
-              $this->authorize('update', $legCase);
-+
-+             if (array_key_exists('status', $validatedData)) {
-+                 $this->caseWorkflowService->validateTransition((string) $legCase->status, (string) $validatedData['status']);
-+             }
-+
-              $legCase->update($validatedData);
- 
- 
-              $this->notificationEvents->entityChanged([
-                  'type' => 'super_admin_entity_changed',
-                  'title' => __('notifications.case_updated_title'),
-                  'message' => __('notifications.case_updated_message', ['id' => $legCase->id, 'entity' => $legCase->title]),
-                  'entity_type' => 'case',
-                  'entity_id' => $legCase->id,
-                  'action' => 'updated',
-                  'url' => '/dashboard/cases/'.$legCase->id,
-                  'actor_id' => (int) ($validatedData['updated_by'] ?? 0),
-                  'meta' => ['notify_self' => (bool) $request->boolean('notify_self', false)],
-              ]);
- 
-              Log::info('audit.case.updated', [
-                  'case_id' => $legCase->id,
-                  'actor_id' => optional($request->user())->id,
-              ]);
- 
-              return response()->json(['message' => 'Leg case updated successfully', 'data' => $legCase], 200);
-          } catch (ModelNotFoundException $e) {
-              return response()->json(['error' => 'LegCase not found'], 404);
-          } catch (\Exception $e) {
-              return response()->json(['error' => 'An error occurred while updating the leg case'], 500);
-@@ -371,54 +386,72 @@ public function getLegCaseSearch(Request $request)
-     // Detach the client from the legal case
-     $legalCase->clients()->detach($clientId);
- 
-     return response()->json(['message' => 'Client removed from the legal case successfully'], 200);
- }
-     /**
-      * Deletes a LegCase and its associated records from the database.
-      *
-      * @param int $id The ID of the LegCase to be deleted.
-      * @throws \Exception If an error occurs during deletion.
-      * @return \Illuminate\Http\JsonResponse A JSON response indicating the result of the deletion.
-      */
-     public function destroy(Request $request, $id)
+     public function fetchDegrees(): JsonResponse
      {
-         $legCase = LegCase::find($id);
+-        return response()->json(['degrees' => $this->fetchOptions()['ddlCourtOptions']]);
++        return $this->successResponse(['degrees' => $this->fetchOptions()['ddlCourtOptions']], 'Court degrees retrieved successfully.');
+     }
  
-         if (! $legCase) {
-             return response()->json(['error' => 'LegCase not found'], 404);
-         }
+     public function getCourtOptions(): JsonResponse
+     {
+-        return response()->json(['court_options' => $this->fetchOptions()['ddlCourtOptions']]);
++        return $this->successResponse(['court_options' => $this->fetchOptions()['ddlCourtOptions']], 'Court options retrieved successfully.');
+     }
  
-         $this->authorize('delete', $legCase);
+     public function getCaseTypeOptions(): JsonResponse
+     {
+-        return response()->json(['case_type_options' => $this->fetchOptions()['caseTypeOptions']]);
++        return $this->successResponse(['case_type_options' => $this->fetchOptions()['caseTypeOptions']], 'Case type options retrieved successfully.');
+     }
  
-         DB::beginTransaction();
+     public function getCaseYearOptions(): JsonResponse
+     {
+-        return response()->json(['case_year_options' => $this->fetchOptions()['yearOptions']]);
++        return $this->successResponse(['case_year_options' => $this->fetchOptions()['yearOptions']], 'Case year options retrieved successfully.');
+     }
  
-         try {
--            if ($legCase->sessions()->exists()) {
--                $legCase->sessions()->detach();
-+            if ($legCase->legalSessions()->exists()) {
-+                $legCase->legalSessions()->delete();
-             }
+     public function getCaseDetails(Request $request): JsonResponse
+     {
+-        return response()->json([
+-            'message' => 'Case details endpoint requires ministry integration payload and is not implemented in legacy code.',
+-            'request' => $request->only(['degree', 'court', 'case_type', 'year', 'case_number']),
+-        ], 501);
++        return $this->notImplementedResponse('Case details endpoint requires ministry integration payload and is not implemented in legacy code.');
+     }
  
-             if ($legCase->procedures()->exists()) {
-                 $legCase->procedures()->delete();
-             }
- 
-             if ($legCase->legalAds()->exists()) {
-                 $legCase->legalAds()->delete();
-             }
- 
-             $legCase->delete();
- 
-             DB::commit();
- 
-             Log::info('audit.case.deleted', [
-                 'case_id' => $id,
-                 'actor_id' => optional($request->user())->id,
-             ]);
- 
-             return response()->json(['message' => 'LegCase and associated records deleted successfully']);
-         } catch (\Exception $e) {
-             DB::rollback();
-             return response()->json(['error' => 'An error occurred during deletion'], 500);
-         }
- 
+     private function fetchOptions(): array
+     {
+-        $client = new Client();
+-        $crawler = $client->request('GET', 'https://moj.gov.eg/ar/Pages/Services/CaseCurrentStatus.aspx');
+-
+-        return [
+-            'lblDegree' => $crawler->filter('#lblDegree')->text(),
+-            'ddlCourtOptions' => $crawler->filter('#ddlCourt option')->each(fn ($option) => $option->text()),
+-            'caseTypeOptions' => $crawler->filter('#CaseType option')->each(fn ($option) => $option->text()),
+-            'yearOptions' => $crawler->filter('#year option')->each(fn ($option) => $option->text()),
+-        ];
++        return Cache::remember('case_status:options', now()->addHours(6), function (): array {
++            $client = new Client();
++            $crawler = $client->request('GET', 'https://moj.gov.eg/ar/Pages/Services/CaseCurrentStatus.aspx');
++
++            return [
++                'lblDegree' => $crawler->filter('#lblDegree')->text(),
++                'ddlCourtOptions' => $crawler->filter('#ddlCourt option')->each(fn ($option) => $option->text()),
++                'caseTypeOptions' => $crawler->filter('#CaseType option')->each(fn ($option) => $option->text()),
++                'yearOptions' => $crawler->filter('#year option')->each(fn ($option) => $option->text()),
++            ];
++        });
+     }
  }
-+
-+    public function workflowTransitions(int $id)
-+    {
-+        $legCase = LegCase::find($id);
-+
-+        if (! $legCase) {
-+            return response()->json(['error' => 'LegCase not found'], 404);
-+        }
-+
-+        $this->authorize('view', $legCase);
-+
-+        return response()->json([
-+            'data' => [
-+                'current_status' => $legCase->status,
-+                'allowed_next_statuses' => $this->caseWorkflowService->allowedNextStatuses((string) $legCase->status),
-+            ],
-+        ]);
-+    }
- }
-diff --git a/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php b/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
-index a8db7bbd1ea1a90ece292121d81baa72131be70c..a655c665882def257416b3e93e19bec4856aed38 100644
---- a/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
-+++ b/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
-@@ -1,91 +1,102 @@
+diff --git a/avocat-backend/app/Http/Controllers/Api/DocumentCenterController.php b/avocat-backend/app/Http/Controllers/Api/DocumentCenterController.php
+index 8cb7321ad34205c49a90758cca559f300a12e6fb..cf1d9fcd0daf51a61f39bd36d0339db9b5196d97 100644
+--- a/avocat-backend/app/Http/Controllers/Api/DocumentCenterController.php
++++ b/avocat-backend/app/Http/Controllers/Api/DocumentCenterController.php
+@@ -1,49 +1,57 @@
  <?php
  
  namespace App\Http\Controllers\Api;
  
- use App\Http\Controllers\Controller;
- 
- use App\Models\Expense;
- use Illuminate\Http\Request;
- use Illuminate\Support\Facades\Auth;
- use App\Models\LegalSession;
+-use App\Http\Controllers\Controller;
  use App\Models\LegCase;
- use App\Models\Event;
- use Illuminate\Support\Facades\Log;
- use App\Services\Notifications\NotificationEventService;
-+use App\Services\SessionSchedulingService;
- class LegalSessionController extends Controller
+ use App\Models\LegalDoc;
+ use App\Models\PowerOfAttorney;
+ use App\Models\Service;
+ use Illuminate\Http\JsonResponse;
++use Illuminate\Support\Facades\Cache;
+ 
+-class DocumentCenterController extends Controller
++class DocumentCenterController extends BaseApiController
  {
--    public function __construct(private readonly NotificationEventService $notificationEvents)
-+    public function __construct(
-+        private readonly NotificationEventService $notificationEvents,
-+        private readonly SessionSchedulingService $sessionSchedulingService,
-+    )
+     public function powerOfAttorneys(): JsonResponse
      {
+-        $powerOfAttorneys = PowerOfAttorney::with(['client', 'attorneyType'])
+-            ->latest()
+-            ->get();
++        $powerOfAttorneys = Cache::remember('document_center:power_of_attorneys', now()->addMinutes(10), static function () {
++            return PowerOfAttorney::with(['client', 'attorneyType'])
++                ->latest()
++                ->get();
++        });
+ 
+-        return response()->json($powerOfAttorneys);
++        return $this->successResponse($powerOfAttorneys, 'Power of attorneys retrieved successfully.');
      }
-     public function index(Request $request)
+ 
+     public function documents(): JsonResponse
      {
-         $query = LegalSession::with(['legCase.clients', 'lawyer', 'court', 'legalSessionType', 'createdBy']);
+-        $documents = LegalDoc::with(['docType', 'docSubType'])
+-            ->latest()
+-            ->get();
++        $documents = Cache::remember('document_center:documents', now()->addMinutes(10), static function () {
++            return LegalDoc::with(['docType', 'docSubType'])
++                ->latest()
++                ->get();
++        });
  
-         $query
-             ->when($request->filled('client_name'), function ($builder) use ($request) {
-                 $builder->whereHas('legCase.clients', fn ($q) => $q->where('name', 'like', '%'.$request->string('client_name').'%'));
-             })
-             ->when($request->filled('lawyer_id'), fn ($builder) => $builder->where('lawyer_id', $request->integer('lawyer_id')))
-             ->when($request->filled('session_type_id'), fn ($builder) => $builder->where('legal_session_type_id', $request->integer('session_type_id')))
-             ->when($request->filled('session_status'), fn ($builder) => $builder->where('status', $request->string('session_status')))
-             ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
-             ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
-             ->orderByDesc($request->input('sort_by', 'updated_at'))
-             ->orderByDesc('id');
+-        return response()->json($documents);
++        return $this->successResponse($documents, 'Documents retrieved successfully.');
+     }
  
-         if ($request->filled('limit')) {
-             return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
-         }
+     public function cases(): JsonResponse
+     {
+-        $cases = LegCase::with(['clients', 'lawyers', 'caseType'])
+-            ->latest()
+-            ->get();
++        $cases = Cache::remember('document_center:cases', now()->addMinutes(10), static function () {
++            return LegCase::with(['clients', 'lawyers', 'caseType'])
++                ->latest()
++                ->get();
++        });
+ 
+-        return response()->json($cases);
++        return $this->successResponse($cases, 'Cases retrieved successfully.');
+     }
+ 
+     public function services(): JsonResponse
+     {
+-        $services = Service::with(['clients', 'serviceType'])
+-            ->latest()
+-            ->get();
++        $services = Cache::remember('document_center:services', now()->addMinutes(10), static function () {
++            return Service::with(['clients', 'serviceType'])
++                ->latest()
++                ->get();
++        });
+ 
+-        return response()->json($services);
++        return $this->successResponse($services, 'Services retrieved successfully.');
+     }
+ }
+diff --git a/avocat-backend/app/Http/Controllers/Api/DocumentController.php b/avocat-backend/app/Http/Controllers/Api/DocumentController.php
+index 42ba6464b39fb93470c924063220ed14cbfef392..ed24dda626cd665aef3cad9b5fb9f15a293eeb93 100644
+--- a/avocat-backend/app/Http/Controllers/Api/DocumentController.php
++++ b/avocat-backend/app/Http/Controllers/Api/DocumentController.php
+@@ -1,35 +1,36 @@
+ <?php
+ 
+ namespace App\Http\Controllers\Api;
+ 
+ use App\Http\Controllers\Controller;
+ use App\Models\Document;
+ use App\Models\Documentable;
+ use Illuminate\Http\JsonResponse;
+ use Illuminate\Http\Request;
+ use Illuminate\Support\Facades\Storage;
++use Illuminate\Support\Facades\Log;
+ use Illuminate\Validation\Rule;
+ 
+ class DocumentController extends Controller
+ {
+     private const DOCUMENT_RELATIONS = ['tab', 'client', 'legCase', 'powerOfAttorney', 'service', 'links'];
+ 
+     public function index(Request $request): JsonResponse
+     {
+         $query = Document::query()->with(self::DOCUMENT_RELATIONS);
+ 
+         $this->applyIndexFilters($query, $request);
  
          return response()->json($query->get());
      }
  
-     public function show($id)
+     public function store(Request $request): JsonResponse
      {
-         $legalSession = LegalSession::findOrFail($id);
-         $this->authorize('view', $legalSession);
+         $validated = $request->validate([
+             'name' => ['required', 'string', 'max:255'],
+             'file' => ['required', 'file', 'max:10240'],
+             'document_tab_id' => ['required', 'exists:document_tabs,id'],
+             'client_id' => ['nullable', 'exists:clients,id'],
+             'leg_case_id' => ['nullable', 'exists:leg_cases,id'],
+             'power_of_attorney_id' => ['nullable', 'exists:power_of_attorneys,id'],
+             'service_id' => ['nullable', 'exists:services,id'],
+@@ -40,77 +41,99 @@ public function store(Request $request): JsonResponse
+                 'App\\Models\\Service',
+             ])],
+             'documentable_id' => ['nullable', 'integer'],
+         ]);
  
-         return response()->json($legalSession);
+         $filePath = $request->file('file')->store('documents', 'public');
+ 
+         $document = Document::create([
+             'name' => $validated['name'],
+             'file_path' => $filePath,
+             'document_tab_id' => $validated['document_tab_id'],
+             'client_id' => $validated['client_id'] ?? null,
+             'leg_case_id' => $validated['leg_case_id'] ?? null,
+             'power_of_attorney_id' => $validated['power_of_attorney_id'] ?? null,
+             'service_id' => $validated['service_id'] ?? null,
+         ]);
+ 
+         if (!empty($validated['documentable_type']) && !empty($validated['documentable_id'])) {
+             Documentable::firstOrCreate([
+                 'document_id' => $document->id,
+                 'documentable_type' => $validated['documentable_type'],
+                 'documentable_id' => $validated['documentable_id'],
+             ]);
+         }
+ 
++        Log::info('audit.document.created', [
++            'document_id' => $document->id,
++            'actor_id' => optional($request->user())->id,
++            'linked_entities' => [
++                'client_id' => $document->client_id,
++                'leg_case_id' => $document->leg_case_id,
++                'power_of_attorney_id' => $document->power_of_attorney_id,
++                'service_id' => $document->service_id,
++            ],
++        ]);
++
+         return response()->json($document->load(self::DOCUMENT_RELATIONS), 201);
      }
  
-     public function store(Request $request)
+     public function show(Document $document): JsonResponse
      {
-         $request->validate([
-             'leg_case_id' => 'required',
-             'court_id' => 'required',
-             
-             'session_date' => 'required',
-             'session_roll' => 'nullable',
-             'session_court' => 'nullable',
-             'cost1' => 'numeric|nullable',
-             'cost2' => 'numeric|nullable',
-             'cost3' => 'numeric|nullable',
-             'lawyer_id' => 'required',
-             'created_by' => 'required',
+         return response()->json($document->load(self::DOCUMENT_RELATIONS));
+     }
+ 
+     public function update(Request $request, Document $document): JsonResponse
+     {
+         $validated = $request->validate([
+             'name' => ['sometimes', 'required', 'string', 'max:255'],
+             'file' => ['sometimes', 'required', 'file', 'max:10240'],
+             'document_tab_id' => ['sometimes', 'required', 'exists:document_tabs,id'],
+             'client_id' => ['nullable', 'exists:clients,id'],
+             'leg_case_id' => ['nullable', 'exists:leg_cases,id'],
+             'power_of_attorney_id' => ['nullable', 'exists:power_of_attorneys,id'],
+             'service_id' => ['nullable', 'exists:services,id'],
          ]);
  
-+        $this->sessionSchedulingService->ensureNoConflicts(
-+            $request->input('lawyer_id'),
-+            $request->input('court_id'),
-+            $request->input('session_date'),
-+            $request->input('session_roll'),
-+        );
+         if ($request->hasFile('file')) {
+             Storage::disk('public')->delete($document->file_path);
+             $validated['file_path'] = $request->file('file')->store('documents', 'public');
+         }
+ 
+         $document->update($validated);
+ 
++        Log::info('audit.document.updated', [
++            'document_id' => $document->id,
++            'actor_id' => optional($request->user())->id,
++        ]);
 +
-         $legalSession = LegalSession::create($request->all());
-  // Step 2: Create Calendar Event
-  $event = new Event();
-  $event->user_id = $request->created_by;
-  $event->title = "legal session";
-  $event->date = $request->session_date;
-  $event->description = "Legal session with case ID " . $request->leg_case_id;
-  $event->save();
+         return response()->json($document->load(self::DOCUMENT_RELATIONS));
+     }
  
-         $this->notificationEvents->entityChanged([
-             'type' => 'super_admin_entity_changed',
-             'title' => __('notifications.session_created_title'),
-             'message' => __('notifications.session_created_message', ['id' => $legalSession->id]),
-             'entity_type' => 'session',
-             'entity_id' => $legalSession->id,
-             'action' => 'created',
-             'url' => '/dashboard/sessions/'.$legalSession->id,
-             'actor_id' => (int) $request->input('created_by'),
-         ]);
+-    public function destroy(Document $document): JsonResponse
++    public function destroy(Request $request, Document $document): JsonResponse
+     {
+         Storage::disk('public')->delete($document->file_path);
++
++        Log::info('audit.document.deleted', [
++            'document_id' => $document->id,
++            'actor_id' => optional($request->user())->id,
++        ]);
++
+         $document->delete();
  
-         $this->notificationEvents->assignmentChanged([
-             'type' => 'assignee_changed',
-             'title' => __('notifications.assignment_created_title'),
-             'message' => __('notifications.assignment_created_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
-             'entity_type' => 'session',
-@@ -96,50 +107,58 @@ public function store(Request $request)
-             'meta' => [
-                 'new_lawyer_id' => (int) $request->input('lawyer_id'),
-                 'entity_label' => __('notifications.entities.session'),
-             ],
-         ]);
+         return response()->json(['message' => 'Document deleted successfully']);
+     }
  
-  return response()->json(['message' => 'Legal session and event created successfully']);
+     private function applyIndexFilters($query, Request $request): void
+     {
+         $query->when($request->filled('document_tab_id'), fn ($builder) => $builder->where('document_tab_id', $request->integer('document_tab_id')))
+             ->when($request->filled('client_name'), function ($builder) use ($request) {
+                 $builder->whereHas('client', function ($subQuery) use ($request) {
+                     $subQuery->where('name', 'like', '%'.$request->string('client_name').'%');
+                 });
+             })
+             ->when($request->filled('leg_case_id'), fn ($builder) => $builder->where('leg_case_id', $request->integer('leg_case_id')))
+             ->when($request->filled('power_of_attorney_id'), fn ($builder) => $builder->where('power_of_attorney_id', $request->integer('power_of_attorney_id')))
+             ->when($request->filled('service_id'), fn ($builder) => $builder->where('service_id', $request->integer('service_id')))
+             ->latest('id');
+     }
  }
-     public function update(Request $request, $id)
-     {
-         $request->validate([
-             'leg_case_id' => 'required',
-             'court_id' => 'required',
-             'session_date' => 'required',
-             'session_roll' => 'required',
-             'cost1' => 'required|numeric',
-             'cost2' => 'numeric|nullable',
-             'cost3' => 'numeric|nullable',
-             'status' => 'required',
-             'lawyer_id' => 'required',
-             'created_by' => 'required',
-             'Judgment_operative' => 'required',
-             'result' => 'required',
-         ]);
- 
-+        $this->sessionSchedulingService->ensureNoConflicts(
-+            $request->input('lawyer_id'),
-+            $request->input('court_id'),
-+            $request->input('session_date'),
-+            $request->input('session_roll'),
-+            (int) $id,
-+        );
-+
-         $legalSession = LegalSession::findOrFail($id);
-         $this->authorize('update', $legalSession);
-         $previousLawyerId = $legalSession->lawyer_id;
-         $legalSession->update($request->all());
- 
-         $this->notificationEvents->entityChanged([
-             'type' => 'super_admin_entity_changed',
-             'title' => __('notifications.session_updated_title'),
-             'message' => __('notifications.session_updated_message', ['id' => $legalSession->id]),
-             'entity_type' => 'session',
-             'entity_id' => $legalSession->id,
-             'action' => 'updated',
-             'url' => '/dashboard/sessions/'.$legalSession->id,
-             'actor_id' => (int) $request->input('created_by'),
-         ]);
- 
-         if ((int) $previousLawyerId !== (int) $request->input('lawyer_id')) {
-             $this->notificationEvents->assignmentChanged([
-                 'type' => 'assignee_changed',
-                 'title' => __('notifications.assignment_updated_title'),
-                 'message' => __('notifications.assignment_updated_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
-                 'entity_type' => 'session',
-                 'entity_id' => $legalSession->id,
-                 'action' => $previousLawyerId ? 'reassigned' : 'assigned',
-                 'url' => '/dashboard/sessions/'.$legalSession->id,
-diff --git a/avocat-backend/app/Http/Controllers/Api/NotificationController.php b/avocat-backend/app/Http/Controllers/Api/NotificationController.php
-index 9a8b0953be81bb18744f2614e787d0fcb51df7bf..cb438204775d5961e27fb2c8aebae1ea08190bb7 100644
---- a/avocat-backend/app/Http/Controllers/Api/NotificationController.php
-+++ b/avocat-backend/app/Http/Controllers/Api/NotificationController.php
-@@ -1,63 +1,61 @@
+diff --git a/avocat-backend/app/Http/Controllers/Api/FinanceLedgerController.php b/avocat-backend/app/Http/Controllers/Api/FinanceLedgerController.php
+index e893a5c900a545b879f9d52eea878cf0d669ba41..1e55ef803197f60902e714b8f9a0c57d9fd0623c 100644
+--- a/avocat-backend/app/Http/Controllers/Api/FinanceLedgerController.php
++++ b/avocat-backend/app/Http/Controllers/Api/FinanceLedgerController.php
+@@ -1,50 +1,58 @@
  <?php
  
  namespace App\Http\Controllers\Api;
  
- use App\Http\Controllers\Controller;
--use App\Models\Notification;
-+use App\Models\User;
-+use App\Services\Notifications\UserNotificationService;
+-use App\Http\Controllers\Controller;
+ use App\Http\Requests\Finance\StoreLedgerEntryRequest;
+ use App\Http\Resources\Finance\LedgerEntryResource;
+ use App\Services\Finance\FinancialTransactionService;
  use Illuminate\Http\JsonResponse;
  use Illuminate\Http\Request;
++use Illuminate\Support\Facades\Log;
  
- class NotificationController extends Controller
+-class FinanceLedgerController extends Controller
++class FinanceLedgerController extends BaseApiController
  {
-+    public function __construct(private readonly UserNotificationService $notificationService)
-+    {
-+    }
-+
+     public function __construct(private readonly FinancialTransactionService $service)
+     {
+     }
+ 
      public function index(Request $request): JsonResponse
      {
--        $user = $request->user();
--        abort_unless($user, 401);
--
--        $query = Notification::query()
--            ->where('user_id', $user->id)
--            ->when($request->filled('state'), function ($q) use ($request) {
--                return match ($request->string('state')->toString()) {
--                    'read' => $q->where('read', true),
--                    'unread' => $q->where('read', false),
--                    default => $q,
--                };
--            })
--            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->string('type')->toString()))
--            ->when($request->filled('entity_type'), fn ($q) => $q->where('entity_type', $request->string('entity_type')->toString()))
--            ->orderByDesc('created_at');
--
--        return response()->json($query->paginate((int) $request->integer('per_page', 15)));
-+        $user = $this->authenticatedUser($request);
-+
-+        $notifications = $this->notificationService->listForUser($user->id, [
-+            'state' => $request->filled('state') ? $request->string('state')->toString() : null,
-+            'type' => $request->filled('type') ? $request->string('type')->toString() : null,
-+            'entity_type' => $request->filled('entity_type') ? $request->string('entity_type')->toString() : null,
-+        ], (int) $request->integer('per_page', 15));
-+
-+        return response()->json($notifications);
+         $rows = $this->service->list($request->all());
+ 
+-        return response()->json([
+-            'data' => LedgerEntryResource::collection($rows),
++        return $this->successResponse([
++            'items' => LedgerEntryResource::collection($rows),
+             'meta' => [
+                 'current_page' => $rows->currentPage(),
+                 'per_page' => $rows->perPage(),
+                 'total' => $rows->total(),
+             ],
+-        ]);
++        ], 'Ledger entries retrieved successfully.');
      }
  
-     public function markRead(Request $request, int $notificationId): JsonResponse
+     public function store(StoreLedgerEntryRequest $request): JsonResponse
      {
--        $user = $request->user();
--        abort_unless($user, 401);
--
--        $notification = Notification::query()->where('user_id', $user->id)->findOrFail($notificationId);
--        $notification->update(['read' => true]);
-+        $user = $this->authenticatedUser($request);
-+        $this->notificationService->markAsRead($user->id, $notificationId);
+         $entry = $this->service->create($request->validated() + [
+             'created_by' => $request->user()?->id,
+             'updated_by' => $request->user()?->id,
+         ]);
  
-         return response()->json(['status' => 'success']);
-     }
+         if ($entry->leg_case_id) {
+             $this->service->syncCaseTotals((int) $entry->leg_case_id);
+         }
  
-     public function markReadAll(Request $request): JsonResponse
-     {
--        $user = $request->user();
--        abort_unless($user, 401);
--
--        Notification::query()->where('user_id', $user->id)->where('read', false)->update(['read' => true]);
-+        $user = $this->authenticatedUser($request);
-+        $this->notificationService->markAllAsRead($user->id);
- 
-         return response()->json(['status' => 'success']);
-     }
- 
-     public function unreadCount(Request $request): JsonResponse
-     {
--        $user = $request->user();
--        abort_unless($user, 401);
--
--        $count = Notification::query()->where('user_id', $user->id)->where('read', false)->count();
-+        $user = $this->authenticatedUser($request);
-+        $count = $this->notificationService->unreadCount($user->id);
- 
-         return response()->json(['unread_count' => $count]);
-     }
-+
-+    private function authenticatedUser(Request $request): User
-+    {
-+        $user = $request->user();
-+        abort_unless($user instanceof User, 401);
-+
-+        return $user;
-+    }
- }
-diff --git a/avocat-backend/app/Services/CaseWorkflowService.php b/avocat-backend/app/Services/CaseWorkflowService.php
-new file mode 100644
-index 0000000000000000000000000000000000000000..486031a431bdf4b8e17634cf5d51f3d9ce6cc749
---- /dev/null
-+++ b/avocat-backend/app/Services/CaseWorkflowService.php
-@@ -0,0 +1,63 @@
-+<?php
-+
-+namespace App\Services;
-+
-+use Illuminate\Validation\ValidationException;
-+
-+class CaseWorkflowService
-+{
-+    public const STATUS_PREPARING = 'قيد التجهيز';
-+
-+    public const STATUS_IN_PROGRESS = 'متداولة';
-+
-+    public const STATUS_COMPLETED = 'منتهية';
-+
-+    public const STATUS_SUSPENDED = 'معلقة';
-+
-+    /**
-+     * @return array<string, array<int, string>>
-+     */
-+    public function transitionsMap(): array
-+    {
-+        return [
-+            self::STATUS_PREPARING => [self::STATUS_IN_PROGRESS, self::STATUS_SUSPENDED],
-+            self::STATUS_IN_PROGRESS => [self::STATUS_COMPLETED, self::STATUS_SUSPENDED],
-+            self::STATUS_SUSPENDED => [self::STATUS_IN_PROGRESS],
-+            self::STATUS_COMPLETED => [],
-+        ];
-+    }
-+
-+    /**
-+     * @return array<int, string>
-+     */
-+    public function allowedNextStatuses(string $currentStatus): array
-+    {
-+        return $this->transitionsMap()[$currentStatus] ?? [];
-+    }
-+
-+    public function canTransition(string $currentStatus, string $nextStatus): bool
-+    {
-+        if ($currentStatus === $nextStatus) {
-+            return true;
-+        }
-+
-+        return in_array($nextStatus, $this->allowedNextStatuses($currentStatus), true);
-+    }
-+
-+    public function validateTransition(string $currentStatus, string $nextStatus): void
-+    {
-+        if ($this->canTransition($currentStatus, $nextStatus)) {
-+            return;
-+        }
-+
-+        $allowed = $this->allowedNextStatuses($currentStatus);
-+        $allowedMessage = empty($allowed) ? 'لا توجد انتقالات متاحة.' : implode('، ', $allowed);
-+
-+        throw ValidationException::withMessages([
-+            'status' => [
-+                "لا يمكن نقل الحالة من {$currentStatus} إلى {$nextStatus}. الحالات المسموحة: {$allowedMessage}",
-+            ],
+-        return response()->json(['data' => new LedgerEntryResource($entry)], 201);
++        Log::info('audit.finance.ledger_entry_created', [
++            'ledger_entry_id' => $entry->id,
++            'type' => $entry->type,
++            'actor_id' => $request->user()?->id,
++            'leg_case_id' => $entry->leg_case_id,
++            'amount' => $entry->amount,
 +        ]);
-+    }
-+}
 +
-diff --git a/avocat-backend/app/Services/Notifications/UserNotificationService.php b/avocat-backend/app/Services/Notifications/UserNotificationService.php
++        return $this->successResponse(new LedgerEntryResource($entry), 'Ledger entry created successfully.', 201);
+     }
+ 
+     public function caseSummary(int $id): JsonResponse
+     {
+-        return response()->json(['data' => $this->service->summarizeCase($id)]);
++        return $this->successResponse($this->service->summarizeCase($id), 'Case summary retrieved successfully.');
+     }
+ }
+diff --git a/avocat-backend/docs/openapi.yaml b/avocat-backend/docs/openapi.yaml
 new file mode 100644
-index 0000000000000000000000000000000000000000..294bc7dad80db022aa7b733674a06191f69f5339
+index 0000000000000000000000000000000000000000..97159d070a093f93e622374b646706d09ab64f1a
 --- /dev/null
-+++ b/avocat-backend/app/Services/Notifications/UserNotificationService.php
-@@ -0,0 +1,51 @@
-+<?php
-+
-+namespace App\Services\Notifications;
-+
-+use App\Models\Notification;
-+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-+
-+class UserNotificationService
-+{
-+    public function listForUser(int|string $userId, array $filters = [], int $perPage = 15): LengthAwarePaginator
-+    {
-+        return Notification::query()
-+            ->where('user_id', $userId)
-+            ->when(isset($filters['state']), function ($query) use ($filters) {
-+                return match ($filters['state']) {
-+                    'read' => $query->where('read', true),
-+                    'unread' => $query->where('read', false),
-+                    default => $query,
-+                };
-+            })
-+            ->when(isset($filters['type']), fn ($query) => $query->where('type', $filters['type']))
-+            ->when(isset($filters['entity_type']), fn ($query) => $query->where('entity_type', $filters['entity_type']))
-+            ->orderByDesc('created_at')
-+            ->paginate($perPage);
-+    }
-+
-+    public function markAsRead(int|string $userId, int $notificationId): void
-+    {
-+        Notification::query()
-+            ->where('user_id', $userId)
-+            ->findOrFail($notificationId)
-+            ->update(['read' => true]);
-+    }
-+
-+    public function markAllAsRead(int|string $userId): void
-+    {
-+        Notification::query()
-+            ->where('user_id', $userId)
-+            ->where('read', false)
-+            ->update(['read' => true]);
-+    }
-+
-+    public function unreadCount(int|string $userId): int
-+    {
-+        return Notification::query()
-+            ->where('user_id', $userId)
-+            ->where('read', false)
-+            ->count();
-+    }
-+}
-+
-diff --git a/avocat-backend/app/Services/SessionSchedulingService.php b/avocat-backend/app/Services/SessionSchedulingService.php
-new file mode 100644
-index 0000000000000000000000000000000000000000..1051f42c5050ee93765e925ca724c657cb556585
---- /dev/null
-+++ b/avocat-backend/app/Services/SessionSchedulingService.php
-@@ -0,0 +1,47 @@
-+<?php
-+
-+namespace App\Services;
-+
-+use App\Models\LegalSession;
-+use Illuminate\Validation\ValidationException;
-+
-+class SessionSchedulingService
-+{
-+    public function ensureNoConflicts(
-+        int|string $lawyerId,
-+        int|string $courtId,
-+        string $sessionDate,
-+        ?string $sessionRoll = null,
-+        ?int $ignoreSessionId = null,
-+    ): void {
-+        $lawyerConflict = LegalSession::query()
-+            ->where('lawyer_id', $lawyerId)
-+            ->whereDate('session_date', $sessionDate)
-+            ->when($ignoreSessionId, fn ($query) => $query->where('id', '!=', $ignoreSessionId))
-+            ->exists();
-+
-+        if ($lawyerConflict) {
-+            throw ValidationException::withMessages([
-+                'session_date' => ['يوجد تعارض: المحامي لديه جلسة أخرى في نفس التاريخ.'],
-+            ]);
-+        }
-+
-+        if (! $sessionRoll) {
-+            return;
-+        }
-+
-+        $courtRollConflict = LegalSession::query()
-+            ->where('court_id', $courtId)
-+            ->whereDate('session_date', $sessionDate)
-+            ->where('session_roll', $sessionRoll)
-+            ->when($ignoreSessionId, fn ($query) => $query->where('id', '!=', $ignoreSessionId))
-+            ->exists();
-+
-+        if ($courtRollConflict) {
-+            throw ValidationException::withMessages([
-+                'session_roll' => ['يوجد تعارض: رقم الرول محجوز بالفعل لنفس المحكمة والتاريخ.'],
-+            ]);
-+        }
-+    }
-+}
-+
++++ b/avocat-backend/docs/openapi.yaml
+@@ -0,0 +1,81 @@
++openapi: 3.0.3
++info:
++  title: Avocat Backend API
++  version: 1.0.0
++  description: |
++    توثيق مبدئي لمسارات الباك-إند الأساسية. يركز هذا الملف على
++    المسارات ذات الأولوية في خطة التطوير (مصادقة، قضايا، جلسات، مستندات، مالية).
++servers:
++  - url: /api/v1
++paths:
++  /login:
++    post:
++      summary: User login
++      tags: [Auth]
++      requestBody:
++        required: true
++        content:
++          application/json:
++            schema:
++              type: object
++              required: [email, password]
++              properties:
++                email: { type: string, format: email }
++                password: { type: string }
++      responses:
++        '200':
++          description: Login successful
++        '401':
++          description: Invalid credentials
++  /legal-cases:
++    get:
++      summary: List legal cases
++      tags: [Cases]
++      responses:
++        '200': { description: Cases retrieved }
++    post:
++      summary: Create legal case
++      tags: [Cases]
++      responses:
++        '201': { description: Case created }
++  /legal_sessions:
++    get:
++      summary: List legal sessions
++      tags: [Sessions]
++      responses:
++        '200': { description: Sessions retrieved }
++    post:
++      summary: Create legal session
++      tags: [Sessions]
++      responses:
++        '200': { description: Session created }
++  /documents:
++    get:
++      summary: List documents
++      tags: [Documents]
++      responses:
++        '200': { description: Documents retrieved }
++    post:
++      summary: Upload document
++      tags: [Documents]
++      responses:
++        '201': { description: Document created }
++  /finance/ledger:
++    get:
++      summary: List financial ledger entries
++      tags: [Finance]
++      responses:
++        '200': { description: Ledger entries retrieved }
++    post:
++      summary: Create financial ledger entry
++      tags: [Finance]
++      responses:
++        '201': { description: Ledger entry created }
++components:
++  securitySchemes:
++    sanctumAuth:
++      type: http
++      scheme: bearer
++      bearerFormat: JWT
++security:
++  - sanctumAuth: []
 diff --git a/avocat-backend/routes/api.php b/avocat-backend/routes/api.php
-index 6979966b2856005ae8956bd81b42fb48afb5fa8c..c7ef75aec1aba1d5ac73f22260773f35c7de4420 100644
+index c7ef75aec1aba1d5ac73f22260773f35c7de4420..837d143b14af3145d4c98035b09dcd805faf0a55 100644
 --- a/avocat-backend/routes/api.php
 +++ b/avocat-backend/routes/api.php
-@@ -79,50 +79,51 @@
+@@ -76,52 +76,50 @@
+         Route::post('doc-types', [LegalDocToolsController::class, 'addDocType']);
+         Route::put('doc-types/{id}', [LegalDocToolsController::class, 'editDocType']);
+         Route::delete('doc-types/{id}', [LegalDocToolsController::class, 'deleteDocTypeAndDocSubType']);
  
          Route::post('doc-sub-types', [LegalDocToolsController::class, 'addDocSubType']);
          Route::put('doc-sub-types/{id}', [LegalDocToolsController::class, 'editDocSubType']);
@@ -661,10 +493,10 @@ index 6979966b2856005ae8956bd81b42fb48afb5fa8c..c7ef75aec1aba1d5ac73f22260773f35
          Route::apiResource('case_types', CaseTypeController::class);
          Route::apiResource('procedure_types', ProcedureTypeController::class);
          Route::apiResource('court_levels', CourtLevelController::class);
-         Route::apiResource('case_types', CaseTypeController::class);
-         Route::apiResource('procedure_types', ProcedureTypeController::class);
+-        Route::apiResource('case_types', CaseTypeController::class);
+-        Route::apiResource('procedure_types', ProcedureTypeController::class);
          Route::apiResource('legal-cases', LegCaseController::class);
-+        Route::get('legal-cases/{id}/workflow-transitions', [LegCaseController::class, 'workflowTransitions']);
+         Route::get('legal-cases/{id}/workflow-transitions', [LegCaseController::class, 'workflowTransitions']);
          Route::apiResource('procedures', ProcedureController::class);
          Route::apiResource('services', ServiceController::class);
          Route::apiResource('power-of-attorneys', PowerOfAttorneyController::class);
@@ -688,253 +520,58 @@ index 6979966b2856005ae8956bd81b42fb48afb5fa8c..c7ef75aec1aba1d5ac73f22260773f35
          Route::get('cases/{case_id}/sessions', [CaseReportingController::class, 'sessions']);
          Route::get('cases/{case_id}/procedures', [CaseReportingController::class, 'procedures']);
          Route::get('cases/{case_id}/clients', [CaseReportingController::class, 'clients']);
-         Route::get('cases/{case_id}/services', [CaseReportingController::class, 'services']);
-         Route::post('legal-cases/{legCaseId}/add_clients', [LegCaseController::class, 'addClients']);
-diff --git a/avocat-backend/tests/Feature/NotificationSystemTest.php b/avocat-backend/tests/Feature/NotificationSystemTest.php
-index ed0dd86dd406ef0956b39bacd2230a09aefa07aa..969a996264bf704e7063feb29583fc2acc0b5143 100644
---- a/avocat-backend/tests/Feature/NotificationSystemTest.php
-+++ b/avocat-backend/tests/Feature/NotificationSystemTest.php
-@@ -154,26 +154,79 @@ public function test_notifications_api_list_mark_read_and_unread_count(): void
-         Notification::query()->create([
-             'user_id' => $user->id,
-             'event_id' => $eventId,
-             'type' => 'x',
-             'title' => 't',
-             'message' => 'm',
-             'entity_type' => 'case',
-             'entity_id' => '1',
-             'action' => 'created',
-             'url' => '/dashboard/cases/1',
-             'actor_id' => null,
-             'event_uuid' => (string) str()->uuid(),
-             'meta' => [],
-             'read' => false,
-         ]);
- 
-         Sanctum::actingAs($user);
- 
-         $list = $this->getJson('/api/v1/notifications');
-         $list->assertOk()->assertJsonPath('data.0.read', false);
- 
-         $notificationId = $list->json('data.0.id');
-         $this->postJson('/api/v1/notifications/'.$notificationId.'/read')->assertOk();
-         $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
-     }
-+
-+    public function test_notifications_api_filters_and_mark_all_read(): void
-+    {
-+        $user = User::factory()->create();
-+        $eventId = \App\Models\Event::query()->create([
-+            'user_id' => $user->id,
-+            'date' => now(),
-+            'title' => 'seed',
-+            'description' => 'seed',
-+        ])->id;
-+
-+        Notification::query()->create([
-+            'user_id' => $user->id,
-+            'event_id' => $eventId,
-+            'type' => 'hearing',
-+            'title' => 't1',
-+            'message' => 'm1',
-+            'entity_type' => 'case',
-+            'entity_id' => '1',
-+            'action' => 'created',
-+            'url' => '/dashboard/cases/1',
-+            'actor_id' => null,
-+            'event_uuid' => (string) str()->uuid(),
-+            'meta' => [],
-+            'read' => false,
-+        ]);
-+
-+        Notification::query()->create([
-+            'user_id' => $user->id,
-+            'event_id' => $eventId,
-+            'type' => 'task',
-+            'title' => 't2',
-+            'message' => 'm2',
-+            'entity_type' => 'session',
-+            'entity_id' => '2',
-+            'action' => 'updated',
-+            'url' => '/dashboard/sessions/2',
-+            'actor_id' => null,
-+            'event_uuid' => (string) str()->uuid(),
-+            'meta' => [],
-+            'read' => true,
-+        ]);
-+
-+        Sanctum::actingAs($user);
-+
-+        $this->getJson('/api/v1/notifications?state=unread&type=hearing&entity_type=case')
-+            ->assertOk()
-+            ->assertJsonCount(1, 'data')
-+            ->assertJsonPath('data.0.type', 'hearing');
-+
-+        $this->postJson('/api/v1/notifications/read-all')->assertOk();
-+        $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
-+    }
- }
-diff --git a/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php b/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php
+diff --git a/avocat-backend/tests/Feature/ApiConsistencyAndRoutesTest.php b/avocat-backend/tests/Feature/ApiConsistencyAndRoutesTest.php
 new file mode 100644
-index 0000000000000000000000000000000000000000..4a4b9780982e8e74c69ec823d39e6c73f61b1a3b
+index 0000000000000000000000000000000000000000..4b6db332e0d14fe0436b071add646a682ed28837
 --- /dev/null
-+++ b/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php
-@@ -0,0 +1,38 @@
++++ b/avocat-backend/tests/Feature/ApiConsistencyAndRoutesTest.php
+@@ -0,0 +1,49 @@
 +<?php
 +
-+namespace Tests\Unit;
++namespace Tests\Feature;
 +
-+use App\Services\CaseWorkflowService;
-+use Illuminate\Validation\ValidationException;
++use Illuminate\Http\Request;
++use Illuminate\Support\Facades\Cache;
++use Illuminate\Support\Facades\Route;
 +use Tests\TestCase;
 +
-+class CaseWorkflowServiceTest extends TestCase
++class ApiConsistencyAndRoutesTest extends TestCase
 +{
-+    public function test_allows_valid_transition(): void
++    public function test_case_status_endpoint_uses_standard_success_envelope(): void
 +    {
-+        $service = new CaseWorkflowService();
++        Cache::put('case_status:options', [
++            'lblDegree' => 'درجة',
++            'ddlCourtOptions' => ['محكمة 1'],
++            'caseTypeOptions' => ['نوع 1'],
++            'yearOptions' => ['2026'],
++        ], now()->addMinutes(5));
 +
-+        $this->assertTrue(
-+            $service->canTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_IN_PROGRESS)
-+        );
++        $response = $this->getJson('/api/v1/case-status');
++
++        $response->assertOk()
++            ->assertJsonPath('status', 'success')
++            ->assertJsonPath('message', 'Case status options retrieved successfully.')
++            ->assertJsonPath('data.lblDegree', 'درجة');
 +    }
 +
-+    public function test_rejects_invalid_transition(): void
++    public function test_case_and_procedure_type_resource_routes_are_not_duplicated(): void
 +    {
-+        $service = new CaseWorkflowService();
++        $allRoutes = collect(Route::getRoutes()->getRoutes())
++            ->map(fn ($route) => [$route->methods(), '/'.$route->uri()]);
 +
-+        $this->assertFalse(
-+            $service->canTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_COMPLETED)
-+        );
-+    }
++        $caseTypesIndexCount = $allRoutes
++            ->filter(fn ($route) => in_array('GET', $route[0], true) && $route[1] === '/api/v1/case_types')
++            ->count();
 +
-+    public function test_validate_transition_throws_with_clear_error_message(): void
-+    {
-+        $service = new CaseWorkflowService();
++        $procedureTypesIndexCount = $allRoutes
++            ->filter(fn ($route) => in_array('GET', $route[0], true) && $route[1] === '/api/v1/procedure_types')
++            ->count();
 +
-+        $this->expectException(ValidationException::class);
++        $this->assertSame(1, $caseTypesIndexCount);
++        $this->assertSame(1, $procedureTypesIndexCount);
 +
-+        $service->validateTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_COMPLETED);
++        // smoke check one action binding
++        $route = Route::getRoutes()->match(Request::create('/api/v1/case_types', 'GET'));
++        $this->assertSame('App\\Http\\Controllers\\Api\\CaseTypeController@index', $route->getActionName());
 +    }
 +}
-+
-diff --git a/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php b/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php
-new file mode 100644
-index 0000000000000000000000000000000000000000..01be7cf6678fb0de9dcf282b905db4e2ef923d35
---- /dev/null
-+++ b/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php
-@@ -0,0 +1,114 @@
-+<?php
-+
-+namespace Tests\Unit;
-+
-+use App\Models\CaseSubType;
-+use App\Models\CaseType;
-+use App\Models\Court;
-+use App\Models\CourtLevel;
-+use App\Models\CourtType;
-+use App\Models\Lawyer;
-+use App\Models\LegalSession;
-+use App\Models\LegalSessionType;
-+use App\Models\LegCase;
-+use App\Models\User;
-+use App\Services\SessionSchedulingService;
-+use Illuminate\Foundation\Testing\RefreshDatabase;
-+use Illuminate\Validation\ValidationException;
-+use Tests\TestCase;
-+
-+class SessionSchedulingServiceTest extends TestCase
-+{
-+    use RefreshDatabase;
-+
-+    public function test_throws_validation_when_lawyer_has_conflicting_session_on_same_date(): void
-+    {
-+        $data = $this->seedSessionDependencies();
-+        LegalSession::query()->create([
-+            'legal_session_type_id' => $data['sessionType']->id,
-+            'leg_case_id' => $data['legCase']->id,
-+            'court_id' => $data['court']->id,
-+            'session_date' => '2026-05-01',
-+            'lawyer_id' => $data['lawyer']->id,
-+            'created_by' => $data['user']->id,
-+            'session_roll' => 'A1',
-+        ]);
-+
-+        $service = new SessionSchedulingService();
-+
-+        $this->expectException(ValidationException::class);
-+        $service->ensureNoConflicts($data['lawyer']->id, $data['court']->id, '2026-05-01', 'B2');
-+    }
-+
-+    public function test_throws_validation_when_court_roll_conflicts_on_same_date(): void
-+    {
-+        $data = $this->seedSessionDependencies();
-+        $otherLawyer = Lawyer::query()->create([
-+            'name' => 'Lawyer B',
-+            'birthdate' => '1990-01-01',
-+            'identity_number' => '10000000000099',
-+            'law_reg_num' => 'REG-99',
-+            'lawyer_class' => 'إبتدائي',
-+            'email' => 'lawyer-b@example.test',
-+            'gender' => 'ذكر',
-+            'religion' => 'مسلم',
-+            'user_id' => User::factory()->create()->id,
-+        ]);
-+
-+        LegalSession::query()->create([
-+            'legal_session_type_id' => $data['sessionType']->id,
-+            'leg_case_id' => $data['legCase']->id,
-+            'court_id' => $data['court']->id,
-+            'session_date' => '2026-05-01',
-+            'lawyer_id' => $data['lawyer']->id,
-+            'created_by' => $data['user']->id,
-+            'session_roll' => 'R-10',
-+        ]);
-+
-+        $service = new SessionSchedulingService();
-+
-+        $this->expectException(ValidationException::class);
-+        $service->ensureNoConflicts($otherLawyer->id, $data['court']->id, '2026-05-01', 'R-10');
-+    }
-+
-+    /**
-+     * @return array<string, mixed>
-+     */
-+    private function seedSessionDependencies(): array
-+    {
-+        $user = User::factory()->create();
-+        $caseType = CaseType::query()->create(['name' => 'Civil']);
-+        $caseSubType = CaseSubType::query()->create(['name' => 'Primary', 'case_type_id' => $caseType->id]);
-+        $legCase = LegCase::query()->create([
-+            'slug' => 'CASE-1',
-+            'title' => 'Case',
-+            'description' => 'Desc',
-+            'case_type_id' => $caseType->id,
-+            'case_sub_type_id' => $caseSubType->id,
-+            'client_capacity' => 'plaintiff',
-+            'created_by' => $user->id,
-+        ]);
-+        $sessionType = LegalSessionType::query()->create(['name' => 'جلسة']);
-+        $courtType = CourtType::query()->create(['name' => 'نوع']);
-+        $courtLevel = CourtLevel::query()->create(['name' => 'مستوى']);
-+        $court = Court::query()->create([
-+            'name' => 'Court 1',
-+            'court_type_id' => $courtType->id,
-+            'court_level_id' => $courtLevel->id,
-+        ]);
-+        $lawyer = Lawyer::query()->create([
-+            'name' => 'Lawyer A',
-+            'birthdate' => '1990-01-01',
-+            'identity_number' => '10000000000001',
-+            'law_reg_num' => 'REG-1',
-+            'lawyer_class' => 'إبتدائي',
-+            'email' => 'lawyer-a@example.test',
-+            'gender' => 'ذكر',
-+            'religion' => 'مسلم',
-+            'user_id' => $user->id,
-+        ]);
-+
-+        return compact('user', 'legCase', 'sessionType', 'court', 'lawyer');
-+    }
-+}
-+

@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: Avocat Backend API
+  version: 1.0.0
+  description: |
+    توثيق مبدئي لمسارات الباك-إند الأساسية. يركز هذا الملف على
+    المسارات ذات الأولوية في خطة التطوير (مصادقة، قضايا، جلسات، مستندات، مالية).
+servers:
+  - url: /api/v1
+paths:
+  /login:
+    post:
+      summary: User login
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /legal-cases:
+    get:
+      summary: List legal cases
+      tags: [Cases]
+      responses:
+        '200': { description: Cases retrieved }
+    post:
+      summary: Create legal case
+      tags: [Cases]
+      responses:
+        '201': { description: Case created }
+  /legal_sessions:
+    get:
+      summary: List legal sessions
+      tags: [Sessions]
+      responses:
+        '200': { description: Sessions retrieved }
+    post:
+      summary: Create legal session
+      tags: [Sessions]
+      responses:
+        '200': { description: Session created }
+  /documents:
+    get:
+      summary: List documents
+      tags: [Documents]
+      responses:
+        '200': { description: Documents retrieved }
+    post:
+      summary: Upload document
+      tags: [Documents]
+      responses:
+        '201': { description: Document created }
+  /finance/ledger:
+    get:
+      summary: List financial ledger entries
+      tags: [Finance]
+      responses:
+        '200': { description: Ledger entries retrieved }
+    post:
+      summary: Create financial ledger entry
+      tags: [Finance]
+      responses:
+        '201': { description: Ledger entry created }
+components:
+  securitySchemes:
+    sanctumAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - sanctumAuth: []

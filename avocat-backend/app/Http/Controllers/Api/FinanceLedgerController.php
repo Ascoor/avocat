@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreLedgerEntryRequest;
 use App\Http\Resources\Finance\LedgerEntryResource;
 use App\Services\Finance\FinancialTransactionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class FinanceLedgerController extends Controller
+class FinanceLedgerController extends BaseApiController
 {
     public function __construct(private readonly FinancialTransactionService $service)
     {
@@ -19,14 +19,14 @@ class FinanceLedgerController extends Controller
     {
         $rows = $this->service->list($request->all());
 
-        return response()->json([
-            'data' => LedgerEntryResource::collection($rows),
+        return $this->successResponse([
+            'items' => LedgerEntryResource::collection($rows),
             'meta' => [
                 'current_page' => $rows->currentPage(),
                 'per_page' => $rows->perPage(),
                 'total' => $rows->total(),
             ],
-        ]);
+        ], 'Ledger entries retrieved successfully.');
     }
 
     public function store(StoreLedgerEntryRequest $request): JsonResponse
@@ -40,11 +40,19 @@ class FinanceLedgerController extends Controller
             $this->service->syncCaseTotals((int) $entry->leg_case_id);
         }
 
-        return response()->json(['data' => new LedgerEntryResource($entry)], 201);
+        Log::info('audit.finance.ledger_entry_created', [
+            'ledger_entry_id' => $entry->id,
+            'type' => $entry->type,
+            'actor_id' => $request->user()?->id,
+            'leg_case_id' => $entry->leg_case_id,
+            'amount' => $entry->amount,
+        ]);
+
+        return $this->successResponse(new LedgerEntryResource($entry), 'Ledger entry created successfully.', 201);
     }
 
     public function caseSummary(int $id): JsonResponse
     {
-        return response()->json(['data' => $this->service->summarizeCase($id)]);
+        return $this->successResponse($this->service->summarizeCase($id), 'Case summary retrieved successfully.');
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Documentable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
@@ -62,6 +63,17 @@ class DocumentController extends Controller
             ]);
         }
 
+        Log::info('audit.document.created', [
+            'document_id' => $document->id,
+            'actor_id' => optional($request->user())->id,
+            'linked_entities' => [
+                'client_id' => $document->client_id,
+                'leg_case_id' => $document->leg_case_id,
+                'power_of_attorney_id' => $document->power_of_attorney_id,
+                'service_id' => $document->service_id,
+            ],
+        ]);
+
         return response()->json($document->load(self::DOCUMENT_RELATIONS), 201);
     }
 
@@ -89,12 +101,23 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
+        Log::info('audit.document.updated', [
+            'document_id' => $document->id,
+            'actor_id' => optional($request->user())->id,
+        ]);
+
         return response()->json($document->load(self::DOCUMENT_RELATIONS));
     }
 
-    public function destroy(Document $document): JsonResponse
+    public function destroy(Request $request, Document $document): JsonResponse
     {
         Storage::disk('public')->delete($document->file_path);
+
+        Log::info('audit.document.deleted', [
+            'document_id' => $document->id,
+            'actor_id' => optional($request->user())->id,
+        ]);
+
         $document->delete();
 
         return response()->json(['message' => 'Document deleted successfully']);
