@@ -11,9 +11,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Services\Notifications\NotificationEventService;
+use App\Services\CaseWorkflowService;
 class LegCaseController extends Controller
 {
-    public function __construct(private readonly NotificationEventService $notificationEvents)
+    public function __construct(
+        private readonly NotificationEventService $notificationEvents,
+        private readonly CaseWorkflowService $caseWorkflowService,
+    )
     {
     }
 
@@ -179,11 +183,22 @@ class LegCaseController extends Controller
                  'litigants_name' => 'nullable|string',
                  'litigants_phone' => 'nullable|string',
                  'client_capacity' => 'required|string',
+                 'status' => ['sometimes', 'string', Rule::in([
+                     CaseWorkflowService::STATUS_PREPARING,
+                     CaseWorkflowService::STATUS_IN_PROGRESS,
+                     CaseWorkflowService::STATUS_COMPLETED,
+                     CaseWorkflowService::STATUS_SUSPENDED,
+                 ])],
                  'updated_by' => 'required|integer',
              ]);
      
              $legCase = LegCase::findOrFail($id);
              $this->authorize('update', $legCase);
+
+             if (array_key_exists('status', $validatedData)) {
+                 $this->caseWorkflowService->validateTransition((string) $legCase->status, (string) $validatedData['status']);
+             }
+
              $legCase->update($validatedData);
 
 
@@ -393,8 +408,8 @@ public function getLegCaseSearch(Request $request)
         DB::beginTransaction();
 
         try {
-            if ($legCase->sessions()->exists()) {
-                $legCase->sessions()->detach();
+            if ($legCase->legalSessions()->exists()) {
+                $legCase->legalSessions()->delete();
             }
 
             if ($legCase->procedures()->exists()) {
@@ -421,4 +436,22 @@ public function getLegCaseSearch(Request $request)
         }
 
 }
+
+    public function workflowTransitions(int $id)
+    {
+        $legCase = LegCase::find($id);
+
+        if (! $legCase) {
+            return response()->json(['error' => 'LegCase not found'], 404);
+        }
+
+        $this->authorize('view', $legCase);
+
+        return response()->json([
+            'data' => [
+                'current_status' => $legCase->status,
+                'allowed_next_statuses' => $this->caseWorkflowService->allowedNextStatuses((string) $legCase->status),
+            ],
+        ]);
+    }
 }

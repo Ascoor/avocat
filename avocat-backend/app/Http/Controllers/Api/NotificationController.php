@@ -3,61 +3,59 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notification;
+use App\Models\User;
+use App\Services\Notifications\UserNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    public function __construct(private readonly UserNotificationService $notificationService)
+    {
+    }
+
     public function index(Request $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user, 401);
+        $user = $this->authenticatedUser($request);
 
-        $query = Notification::query()
-            ->where('user_id', $user->id)
-            ->when($request->filled('state'), function ($q) use ($request) {
-                return match ($request->string('state')->toString()) {
-                    'read' => $q->where('read', true),
-                    'unread' => $q->where('read', false),
-                    default => $q,
-                };
-            })
-            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->string('type')->toString()))
-            ->when($request->filled('entity_type'), fn ($q) => $q->where('entity_type', $request->string('entity_type')->toString()))
-            ->orderByDesc('created_at');
+        $notifications = $this->notificationService->listForUser($user->id, [
+            'state' => $request->filled('state') ? $request->string('state')->toString() : null,
+            'type' => $request->filled('type') ? $request->string('type')->toString() : null,
+            'entity_type' => $request->filled('entity_type') ? $request->string('entity_type')->toString() : null,
+        ], (int) $request->integer('per_page', 15));
 
-        return response()->json($query->paginate((int) $request->integer('per_page', 15)));
+        return response()->json($notifications);
     }
 
     public function markRead(Request $request, int $notificationId): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user, 401);
-
-        $notification = Notification::query()->where('user_id', $user->id)->findOrFail($notificationId);
-        $notification->update(['read' => true]);
+        $user = $this->authenticatedUser($request);
+        $this->notificationService->markAsRead($user->id, $notificationId);
 
         return response()->json(['status' => 'success']);
     }
 
     public function markReadAll(Request $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user, 401);
-
-        Notification::query()->where('user_id', $user->id)->where('read', false)->update(['read' => true]);
+        $user = $this->authenticatedUser($request);
+        $this->notificationService->markAllAsRead($user->id);
 
         return response()->json(['status' => 'success']);
     }
 
     public function unreadCount(Request $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user, 401);
-
-        $count = Notification::query()->where('user_id', $user->id)->where('read', false)->count();
+        $user = $this->authenticatedUser($request);
+        $count = $this->notificationService->unreadCount($user->id);
 
         return response()->json(['unread_count' => $count]);
+    }
+
+    private function authenticatedUser(Request $request): User
+    {
+        $user = $request->user();
+        abort_unless($user instanceof User, 401);
+
+        return $user;
     }
 }

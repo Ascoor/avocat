@@ -1,295 +1,940 @@
-diff --git a/docs/backend-development-prompts-ar.md b/docs/backend-development-prompts-ar.md
+diff --git a/avocat-backend/app/Http/Controllers/Api/LegCaseController.php b/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
+index 8cf9d5d7a265301236c14d6b2c49073bd6f75174..98492a1e4fe6c089e81b26c8ea591b2a4d1d35ce 100644
+--- a/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
++++ b/avocat-backend/app/Http/Controllers/Api/LegCaseController.php
+@@ -1,41 +1,45 @@
+ <?php
+ 
+ namespace App\Http\Controllers\Api;
+ 
+ use App\Http\Controllers\Controller;
+ 
+ use App\Models\{LegCase, Court, CaseType };
+ use Illuminate\Http\Request;
+ use Illuminate\Support\Facades\DB;
+ use Illuminate\Validation\Rule;
+ use Illuminate\Support\Facades\Log;
+ use Illuminate\Database\Eloquent\ModelNotFoundException;
+ use App\Services\Notifications\NotificationEventService;
++use App\Services\CaseWorkflowService;
+ class LegCaseController extends Controller
+ {
+-    public function __construct(private readonly NotificationEventService $notificationEvents)
++    public function __construct(
++        private readonly NotificationEventService $notificationEvents,
++        private readonly CaseWorkflowService $caseWorkflowService,
++    )
+     {
+     }
+ 
+     /**
+      * Retrieves active legal cases for list views with lightweight relations.
+      *
+      * @return JsonResponse The JSON response containing the legal cases.
+      */
+     public function index(Request $request)
+     {
+         $isReportMode = $request->boolean('report_mode');
+ 
+         $query = LegCase::query()
+             ->select([
+                 'id', 'slug', 'title', 'client_capacity', 'status', 'case_type_id',
+                 'case_sub_type_id', 'created_at', 'updated_at',
+             ])
+             ->with([
+                 'clients:id,name',
+                 'caseSubType:id,name',
+             ])
+             ->withCount(['procedures', 'legalSessions']);
+ 
+         if (! $isReportMode) {
+             $query->whereIn('status', ['قيد التجهيز', 'متداولة']);
+@@ -157,55 +161,66 @@ public function show($id)
+         $this->authorize('view', $legCase);
+ 
+         return response()->json(['leg_case' => $legCase]);
+     }
+ 
+     /**
+      * Update a Leg Case.
+      *
+      * @param \Illuminate\Http\Request $request The HTTP request.
+      * @param int $id The ID of the Leg Case to update.
+      * @return \Illuminate\Http\JsonResponse The JSON response.
+      */
+ 
+      public function update(Request $request, $id): \Illuminate\Http\JsonResponse
+      {
+          try {
+              $validatedData = $request->validate([
+                  'slug' => ['required', 'string', 'max:255', Rule::unique('leg_cases')->ignore($id)],
+                  'title' => 'required|string|max:255',
+                  'description' => 'required|string',
+                  'case_type_id' => 'required|integer',
+                  'case_sub_type_id' => 'required|integer',
+                  'litigants_name' => 'nullable|string',
+                  'litigants_phone' => 'nullable|string',
+                  'client_capacity' => 'required|string',
++                 'status' => ['sometimes', 'string', Rule::in([
++                     CaseWorkflowService::STATUS_PREPARING,
++                     CaseWorkflowService::STATUS_IN_PROGRESS,
++                     CaseWorkflowService::STATUS_COMPLETED,
++                     CaseWorkflowService::STATUS_SUSPENDED,
++                 ])],
+                  'updated_by' => 'required|integer',
+              ]);
+      
+              $legCase = LegCase::findOrFail($id);
+              $this->authorize('update', $legCase);
++
++             if (array_key_exists('status', $validatedData)) {
++                 $this->caseWorkflowService->validateTransition((string) $legCase->status, (string) $validatedData['status']);
++             }
++
+              $legCase->update($validatedData);
+ 
+ 
+              $this->notificationEvents->entityChanged([
+                  'type' => 'super_admin_entity_changed',
+                  'title' => __('notifications.case_updated_title'),
+                  'message' => __('notifications.case_updated_message', ['id' => $legCase->id, 'entity' => $legCase->title]),
+                  'entity_type' => 'case',
+                  'entity_id' => $legCase->id,
+                  'action' => 'updated',
+                  'url' => '/dashboard/cases/'.$legCase->id,
+                  'actor_id' => (int) ($validatedData['updated_by'] ?? 0),
+                  'meta' => ['notify_self' => (bool) $request->boolean('notify_self', false)],
+              ]);
+ 
+              Log::info('audit.case.updated', [
+                  'case_id' => $legCase->id,
+                  'actor_id' => optional($request->user())->id,
+              ]);
+ 
+              return response()->json(['message' => 'Leg case updated successfully', 'data' => $legCase], 200);
+          } catch (ModelNotFoundException $e) {
+              return response()->json(['error' => 'LegCase not found'], 404);
+          } catch (\Exception $e) {
+              return response()->json(['error' => 'An error occurred while updating the leg case'], 500);
+@@ -371,54 +386,72 @@ public function getLegCaseSearch(Request $request)
+     // Detach the client from the legal case
+     $legalCase->clients()->detach($clientId);
+ 
+     return response()->json(['message' => 'Client removed from the legal case successfully'], 200);
+ }
+     /**
+      * Deletes a LegCase and its associated records from the database.
+      *
+      * @param int $id The ID of the LegCase to be deleted.
+      * @throws \Exception If an error occurs during deletion.
+      * @return \Illuminate\Http\JsonResponse A JSON response indicating the result of the deletion.
+      */
+     public function destroy(Request $request, $id)
+     {
+         $legCase = LegCase::find($id);
+ 
+         if (! $legCase) {
+             return response()->json(['error' => 'LegCase not found'], 404);
+         }
+ 
+         $this->authorize('delete', $legCase);
+ 
+         DB::beginTransaction();
+ 
+         try {
+-            if ($legCase->sessions()->exists()) {
+-                $legCase->sessions()->detach();
++            if ($legCase->legalSessions()->exists()) {
++                $legCase->legalSessions()->delete();
+             }
+ 
+             if ($legCase->procedures()->exists()) {
+                 $legCase->procedures()->delete();
+             }
+ 
+             if ($legCase->legalAds()->exists()) {
+                 $legCase->legalAds()->delete();
+             }
+ 
+             $legCase->delete();
+ 
+             DB::commit();
+ 
+             Log::info('audit.case.deleted', [
+                 'case_id' => $id,
+                 'actor_id' => optional($request->user())->id,
+             ]);
+ 
+             return response()->json(['message' => 'LegCase and associated records deleted successfully']);
+         } catch (\Exception $e) {
+             DB::rollback();
+             return response()->json(['error' => 'An error occurred during deletion'], 500);
+         }
+ 
+ }
++
++    public function workflowTransitions(int $id)
++    {
++        $legCase = LegCase::find($id);
++
++        if (! $legCase) {
++            return response()->json(['error' => 'LegCase not found'], 404);
++        }
++
++        $this->authorize('view', $legCase);
++
++        return response()->json([
++            'data' => [
++                'current_status' => $legCase->status,
++                'allowed_next_statuses' => $this->caseWorkflowService->allowedNextStatuses((string) $legCase->status),
++            ],
++        ]);
++    }
+ }
+diff --git a/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php b/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
+index a8db7bbd1ea1a90ece292121d81baa72131be70c..a655c665882def257416b3e93e19bec4856aed38 100644
+--- a/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
++++ b/avocat-backend/app/Http/Controllers/Api/LegalSessionController.php
+@@ -1,91 +1,102 @@
+ <?php
+ 
+ namespace App\Http\Controllers\Api;
+ 
+ use App\Http\Controllers\Controller;
+ 
+ use App\Models\Expense;
+ use Illuminate\Http\Request;
+ use Illuminate\Support\Facades\Auth;
+ use App\Models\LegalSession;
+ use App\Models\LegCase;
+ use App\Models\Event;
+ use Illuminate\Support\Facades\Log;
+ use App\Services\Notifications\NotificationEventService;
++use App\Services\SessionSchedulingService;
+ class LegalSessionController extends Controller
+ {
+-    public function __construct(private readonly NotificationEventService $notificationEvents)
++    public function __construct(
++        private readonly NotificationEventService $notificationEvents,
++        private readonly SessionSchedulingService $sessionSchedulingService,
++    )
+     {
+     }
+     public function index(Request $request)
+     {
+         $query = LegalSession::with(['legCase.clients', 'lawyer', 'court', 'legalSessionType', 'createdBy']);
+ 
+         $query
+             ->when($request->filled('client_name'), function ($builder) use ($request) {
+                 $builder->whereHas('legCase.clients', fn ($q) => $q->where('name', 'like', '%'.$request->string('client_name').'%'));
+             })
+             ->when($request->filled('lawyer_id'), fn ($builder) => $builder->where('lawyer_id', $request->integer('lawyer_id')))
+             ->when($request->filled('session_type_id'), fn ($builder) => $builder->where('legal_session_type_id', $request->integer('session_type_id')))
+             ->when($request->filled('session_status'), fn ($builder) => $builder->where('status', $request->string('session_status')))
+             ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+             ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+             ->orderByDesc($request->input('sort_by', 'updated_at'))
+             ->orderByDesc('id');
+ 
+         if ($request->filled('limit')) {
+             return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+         }
+ 
+         return response()->json($query->get());
+     }
+ 
+     public function show($id)
+     {
+         $legalSession = LegalSession::findOrFail($id);
+         $this->authorize('view', $legalSession);
+ 
+         return response()->json($legalSession);
+     }
+ 
+     public function store(Request $request)
+     {
+         $request->validate([
+             'leg_case_id' => 'required',
+             'court_id' => 'required',
+             
+             'session_date' => 'required',
+             'session_roll' => 'nullable',
+             'session_court' => 'nullable',
+             'cost1' => 'numeric|nullable',
+             'cost2' => 'numeric|nullable',
+             'cost3' => 'numeric|nullable',
+             'lawyer_id' => 'required',
+             'created_by' => 'required',
+         ]);
+ 
++        $this->sessionSchedulingService->ensureNoConflicts(
++            $request->input('lawyer_id'),
++            $request->input('court_id'),
++            $request->input('session_date'),
++            $request->input('session_roll'),
++        );
++
+         $legalSession = LegalSession::create($request->all());
+  // Step 2: Create Calendar Event
+  $event = new Event();
+  $event->user_id = $request->created_by;
+  $event->title = "legal session";
+  $event->date = $request->session_date;
+  $event->description = "Legal session with case ID " . $request->leg_case_id;
+  $event->save();
+ 
+         $this->notificationEvents->entityChanged([
+             'type' => 'super_admin_entity_changed',
+             'title' => __('notifications.session_created_title'),
+             'message' => __('notifications.session_created_message', ['id' => $legalSession->id]),
+             'entity_type' => 'session',
+             'entity_id' => $legalSession->id,
+             'action' => 'created',
+             'url' => '/dashboard/sessions/'.$legalSession->id,
+             'actor_id' => (int) $request->input('created_by'),
+         ]);
+ 
+         $this->notificationEvents->assignmentChanged([
+             'type' => 'assignee_changed',
+             'title' => __('notifications.assignment_created_title'),
+             'message' => __('notifications.assignment_created_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
+             'entity_type' => 'session',
+@@ -96,50 +107,58 @@ public function store(Request $request)
+             'meta' => [
+                 'new_lawyer_id' => (int) $request->input('lawyer_id'),
+                 'entity_label' => __('notifications.entities.session'),
+             ],
+         ]);
+ 
+  return response()->json(['message' => 'Legal session and event created successfully']);
+ }
+     public function update(Request $request, $id)
+     {
+         $request->validate([
+             'leg_case_id' => 'required',
+             'court_id' => 'required',
+             'session_date' => 'required',
+             'session_roll' => 'required',
+             'cost1' => 'required|numeric',
+             'cost2' => 'numeric|nullable',
+             'cost3' => 'numeric|nullable',
+             'status' => 'required',
+             'lawyer_id' => 'required',
+             'created_by' => 'required',
+             'Judgment_operative' => 'required',
+             'result' => 'required',
+         ]);
+ 
++        $this->sessionSchedulingService->ensureNoConflicts(
++            $request->input('lawyer_id'),
++            $request->input('court_id'),
++            $request->input('session_date'),
++            $request->input('session_roll'),
++            (int) $id,
++        );
++
+         $legalSession = LegalSession::findOrFail($id);
+         $this->authorize('update', $legalSession);
+         $previousLawyerId = $legalSession->lawyer_id;
+         $legalSession->update($request->all());
+ 
+         $this->notificationEvents->entityChanged([
+             'type' => 'super_admin_entity_changed',
+             'title' => __('notifications.session_updated_title'),
+             'message' => __('notifications.session_updated_message', ['id' => $legalSession->id]),
+             'entity_type' => 'session',
+             'entity_id' => $legalSession->id,
+             'action' => 'updated',
+             'url' => '/dashboard/sessions/'.$legalSession->id,
+             'actor_id' => (int) $request->input('created_by'),
+         ]);
+ 
+         if ((int) $previousLawyerId !== (int) $request->input('lawyer_id')) {
+             $this->notificationEvents->assignmentChanged([
+                 'type' => 'assignee_changed',
+                 'title' => __('notifications.assignment_updated_title'),
+                 'message' => __('notifications.assignment_updated_message', ['entity' => __('notifications.entities.session'), 'id' => $legalSession->id]),
+                 'entity_type' => 'session',
+                 'entity_id' => $legalSession->id,
+                 'action' => $previousLawyerId ? 'reassigned' : 'assigned',
+                 'url' => '/dashboard/sessions/'.$legalSession->id,
+diff --git a/avocat-backend/app/Http/Controllers/Api/NotificationController.php b/avocat-backend/app/Http/Controllers/Api/NotificationController.php
+index 9a8b0953be81bb18744f2614e787d0fcb51df7bf..cb438204775d5961e27fb2c8aebae1ea08190bb7 100644
+--- a/avocat-backend/app/Http/Controllers/Api/NotificationController.php
++++ b/avocat-backend/app/Http/Controllers/Api/NotificationController.php
+@@ -1,63 +1,61 @@
+ <?php
+ 
+ namespace App\Http\Controllers\Api;
+ 
+ use App\Http\Controllers\Controller;
+-use App\Models\Notification;
++use App\Models\User;
++use App\Services\Notifications\UserNotificationService;
+ use Illuminate\Http\JsonResponse;
+ use Illuminate\Http\Request;
+ 
+ class NotificationController extends Controller
+ {
++    public function __construct(private readonly UserNotificationService $notificationService)
++    {
++    }
++
+     public function index(Request $request): JsonResponse
+     {
+-        $user = $request->user();
+-        abort_unless($user, 401);
+-
+-        $query = Notification::query()
+-            ->where('user_id', $user->id)
+-            ->when($request->filled('state'), function ($q) use ($request) {
+-                return match ($request->string('state')->toString()) {
+-                    'read' => $q->where('read', true),
+-                    'unread' => $q->where('read', false),
+-                    default => $q,
+-                };
+-            })
+-            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->string('type')->toString()))
+-            ->when($request->filled('entity_type'), fn ($q) => $q->where('entity_type', $request->string('entity_type')->toString()))
+-            ->orderByDesc('created_at');
+-
+-        return response()->json($query->paginate((int) $request->integer('per_page', 15)));
++        $user = $this->authenticatedUser($request);
++
++        $notifications = $this->notificationService->listForUser($user->id, [
++            'state' => $request->filled('state') ? $request->string('state')->toString() : null,
++            'type' => $request->filled('type') ? $request->string('type')->toString() : null,
++            'entity_type' => $request->filled('entity_type') ? $request->string('entity_type')->toString() : null,
++        ], (int) $request->integer('per_page', 15));
++
++        return response()->json($notifications);
+     }
+ 
+     public function markRead(Request $request, int $notificationId): JsonResponse
+     {
+-        $user = $request->user();
+-        abort_unless($user, 401);
+-
+-        $notification = Notification::query()->where('user_id', $user->id)->findOrFail($notificationId);
+-        $notification->update(['read' => true]);
++        $user = $this->authenticatedUser($request);
++        $this->notificationService->markAsRead($user->id, $notificationId);
+ 
+         return response()->json(['status' => 'success']);
+     }
+ 
+     public function markReadAll(Request $request): JsonResponse
+     {
+-        $user = $request->user();
+-        abort_unless($user, 401);
+-
+-        Notification::query()->where('user_id', $user->id)->where('read', false)->update(['read' => true]);
++        $user = $this->authenticatedUser($request);
++        $this->notificationService->markAllAsRead($user->id);
+ 
+         return response()->json(['status' => 'success']);
+     }
+ 
+     public function unreadCount(Request $request): JsonResponse
+     {
+-        $user = $request->user();
+-        abort_unless($user, 401);
+-
+-        $count = Notification::query()->where('user_id', $user->id)->where('read', false)->count();
++        $user = $this->authenticatedUser($request);
++        $count = $this->notificationService->unreadCount($user->id);
+ 
+         return response()->json(['unread_count' => $count]);
+     }
++
++    private function authenticatedUser(Request $request): User
++    {
++        $user = $request->user();
++        abort_unless($user instanceof User, 401);
++
++        return $user;
++    }
+ }
+diff --git a/avocat-backend/app/Services/CaseWorkflowService.php b/avocat-backend/app/Services/CaseWorkflowService.php
 new file mode 100644
-index 0000000000000000000000000000000000000000..0d1c3783062385dc3722f8cf6a21512ba171f8e9
+index 0000000000000000000000000000000000000000..486031a431bdf4b8e17634cf5d51f3d9ce6cc749
 --- /dev/null
-+++ b/docs/backend-development-prompts-ar.md
-@@ -0,0 +1,289 @@
-+# برومبتات تنفيذ خطة تطوير الباكند (خطوة بخطوة)
-+
-+هذا الملف يحوّل خطة `docs/backend-development-plan-ar.md` إلى **مهام برومبت جاهزة للتنفيذ بالتسلسل** باستخدام أي وكيل برمجي (Coding Agent).
-+
-+> طريقة الاستخدام: نفّذ البرومبت رقم 1 ثم 2 ثم 3 ... ولا تنتقل للبرومبت التالي إلا بعد تحقيق "معيار الإنجاز" لكل خطوة.
-+
-+---
-+
-+## 0) برومبت التهيئة قبل التنفيذ
-+
-+**البرومبت:**
-+
-+```text
-+اقرأ docs/backend-development-plan-ar.md بالكامل. ثم أنشئ خطة تنفيذ عملية من 5 مراحل بنفس ترتيب الملف.
-+- اعرض المخرجات المتوقعة لكل مرحلة.
-+- اعرض المخاطر المحتملة.
-+- اعرض أوامر التحقق (tests/lint/static analysis) التي ستُشغل في نهاية كل مرحلة.
-+بعدها ابدأ مباشرة بالمرحلة الأولى فقط ولا تنفذ أي شيء من المراحل التالية قبل طلب صريح.
-+```
-+
-+**معيار الإنجاز:**
-+- تم إنتاج خطة تنفيذ واضحة مرتبطة بالمراحل الخمس.
-+- تم تحديد أوامر التحقق الخاصة بكل مرحلة.
-+
-+---
-+
-+## المرحلة الأولى: التحسينات الهيكلية الأساسية
-+
-+### 1) إزالة التكرار في Controllers/Services/Jobs
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ مهمة إزالة التكرار في طبقات Controllers وServices وJobs.
-+المطلوب:
-+1) اكتشاف المقاطع المكررة فعليًا (منطق مشترك، تحقق مكرر، تحويل بيانات مكرر).
-+2) استخراج المنطق المشترك إلى Service/Action/Helper مناسب.
-+3) الحفاظ على نفس السلوك الخارجي للواجهات البرمجية.
-+4) إضافة/تحديث اختبارات تغطي المسارات التي تم توحيدها.
-+أعطني ملخصًا قبل/بعد + قائمة الملفات المتأثرة + سبب كل تعديل.
-+```
-+
-+**معيار الإنجاز:**
-+- تقليل التكرار مع عدم تغيير السلوك.
-+- نجاح الاختبارات المتعلقة بالمسارات المعدلة.
-+
-+### 2) توحيد استجابات API وفق Swagger/OpenAPI
-+
-+**البرومبت:**
-+
-+```text
-+وحّد شكل استجابات API ليتوافق مع Swagger/OpenAPI.
-+المطلوب:
-+1) اعتماد Response Schema موحد (success, data, message, errors, meta عند الحاجة).
-+2) توحيد أكواد HTTP حسب نوع الحالة (نجاح/تحقق/صلاحيات/غير موجود/خطأ داخلي).
-+3) توحيد تنسيق أخطاء التحقق Validation.
-+4) تحديث توثيق Swagger/OpenAPI ليتطابق مع التنفيذ.
-+5) تحديث اختبارات الـ Feature للتأكد من العقد الجديد للاستجابة.
-+```
-+
-+**معيار الإنجاز:**
-+- جميع نقاط النهاية الأساسية تُرجع نفس بنية الاستجابة.
-+- التوثيق يطابق السلوك الفعلي.
-+
-+### 3) MFA + RBAC
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ تحسين الأمان بإضافة MFA وربطها مع RBAC.
-+المطلوب:
-+1) تفعيل MFA للمستخدمين (إعداد، تحقق، إيقاف) مع تدفق آمن.
-+2) تطبيق RBAC دقيق على العمليات الحساسة.
-+3) التأكد من حماية endpoints غير المصرح بها (401/403).
-+4) إضافة اختبارات تفويض ومصادقة تغطي: مستخدم بدون صلاحية، مستخدم بصلاحية، مستخدم مع MFA غير مكتمل.
-+5) توثيق خطوات الإعداد محليًا وفي بيئة الإنتاج.
-+```
-+
-+**معيار الإنجاز:**
-+- لا يمكن الوصول للعمليات الحساسة دون صلاحيات صحيحة وMFA (حيث مطلوب).
-+- نجاح اختبارات المصادقة والتفويض.
-+
-+---
-+
-+## المرحلة الثانية: تحسين وظائف النظام
-+
-+### 4) إدارة القضايا (CRUD + Workflow)
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ CRUD كامل لإدارة القضايا مع حالات سير عمل واضحة.
-+المطلوب:
-+1) إنشاء/عرض/تعديل/حذف قضية.
-+2) تعريف Workflow States وانتقالات الحالة المسموحة.
-+3) منع الانتقالات غير القانونية برسائل خطأ واضحة.
-+4) كتابة اختبارات Feature للحالات الأساسية وحالات الفشل.
-+5) إضافة توثيق API للأمثلة الشائعة.
-+```
-+
-+**معيار الإنجاز:**
-+- CRUD يعمل بالكامل.
-+- الانتقالات بين الحالات مضبوطة ومختبرة.
-+
-+### 5) إدارة الجلسات والإجراءات
-+
-+**البرومبت:**
-+
-+```text
-+أضف نظام إدارة جلسات مرتبط بالقضايا والمحامين.
-+المطلوب:
-+1) ربط الجلسة بقضية ومحامٍ وتاريخ/وقت وحالة.
-+2) دعم تحديثات الجلسات مع التحقق من التعارضات الزمنية.
-+3) إضافة إشعارات/تحديثات تلقائية عند تعديل موعد الجلسة.
-+4) تغطية اختبارات لعمليات الإنشاء والتعديل والإلغاء والتعارضات.
-+```
-+
-+**معيار الإنجاز:**
-+- الجلسات متزامنة مع بيانات القضايا والمحامين.
-+- التعامل مع التعارضات الزمنية بشكل صحيح.
-+
-+### 6) تحسين إدارة المستندات
-+
-+**البرومبت:**
-+
-+```text
-+طوّر نظام المستندات المرتبطة بالقضايا.
-+المطلوب:
-+1) رفع مستندات بشكل آمن مع التحقق من النوع/الحجم.
-+2) ربط كل مستند بالقضية ذات العلاقة.
-+3) دعم جلب/عرض/تحميل المستندات مع صلاحيات وصول مناسبة.
-+4) إضافة مسار مراجعة (Review Trail) للعمليات المهمة على المستندات.
-+5) اختبارات لرفع الملفات والوصول غير المصرح.
-+```
-+
-+**معيار الإنجاز:**
-+- المستندات محفوظة ومربوطة بشكل صحيح.
-+- صلاحيات الوصول مطبقة ومختبرة.
-+
-+---
-+
-+## المرحلة الثالثة: التكاملات الخارجية
-+
-+### 7) تكامل Google Calendar
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ تكامل Google Calendar لمزامنة مواعيد الجلسات.
-+المطلوب:
-+1) إعداد عميل Google API وإدارة الرموز السرية عبر env.
-+2) مزامنة إنشاء/تعديل/إلغاء الجلسات مع تقويم Google.
-+3) إضافة معالجة أخطاء وإعادة المحاولة عند فشل API الخارجي.
-+4) تسجيل Logs واضحة لأحداث المزامنة.
-+5) اختبارات تكامل باستخدام mocks/fakes بدون الاعتماد على خدمة خارجية فعلية.
-+```
-+
-+**معيار الإنجاز:**
-+- المواعيد تُزامن تلقائيًا مع Google Calendar.
-+- حالات الفشل تُدار بأمان مع سجلات واضحة.
-+
-+### 8) تكامل Outlook Calendar
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ تكامل Outlook Calendar باستخدام Microsoft Graph API.
-+المطلوب:
-+1) إعداد OAuth/Graph Client بشكل آمن.
-+2) مزامنة أحداث الجلسات (create/update/delete).
-+3) توحيد واجهة مزودات التقويم (Google/Outlook) خلف abstraction واحدة.
-+4) اختبارات تكامل مبنية على mocks للتأكد من ثبات العقد البرمجية.
-+5) توثيق إعداد المزودين وخطوات استكشاف الأعطال.
-+```
-+
-+**معيار الإنجاز:**
-+- Outlook يعمل بنفس نمط Google عبر طبقة موحدة.
-+- اختبارات التكامل تمر على المزودين.
-+
-+---
-+
-+## المرحلة الرابعة: الأداء والأمان
-+
-+### 9) تحسين استعلامات قاعدة البيانات
-+
-+**البرومبت:**
-+
-+```text
-+حسّن أداء استعلامات قاعدة البيانات في مسارات القضايا/الجلسات/المستندات.
-+المطلوب:
-+1) تحديد أبطأ الاستعلامات (N+1، فهارس ناقصة، joins مكلفة).
-+2) تطبيق eager loading، indexing، وتحسين شروط الاستعلام.
-+3) قياس الأداء قبل/بعد (زمن الاستجابة + استهلاك الذاكرة).
-+4) توثيق نتائج القياس في جدول واضح.
-+```
-+
-+**معيار الإنجاز:**
-+- انخفاض ملحوظ في زمن الاستجابة واستهلاك الموارد.
-+- وجود قياس موثق قبل/بعد.
-+
-+### 10) Audit Logs للعمليات الحساسة
-+
-+**البرومبت:**
-+
-+```text
-+أضف نظام Audit Logs للعمليات الحساسة.
-+المطلوب:
-+1) تسجيل: تعديل القضايا، رفع/حذف المستندات، وتسوية المدفوعات.
-+2) تضمين: من قام بالعملية، متى، ما التغيير، والمعرفات المرجعية.
-+3) منع تخزين بيانات سرية خام في السجل.
-+4) إضافة endpoint/واجهة لعرض السجلات مع صلاحيات مقيدة.
-+5) اختبارات للتأكد من إنشاء السجلات وصحة الصلاحيات.
-+```
-+
-+**معيار الإنجاز:**
-+- كل عملية حساسة تولّد أثرًا تدقيقيًا قابلًا للتتبع.
-+- لا توجد تسريبات لبيانات حساسة في السجلات.
-+
-+### 11) تحسين استراتيجية Cache
-+
-+**البرومبت:**
-+
-+```text
-+حسّن استراتيجية التخزين المؤقت لتقليل حمل قاعدة البيانات.
-+المطلوب:
-+1) تحديد نقاط القراءة عالية التكرار المناسبة للكاش.
-+2) تطبيق مفاتيح cache واضحة مع TTL مناسب.
-+3) بناء آلية invalidation دقيقة عند التحديث.
-+4) قياس تأثير الكاش على زمن الاستجابة ومعدل الاستعلامات.
-+5) إضافة اختبارات لسلوك cache hit/miss/invalidation.
-+```
-+
-+**معيار الإنجاز:**
-+- انخفاض عدد الاستعلامات المتكررة.
-+- ثبات البيانات بعد التحديث بفضل invalidation الصحيح.
-+
-+---
-+
-+## المرحلة الخامسة: التحقق والاختبار
-+
-+### 12) Unit/Feature Tests
-+
-+**البرومبت:**
-+
-+```text
-+ارفع تغطية الاختبارات للوحدات والـ Feature للمسارات الحرجة.
-+المطلوب:
-+1) تغطية CRUD القضايا والجلسات.
-+2) تغطية المصادقة/التفويض/MFA.
-+3) تغطية إدارة المستندات والتكاملات عبر mocks.
-+4) إصلاح الاختبارات الهشة وتحسين الثبات.
-+5) إصدار تقرير مختصر بالتغطية الحالية والثغرات المتبقية.
-+```
-+
-+**معيار الإنجاز:**
-+- نجاح مجموعة الاختبارات المستهدفة.
-+- وضوح النقاط غير المغطاة المتبقية.
-+
-+### 13) Performance Tests
-+
-+**البرومبت:**
-+
-+```text
-+نفّذ اختبارات أداء على أهم نقاط النهاية.
-+المطلوب:
-+1) تعريف سيناريوهات حمل واقعية (قراءة/كتابة/مزامنة تقويم).
-+2) تشغيل اختبارات الأداء (مثل Postman/New Relic أو بدائل متاحة محليًا).
-+3) تحديد عنق الزجاجة وتقديم توصيات تحسين مرتبة بالأولوية.
-+4) توثيق baseline ونتائج ما بعد التحسين.
-+```
-+
-+**معيار الإنجاز:**
-+- تقرير أداء واضح يتضمن أرقامًا قابلة للمقارنة.
-+- قائمة إجراءات تحسين قابلة للتنفيذ.
-+
-+---
-+
-+## برومبت الإغلاق النهائي (بعد إنهاء كل المراحل)
-+
-+```text
-+راجع جميع مراحل خطة الباكند المنفذة.
-+أخرج تقريرًا نهائيًا يتضمن:
-+1) ما تم إنجازه مقابل كل مرحلة.
-+2) البنود المؤجلة وأسباب التأجيل.
-+3) المخاطر الحالية وخطة المعالجة.
-+4) قائمة التحقق النهائية (Checklist) مع حالة كل بند.
-+5) خطة ما بعد الإطلاق لمدة 30 يوم (مراقبة + إصلاحات سريعة + تحسينات).
-+```
++++ b/avocat-backend/app/Services/CaseWorkflowService.php
+@@ -0,0 +1,63 @@
++<?php
++
++namespace App\Services;
++
++use Illuminate\Validation\ValidationException;
++
++class CaseWorkflowService
++{
++    public const STATUS_PREPARING = 'قيد التجهيز';
++
++    public const STATUS_IN_PROGRESS = 'متداولة';
++
++    public const STATUS_COMPLETED = 'منتهية';
++
++    public const STATUS_SUSPENDED = 'معلقة';
++
++    /**
++     * @return array<string, array<int, string>>
++     */
++    public function transitionsMap(): array
++    {
++        return [
++            self::STATUS_PREPARING => [self::STATUS_IN_PROGRESS, self::STATUS_SUSPENDED],
++            self::STATUS_IN_PROGRESS => [self::STATUS_COMPLETED, self::STATUS_SUSPENDED],
++            self::STATUS_SUSPENDED => [self::STATUS_IN_PROGRESS],
++            self::STATUS_COMPLETED => [],
++        ];
++    }
++
++    /**
++     * @return array<int, string>
++     */
++    public function allowedNextStatuses(string $currentStatus): array
++    {
++        return $this->transitionsMap()[$currentStatus] ?? [];
++    }
++
++    public function canTransition(string $currentStatus, string $nextStatus): bool
++    {
++        if ($currentStatus === $nextStatus) {
++            return true;
++        }
++
++        return in_array($nextStatus, $this->allowedNextStatuses($currentStatus), true);
++    }
++
++    public function validateTransition(string $currentStatus, string $nextStatus): void
++    {
++        if ($this->canTransition($currentStatus, $nextStatus)) {
++            return;
++        }
++
++        $allowed = $this->allowedNextStatuses($currentStatus);
++        $allowedMessage = empty($allowed) ? 'لا توجد انتقالات متاحة.' : implode('، ', $allowed);
++
++        throw ValidationException::withMessages([
++            'status' => [
++                "لا يمكن نقل الحالة من {$currentStatus} إلى {$nextStatus}. الحالات المسموحة: {$allowedMessage}",
++            ],
++        ]);
++    }
++}
++
+diff --git a/avocat-backend/app/Services/Notifications/UserNotificationService.php b/avocat-backend/app/Services/Notifications/UserNotificationService.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..294bc7dad80db022aa7b733674a06191f69f5339
+--- /dev/null
++++ b/avocat-backend/app/Services/Notifications/UserNotificationService.php
+@@ -0,0 +1,51 @@
++<?php
++
++namespace App\Services\Notifications;
++
++use App\Models\Notification;
++use Illuminate\Contracts\Pagination\LengthAwarePaginator;
++
++class UserNotificationService
++{
++    public function listForUser(int|string $userId, array $filters = [], int $perPage = 15): LengthAwarePaginator
++    {
++        return Notification::query()
++            ->where('user_id', $userId)
++            ->when(isset($filters['state']), function ($query) use ($filters) {
++                return match ($filters['state']) {
++                    'read' => $query->where('read', true),
++                    'unread' => $query->where('read', false),
++                    default => $query,
++                };
++            })
++            ->when(isset($filters['type']), fn ($query) => $query->where('type', $filters['type']))
++            ->when(isset($filters['entity_type']), fn ($query) => $query->where('entity_type', $filters['entity_type']))
++            ->orderByDesc('created_at')
++            ->paginate($perPage);
++    }
++
++    public function markAsRead(int|string $userId, int $notificationId): void
++    {
++        Notification::query()
++            ->where('user_id', $userId)
++            ->findOrFail($notificationId)
++            ->update(['read' => true]);
++    }
++
++    public function markAllAsRead(int|string $userId): void
++    {
++        Notification::query()
++            ->where('user_id', $userId)
++            ->where('read', false)
++            ->update(['read' => true]);
++    }
++
++    public function unreadCount(int|string $userId): int
++    {
++        return Notification::query()
++            ->where('user_id', $userId)
++            ->where('read', false)
++            ->count();
++    }
++}
++
+diff --git a/avocat-backend/app/Services/SessionSchedulingService.php b/avocat-backend/app/Services/SessionSchedulingService.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..1051f42c5050ee93765e925ca724c657cb556585
+--- /dev/null
++++ b/avocat-backend/app/Services/SessionSchedulingService.php
+@@ -0,0 +1,47 @@
++<?php
++
++namespace App\Services;
++
++use App\Models\LegalSession;
++use Illuminate\Validation\ValidationException;
++
++class SessionSchedulingService
++{
++    public function ensureNoConflicts(
++        int|string $lawyerId,
++        int|string $courtId,
++        string $sessionDate,
++        ?string $sessionRoll = null,
++        ?int $ignoreSessionId = null,
++    ): void {
++        $lawyerConflict = LegalSession::query()
++            ->where('lawyer_id', $lawyerId)
++            ->whereDate('session_date', $sessionDate)
++            ->when($ignoreSessionId, fn ($query) => $query->where('id', '!=', $ignoreSessionId))
++            ->exists();
++
++        if ($lawyerConflict) {
++            throw ValidationException::withMessages([
++                'session_date' => ['يوجد تعارض: المحامي لديه جلسة أخرى في نفس التاريخ.'],
++            ]);
++        }
++
++        if (! $sessionRoll) {
++            return;
++        }
++
++        $courtRollConflict = LegalSession::query()
++            ->where('court_id', $courtId)
++            ->whereDate('session_date', $sessionDate)
++            ->where('session_roll', $sessionRoll)
++            ->when($ignoreSessionId, fn ($query) => $query->where('id', '!=', $ignoreSessionId))
++            ->exists();
++
++        if ($courtRollConflict) {
++            throw ValidationException::withMessages([
++                'session_roll' => ['يوجد تعارض: رقم الرول محجوز بالفعل لنفس المحكمة والتاريخ.'],
++            ]);
++        }
++    }
++}
++
+diff --git a/avocat-backend/routes/api.php b/avocat-backend/routes/api.php
+index 6979966b2856005ae8956bd81b42fb48afb5fa8c..c7ef75aec1aba1d5ac73f22260773f35c7de4420 100644
+--- a/avocat-backend/routes/api.php
++++ b/avocat-backend/routes/api.php
+@@ -79,50 +79,51 @@
+ 
+         Route::post('doc-sub-types', [LegalDocToolsController::class, 'addDocSubType']);
+         Route::put('doc-sub-types/{id}', [LegalDocToolsController::class, 'editDocSubType']);
+ 
+         Route::post('legal-doc-upload', [LegalDocArchiveController::class, 'uploadLegalDoc']);
+ 
+         Route::get('document-center/power-of-attorneys', [DocumentCenterController::class, 'powerOfAttorneys']);
+         Route::get('document-center/documents', [DocumentCenterController::class, 'documents']);
+         Route::get('document-center/cases', [DocumentCenterController::class, 'cases']);
+         Route::get('document-center/services', [DocumentCenterController::class, 'services']);
+         Route::apiResource('document-tabs', DocumentTabController::class);
+         Route::apiResource('documents', DocumentController::class);
+ 
+         Route::apiResource('clients', ClientController::class);
+         Route::apiResource('unclients', UnclientController::class);
+         Route::apiResource('lawyers', LawyerController::class);
+         Route::apiResource('courts', CourtController::class);
+         Route::apiResource('court_types', CourtTypeController::class);
+         
+         Route::apiResource('case_types', CaseTypeController::class);
+         Route::apiResource('procedure_types', ProcedureTypeController::class);
+         Route::apiResource('court_levels', CourtLevelController::class);
+         Route::apiResource('case_types', CaseTypeController::class);
+         Route::apiResource('procedure_types', ProcedureTypeController::class);
+         Route::apiResource('legal-cases', LegCaseController::class);
++        Route::get('legal-cases/{id}/workflow-transitions', [LegCaseController::class, 'workflowTransitions']);
+         Route::apiResource('procedures', ProcedureController::class);
+         Route::apiResource('services', ServiceController::class);
+         Route::apiResource('power-of-attorneys', PowerOfAttorneyController::class);
+ 
+         Route::get('lawyer/{lawyer}', [LawyerController::class, 'show']);
+         Route::put('lawyer/{lawyer}', [LawyerController::class, 'update']);
+         Route::delete('lawyer/{lawyer}', [LawyerController::class, 'destroy']);
+ 
+         Route::get('all_count_office', [HomeController::class, 'countOffice']);
+         Route::get('client-search', [HomeController::class, 'searchClient']);
+         Route::get('leg-case-search', [HomeController::class, 'searchLegCase']);
+ 
+         Route::get('unclients-search', [UnclientController::class, 'getUnclientSearch']);
+         Route::get('court-types/{courtTypeId}', [CourtTypeController::class, 'getCourtTypesWithSubTypes']);
+         Route::get('legal-case/case-types-sub-types', [LegCaseController::class, 'getCaseTypesWithCaseSubTypes']);
+         Route::get('case-types/{caseTypeId}/sub-types', [CaseTypeController::class, 'getCaseTypesWithSubTypes'])->name('case-sub-types.index');
+         Route::get('legal-case-search', [LegCaseController::class, 'getLegCaseSearch']);
+         Route::get('cases/search', [CaseReportingController::class, 'search'])->name('cases.search');
+         Route::get('search', [CaseReportingController::class, 'search']); // backward compatibility
+         Route::get('cases/{case_id}', [CaseReportingController::class, 'show']);
+         Route::get('cases/{case_id}/sessions', [CaseReportingController::class, 'sessions']);
+         Route::get('cases/{case_id}/procedures', [CaseReportingController::class, 'procedures']);
+         Route::get('cases/{case_id}/clients', [CaseReportingController::class, 'clients']);
+         Route::get('cases/{case_id}/services', [CaseReportingController::class, 'services']);
+         Route::post('legal-cases/{legCaseId}/add_clients', [LegCaseController::class, 'addClients']);
+diff --git a/avocat-backend/tests/Feature/NotificationSystemTest.php b/avocat-backend/tests/Feature/NotificationSystemTest.php
+index ed0dd86dd406ef0956b39bacd2230a09aefa07aa..969a996264bf704e7063feb29583fc2acc0b5143 100644
+--- a/avocat-backend/tests/Feature/NotificationSystemTest.php
++++ b/avocat-backend/tests/Feature/NotificationSystemTest.php
+@@ -154,26 +154,79 @@ public function test_notifications_api_list_mark_read_and_unread_count(): void
+         Notification::query()->create([
+             'user_id' => $user->id,
+             'event_id' => $eventId,
+             'type' => 'x',
+             'title' => 't',
+             'message' => 'm',
+             'entity_type' => 'case',
+             'entity_id' => '1',
+             'action' => 'created',
+             'url' => '/dashboard/cases/1',
+             'actor_id' => null,
+             'event_uuid' => (string) str()->uuid(),
+             'meta' => [],
+             'read' => false,
+         ]);
+ 
+         Sanctum::actingAs($user);
+ 
+         $list = $this->getJson('/api/v1/notifications');
+         $list->assertOk()->assertJsonPath('data.0.read', false);
+ 
+         $notificationId = $list->json('data.0.id');
+         $this->postJson('/api/v1/notifications/'.$notificationId.'/read')->assertOk();
+         $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
+     }
++
++    public function test_notifications_api_filters_and_mark_all_read(): void
++    {
++        $user = User::factory()->create();
++        $eventId = \App\Models\Event::query()->create([
++            'user_id' => $user->id,
++            'date' => now(),
++            'title' => 'seed',
++            'description' => 'seed',
++        ])->id;
++
++        Notification::query()->create([
++            'user_id' => $user->id,
++            'event_id' => $eventId,
++            'type' => 'hearing',
++            'title' => 't1',
++            'message' => 'm1',
++            'entity_type' => 'case',
++            'entity_id' => '1',
++            'action' => 'created',
++            'url' => '/dashboard/cases/1',
++            'actor_id' => null,
++            'event_uuid' => (string) str()->uuid(),
++            'meta' => [],
++            'read' => false,
++        ]);
++
++        Notification::query()->create([
++            'user_id' => $user->id,
++            'event_id' => $eventId,
++            'type' => 'task',
++            'title' => 't2',
++            'message' => 'm2',
++            'entity_type' => 'session',
++            'entity_id' => '2',
++            'action' => 'updated',
++            'url' => '/dashboard/sessions/2',
++            'actor_id' => null,
++            'event_uuid' => (string) str()->uuid(),
++            'meta' => [],
++            'read' => true,
++        ]);
++
++        Sanctum::actingAs($user);
++
++        $this->getJson('/api/v1/notifications?state=unread&type=hearing&entity_type=case')
++            ->assertOk()
++            ->assertJsonCount(1, 'data')
++            ->assertJsonPath('data.0.type', 'hearing');
++
++        $this->postJson('/api/v1/notifications/read-all')->assertOk();
++        $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
++    }
+ }
+diff --git a/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php b/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a4b9780982e8e74c69ec823d39e6c73f61b1a3b
+--- /dev/null
++++ b/avocat-backend/tests/Unit/CaseWorkflowServiceTest.php
+@@ -0,0 +1,38 @@
++<?php
++
++namespace Tests\Unit;
++
++use App\Services\CaseWorkflowService;
++use Illuminate\Validation\ValidationException;
++use Tests\TestCase;
++
++class CaseWorkflowServiceTest extends TestCase
++{
++    public function test_allows_valid_transition(): void
++    {
++        $service = new CaseWorkflowService();
++
++        $this->assertTrue(
++            $service->canTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_IN_PROGRESS)
++        );
++    }
++
++    public function test_rejects_invalid_transition(): void
++    {
++        $service = new CaseWorkflowService();
++
++        $this->assertFalse(
++            $service->canTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_COMPLETED)
++        );
++    }
++
++    public function test_validate_transition_throws_with_clear_error_message(): void
++    {
++        $service = new CaseWorkflowService();
++
++        $this->expectException(ValidationException::class);
++
++        $service->validateTransition(CaseWorkflowService::STATUS_PREPARING, CaseWorkflowService::STATUS_COMPLETED);
++    }
++}
++
+diff --git a/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php b/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..01be7cf6678fb0de9dcf282b905db4e2ef923d35
+--- /dev/null
++++ b/avocat-backend/tests/Unit/SessionSchedulingServiceTest.php
+@@ -0,0 +1,114 @@
++<?php
++
++namespace Tests\Unit;
++
++use App\Models\CaseSubType;
++use App\Models\CaseType;
++use App\Models\Court;
++use App\Models\CourtLevel;
++use App\Models\CourtType;
++use App\Models\Lawyer;
++use App\Models\LegalSession;
++use App\Models\LegalSessionType;
++use App\Models\LegCase;
++use App\Models\User;
++use App\Services\SessionSchedulingService;
++use Illuminate\Foundation\Testing\RefreshDatabase;
++use Illuminate\Validation\ValidationException;
++use Tests\TestCase;
++
++class SessionSchedulingServiceTest extends TestCase
++{
++    use RefreshDatabase;
++
++    public function test_throws_validation_when_lawyer_has_conflicting_session_on_same_date(): void
++    {
++        $data = $this->seedSessionDependencies();
++        LegalSession::query()->create([
++            'legal_session_type_id' => $data['sessionType']->id,
++            'leg_case_id' => $data['legCase']->id,
++            'court_id' => $data['court']->id,
++            'session_date' => '2026-05-01',
++            'lawyer_id' => $data['lawyer']->id,
++            'created_by' => $data['user']->id,
++            'session_roll' => 'A1',
++        ]);
++
++        $service = new SessionSchedulingService();
++
++        $this->expectException(ValidationException::class);
++        $service->ensureNoConflicts($data['lawyer']->id, $data['court']->id, '2026-05-01', 'B2');
++    }
++
++    public function test_throws_validation_when_court_roll_conflicts_on_same_date(): void
++    {
++        $data = $this->seedSessionDependencies();
++        $otherLawyer = Lawyer::query()->create([
++            'name' => 'Lawyer B',
++            'birthdate' => '1990-01-01',
++            'identity_number' => '10000000000099',
++            'law_reg_num' => 'REG-99',
++            'lawyer_class' => 'إبتدائي',
++            'email' => 'lawyer-b@example.test',
++            'gender' => 'ذكر',
++            'religion' => 'مسلم',
++            'user_id' => User::factory()->create()->id,
++        ]);
++
++        LegalSession::query()->create([
++            'legal_session_type_id' => $data['sessionType']->id,
++            'leg_case_id' => $data['legCase']->id,
++            'court_id' => $data['court']->id,
++            'session_date' => '2026-05-01',
++            'lawyer_id' => $data['lawyer']->id,
++            'created_by' => $data['user']->id,
++            'session_roll' => 'R-10',
++        ]);
++
++        $service = new SessionSchedulingService();
++
++        $this->expectException(ValidationException::class);
++        $service->ensureNoConflicts($otherLawyer->id, $data['court']->id, '2026-05-01', 'R-10');
++    }
++
++    /**
++     * @return array<string, mixed>
++     */
++    private function seedSessionDependencies(): array
++    {
++        $user = User::factory()->create();
++        $caseType = CaseType::query()->create(['name' => 'Civil']);
++        $caseSubType = CaseSubType::query()->create(['name' => 'Primary', 'case_type_id' => $caseType->id]);
++        $legCase = LegCase::query()->create([
++            'slug' => 'CASE-1',
++            'title' => 'Case',
++            'description' => 'Desc',
++            'case_type_id' => $caseType->id,
++            'case_sub_type_id' => $caseSubType->id,
++            'client_capacity' => 'plaintiff',
++            'created_by' => $user->id,
++        ]);
++        $sessionType = LegalSessionType::query()->create(['name' => 'جلسة']);
++        $courtType = CourtType::query()->create(['name' => 'نوع']);
++        $courtLevel = CourtLevel::query()->create(['name' => 'مستوى']);
++        $court = Court::query()->create([
++            'name' => 'Court 1',
++            'court_type_id' => $courtType->id,
++            'court_level_id' => $courtLevel->id,
++        ]);
++        $lawyer = Lawyer::query()->create([
++            'name' => 'Lawyer A',
++            'birthdate' => '1990-01-01',
++            'identity_number' => '10000000000001',
++            'law_reg_num' => 'REG-1',
++            'lawyer_class' => 'إبتدائي',
++            'email' => 'lawyer-a@example.test',
++            'gender' => 'ذكر',
++            'religion' => 'مسلم',
++            'user_id' => $user->id,
++        ]);
++
++        return compact('user', 'legCase', 'sessionType', 'court', 'lawyer');
++    }
++}
 +

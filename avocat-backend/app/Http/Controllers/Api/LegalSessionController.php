@@ -12,9 +12,13 @@ use App\Models\LegCase;
 use App\Models\Event;
 use Illuminate\Support\Facades\Log;
 use App\Services\Notifications\NotificationEventService;
+use App\Services\SessionSchedulingService;
 class LegalSessionController extends Controller
 {
-    public function __construct(private readonly NotificationEventService $notificationEvents)
+    public function __construct(
+        private readonly NotificationEventService $notificationEvents,
+        private readonly SessionSchedulingService $sessionSchedulingService,
+    )
     {
     }
     public function index(Request $request)
@@ -63,6 +67,13 @@ class LegalSessionController extends Controller
             'lawyer_id' => 'required',
             'created_by' => 'required',
         ]);
+
+        $this->sessionSchedulingService->ensureNoConflicts(
+            $request->input('lawyer_id'),
+            $request->input('court_id'),
+            $request->input('session_date'),
+            $request->input('session_roll'),
+        );
 
         $legalSession = LegalSession::create($request->all());
  // Step 2: Create Calendar Event
@@ -117,6 +128,14 @@ class LegalSessionController extends Controller
             'Judgment_operative' => 'required',
             'result' => 'required',
         ]);
+
+        $this->sessionSchedulingService->ensureNoConflicts(
+            $request->input('lawyer_id'),
+            $request->input('court_id'),
+            $request->input('session_date'),
+            $request->input('session_roll'),
+            (int) $id,
+        );
 
         $legalSession = LegalSession::findOrFail($id);
         $this->authorize('update', $legalSession);

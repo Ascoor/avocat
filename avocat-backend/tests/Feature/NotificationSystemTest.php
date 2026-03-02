@@ -176,4 +176,57 @@ class NotificationSystemTest extends TestCase
         $this->postJson('/api/v1/notifications/'.$notificationId.'/read')->assertOk();
         $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
     }
+
+    public function test_notifications_api_filters_and_mark_all_read(): void
+    {
+        $user = User::factory()->create();
+        $eventId = \App\Models\Event::query()->create([
+            'user_id' => $user->id,
+            'date' => now(),
+            'title' => 'seed',
+            'description' => 'seed',
+        ])->id;
+
+        Notification::query()->create([
+            'user_id' => $user->id,
+            'event_id' => $eventId,
+            'type' => 'hearing',
+            'title' => 't1',
+            'message' => 'm1',
+            'entity_type' => 'case',
+            'entity_id' => '1',
+            'action' => 'created',
+            'url' => '/dashboard/cases/1',
+            'actor_id' => null,
+            'event_uuid' => (string) str()->uuid(),
+            'meta' => [],
+            'read' => false,
+        ]);
+
+        Notification::query()->create([
+            'user_id' => $user->id,
+            'event_id' => $eventId,
+            'type' => 'task',
+            'title' => 't2',
+            'message' => 'm2',
+            'entity_type' => 'session',
+            'entity_id' => '2',
+            'action' => 'updated',
+            'url' => '/dashboard/sessions/2',
+            'actor_id' => null,
+            'event_uuid' => (string) str()->uuid(),
+            'meta' => [],
+            'read' => true,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/v1/notifications?state=unread&type=hearing&entity_type=case')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.type', 'hearing');
+
+        $this->postJson('/api/v1/notifications/read-all')->assertOk();
+        $this->getJson('/api/v1/notifications/unread-count')->assertOk()->assertJsonPath('unread_count', 0);
+    }
 }
