@@ -25,7 +25,8 @@ const LegalCasesIndex = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingLegCase, setEditingLegCase] = useState(null);
   const [legCases, setLegCases] = useState([]);
-  const [meta, setMeta] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
    
   const accessUser = useMemo(() => ({
     id: user?.id || '',
@@ -45,14 +46,29 @@ const LegalCasesIndex = () => {
   );
 
   const fetchLegCases = useCallback(async () => {
-    try { 
-      const res = await getLegCases({ page: 1 });
-setLegCases(res.data?.data ?? []);
+    setLoading(true);
+    setError('');
 
-    } catch (error) {
-      console.error('Error fetching legal cases:', error);
+    try {
+      const cached = sessionStorage.getItem('legcases_latest_50');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) {
+          setLegCases(parsed);
+        }
+      }
+
+      const res = await getLegCases({ page: 1 });
+      const payload = res.data?.data?.data ?? [];
+      setLegCases(payload);
+      sessionStorage.setItem('legcases_latest_50', JSON.stringify(payload));
+    } catch (fetchError) {
+      console.error('Error fetching legal cases:', fetchError);
+      setError(t('common.error'));
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => { fetchLegCases(); }, [fetchLegCases]);
 
@@ -135,6 +151,15 @@ setLegCases(res.data?.data ?? []);
   ], [acl.delete, acl.update, acl.view, navigate, t]);
 
   if (!acl.view) return <ForbiddenState moduleLabel="Legal Cases" />;
+
+  if (loading && !legCases.length) {
+    return <div className="p-6 mt-12 w-full text-center text-gray-500">Loading...</div>;
+  }
+
+  if (error && !legCases.length) {
+    return <div className="p-6 mt-12 w-full text-center text-red-600">{error}</div>;
+  }
+
 
   return (
     <div className="p-6 mt-12 w-full">

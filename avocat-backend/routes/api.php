@@ -99,6 +99,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('procedure_types', ProcedureTypeController::class);
         Route::apiResource('court_levels', CourtLevelController::class);
         Route::apiResource('legal-cases', LegCaseController::class);
+        Route::get('legcases', [LegCaseController::class, 'index'])->middleware('permission.guard:cases.view,cases.list');
         Route::get('legal-cases/{id}/workflow-transitions', [LegCaseController::class, 'workflowTransitions']);
         Route::apiResource('procedures', ProcedureController::class);
         Route::apiResource('services', ServiceController::class);

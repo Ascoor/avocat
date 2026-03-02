@@ -31,7 +31,7 @@ export const updateLawyer = (id, data) => api.put(`/lawyers/${id}`, data);
 export const deleteLawyer = (id) => api.delete(`/lawyers/${id}`);
 
 // ** Legal Cases **
-export const getLegCases = () => api.get('/legal-cases');
+export const getLegCases = (params = {}) => api.get('/legcases', { params });
 export const getLegCaseById = (id) => api.get(`/legal-cases/${id}`);
 export const createLegCase = (data) => api.post('/legal-cases', data);
 export const updateLegCase = (id, data) => api.put(`/legal-cases/${id}`, data);
