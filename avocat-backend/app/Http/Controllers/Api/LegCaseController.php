@@ -27,34 +27,46 @@ class LegCaseController extends Controller
      *
      * @return JsonResponse The JSON response containing the legal cases.
      */
+    
     public function index(Request $request)
     {
-        $cacheKey = sprintf('leg_cases:latest:%d', (int) $request->integer('page', 1));
+        $isReportMode = $request->boolean('report_mode');
 
-        $legCases = Cache::remember($cacheKey, now()->addHours(6), function () {
-            return LegCase::query()
-                ->select([
-                    'id', 'slug', 'title', 'client_capacity', 'status', 'case_type_id',
-                    'case_sub_type_id', 'created_at', 'updated_at',
-                ])
-                ->with([
-                    'clients:id,name',
-                    'caseSubType:id,name',
-                ])
-                ->withCount(['procedures', 'legalSessions'])
-                ->orderByDesc('updated_at')
-                ->orderByDesc('id')
-                ->limit(50)
-                ->paginate(50);
-        });
+        $query = LegCase::query()
+            ->select([
+                'id', 'slug', 'title', 'client_capacity', 'status', 'case_type_id',
+                'case_sub_type_id', 'created_at', 'updated_at',
+            ])
+            ->with([
+                'clients:id,name',
+                'caseSubType:id,name',
+            ])
+            ->withCount(['procedures', 'legalSessions']);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Fetched latest 50 LegCases',
-            'data' => $legCases,
-        ]);
+        if (! $isReportMode) {
+            $query->whereIn('status', ['قيد التجهيز', 'متداولة']);
+        }
+
+        $query
+            ->when($request->filled('client_name'), function ($builder) use ($request) {
+                $builder->whereHas('clients', function ($clientQuery) use ($request) {
+                    $clientQuery->where('name', 'like', '%'.$request->string('client_name').'%');
+                });
+            })
+            ->when($request->filled('file_number'), fn ($builder) => $builder->where('slug', 'like', '%'.$request->string('file_number').'%'))
+            ->when($request->filled('case_type_id'), fn ($builder) => $builder->where('case_type_id', $request->integer('case_type_id')))
+            ->when($request->filled('case_status'), fn ($builder) => $builder->where('status', $request->string('case_status')))
+            ->when($request->filled('from_date'), fn ($builder) => $builder->whereDate('updated_at', '>=', $request->date('from_date')))
+            ->when($request->filled('to_date'), fn ($builder) => $builder->whereDate('updated_at', '<=', $request->date('to_date')))
+            ->orderByDesc($request->input('sort_by', 'updated_at'))
+            ->orderByDesc('id');
+
+        if ($request->filled('limit')) {
+            return response()->json(['data' => $query->limit((int) $request->input('limit'))->get()]);
+        }
+
+        return response()->json($query->cursorPaginate(30));
     }
-
 
     /**
      * Retrieves the case types along with their corresponding case subtypes.   
