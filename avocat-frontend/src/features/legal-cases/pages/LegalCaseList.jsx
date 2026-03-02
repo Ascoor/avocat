@@ -16,6 +16,16 @@ import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const AddEditLegCase = lazy(() => import('../components/LegalCases/AddEditLegCase'));
 
+const extractLegCasesPayload = (response) => {
+  const body = response?.data;
+
+  if (Array.isArray(body)) return body;
+  if (Array.isArray(body?.data)) return body.data;
+  if (Array.isArray(body?.data?.data)) return body.data.data;
+
+  return [];
+};
+
 const LegalCasesIndex = () => {
   const { permissions, user, roles } = useSecurity();
   const { t } = useLanguage();
@@ -50,7 +60,7 @@ const LegalCasesIndex = () => {
     setError('');
 
     try {
-      const cached = sessionStorage.getItem('legcases_latest_50');
+      const cached = sessionStorage.getItem('legcases_list_cache');
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed)) {
@@ -58,10 +68,21 @@ const LegalCasesIndex = () => {
         }
       }
 
-      const res = await getLegCases({ page: 1 });
-      const payload = res.data?.data?.data ?? [];
-      setLegCases(payload);
-      sessionStorage.setItem('legcases_latest_50', JSON.stringify(payload));
+      const allCases = [];
+      let cursor = null;
+      let pageCount = 0;
+
+      do {
+        const res = await getLegCases({ cursor: cursor || undefined });
+
+        const chunk = extractLegCasesPayload(res);
+        allCases.push(...chunk);
+        cursor = res?.data?.next_cursor ?? null;
+        pageCount += 1;
+      } while (cursor && pageCount < 100);
+
+      setLegCases(allCases);
+      sessionStorage.setItem('legcases_list_cache', JSON.stringify(allCases));
     } catch (fetchError) {
       console.error('Error fetching legal cases:', fetchError);
       setError(t('common.error'));
@@ -173,6 +194,9 @@ const LegalCasesIndex = () => {
       <TableComponent
         data={visibleCases}
         headers={headers}
+        loading={loading}
+        error={error}
+        onRetry={fetchLegCases}
         actionColumns={actionColumns}
         customRenderers={customRenderers}
         renderAddButton={acl.create ? (() => (
