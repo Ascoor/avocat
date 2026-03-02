@@ -153,7 +153,9 @@ export const permissionMap = {
 
 export type PermissionModuleKey = keyof typeof permissionMap;
 export type ModulePermissions<TModule extends PermissionModuleKey = PermissionModuleKey> = (typeof permissionMap)[TModule];
-export type PermissionName = (typeof permissionMap)[PermissionModuleKey][keyof (typeof permissionMap)[PermissionModuleKey]];
+export type PermissionName = {
+  [K in PermissionModuleKey]: (typeof permissionMap)[K][keyof (typeof permissionMap)[K]];
+}[PermissionModuleKey];
 
 export const allPermissions = Array.from(new Set(Object.values(permissionMap).flatMap((modulePermissions) => Object.values(modulePermissions))));
 

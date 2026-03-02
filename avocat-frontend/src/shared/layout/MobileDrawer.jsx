@@ -9,6 +9,8 @@ import { useLanguage } from "@shared/contexts/LanguageContext";
 import { sidebarGroups } from "@config/sidebar";
 import { useSecurity } from "@shared/security/SecurityContext";
 import { hasAny, hasPermission } from "@shared/security/permissions";
+import ThemeToggle from "@shared/ui/ThemeToggle";
+import LanguageToggle from "@shared/ui/language-toggle";
 
 const drawerVariants = {
   open: () => ({
@@ -32,9 +34,7 @@ const MobileDrawer = () => {
 
   useEffect(() => {
     const handleEscape = (event) => {
-      if (event.key === "Escape" && isMobileOpen) {
-        closeMobile();
-      }
+      if (event.key === "Escape" && isMobileOpen) closeMobile();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
@@ -43,9 +43,7 @@ const MobileDrawer = () => {
   useEffect(() => {
     if (isMobileOpen) {
       document.documentElement.classList.add("overflow-hidden");
-      return () => {
-        document.documentElement.classList.remove("overflow-hidden");
-      };
+      return () => document.documentElement.classList.remove("overflow-hidden");
     }
     document.documentElement.classList.remove("overflow-hidden");
   }, [isMobileOpen]);
@@ -56,6 +54,7 @@ const MobileDrawer = () => {
       ? hasAny(permissions, item.requiredPermission)
       : hasPermission(permissions, item.requiredPermission);
   };
+
   const visibleGroups = sidebarGroups
     .map((group) => ({
       ...group,
@@ -74,7 +73,7 @@ const MobileDrawer = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeMobile}
-            className={cn("fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm md:hidden")}
+            className="fixed inset-0 z-[9998] bg-background/60 backdrop-blur-sm md:hidden"
           />
           <motion.aside
             custom={isRTL}
@@ -82,31 +81,33 @@ const MobileDrawer = () => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed inset-y-0 start-0 z-[9999] flex h-full w-full max-w-[360px] flex-col border border-[hsl(var(--color-border))] bg-[hsl(var(--color-surface-2))] text-[hsl(var(--color-text))] shadow-custom-xl md:hidden"
+            className="fixed inset-y-0 start-0 z-[9999] flex h-full w-full max-w-[320px] flex-col border-e border-border bg-card text-foreground shadow-2xl md:hidden"
             dir={isRTL ? "rtl" : "ltr"}
           >
+            {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-4 py-4">
               <div>
-                <p className="text-sm font-semibold">Avocat</p>
-                <p className="text-xs text-sidebar-text-muted">{t("common.dashboard")}</p>
+                <p className="text-sm font-semibold text-foreground">Avocat</p>
+                <p className="text-xs text-muted-foreground">{t("common.dashboard")}</p>
               </div>
               <Button variant="ghost" size="icon" onClick={closeMobile} aria-label={t("common.close")}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
 
-            <nav className="flex flex-1 flex-col gap-6 overflow-y-auto p-4">
+            {/* Navigation */}
+            <nav className="flex flex-1 flex-col gap-5 overflow-y-auto p-4">
               {visibleGroups.map((group) => (
-                <div key={group.key} className="space-y-3">
-                  <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-sidebar-text-muted">
+                <div key={group.key} className="space-y-2">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     {t(`sidebar.sections.${group.key}`)}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {group.items.map((item) => {
                       if (item.children?.length) {
                         return (
-                          <div key={item.key} className="space-y-2">
-                            <p className="text-xs font-semibold text-sidebar-foreground">{t(item.labelKey)}</p>
+                          <div key={item.key} className="space-y-1">
+                            <p className="text-xs font-semibold text-foreground px-3 py-1">{t(item.labelKey)}</p>
                             {item.children.map((child) => {
                               const Icon = child.icon;
                               return (
@@ -116,10 +117,10 @@ const MobileDrawer = () => {
                                   onClick={closeMobile}
                                   className={({ isActive }) =>
                                     cn(
-                                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium",
+                                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                                       isActive
-                                        ? "bg-[hsl(var(--sidebar-item-active-bg))] text-[hsl(var(--sidebar-primary))]"
-                                        : "text-sidebar-text-muted",
+                                        ? "bg-primary/10 text-primary"
+                                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                                     )
                                   }
                                 >
@@ -140,10 +141,10 @@ const MobileDrawer = () => {
                           onClick={closeMobile}
                           className={({ isActive }) =>
                             cn(
-                              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium",
+                              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                               isActive
-                                ? "bg-[hsl(var(--sidebar-item-active-bg))] text-[hsl(var(--sidebar-primary))]"
-                                : "text-sidebar-text-muted",
+                                ? "bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                             )
                           }
                         >
@@ -156,6 +157,12 @@ const MobileDrawer = () => {
                 </div>
               ))}
             </nav>
+
+            {/* Footer with toggles */}
+            <div className="border-t border-border p-4 flex items-center gap-3">
+              <ThemeToggle size="sm" />
+              <LanguageToggle />
+            </div>
           </motion.aside>
         </>
       )}

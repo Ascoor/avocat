@@ -1,6 +1,8 @@
 // Placeholder module stubs for vendor packages that may be missing typings.
 // Add specific module declarations here as needed.
 
+declare module '*.css' {}
+
 declare module '*.svg' {
   const content: string;
   export default content;

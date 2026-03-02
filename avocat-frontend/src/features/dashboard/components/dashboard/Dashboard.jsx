@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchClients } from '@app/store/clientsSlice';
-import { useThemeProvider } from '@shared/contexts/ThemeContext';
 import api from '@shared/services/api/axiosConfig';
 import DashboardSearch from './DashboardSearch';
 import MainCard from '@shared/components/common/MainCard';
@@ -35,8 +34,6 @@ const Home = () => {
     serviceCount: 0,
     legalSessionCount: 0,
   });
-  const { currentTheme } = useThemeProvider();
-  const isDarkMode = currentTheme === 'dark';
 
   useEffect(() => {
     dispatch(fetchClients());
@@ -63,7 +60,6 @@ const Home = () => {
     const debounceTimeout = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 300);
-
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);
 
@@ -72,33 +68,31 @@ const Home = () => {
       setFilteredClients([]);
       return;
     }
-
     const normalizedSearchTerm = debouncedSearchTerm.trim().toLowerCase();
     const result = clients.filter((client) => {
       const name = client.name?.toLowerCase() || '';
       const slug = String(client.slug || '').toLowerCase();
       const phoneNumber = String(client.phone_number || '').toLowerCase();
-
       return (
         name.includes(normalizedSearchTerm) ||
         slug.includes(normalizedSearchTerm) ||
         phoneNumber.includes(normalizedSearchTerm)
       );
     });
-
     setFilteredClients(result.slice(0, 5));
   }, [debouncedSearchTerm, clients]);
 
   return (
-    <div className="p-4 mt-16 xl:max-w-7xl xl:mx-auto w-full">
-      <div className="flex justify-center mb-6">
-        <div className="flex w-full max-w-2xl app-panel p-4 animate-fade-in-up gap-2">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Search bar */}
+      <div className="flex justify-center">
+        <div className="w-full max-w-2xl app-panel p-3 sm:p-4">
           <input
             type="text"
             placeholder="بحث بالإسم، رقم الهاتف، رقم الموكل"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 rounded-xl text-center bg-surface border-2 border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/40"
+            className="w-full p-2.5 rounded-xl text-center bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
           />
         </div>
       </div>
@@ -112,7 +106,8 @@ const Home = () => {
         />
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pb-4 animate-fade-in-up">
+          {/* KPI Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <MainCard
               count={counts.legalSessionCount}
               icon={MainSessions}
@@ -136,17 +131,21 @@ const Home = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 pb-4 animate-fade-in-up">
-            <DashboardCard01 isDarkMode={isDarkMode} />
-            <DashboardCard02 isDarkMode={isDarkMode} />
-            <DashboardCard03 isDarkMode={isDarkMode} />
-            <DashboardCard04 isDarkMode={isDarkMode} />
-            <DashboardCard05 isDarkMode={isDarkMode} />
-            <DashboardCard06 isDarkMode={isDarkMode} />
-          </div>
-
+          {/* Dashboard Cards */}
           <Suspense fallback={<HomeSpinner />}>
-            <div className="mt-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <DashboardCard01 />
+              <DashboardCard02 />
+              <DashboardCard03 />
+              <DashboardCard04 />
+              <DashboardCard05 />
+              <DashboardCard06 />
+            </div>
+          </Suspense>
+
+          {/* Calendar */}
+          <Suspense fallback={<HomeSpinner />}>
+            <div className="card-premium p-4 sm:p-6">
               <CalendarPage />
             </div>
           </Suspense>

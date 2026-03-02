@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, PanelLeft, LogOut, Settings, User, Languages, SunMoon } from "lucide-react";
+import { Menu, PanelLeft, LogOut, Settings, User } from "lucide-react";
 import { Button } from "@shared/ui/button";
 import {
   DropdownMenu,
@@ -24,19 +24,18 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
-  const toggleLabel = language === "ar" ? t("language.switchToEnglish") : t("language.switchToArabic");
-
   return (
     <header className={cn("header-shell sticky top-0 z-40", className)}>
-      <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+      {/* Main row */}
+      <div className="mx-auto flex h-14 sm:h-16 w-full items-center justify-between px-3 sm:px-6 lg:px-8">
         {/* LEFT */}
-        <div className={cn("flex items-center gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
+        <div className={cn("flex items-center gap-2 sm:gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
           {/* Mobile drawer toggle */}
           <Button
             variant="outline"
             size="icon"
             onClick={toggleMobile}
-            className="md:hidden"
+            className="md:hidden shrink-0"
             aria-label={isMobileOpen ? t("common.close") : t("common.menu")}
           >
             <Menu className="h-5 w-5" />
@@ -47,57 +46,46 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
               variant="outline"
               size="icon"
               onClick={toggleCollapsed}
-              className="hidden md:flex"
+              className="hidden md:flex shrink-0"
               aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
             >
               <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && (isRTL ? "-rotate-180" : "rotate-180"))} />
             </Button>
           )}
 
-          {/* Title */}
+          {/* Title — hidden on small mobile */}
           {title && (
-            <div className="hidden min-w-0 sm:block text-start">
-              <p className="text-sm text-muted-foreground">{t("common.workspace")}</p>
-              <h1 className="text-lg font-semibold text-foreground truncate">{title}</h1>
+            <div className="hidden sm:block min-w-0 text-start">
+              <p className="text-xs text-muted-foreground">{t("common.workspace")}</p>
+              <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate">{title}</h1>
             </div>
           )}
         </div>
 
-        {/* MIDDLE (Tabs) - desktop only */}
-        <div className="hidden lg:flex flex-1 px-4">
+        {/* MIDDLE — Tabs: desktop only */}
+        <div className="hidden lg:flex flex-1 px-4 overflow-hidden">
           <HeaderTabs className={cn("w-full", isRTL ? "justify-end" : "justify-start")} />
         </div>
 
-        {/* RIGHT */}
-        <div className={cn("flex items-center gap-2 sm:gap-3", isRTL && "flex-row-reverse")}>
-          <div className="hidden sm:flex items-center gap-2">
-            <div className="tab-pill px-2 py-1">
-              <ThemeToggle />
-            </div>
-            <div className="tab-pill px-2 py-1">
-              <LanguageToggle />
-            </div>
+        {/* RIGHT — actions */}
+        <div className={cn("flex items-center gap-1.5 sm:gap-2", isRTL && "flex-row-reverse")}>
+          {/* Theme + Language — visible on ALL screens */}
+          <ThemeToggle size="sm" className="shrink-0" />
+          <div className="hidden sm:block">
+            <LanguageToggle />
           </div>
 
-          <div className="sm:hidden flex items-center gap-2">
-            <Button variant="outline" size="icon" aria-label={t("common.switchToDark")}>
-              <SunMoon className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" aria-label={toggleLabel}>
-              <Languages className="h-4 w-4" />
-            </Button>
-          </div>
-
+          {/* User menu */}
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold">
+                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2">
+                  <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-semibold shrink-0">
                     {user.name?.slice(0, 1) || "A"}
                   </span>
 
-                  <span className="hidden flex-col items-start text-left sm:flex">
-                    <span className="text-sm font-semibold">{user.name || t("common.demoUser")}</span>
+                  <span className="hidden md:flex flex-col items-start text-start">
+                    <span className="text-sm font-semibold text-foreground">{user.name || t("common.demoUser")}</span>
                     <span className="text-xs text-muted-foreground">
                       {user?.role
                         ? t(`roles.${user.role}`, {
@@ -112,27 +100,33 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{user.name || t("common.demoUser")}</p>
+                    <p className="text-sm font-medium text-foreground">{user.name || t("common.demoUser")}</p>
                     <p className="text-xs text-muted-foreground">{user?.email || t("common.demoEmail")}</p>
                   </div>
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />
 
+                {/* Language toggle for mobile inside menu */}
+                <DropdownMenuItem className="sm:hidden">
+                  <LanguageToggle />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="sm:hidden" />
+
                 <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                  <User className="me-2 h-4 w-4" />
                   {t("common.profile")}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                  <Settings className="me-2 h-4 w-4" />
                   {t("common.settings")}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem className="text-destructive" onClick={logout}>
-                  <LogOut className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                  <LogOut className="me-2 h-4 w-4" />
                   {t("common.signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -141,7 +135,8 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
         </div>
       </div>
 
-      <div className="lg:hidden hidden md:block px-4 sm:px-6 pb-2">
+      {/* Tabs row — tablet only (hidden on mobile + desktop) */}
+      <div className="hidden md:block lg:hidden px-4 sm:px-6 pb-2 overflow-x-auto">
         <HeaderTabs />
       </div>
     </header>

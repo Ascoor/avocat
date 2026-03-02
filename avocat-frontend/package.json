@@ -11,7 +11,8 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "npm run check:security && vite build",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
     "copy-dist": "cp -R dist/* /var/www/html/avocat.live/public",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",

@@ -16,11 +16,11 @@ const LEGACY_STORAGE_KEY = 'language';
 const FALLBACK_LANGUAGE: LanguageCode = 'en';
 const DEFAULT_LANGUAGE: LanguageCode = 'ar';
 
-const deepMerge = <T extends Record<string, any>>(
-  target: T,
+const deepMerge = (
+  target: Record<string, any>,
   ...sources: Record<string, any>[]
-) => {
-  const output = { ...target };
+): Record<string, any> => {
+  const output: Record<string, any> = { ...target };
   for (const source of sources) {
     Object.keys(source).forEach((key) => {
       const sourceValue = source[key];
@@ -37,12 +37,12 @@ const deepMerge = <T extends Record<string, any>>(
       }
     });
   }
-  return output as T;
+  return output;
 };
 
 const translations: Record<LanguageCode, TranslationTable> = {
-  en: deepMerge(en, enCommon, enSettings, enFinance),
-  ar: deepMerge(ar, arCommon, arSettings, arFinance),
+  en: deepMerge(en, enCommon, enSettings, enFinance) as TranslationTable,
+  ar: deepMerge(ar, arCommon, arSettings, arFinance) as TranslationTable,
 };
 
 const getNestedValue = (source: Record<string, any>, key: string) =>

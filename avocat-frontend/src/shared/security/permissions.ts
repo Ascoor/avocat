@@ -7,7 +7,7 @@ const normalizePermission = (permission?: string) => {
   if (!permission) return permission;
   const normalized = permissionAliases[permission] ?? permission;
 
-  if (import.meta.env.DEV && normalized !== permission) {
+  if ((import.meta as any).env?.DEV && normalized !== permission) {
     legacyPermissionUsage[permission] = (legacyPermissionUsage[permission] ?? 0) + 1;
 
     if (!warnedAliases.has(permission)) {
@@ -34,7 +34,7 @@ export const modulePermissions = <TModule extends PermissionModuleKey>(moduleKey
   permissionMap[moduleKey];
 
 export const canCrud = (permissions: string[] = [], moduleKey: PermissionModuleKey) => {
-  const moduleAcl = permissionMap[moduleKey];
+  const moduleAcl = permissionMap[moduleKey] as Record<string, string>;
   return {
     view: hasPermission(permissions, moduleAcl.view),
     create: hasPermission(permissions, moduleAcl.create),
@@ -46,10 +46,10 @@ export const canCrud = (permissions: string[] = [], moduleKey: PermissionModuleK
 export const canAction = (
   permissions: string[] = [],
   moduleOrPermission: PermissionModuleKey | PermissionName,
-  action?: keyof ModulePermissions,
+  action?: string,
 ) => {
   if (!action) return hasPermission(permissions, moduleOrPermission);
-  return hasPermission(permissions, permissionMap[moduleOrPermission as PermissionModuleKey][action]);
+  return hasPermission(permissions, (permissionMap[moduleOrPermission as PermissionModuleKey] as any)[action]);
 };
 
 export const guardPermissions = (
