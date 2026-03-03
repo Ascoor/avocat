@@ -35,22 +35,10 @@ return new class extends Migration
             $table->index(['category_type', 'category_id']);
             $table->index('occurred_at');
         });
-
-        Schema::table('expenses', function (Blueprint $table) {
-            if (! Schema::hasColumn('expenses', 'legal_ad_id')) {
-                $table->foreignId('legal_ad_id')->nullable()->after('legal_session_id')->constrained('legal_ads')->nullOnDelete();
-            }
-        });
     }
 
     public function down(): void
     {
-        Schema::table('expenses', function (Blueprint $table) {
-            if (Schema::hasColumn('expenses', 'legal_ad_id')) {
-                $table->dropConstrainedForeignId('legal_ad_id');
-            }
-        });
-
         Schema::dropIfExists('financial_transactions');
     }
 };

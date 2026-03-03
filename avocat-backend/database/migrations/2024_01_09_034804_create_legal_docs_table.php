@@ -37,10 +37,14 @@ class CreateLegalDocsTable extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('doc_type_id');
             $table->unsignedBigInteger('doc_sub_type_id');
+            $table->unsignedBigInteger('power_of_attorney_id')->nullable();
+            $table->unsignedBigInteger('leg_case_id')->nullable();
             $table->timestamps();
 
             $table->foreign('doc_type_id')->references('id')->on('doc_types');
             $table->foreign('doc_sub_type_id')->references('id')->on('doc_sub_types');
+            $table->foreign('power_of_attorney_id')->references('id')->on('power_of_attorneys')->nullOnDelete();
+            $table->foreign('leg_case_id')->references('id')->on('leg_cases')->nullOnDelete();
         });
     }
 
@@ -51,8 +55,8 @@ class CreateLegalDocsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('legal_docs');
         Schema::dropIfExists('doc_sub_types');
         Schema::dropIfExists('doc_types');
-        Schema::dropIfExists('legal_docs');
     }
 }

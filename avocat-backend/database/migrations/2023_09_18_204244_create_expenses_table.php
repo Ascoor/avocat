@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('leg_case_id')->nullable()->constrained('leg_cases')->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('legal_session_id')->nullable()->constrained('legal_sessions')->nullOnDelete();
+            $table->foreignId('legal_ad_id')->nullable()->constrained('legal_ads')->nullOnDelete();
             $table->foreignId('expense_category_id')->constrained('expense_categories')->cascadeOnDelete();
             $table->foreignId('client_id')->nullable()->constrained('clients')->nullOnDelete();
             $table->foreignId('unclients_id')->nullable()->constrained('unclients')->nullOnDelete();

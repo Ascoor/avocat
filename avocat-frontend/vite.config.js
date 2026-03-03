@@ -75,7 +75,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: '../public_html', 
+    outDir: '../dist', 
     emptyOutDir: false, 
     minify: 'esbuild',
     sourcemap: false, 

@@ -1,24 +1,22 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * This migration is now intentionally a no-op.
+     *
+     * User role/client columns are part of the base users table schema in:
+     * - 0001_01_01_000000_create_users_table
+     */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['1', '2', '3'])->default('1')->after('password');
-            $table->string('client_id')->nullable()->after('role');
-            $table->string('client_secret')->nullable()->after('client_id');
-        });
+        // no-op
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'client_id', 'client_secret']);
-        });
+        // no-op
     }
 };
