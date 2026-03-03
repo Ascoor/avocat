@@ -20,22 +20,19 @@ import { useSidebar } from "@shared/contexts/SidebarContext";
 import { cn } from "@shared/lib/utils";
 
 const Header = ({ title, className, showSidebarToggle = false }) => {
-  const { language, t, isRTL } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
   return (
     <header className={cn("header-shell sticky top-0 z-40", className)}>
-      {/* Main row */}
-      <div className="mx-auto flex h-14 sm:h-16 w-full items-center justify-between px-3 sm:px-6 lg:px-8">
-        {/* LEFT */}
+      <div className="mx-auto flex min-h-16 w-full items-center justify-between gap-2 px-3 py-2 sm:px-6 lg:px-8">
         <div className={cn("flex items-center gap-2 sm:gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
-          {/* Mobile drawer toggle */}
           <Button
             variant="outline"
             size="icon"
             onClick={toggleMobile}
-            className="md:hidden shrink-0"
+            className="header-action-btn md:hidden shrink-0"
             aria-label={isMobileOpen ? t("common.close") : t("common.menu")}
           >
             <Menu className="h-5 w-5" />
@@ -46,14 +43,13 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
               variant="outline"
               size="icon"
               onClick={toggleCollapsed}
-              className="hidden md:flex shrink-0"
+              className="header-action-btn hidden md:flex shrink-0"
               aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
             >
               <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && (isRTL ? "-rotate-180" : "rotate-180"))} />
             </Button>
           )}
 
-          {/* Title — hidden on small mobile */}
           {title && (
             <div className="hidden sm:block min-w-0 text-start">
               <p className="text-xs text-muted-foreground">{t("common.workspace")}</p>
@@ -62,24 +58,18 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
           )}
         </div>
 
-        {/* MIDDLE — Tabs: desktop only */}
         <div className="hidden lg:flex flex-1 px-4 overflow-hidden">
           <HeaderTabs className={cn("w-full", isRTL ? "justify-end" : "justify-start")} />
         </div>
 
-        {/* RIGHT — actions */}
         <div className={cn("flex items-center gap-1.5 sm:gap-2", isRTL && "flex-row-reverse")}>
-          {/* Theme + Language — visible on ALL screens */}
-          <ThemeToggle size="sm" className="shrink-0" />
-          <div className="hidden sm:block">
-            <LanguageToggle />
-          </div>
+          <ThemeToggle size="sm" className="header-action-btn shrink-0" />
+          <LanguageToggle size="sm" className="shrink-0" />
 
-          {/* User menu */}
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2">
+                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 rounded-full">
                   <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-semibold shrink-0">
                     {user.name?.slice(0, 1) || "A"}
                   </span>
@@ -107,12 +97,6 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
 
                 <DropdownMenuSeparator />
 
-                {/* Language toggle for mobile inside menu */}
-                <DropdownMenuItem className="sm:hidden">
-                  <LanguageToggle />
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="sm:hidden" />
-
                 <DropdownMenuItem>
                   <User className="me-2 h-4 w-4" />
                   {t("common.profile")}
@@ -135,7 +119,6 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
         </div>
       </div>
 
-      {/* Tabs row — tablet only (hidden on mobile + desktop) */}
       <div className="hidden md:block lg:hidden px-4 sm:px-6 pb-2 overflow-x-auto">
         <HeaderTabs />
       </div>

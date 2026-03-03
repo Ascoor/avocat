@@ -1,28 +1,34 @@
 import React from "react";
-import { Globe } from "lucide-react";
-import { Button } from "./button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
-import { useLanguage } from "@shared/contexts/LanguageContext";
+import { Languages } from "lucide-react";
 
-const LanguageToggle = () => {
+import { Button } from "./button";
+import { useLanguage } from "@shared/contexts/LanguageContext";
+import { cn } from "@shared/lib/utils";
+
+const LanguageToggle = ({ size = "md", className = "" }) => {
   const { language, setLanguage, t } = useLanguage();
+  const isArabic = language === "ar";
+
+  const toggleLanguage = () => {
+    setLanguage(isArabic ? "en" : "ar");
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={t("common.language")} className="h-9 w-9">
-          <Globe className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setLanguage("en")} className={language === "en" ? "bg-muted" : ""}>
-          {t("language.english")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage("ar")} className={language === "ar" ? "bg-muted" : ""}>
-          {t("language.arabic")}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={toggleLanguage}
+      aria-label={isArabic ? t("language.english") : t("language.arabic")}
+      className={cn(
+        "lang-toggle rounded-full border bg-background/80 shadow-sm backdrop-blur-sm",
+        "hover:-translate-y-0.5 hover:shadow-md",
+        size === "sm" ? "h-8 px-2.5" : "h-9 px-3",
+        className,
+      )}
+    >
+      <Languages className="h-4 w-4" />
+      <span className="text-xs font-semibold leading-none">{isArabic ? t("language.switchToEnglish") : t("language.switchToArabic")}</span>
+    </Button>
   );
 };
 

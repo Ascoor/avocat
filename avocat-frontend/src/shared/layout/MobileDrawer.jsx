@@ -11,6 +11,7 @@ import { useSecurity } from "@shared/security/SecurityContext";
 import { hasAny, hasPermission } from "@shared/security/permissions";
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
+import { getTopNavOrderIndex, sortItemsByTopNavOrder } from "./nav-order";
 
 const drawerVariants = {
   open: () => ({
@@ -58,11 +59,18 @@ const MobileDrawer = () => {
   const visibleGroups = sidebarGroups
     .map((group) => ({
       ...group,
-      items: group.items
-        .map((item) => ({ ...item, children: item.children?.filter((child) => isAllowed(child)) }))
-        .filter((item) => isAllowed(item) && (!item.children || item.children.length > 0)),
+      items: sortItemsByTopNavOrder(
+        group.items
+          .map((item) => ({ ...item, children: item.children?.filter((child) => isAllowed(child)) }))
+          .filter((item) => isAllowed(item) && (!item.children || item.children.length > 0)),
+      ),
     }))
-    .filter((group) => group.items.length > 0);
+    .filter((group) => group.items.length > 0)
+    .sort((a, b) => {
+      const firstAIndex = getTopNavOrderIndex(a.items[0]?.key);
+      const firstBIndex = getTopNavOrderIndex(b.items[0]?.key);
+      return firstAIndex - firstBIndex;
+    });
 
   return (
     <AnimatePresence mode="wait">
@@ -159,9 +167,9 @@ const MobileDrawer = () => {
             </nav>
 
             {/* Footer with toggles */}
-            <div className="border-t border-border p-4 flex items-center gap-3">
-              <ThemeToggle size="sm" />
-              <LanguageToggle />
+            <div className="border-t border-border/70 p-4 flex items-center justify-between gap-3 bg-muted/20">
+              <ThemeToggle size="sm" className="header-action-btn" />
+              <LanguageToggle size="sm" />
             </div>
           </motion.aside>
         </>

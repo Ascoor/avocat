@@ -7,6 +7,7 @@ import { useLanguage } from '@shared/contexts/LanguageContext';
 import { cn } from '@shared/lib/utils';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { hasAny, hasPermission } from '@shared/security/permissions';
+import { sortItemsByTopNavOrder } from './nav-order';
 
 import {
   DropdownMenu,
@@ -50,26 +51,7 @@ const HeaderTabs = ({ className }) => {
   }, [permissions]);
 
   const orderedItems = useMemo(() => {
-    const preferredOrder = [
-      'dashboard',
-      'customer_service',
-      'documents',
-      'power_of_attorney',
-      'finance',
-      'cases',
-      'services',
-      'follow_work',
-      'reports',
-      'settings',
-      'admin_access',
-    ];
-    const orderMap = new Map(preferredOrder.map((key, index) => [key, index]));
-
-    return [...items].sort((a, b) => {
-      const aOrder = orderMap.get(a.key) ?? Number.MAX_SAFE_INTEGER;
-      const bOrder = orderMap.get(b.key) ?? Number.MAX_SAFE_INTEGER;
-      return aOrder - bOrder;
-    });
+    return sortItemsByTopNavOrder(items);
   }, [items]);
 
   return (
