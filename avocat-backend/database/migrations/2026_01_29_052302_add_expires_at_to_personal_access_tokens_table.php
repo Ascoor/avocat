@@ -1,32 +1,27 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class AddExpiresAtToPersonalAccessTokensTable extends Migration
 {
     /**
-     * Run the migrations.
+     * This migration is now intentionally a no-op.
+     *
+     * The expires_at column is part of the base table schema in:
+     * - 2019_12_14_000001_create_personal_access_tokens_table
      *
      * @return void
      */
     public function up()
     {
-        Schema::table('personal_access_tokens', function (Blueprint $table) {
-            $table->timestamp('expires_at')->nullable()->after('last_used_at');
-        });
+        // no-op
     }
 
     /**
-     * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('personal_access_tokens', function (Blueprint $table) {
-            $table->dropColumn('expires_at');
-        });
+        // no-op
     }
 }
