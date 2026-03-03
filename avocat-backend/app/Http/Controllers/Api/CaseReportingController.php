@@ -54,14 +54,69 @@ class CaseReportingController extends Controller
     public function show(Request $request, int $caseId): JsonResponse
     {
         // Ensure clients are loaded explicitly
-        $case = LegCase::with($this->resolveIncludes($request))
-            ->find($caseId);
+        $case = $this->findCaseOrNotFound($caseId, $this->resolveIncludes($request));
 
-        if (!$case) {
-            return response()->json(['message' => 'Case not found.'], 404);
+        if ($case instanceof JsonResponse) {
+            return $case;
         }
 
         return response()->json(['data' => $case]);
+    }
+
+    /**
+     * Return the legal sessions linked to a case.
+     */
+    public function sessions(int $caseId): JsonResponse
+    {
+        $case = $this->findCaseOrNotFound($caseId, ['legalSessions', 'legalSessions.legalSessionType', 'legalSessions.court', 'legalSessions.lawyer']);
+
+        if ($case instanceof JsonResponse) {
+            return $case;
+        }
+
+        return response()->json(['data' => $case->legalSessions]);
+    }
+
+    /**
+     * Return the procedures linked to a case.
+     */
+    public function procedures(int $caseId): JsonResponse
+    {
+        $case = $this->findCaseOrNotFound($caseId, ['procedures', 'procedures.procedureType', 'procedures.lawyer']);
+
+        if ($case instanceof JsonResponse) {
+            return $case;
+        }
+
+        return response()->json(['data' => $case->procedures]);
+    }
+
+    /**
+     * Return the clients linked to a case.
+     */
+    public function clients(int $caseId): JsonResponse
+    {
+        $case = $this->findCaseOrNotFound($caseId, ['clients']);
+
+        if ($case instanceof JsonResponse) {
+            return $case;
+        }
+
+        return response()->json(['data' => $case->clients]);
+    }
+
+    /**
+     * Return the services linked to a case.
+     */
+    public function services(int $caseId): JsonResponse
+    {
+        $case = $this->findCaseOrNotFound($caseId, ['services']);
+
+        if ($case instanceof JsonResponse) {
+            return $case;
+        }
+
+        return response()->json(['data' => $case->services]);
     }
 
     /**
@@ -169,5 +224,25 @@ class CaseReportingController extends Controller
         $normalized = self::SORT_ALIASES[$sortBy] ?? $sortBy;
 
         return array_key_exists($normalized, self::SORT_ALLOWLIST) ? $normalized : 'created_at';
+    }
+
+    /**
+     * Finds a case and optionally eager loads relations.
+     */
+    private function findCaseOrNotFound(int $caseId, array $with = []): LegCase|JsonResponse
+    {
+        $query = LegCase::query();
+
+        if ($with !== []) {
+            $query->with($with);
+        }
+
+        $case = $query->find($caseId);
+
+        if (!$case) {
+            return response()->json(['message' => 'Case not found.'], 404);
+        }
+
+        return $case;
     }
 }
