@@ -210,6 +210,36 @@
   .dark .header-shell::after {
     animation: neonPulse 4s ease-in-out infinite;
   }
+
+  .header-action-btn {
+    border-color: hsl(var(--border) / 0.9);
+    background: hsl(var(--background) / 0.72);
+    box-shadow: 0 10px 24px -18px hsl(var(--foreground) / 0.42);
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  .header-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 24px -16px hsl(var(--foreground) / 0.38);
+  }
+
+  .lang-toggle {
+    border-color: hsl(var(--border) / 0.9);
+    color: hsl(var(--foreground));
+    background: linear-gradient(130deg, hsl(var(--background) / 0.95), hsl(var(--muted) / 0.75));
+    box-shadow: 0 12px 26px -18px hsl(var(--foreground) / 0.45);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .lang-toggle:hover {
+    border-color: hsl(var(--primary) / 0.45);
+    box-shadow: 0 14px 30px -16px hsl(var(--primary) / 0.35);
+  }
+
+  .dark .lang-toggle {
+    background: linear-gradient(130deg, hsl(var(--background) / 0.9), hsl(var(--muted) / 0.3));
+    box-shadow: 0 12px 24px -14px hsl(var(--primary) / 0.35);
+  }
   
   /* ============================
      4) Header Tabs — Smart Scroll + Separators
