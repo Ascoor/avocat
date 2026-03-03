@@ -1,23 +1,42 @@
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import useFetchEvents from '../hooks/useFetchEvents';
-const CalendarView = () => {
-  const { events } = useFetchEvents();
+import arLocale from '@fullcalendar/core/locales/ar';
+
+const CalendarView = ({
+  events,
+  locale,
+  onEventClick,
+  onDateSelect,
+  isRtl,
+}) => {
   return (
-    <div className="calendar-view">
+    <div className="calendar-view rounded-xl bg-white p-4 shadow-md dark:bg-gray-800">
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        locales={[arLocale]}
+        locale={locale}
+        direction={isRtl ? 'rtl' : 'ltr'}
+        initialView="timeGridWeek"
+        selectable
+        selectMirror
+        dayMaxEvents
+        events={events}
+        select={onDateSelect}
+        eventClick={onEventClick}
+        height="auto"
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
-        locale="ar"
-        events={events}
-        editable={true}
-        eventClick={({ event }) => alert(`📅 حدث: ${event.title}`)}
+        buttonText={{
+          today: locale === 'ar' ? 'اليوم' : 'Today',
+          month: locale === 'ar' ? 'شهر' : 'Month',
+          week: locale === 'ar' ? 'أسبوع' : 'Week',
+          day: locale === 'ar' ? 'يوم' : 'Day',
+        }}
       />
     </div>
   );
