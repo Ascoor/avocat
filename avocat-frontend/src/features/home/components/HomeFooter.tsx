@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
-import { LogoArt, LogoPatren } from '@/assets/images';
+import { LogoBlue, LogoPatren } from '@/assets/images';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 
 const HomeFooter = () => {
   const { t, language } = useLanguage();
   const { theme } = useTheme();
-  const logo = theme === 'dark' ? LogoPatren : LogoArt;
+  const logo = theme === 'dark' ? LogoPatren : LogoBlue;
 
   const quickLinks = [
     { label: t('publicSite.nav.about'), path: '/about' },
