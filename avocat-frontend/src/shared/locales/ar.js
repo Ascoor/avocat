@@ -177,6 +177,9 @@ const ar = {publicSite: {
     privacy: "سياسة الخصوصية",
     terms: "الشروط والأحكام",
     disclaimer: "إخلاء المسؤولية: المعلومات الواردة في هذا الموقع لأغراض عامة فقط ولا تشكل استشارة قانونية.",
+    addressPlaceholder: "[عنوان المكتب]",
+    phonePlaceholder: "[رقم الهاتف]",
+    emailPlaceholder: "[البريد الإلكتروني]",
   },
 
   about: {
@@ -265,6 +268,19 @@ const ar = {publicSite: {
     backToHome: "العودة للرئيسية",
     notFound: "الصفحة غير موجودة",
     notFoundDesc: "عذرًا، الصفحة التي تبحث عنها غير موجودة.",
+  },
+
+  pagePlaceholders: {
+    aboutTitle: "من نحن",
+    servicesTitle: "الخدمات",
+    industriesTitle: "القطاعات",
+    teamTitle: "فريق العمل",
+    insightsTitle: "المعرفة القانونية",
+    contactTitle: "تواصل معنا",
+    bookTitle: "احجز استشارة",
+    serviceDetailsTitle: "تفاصيل الخدمة",
+    articleDetailsTitle: "تفاصيل المقال",
+    subtitle: "هذه الصفحة مربوطة بالمسارات وجاهزة لإضافة محتوى الأعمال النهائي.",
   },
 
   breadcrumb: {

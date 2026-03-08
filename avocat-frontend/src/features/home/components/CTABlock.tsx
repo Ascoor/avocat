@@ -13,7 +13,7 @@ interface CTABlockProps {
 
 const CTABlock = ({ title, description, buttonText, buttonLink = "/book" }: CTABlockProps) => {
   const { t } = useLanguage();
-  const btnText = buttonText || t("cta.book");
+  const btnText = buttonText || t("publicSite.cta.book");
 
   return (
     <section className="section-padding">
@@ -39,7 +39,7 @@ const CTABlock = ({ title, description, buttonText, buttonLink = "/book" }: CTAB
               href="#"
               className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg border border-green-600/40 text-green-500 font-semibold text-base transition-all hover:bg-green-600/10"
             >
-              {t("cta.whatsapp")}
+              {t("publicSite.cta.whatsapp")}
             </a>
           </div>
         </motion.div>

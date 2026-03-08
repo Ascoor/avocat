@@ -48,10 +48,14 @@ export const LanguageProvider = ({ children }) => {
       return humanizeTranslationKey(key);
     };
 
+    const setLanguageValue = (nextLanguage) =>
+      setLanguage(setStoredLanguage(nextLanguage));
+
     return {
       language,
-      setLanguage: (nextLanguage) =>
-        setLanguage(setStoredLanguage(nextLanguage)),
+      lang: language,
+      setLanguage: setLanguageValue,
+      setLang: setLanguageValue,
       direction,
       isRTL,
       t,

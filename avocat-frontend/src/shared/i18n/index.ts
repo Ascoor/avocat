@@ -1,6 +1,7 @@
 import en from '@shared/locales/en';
 import ar from '@shared/locales/ar';
 import enCommon from '@shared/locales/en/common.json';
+import enPublicSite from '@shared/locales/en/public-site';
 import arCommon from '@shared/locales/ar/common.json';
 import enSettings from '@shared/locales/en/settings.json';
 import arSettings from '@shared/locales/ar/settings.json';
@@ -41,7 +42,7 @@ const deepMerge = (
 };
 
 const translations: Record<LanguageCode, TranslationTable> = {
-  en: deepMerge(en, enCommon, enSettings, enFinance) as TranslationTable,
+  en: deepMerge(en, enCommon, enPublicSite, enSettings, enFinance) as TranslationTable,
   ar: deepMerge(ar, arCommon, arSettings, arFinance) as TranslationTable,
 };
 

@@ -14,8 +14,8 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ title, titleEn, summary, summaryEn, icon: Icon, id, index }: ServiceCardProps) => {
-  const { lang, t } = useLanguage();
-  const Arrow = lang === "ar" ? ArrowLeft : ArrowRight;
+  const { language, t } = useLanguage();
+  const Arrow = language === "ar" ? ArrowLeft : ArrowRight;
   const displayTitle = lang === "en" && titleEn ? titleEn : title;
   const displaySummary = lang === "en" && summaryEn ? summaryEn : summary;
 
@@ -36,7 +36,7 @@ const ServiceCard = ({ title, titleEn, summary, summaryEn, icon: Icon, id, index
         <h3 className="mb-3 text-lg font-bold text-foreground">{displayTitle}</h3>
         <p className="text-sm leading-relaxed text-muted-foreground mb-4">{displaySummary}</p>
         <span className="inline-flex items-center gap-2 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-          {t("services.learnMore")}
+          {t("publicSite.services.learnMore")}
           <Arrow className="h-4 w-4" />
         </span>
       </Link>
