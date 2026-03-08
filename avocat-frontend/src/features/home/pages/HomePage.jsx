@@ -5,7 +5,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import useAuth from '@features/auth/components/AuthUser';
 import { BackgroundSvg } from '@assets/images';
+import ServiceCard from '../components/ServiceCard';
+import IndustryCard from "../components/IndustryCard";
+import TeamCard from "../components/TeamCard";
+import ArticleCard from "../components/ArticleCard";
+import CTABlock from "../components/CTABlock";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/shared/ui/accordion";
 import hero1 from "@/assets/images/hero-1.png";
 import hero2 from "@/assets/images/hero-2.png";
 import hero3 from "@/assets/images/hero-3.png";
@@ -168,6 +179,7 @@ const HomePage = () => {
         </div>
       </section>
 
+
       {/* ===== WHY AVOCAT ===== */}
       <section className="section-padding">
         <div className="container">
@@ -192,6 +204,121 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* ===== FEATURED SERVICES ===== */}
+      <section className="section-padding bg-surface">
+        <div className="container">
+          <SectionHeading subtitle={t("services.subtitle")} title={t("services.title")} description={t("services.desc")} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.slice(0, 6).map((service, i) => (
+              <ServiceCard key={service.id} {...service} index={i} />
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link to="/services" className="inline-flex items-center gap-2 text-primary font-medium hover:underline">
+              {t("services.viewAll")}
+              <Arrow className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== INDUSTRIES ===== */}
+      <section className="section-padding">
+        <div className="container">
+          <SectionHeading subtitle={t("industries.subtitle")} title={t("industries.title")} description={t("industries.desc")} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {industries.slice(0, 6).map((ind, i) => (
+              <IndustryCard key={ind.id} {...ind} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PROCESS / LEGAL-TECH ===== */}
+      <section className="section-padding bg-surface">
+        <div className="container">
+          <SectionHeading subtitle={t("process.subtitle")} title={t("process.title")} description={t("process.desc")} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {processSteps.map((step, i) => (
+              <motion.div
+                key={step.key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="relative rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30"
+              >
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">
+                    {i + 1}
+                  </span>
+                  <h3 className="font-bold text-foreground">{t(`process.${step.key}`)}</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(`process.${step.key}.desc`)}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TEAM PREVIEW ===== */}
+      <section className="section-padding">
+        <div className="container">
+          <SectionHeading subtitle={t("team.subtitle")} title={t("team.title")} description={t("team.desc")} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teamMembers.map((member, i) => (
+              <TeamCard key={member.id} {...member} index={i} />
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link to="/team" className="inline-flex items-center gap-2 text-primary font-medium hover:underline">
+              {t("team.viewAll")}
+              <Arrow className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== INSIGHTS PREVIEW ===== */}
+      <section className="section-padding bg-surface">
+        <div className="container">
+          <SectionHeading subtitle={t("insights.subtitle")} title={t("insights.title")} description={t("insights.desc")} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {articles.map((article, i) => (
+              <ArticleCard key={article.id} {...article} index={i} />
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link to="/insights" className="inline-flex items-center gap-2 text-primary font-medium hover:underline">
+              {t("insights.viewAll")}
+              <Arrow className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section className="section-padding">
+        <div className="container max-w-3xl">
+          <SectionHeading subtitle={t("faq.subtitle")} title={t("faq.title")} />
+          <Accordion type="single" collapsible className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-lg px-5">
+                <AccordionTrigger className="text-foreground font-medium text-start hover:no-underline">
+                  {t(`faq.${i}.q`)}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {t(`faq.${i}.a`)}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* ===== FINAL CTA ===== */}
+      <CTABlock title={t("cta.title")} description={t("cta.desc")} />
       </main>
     </div>
   );
