@@ -14,10 +14,10 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ title, titleEn, summary, summaryEn, icon: Icon, id, index }: ServiceCardProps) => {
-    const { lang, t } = useLanguage();
-    const Arrow = lang === "ar" ? ArrowLeft : ArrowRight;
-    const displayTitle = lang === "en" && titleEn ? titleEn : title;
-    const displaySummary = lang === "en" && summaryEn ? summaryEn : summary;
+    const { language, t } = useLanguage();
+    const Arrow = language === "ar" ? ArrowLeft : ArrowRight;
+    const displayTitle = language === "en" && titleEn ? titleEn : title;
+    const displaySummary = language === "en" && summaryEn ? summaryEn : summary;
   
 
   return (

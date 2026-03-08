@@ -131,9 +131,7 @@ declare module 'react' {
   }
 
   export namespace JSX {
-    interface Element {
-      [key: string]: any;
-    }
+    type Element = any
 
     interface IntrinsicElements {
       [elemName: string]: any;
