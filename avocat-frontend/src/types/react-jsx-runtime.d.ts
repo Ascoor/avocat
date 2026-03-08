@@ -1,8 +1,6 @@
 declare module 'react/jsx-runtime' {
   export namespace JSX {
-    interface Element {
-      [key: string]: any;
-    }
+    type Element = any
     interface IntrinsicElements {
       [elemName: string]: any;
       mesh?: any;

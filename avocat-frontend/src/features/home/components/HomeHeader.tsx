@@ -21,7 +21,7 @@ const HomeHeader = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const { lang, setLang, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -65,12 +65,12 @@ const HomeHeader = () => {
           <div className="flex items-center gap-2">
             {/* Language toggle */}
             <button
-              onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+              onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
               className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-surface-elevated transition-colors"
-              title={lang === "ar" ? "Switch to English" : "التبديل للعربية"}
+              title={language === "ar" ? "Switch to English" : "التبديل للعربية"}
             >
               <Globe className="h-4 w-4" />
-              <span className="hidden sm:inline text-xs">{lang === "ar" ? "EN" : "عربي"}</span>
+              <span className="hidden sm:inline text-xs">{language === "ar" ? "EN" : "عربي"}</span>
             </button>
 
             {/* Theme toggle */}
