@@ -16,11 +16,11 @@ interface TeamCardProps {
 }
 
 const TeamCard = ({ name, nameEn, role, roleEn, areas, areasEn, bio, bioEn, languages, index }: TeamCardProps) => {
-  const { lang, t } = useLanguage();
-  const displayName = lang === "en" && nameEn ? nameEn : name;
-  const displayRole = lang === "en" && roleEn ? roleEn : role;
-  const displayBio = lang === "en" && bioEn ? bioEn : bio;
-  const displayAreas = lang === "en" && areasEn ? areasEn : areas;
+  const { language, t } = useLanguage();
+  const displayName = language === "en" && nameEn ? nameEn : name;
+  const displayRole = language === "en" && roleEn ? roleEn : role;
+  const displayBio = language === "en" && bioEn ? bioEn : bio;
+  const displayAreas = language === "en" && areasEn ? areasEn : areas;
 
   return (
     <motion.div
@@ -51,7 +51,7 @@ const TeamCard = ({ name, nameEn, role, roleEn, areas, areasEn, bio, bioEn, lang
         </div>
         <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary">
           <Mail className="h-4 w-4" />
-          {t("team.viewProfile")}
+          {t("publicSite.team.viewProfile")}
         </button>
       </div>
     </motion.div>

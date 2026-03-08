@@ -12,9 +12,9 @@ interface IndustryCardProps {
 }
 
 const IndustryCard = ({ id, title, titleEn, description, descriptionEn, index }: IndustryCardProps) => {
-  const { lang } = useLanguage();
-  const displayTitle = lang === "en" && titleEn ? titleEn : title;
-  const displayDesc = lang === "en" && descriptionEn ? descriptionEn : description;
+  const { language } = useLanguage();
+  const displayTitle = language === "en" && titleEn ? titleEn : title;
+  const displayDesc = language === "en" && descriptionEn ? descriptionEn : description;
 
   return (
     <motion.div

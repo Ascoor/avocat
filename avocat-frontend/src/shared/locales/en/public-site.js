@@ -1,0 +1,140 @@
+const enPublicSite = {
+  publicSite: {
+    nav: {
+      home: 'Home',
+      about: 'About',
+      services: 'Services',
+      industries: 'Industries',
+      team: 'Team',
+      insights: 'Insights',
+      contact: 'Contact',
+      book: 'Book Consultation',
+      clientLogin: 'Client Login',
+    },
+    hero: {
+      slides: {
+        1: {
+          title: 'Modern legal solutions with trusted expertise',
+          desc: 'We deliver premium legal services with transparent, technology-enabled client care.',
+        },
+        2: {
+          title: 'A legal experience built for business growth',
+          desc: 'Strategic legal counsel for companies and founders operating in Egypt.',
+        },
+        3: {
+          title: 'Structured case management and clear updates',
+          desc: 'Organized workflows and timely communication across every legal matter.',
+        },
+        4: {
+          title: 'Your dependable long-term legal partner',
+          desc: 'Institutional legal support for individuals, SMEs, and established enterprises.',
+        },
+      },
+      cta: {
+        book: 'Book Consultation',
+        services: 'Explore Services',
+      },
+    },
+    trust: {
+      consultation: 'Legal Consultation',
+      contracts: 'Contracts & Companies',
+      litigation: 'Litigation & Disputes',
+      management: 'Structured Legal Ops',
+      followup: 'Clear Client Follow-up',
+    },
+    why: {
+      subtitle: 'Why Avocat',
+      title: 'Trusted legal partnership, modern execution',
+      desc: 'We combine deep legal knowledge with practical delivery and digital discipline.',
+      items: {
+        1: { title: 'Proven Legal Expertise', desc: 'Experienced lawyers across core legal practice areas.' },
+        2: { title: 'Efficient Digital Operations', desc: 'Modern workflows for speed, clarity, and quality.' },
+        3: { title: 'Fast Response & Follow-up', desc: 'Consistent updates and timely communication.' },
+        4: { title: 'Premium Client Experience', desc: 'Transparent process from kickoff to closure.' },
+      },
+    },
+    services: {
+      subtitle: 'Our Services',
+      title: 'Comprehensive legal solutions',
+      desc: 'Specialized legal services tailored for organizations and individuals.',
+      viewAll: 'View all services',
+      learnMore: 'Learn more',
+    },
+    industries: {
+      subtitle: 'Industries',
+      title: 'Legal support across key sectors',
+      desc: 'Industry-aware legal guidance aligned with your operational reality.',
+    },
+    process: {
+      subtitle: 'Methodology',
+      title: 'A structured and transparent legal journey',
+      desc: 'A practical legal workflow that keeps every case organized and accountable.',
+      steps: {
+        1: { title: 'Understand the matter', desc: 'We gather context and define legal priorities.' },
+        2: { title: 'Review documents', desc: 'We examine available records and supporting evidence.' },
+        3: { title: 'Build legal strategy', desc: 'We design an approach aligned with your objectives.' },
+        4: { title: 'Execute and monitor', desc: 'We implement the plan with active case tracking.' },
+        5: { title: 'Continuous reporting', desc: 'You receive regular status updates and next steps.' },
+        6: { title: 'Closure or ongoing support', desc: 'We conclude the matter or continue advisory support.' },
+      },
+    },
+    team: {
+      subtitle: 'Our Team',
+      title: 'Specialized legal professionals',
+      desc: 'A multidisciplinary team of lawyers and legal advisors.',
+      viewProfile: 'Contact',
+      viewAll: 'View full team',
+    },
+    insights: {
+      subtitle: 'Legal Insights',
+      title: 'Latest legal articles',
+      desc: 'Practical legal analysis and updates from the Avocat team.',
+      viewAll: 'View all articles',
+    },
+    faq: {
+      subtitle: 'FAQ',
+      title: 'Frequently asked questions',
+      items: {
+        1: { q: 'How can I book a consultation?', a: 'You can book online through our consultation page or contact us by phone/WhatsApp.' },
+        2: { q: 'Do you serve businesses and individuals?', a: 'Yes. We support both corporate and individual legal matters.' },
+        3: { q: 'How do you handle confidentiality?', a: 'All shared information is treated under strict professional confidentiality.' },
+        4: { q: 'Can you review our contracts?', a: 'Yes. We draft, review, and negotiate a wide range of agreements.' },
+        5: { q: 'Do you provide ongoing retainers?', a: 'Yes. We offer monthly legal retainers tailored to your needs.' },
+      },
+    },
+    cta: {
+      title: 'Need trusted legal support?',
+      desc: 'Book a consultation and let our team guide your next legal step with confidence.',
+      book: 'Book Consultation',
+      whatsapp: 'Contact via WhatsApp',
+    },
+    footer: {
+      brand: 'Avocat is a premium Egyptian law firm combining legal depth with modern execution.',
+      quickLinks: 'Quick Links',
+      ourServices: 'Core Services',
+      contact: 'Contact',
+      workingHoursValue: 'Sun - Thu | 9:00 AM - 6:00 PM',
+      addressPlaceholder: '[Office Address]',
+      phonePlaceholder: '[Phone Number]',
+      emailPlaceholder: '[Email Address]',
+      disclaimer: 'General information on this site is not legal advice and does not create attorney-client relationship.',
+      rights: 'All rights reserved.',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Use',
+    },
+    pagePlaceholders: {
+      aboutTitle: 'About Avocat',
+      servicesTitle: 'Our Services',
+      industriesTitle: 'Industries We Serve',
+      teamTitle: 'Legal Team',
+      insightsTitle: 'Insights',
+      contactTitle: 'Contact Us',
+      bookTitle: 'Book Consultation',
+      serviceDetailsTitle: 'Service Details',
+      articleDetailsTitle: 'Article Details',
+      subtitle: 'This page structure is connected and ready for business content enrichment.',
+    },
+  },
+};
+
+export default enPublicSite;
