@@ -38,6 +38,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
           )}
         >
           <div className="absolute inset-0 bg-gradient-hero" />
+          <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 opacity-40">
             <div className="absolute -top-16 end-0 h-72 w-72 rounded-full bg-[hsl(var(--gold))] blur-[120px]" />
             <div className="absolute bottom-0 start-0 h-72 w-72 rounded-full bg-[hsl(var(--primary-glow))] blur-[140px]" />
@@ -65,7 +66,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
               variants={fadeInUp}
               custom={2}
               className={cn(
-                "mb-4 text-4xl font-semibold text-white xl:text-5xl",
+                "mb-4 text-4xl font-semibold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] xl:text-5xl",
                 isRTL ? "font-arabic leading-tight" : "font-display tracking-tight",
               )}
             >
@@ -77,7 +78,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
               animate="visible"
               variants={fadeInUp}
               custom={3}
-              className={cn("mb-8 max-w-lg text-base text-white/85 leading-relaxed", !isRTL && "text-lg")}
+              className={cn("mb-8 max-w-lg text-base text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.3)] leading-relaxed", !isRTL && "text-lg")}
             >
               {hero?.description}
             </motion.p>
@@ -94,7 +95,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                     className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm"
                   >
                     <div className="mt-0.5 text-[hsl(var(--gold))]">{highlight.icon}</div>
-                    <p className="text-sm text-white/85">{highlight.text}</p>
+                    <p className="text-sm text-white/90">{highlight.text}</p>
                   </motion.div>
                 ))}
               </motion.div>
@@ -111,7 +112,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                 {hero.stats.map((stat, index) => (
                   <div key={index} className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-center backdrop-blur-sm sm:text-start">
                     <div className="text-2xl font-bold text-[hsl(var(--gold))]">{stat.value}</div>
-                    <div className="text-sm text-white/60">{stat.label}</div>
+                    <div className="text-sm text-white/75">{stat.label}</div>
                   </div>
                 ))}
               </motion.div>
