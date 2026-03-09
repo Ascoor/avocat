@@ -34,6 +34,9 @@ const ar = {publicSite: {
       book: "احجز استشارة",
       services: "استكشف خدماتنا",
     },
+    prevSlide: "الشريحة السابقة",
+    nextSlide: "الشريحة التالية",
+    slideLabel: "الشريحة {{number}}",
   },
 
   trust: {
@@ -176,11 +179,15 @@ const ar = {publicSite: {
     rights: "جميع الحقوق محفوظة.",
     privacy: "سياسة الخصوصية",
     terms: "الشروط والأحكام",
+    firmName: "مكتب أفوكات للمحاماة",
+    serviceLinks: ["القضايا المدنية والتجارية", "تأسيس الشركات", "العقود", "التحكيم", "الاستشارات المستمرة"],
     disclaimer: "إخلاء المسؤولية: المعلومات الواردة في هذا الموقع لأغراض عامة فقط ولا تشكل استشارة قانونية.",
     addressPlaceholder: "[عنوان المكتب]",
     phonePlaceholder: "[رقم الهاتف]",
     emailPlaceholder: "[البريد الإلكتروني]",
   },
+
+  backToTop: "العودة إلى الأعلى",
 
   about: {
     subtitle: "من نحن",

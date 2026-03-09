@@ -1,49 +1,68 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon, Globe, LogIn, LayoutDashboard } from "lucide-react";
+import { useState, useEffect, useMemo, type MouseEvent } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Sun, Moon, Globe, LogIn, LayoutDashboard } from 'lucide-react';
 
-import {LogoPatren,LogoBlue} from "@/assets/images" 
-import { useLanguage } from "@/shared/contexts/LanguageContext";
-import { useTheme } from "@/shared/contexts/ThemeContext";
-import { useAuth } from "@/shared/contexts/AuthContext";
+import { LogoPatren, LogoBlue } from '@/assets/images';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { scrollToSection } from '../utils/smoothScroll';
 
-const navKeys = [
-  { key: "nav.home", path: "/" },
-  { key: "nav.about", path: "/about" },
-  { key: "nav.services", path: "/services" },
-  { key: "nav.industries", path: "/industries" },
-  { key: "nav.team", path: "/team" },
-  { key: "nav.insights", path: "/insights" },
-  { key: "nav.contact", path: "/contact" },
+const navItems = [
+  { key: 'publicSite.nav.home', path: '/', sectionId: 'hero' },
+  { key: 'publicSite.nav.about', path: '/about', sectionId: 'why' },
+  { key: 'publicSite.nav.services', path: '/services', sectionId: 'services' },
+  { key: 'publicSite.nav.industries', path: '/industries', sectionId: 'industries' },
+  { key: 'publicSite.nav.team', path: '/team', sectionId: 'team' },
+  { key: 'publicSite.nav.insights', path: '/insights', sectionId: 'insights' },
+  { key: 'publicSite.nav.contact', path: '/contact', sectionId: 'cta' },
 ];
 
 const HomeHeader = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === "/";
+  const navigate = useNavigate();
+  const isHome = location.pathname === '/';
   const { language, setLanguage, t, direction, isRTL } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => setMobileOpen(false), [location]);
 
   const headerBg = scrolled || !isHome
-    ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm"
-    : "bg-transparent";
+    ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-sm'
+    : 'bg-transparent';
 
-  const orderedNavKeys = isRTL ? [...navKeys].reverse() : navKeys;
-  const authActionPath = isAuthenticated ? "/dashboard" : "/login";
-  const authActionKey = isAuthenticated ? "common.dashboard" : "nav.clientLogin";
+  const orderedNavItems = useMemo(
+    () => (isRTL ? [...navItems].reverse() : navItems),
+    [isRTL],
+  );
+  const authActionPath = isAuthenticated ? '/dashboard' : '/login';
+  const authActionKey = isAuthenticated ? 'common.dashboard' : 'publicSite.nav.clientLogin';
   const AuthActionIcon = isAuthenticated ? LayoutDashboard : LogIn;
 
-  const logo = theme === "dark" ? LogoPatren : LogoBlue;
+  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, item: (typeof navItems)[number]) => {
+    if (!item.sectionId) return;
+
+    if (location.pathname === '/') {
+      event.preventDefault();
+      scrollToSection(item.sectionId);
+      return;
+    }
+
+    event.preventDefault();
+    navigate(`/#${item.sectionId}`);
+  };
+
+  const logo = theme === 'dark' ? LogoPatren : LogoBlue;
+
   return (
     <>
       <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${headerBg}`}>
@@ -52,43 +71,41 @@ const HomeHeader = () => {
             <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
           </Link>
 
-          <nav
-            dir={direction}
-            className={`hidden lg:flex items-center gap-1 ${isRTL ? "justify-end" : "justify-start"}`}
-          >
-            {orderedNavKeys.map((link) => (
+          <nav dir={direction} className={`hidden lg:flex items-center gap-1 ${isRTL ? 'justify-end' : 'justify-start'}`}>
+            {orderedNavItems.map((item) => (
               <Link
-                key={link.path}
-                to={link.path}
+                key={item.path}
+                to={item.path}
+                onClick={(event) => handleNavClick(event, item)}
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  location.pathname === link.path
-                    ? "text-primary"
-                    : "text-foreground/80 hover:text-foreground hover:bg-surface-elevated"
+                  location.pathname === item.path
+                    ? 'text-primary'
+                    : 'text-foreground/80 hover:text-foreground hover:bg-surface-elevated'
                 }`}
               >
-                {t(link.key)}
+                {t(item.key)}
               </Link>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
-            {/* Language toggle */}
             <button
-              onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+              onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
               className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-surface-elevated transition-colors"
               title={language === 'ar' ? t('language.english') : t('language.arabic')}
             >
               <Globe className="h-4 w-4" />
-              <span className="hidden sm:inline text-xs">{language === "ar" ? "EN" : "عربي"}</span>
+              <span className="hidden sm:inline text-xs">
+                {language === 'ar' ? t('language.switchToEnglish') : t('language.switchToArabic')}
+              </span>
             </button>
 
-            {/* Theme toggle */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-surface-elevated transition-colors"
-             title={theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')}
+              title={theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')}
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
 
             <Link
@@ -100,57 +117,40 @@ const HomeHeader = () => {
               <span>{t(authActionKey)}</span>
             </Link>
 
-            <Link
-              to="/book"
-              className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold transition-all hover:brightness-110 glow-red"
-            >
-              {t("nav.book")}
+            <Link to="/book" className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold transition-all hover:brightness-110 glow-red">
+              {t('publicSite.nav.book')}
             </Link>
 
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-foreground"
- 
-              aria-label={t('common.menu')}
-            >
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2 text-foreground" aria-label={t('common.menu')}>
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-background/98 backdrop-blur-lg pt-20 lg:hidden">
-          <nav
-            dir={direction}
-            className={`container flex flex-col gap-1 py-6 ${isRTL ? "items-end text-right" : "items-start text-left"}`}
-          >
-            {orderedNavKeys.map((link) => (
+          <nav dir={direction} className={`container flex flex-col gap-1 py-6 ${isRTL ? 'items-end text-right' : 'items-start text-left'}`}>
+            {orderedNavItems.map((item) => (
               <Link
-                key={link.path}
-                to={link.path}
+                key={item.path}
+                to={item.path}
+                onClick={(event) => handleNavClick(event, item)}
                 className={`px-4 py-3 text-lg font-medium rounded-lg transition-colors ${
-                  location.pathname === link.path
-                    ? "text-primary bg-primary/10"
-                    : "text-foreground hover:bg-surface-elevated"
+                  location.pathname === item.path
+                    ? 'text-primary bg-primary/10'
+                    : 'text-foreground hover:bg-surface-elevated'
                 }`}
               >
-                {t(link.key)}
+                {t(item.key)}
               </Link>
             ))}
-            <Link
-              to={authActionPath}
-              className="mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-semibold"
-            >
+            <Link to={authActionPath} className="mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-semibold">
               <AuthActionIcon className="h-4 w-4" />
               {t(authActionKey)}
             </Link>
-            <Link
-              to="/book"
-              className="flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold"
-            >
-              {t("nav.book")}
+            <Link to="/book" className="flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold">
+              {t('publicSite.nav.book')}
             </Link>
           </nav>
         </div>
@@ -158,5 +158,5 @@ const HomeHeader = () => {
     </>
   );
 };
- 
+
 export default HomeHeader;
