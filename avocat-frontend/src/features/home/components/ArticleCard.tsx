@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@shared/contexts/LanguageContext";
+import { useLanguage } from "@shared/contexts/LanguageContext"; 
 
 interface ArticleCardProps {
   id: string;
@@ -19,12 +19,13 @@ interface ArticleCardProps {
 }
 
 const ArticleCard = ({ id, title, titleEn, summary, summaryEn, category, categoryEn, date, dateEn, readTime, readTimeEn, index }: ArticleCardProps) => {
-  const { language } = useLanguage();
-  const displayTitle = language === "en" && titleEn ? titleEn : title;
-  const displaySummary = language === "en" && summaryEn ? summaryEn : summary;
-  const displayCategory = language === "en" && categoryEn ? categoryEn : category;
-  const displayDate = language === "en" && dateEn ? dateEn : date;
-  const displayReadTime = language === "en" && readTimeEn ? readTimeEn : readTime;
+  const { lang, t } = useLanguage();
+  const Arrow = lang === "ar" ? ArrowLeft : ArrowRight;
+  const displayTitle = lang === "en" && titleEn ? titleEn : title;
+  const displaySummary = lang === "en" && summaryEn ? summaryEn : summary;
+  const displayCategory = lang === "en" && categoryEn ? categoryEn : category;
+  const displayDate = lang === "en" && dateEn ? dateEn : date;
+  const displayReadTime = lang === "en" && readTimeEn ? readTimeEn : readTime;
 
   return (
     <motion.div
@@ -56,4 +57,4 @@ const ArticleCard = ({ id, title, titleEn, summary, summaryEn, category, categor
   );
 };
 
-export default ArticleCard; 
+export default ArticleCard;
