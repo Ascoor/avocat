@@ -105,11 +105,11 @@ const SMART_ACTION_ROWS = [
   },
 ];
 
-const formatValue = (value, format) => {
+const formatValue = (value, format, currencyCode = 'SAR') => {
   if (format === 'currency') {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'SAR',
+      currency: currencyCode,
       maximumFractionDigits: 0,
     }).format(value);
   }
@@ -151,6 +151,7 @@ const Home = () => {
     procedureCount: 0,
     legalSessionCount: 0,
   });
+  const [displayCurrency, setDisplayCurrency] = useState('SAR');
   const [filters, setFilters] = useState({
     branch: 'كل الفروع',
     caseType: 'كل الأنواع',
@@ -189,6 +190,14 @@ const Home = () => {
     }, 300);
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);
+
+
+  useEffect(() => {
+    const officeCurrency = localStorage.getItem('office.defaultCurrencyCode');
+    if (officeCurrency) {
+      setDisplayCurrency(officeCurrency);
+    }
+  }, []);
 
   useEffect(() => {
     if (debouncedSearchTerm.trim() === '') {
@@ -481,7 +490,7 @@ const Home = () => {
                 children: KPI_DEFINITIONS.map((kpi) => (
                   <article key={kpi.key} className="card-premium p-4 sm:p-5">
                     <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">{kpi.label}</p>
-                    <p className="mt-3 text-2xl font-bold text-foreground">{formatValue(kpiValues[kpi.key], kpi.format)}</p>
+                    <p className="mt-3 text-2xl font-bold text-foreground">{formatValue(kpiValues[kpi.key], kpi.format, displayCurrency)}</p>
                   </article>
                 )),
               })}

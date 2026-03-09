@@ -6,6 +6,7 @@ use App\Models\CaseType;
 use App\Models\Court;
 use App\Models\CourtLevel;
 use App\Models\CourtType;
+use App\Models\Currency;
 use App\Models\Division;
 use App\Models\DocSubType;
 use App\Models\DocType;
@@ -29,7 +30,7 @@ return [
         'procedure_settings' => ['procedure_types', 'procedure_place_types'],
         'session_settings' => ['legal_session_types'],
         'announcement_settings' => ['legal_ad_types'],
-        'financial_settings' => ['revenue_categories', 'expense_categories'],
+        'financial_settings' => ['revenue_categories', 'expense_categories', 'currencies'],
         'lawyer_settings' => ['attorney_types'],
         'court_settings' => ['court_levels', 'court_types', 'courts', 'divisions'],
         'document_settings' => ['doc_types', 'doc_sub_types'],
@@ -107,6 +108,12 @@ return [
             'mode' => 'system_overrides',
             'operations' => ['index', 'store', 'update', 'destroy'],
             'in_use_checker' => static fn (int $id): bool => DB::table('expenses')->where('expense_category_id', $id)->exists(),
+        ],
+        'currencies' => [
+            'model' => Currency::class,
+            'name_column' => 'name',
+            'mode' => 'system_only',
+            'operations' => ['index'],
         ],
         'attorney_types' => [
             'model' => AttorneyType::class,

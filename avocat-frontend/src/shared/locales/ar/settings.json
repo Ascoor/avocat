@@ -13,7 +13,8 @@
         "legalAdTypes": "أنواع الإعلانات",
         "revenueCategories": "تصنيفات الإيراد",
         "expenseCategories": "تصنيفات المصروف",
-        "serviceTypes": "أنواع الخدمات"
+        "serviceTypes": "أنواع الخدمات",
+        "currencies": "العملات"
       },
       "fields": {
         "nameAr": "الاسم بالعربية",
