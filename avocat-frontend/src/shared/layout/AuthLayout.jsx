@@ -18,9 +18,16 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background" dir={direction}>
+    <div className="relative min-h-screen overflow-hidden bg-background" dir={direction}>
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 start-[8%] h-72 w-72 rounded-full bg-[hsl(var(--gold))]/10 blur-[140px]" />
+        <div className="absolute bottom-0 end-[6%] h-72 w-72 rounded-full bg-[hsl(var(--primary))]/10 blur-[150px]" />
+      </div>
+
       {toolbar && (
-        <div className="absolute top-4 end-4 z-50 flex items-center gap-2">{toolbar}</div>
+        <div className="absolute top-4 end-4 z-50 flex items-center gap-2 rounded-2xl border border-border/70 bg-background/70 p-1.5 shadow-sm backdrop-blur-xl">
+          {toolbar}
+        </div>
       )}
 
       <div className="flex min-h-screen">
@@ -31,10 +38,11 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
           )}
         >
           <div className="absolute inset-0 bg-gradient-hero" />
-          <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 opacity-40">
             <div className="absolute -top-16 end-0 h-72 w-72 rounded-full bg-[hsl(var(--gold))] blur-[120px]" />
             <div className="absolute bottom-0 start-0 h-72 w-72 rounded-full bg-[hsl(var(--primary-glow))] blur-[140px]" />
           </div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.16),transparent_42%),radial-gradient(circle_at_80%_75%,rgba(255,255,255,0.09),transparent_36%)]" />
 
           <div className="relative z-10 flex h-full flex-col justify-center px-12 py-16 xl:px-16">
             <motion.div initial="hidden" animate="visible" variants={fadeInUp} custom={0} className="mb-8">
@@ -45,7 +53,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
 
             {hero?.badge && (
               <motion.div initial="hidden" animate="visible" variants={fadeInUp} custom={1} className="mb-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur">
                   {hero.badge}
                 </div>
               </motion.div>
@@ -69,10 +77,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
               animate="visible"
               variants={fadeInUp}
               custom={3}
-              className={cn(
-                "mb-8 max-w-lg text-base text-white/80",
-                isRTL ? "leading-relaxed" : "text-lg leading-relaxed",
-              )}
+              className={cn("mb-8 max-w-lg text-base text-white/85 leading-relaxed", !isRTL && "text-lg")}
             >
               {hero?.description}
             </motion.p>
@@ -86,7 +91,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                     animate="visible"
                     variants={fadeInUp}
                     custom={4 + index}
-                    className="flex items-start gap-3"
+                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm"
                   >
                     <div className="mt-0.5 text-[hsl(var(--gold))]">{highlight.icon}</div>
                     <p className="text-sm text-white/85">{highlight.text}</p>
@@ -101,10 +106,10 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
                 animate="visible"
                 variants={fadeInUp}
                 custom={7}
-                className="flex gap-8 border-t border-white/10 pt-8"
+                className="grid grid-cols-3 gap-5 border-t border-white/15 pt-8"
               >
                 {hero.stats.map((stat, index) => (
-                  <div key={index} className="text-center sm:text-start">
+                  <div key={index} className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-center backdrop-blur-sm sm:text-start">
                     <div className="text-2xl font-bold text-[hsl(var(--gold))]">{stat.value}</div>
                     <div className="text-sm text-white/60">{stat.label}</div>
                   </div>
@@ -119,7 +124,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
             transition={{ delay: 0.5, duration: 0.3, ease: "easeOut" }}
             className="relative z-10 px-12 pb-8 xl:px-16"
           >
-            <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
+            <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-md shadow-lg shadow-black/20">
               <Lock className="h-5 w-5 text-[hsl(var(--gold))]" />
               <div className="text-xs text-white/75">{t("auth.securePortal")}</div>
             </div>
@@ -143,7 +148,7 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="relative z-10 w-full max-w-md space-y-6"
           >
-            <div className="rounded-[var(--radius-xl)] border border-border bg-[hsl(var(--card))] p-6 shadow-custom-lg sm:p-8">
+            <div className="rounded-[28px] border border-border/70 bg-[hsl(var(--card))]/95 p-6 shadow-2xl shadow-black/10 ring-1 ring-white/10 backdrop-blur-xl sm:p-8">
               {card?.icon && <div className="mb-4 flex justify-center">{card.icon}</div>}
 
               <div className="mb-6 text-center">
