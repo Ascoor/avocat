@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Transition from '@shared/utils/Transition';
 import useAuth from '@features/auth/components/AuthUser';
 
 function UserMenu({ align = 'left' }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [userImage, setUserImage] = useState('/default-profile.png');
   const trigger = useRef(null);
   const dropdown = useRef(null);
@@ -33,6 +34,12 @@ function UserMenu({ align = 'left' }) {
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
   }, [dropdownOpen]);
+
+  const handleLogout = async () => {
+    await logout();
+    setDropdownOpen(false);
+    navigate('/');
+  };
 
   return (
     <div className="relative inline-flex">
@@ -91,7 +98,7 @@ function UserMenu({ align = 'left' }) {
             <li>
               <button
                 className="font-medium text-sm text-red-500 hover:text-red-600 dark:hover:text-red-400 flex items-center py-2 px-4 w-full text-right"
-                onClick={logout}
+                onClick={handleLogout}
               >
                 تسجيل الخروج
               </button>
