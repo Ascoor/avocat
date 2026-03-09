@@ -38,7 +38,13 @@ const config: Config = {
         neutral: {
           50: "hsl(var(--neutral-50))",
           100: "hsl(var(--neutral-100))",
+          200: "hsl(var(--neutral-200))",
+          300: "hsl(var(--neutral-300))",
+          400: "hsl(var(--neutral-400))",
+          500: "hsl(var(--neutral-500))",
+          600: "hsl(var(--neutral-600))",
           700: "hsl(var(--neutral-700))",
+          800: "hsl(var(--neutral-800))",
           900: "hsl(var(--neutral-900))",
         },
 
@@ -59,16 +65,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--gold))",
           muted: "hsl(var(--gold-muted))",
           light: "hsl(var(--gold-light))",
-          50: "hsl(45, 90%, 95%)",
-          100: "hsl(45, 90%, 85%)",
-          200: "hsl(45, 90%, 75%)",
-          300: "hsl(45, 90%, 65%)",
-          400: "hsl(38, 92%, 60%)",
-          500: "hsl(38, 92%, 50%)",
-          600: "hsl(38, 92%, 45%)",
-          700: "hsl(35, 85%, 40%)",
-          800: "hsl(32, 80%, 35%)",
-          900: "hsl(30, 75%, 30%)",
+          300: "hsl(var(--gold-light))",
+          400: "hsl(var(--gold))",
+          500: "hsl(var(--gold))",
+          600: "hsl(var(--gold-muted))",
         },
 
         /* ACCENT COLORS */
@@ -159,6 +159,18 @@ const config: Config = {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
 
         /* CARD & POPOVER */
         card: {
@@ -192,16 +204,16 @@ const config: Config = {
 
         /* NAVY (Static scale) */
         navy: {
-          50: "hsl(222, 47%, 95%)",
-          100: "hsl(222, 47%, 85%)",
-          200: "hsl(222, 47%, 75%)",
-          300: "hsl(222, 47%, 65%)",
-          400: "hsl(222, 47%, 45%)",
-          500: "hsl(222, 47%, 35%)",
-          600: "hsl(222, 47%, 25%)",
-          700: "hsl(222, 47%, 15%)",
-          800: "hsl(222, 47%, 11%)",
-          900: "hsl(222, 47%, 8%)",
+          50: "hsl(var(--neutral-50))",
+          100: "hsl(var(--neutral-100))",
+          200: "hsl(var(--neutral-200))",
+          300: "hsl(var(--neutral-300))",
+          400: "hsl(var(--neutral-400))",
+          500: "hsl(var(--slate))",
+          600: "hsl(var(--neutral-600))",
+          700: "hsl(var(--neutral-700))",
+          800: "hsl(var(--neutral-800))",
+          900: "hsl(var(--neutral-900))",
         },
       },
       borderRadius: {
@@ -248,6 +260,7 @@ const config: Config = {
         "gradient-card": "var(--gradient-card)",
         "gradient-exclusive": "var(--gradient-exclusive)",
         "gradient-neon": "var(--gradient-neon)",
+        "gradient-cta": "var(--gradient-cta)",
         "header-surface": "var(--header-surface-gradient)",
       },
       strokeWidth: {
