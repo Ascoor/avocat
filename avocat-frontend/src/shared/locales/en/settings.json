@@ -13,7 +13,8 @@
         "legalAdTypes": "Legal Ad Types",
         "revenueCategories": "Revenue Categories",
         "expenseCategories": "Expense Categories",
-        "serviceTypes": "Service Types"
+        "serviceTypes": "Service Types",
+        "currencies": "Currencies"
       },
       "fields": {
         "nameAr": "Arabic Name",

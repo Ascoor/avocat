@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Court;
 use App\Models\CourtLevel;
 use App\Models\CourtType;
+use App\Models\Currency;
 use App\Models\Division;
 use App\Models\Office;
 use App\Models\User;
@@ -175,4 +176,48 @@ class OfficeSettingsControllerTest extends TestCase
             ->assertJsonCount(2, 'data');
     }
 
+
+    public function test_office_preferences_can_set_default_currency_and_lookup_returns_currencies(): void
+    {
+        $office = Office::create(['name' => 'Office A']);
+        $this->actingOfficeAdmin($office->id);
+
+        $egp = Currency::create([
+            'code' => 'EGP',
+            'symbol' => 'E£',
+            'name' => 'Egyptian Pound',
+            'name_ar' => 'جنيه مصري',
+            'name_en' => 'Egyptian Pound',
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
+        $usd = Currency::create([
+            'code' => 'USD',
+            'symbol' => '$',
+            'name' => 'US Dollar',
+            'name_ar' => 'دولار أمريكي',
+            'name_en' => 'US Dollar',
+            'is_active' => true,
+            'sort_order' => 2,
+        ]);
+
+        $this->getJson('/api/v1/lookups/currencies')
+            ->assertOk()
+            ->assertJsonPath('meta.entity', 'currencies')
+            ->assertJsonPath('data.0.code', 'EGP');
+
+        $this->putJson("/api/v1/offices/{$office->id}/preferences", [
+            'default_currency_id' => $usd->id,
+        ])->assertOk()->assertJsonPath('data.default_currency.code', 'USD');
+
+        $this->getJson("/api/v1/offices/{$office->id}/preferences")
+            ->assertOk()
+            ->assertJsonPath('data.default_currency_id', $usd->id)
+            ->assertJsonPath('data.default_currency.code', 'USD');
+
+        $this->putJson("/api/v1/offices/{$office->id}/preferences", [
+            'default_currency_id' => 9999,
+        ])->assertStatus(422)->assertJsonValidationErrors('default_currency_id');
+    }
 }

@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             LegalAdTypeSeeder::class,
             RevenueCategories::class,
             ExpenseCategories::class,
+            CurrenciesSeeder::class,
             ClientsTableSeeder::class,
             LawyerSeeder::class,
             AppealTypesSeeder::class,

@@ -23,6 +23,10 @@ class OfficeSettingResource extends JsonResource
             'court_id' => $this->court_id,
             'case_type_id' => $this->case_type_id,
             'doc_type_id' => $this->doc_type_id,
+            'code' => $this->code,
+            'symbol' => $this->symbol,
+            'name_ar' => $this->name_ar,
+            'name_en' => $this->name_en,
             'resolved_source' => $this->resolved_source,
             'resolved_from_system_id' => $this->resolved_from_system_id,
             'meta' => [
