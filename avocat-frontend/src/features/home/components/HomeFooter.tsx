@@ -18,16 +18,14 @@ const HomeFooter = () => {
     { label: t('publicSite.nav.contact'), path: '/contact' },
   ];
 
-  const serviceLinks = language === 'ar'
-    ? ['القضايا المدنية والتجارية', 'تأسيس الشركات', 'العقود', 'التحكيم', 'الاستشارات المستمرة']
-    : ['Civil & Commercial Cases', 'Company Formation', 'Contracts', 'Arbitration', 'Legal Retainers'];
+  const serviceLinks = [1, 2, 3, 4, 5].map((item) => t(`publicSite.footer.serviceItems.${item}`));
 
   return (
     <footer className="border-t border-border bg-card">
       <div className="container py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <img src={logo} alt="Avocat" className="h-12 w-auto mb-4" />
+            <img src={logo} alt={t('publicSite.footer.firmName')} className="h-12 w-auto mb-4" />
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">{t('publicSite.footer.brand')}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Clock className="h-3.5 w-3.5 text-primary" />
@@ -83,7 +81,7 @@ const HomeFooter = () => {
         <div className="container py-4">
           <p className="text-[11px] text-muted-foreground/60 text-center mb-3">{t('publicSite.footer.disclaimer')}</p>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <span>© {new Date().getFullYear()} {language === 'ar' ? 'مكتب أفوكات للمحاماة' : 'Avocat Law Firm'}. {t('publicSite.footer.rights')}</span>
+            <span>© {new Date().getFullYear()} {t('publicSite.footer.firmName')}. {t('publicSite.footer.rights')}</span>
             <div className="flex gap-4">
               <Link to="#" className="hover:text-primary transition-colors">{t('publicSite.footer.privacy')}</Link>
               <Link to="#" className="hover:text-primary transition-colors">{t('publicSite.footer.terms')}</Link>

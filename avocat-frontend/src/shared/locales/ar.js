@@ -167,9 +167,17 @@ const ar = {publicSite: {
   },
 
   footer: {
+    firmName: "مكتب أفوكات للمحاماة",
     brand: "مكتب أفوكات للمحاماة يقدم خدمات قانونية متميزة في مصر بمعايير احترافية عالية وخبرة واسعة.",
     quickLinks: "روابط سريعة",
     ourServices: "خدماتنا",
+    serviceItems: {
+      1: "القضايا المدنية والتجارية",
+      2: "تأسيس الشركات",
+      3: "العقود",
+      4: "التحكيم",
+      5: "الاستشارات المستمرة",
+    },
     contact: "تواصل معنا",
     workingHours: "ساعات العمل",
     workingHoursValue: "الأحد - الخميس: ٩:٠٠ ص - ٥:٠٠ م",
@@ -180,6 +188,17 @@ const ar = {publicSite: {
     addressPlaceholder: "[عنوان المكتب]",
     phonePlaceholder: "[رقم الهاتف]",
     emailPlaceholder: "[البريد الإلكتروني]",
+  },
+
+  sectionNav: {
+    why: "لماذا أفوكات",
+    services: "الخدمات",
+    industries: "القطاعات",
+    process: "المنهجية",
+    team: "الفريق",
+    insights: "المقالات",
+    faq: "الأسئلة",
+    top: "العودة للأعلى",
   },
 
   about: {
