@@ -34,6 +34,9 @@ const enPublicSite = {
         book: 'Book Consultation',
         services: 'Explore Services',
       },
+      prevSlide: 'Previous slide',
+      nextSlide: 'Next slide',
+      slideLabel: 'Slide {{number}}',
     },
     trust: {
       consultation: 'Legal Consultation',
@@ -121,7 +124,10 @@ const enPublicSite = {
       rights: 'All rights reserved.',
       privacy: 'Privacy Policy',
       terms: 'Terms of Use',
+      firmName: 'Avocat Law Firm',
+      serviceLinks: ['Civil & Commercial Cases', 'Company Formation', 'Contracts', 'Arbitration', 'Legal Retainers'],
     },
+    backToTop: 'Back to top',
     pagePlaceholders: {
       aboutTitle: 'About Avocat',
       servicesTitle: 'Our Services',
