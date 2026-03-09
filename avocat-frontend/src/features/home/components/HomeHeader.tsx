@@ -40,7 +40,7 @@ const HomeHeader = () => {
 
   const orderedNavKeys = isRTL ? [...navKeys].reverse() : navKeys;
   const authActionPath = isAuthenticated ? "/dashboard" : "/login";
-  const authActionKey = isAuthenticated ? "common.dashboard" : "publicSite.nav.clientLogin";
+  const authActionKey = isAuthenticated ? "common.dashboard" : "nav.clientLogin";
   const AuthActionIcon = isAuthenticated ? LayoutDashboard : LogIn;
 
   const logo = theme === "dark" ? LogoPatren : LogoBlue;
@@ -93,7 +93,7 @@ const HomeHeader = () => {
 
             <Link
               to={authActionPath}
-              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-surface-elevated transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-colors"
               title={t(authActionKey)}
             >
               <AuthActionIcon className="h-4 w-4" />
