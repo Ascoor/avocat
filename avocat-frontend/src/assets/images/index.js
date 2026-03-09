@@ -11,12 +11,7 @@ export { default as WelcomeImage } from '../images/welcome.jpg';
 export { default as WelcomeBackground } from '../images/welcome.webp';
 export { default as WelcomePatren } from '../images/logo512.png';
 export { default as WelcomeLogo } from '../images/logo512.png';
-export { default as LandingPageImg } from '../images/landing.png';
-
-export { default as Slider1 } from '../images/home-img/home-slider1.jpeg';
-export { default as Slider2 } from '../images/home-img/slide-2.png';
-export { default as Slider3 } from '../images/home-img/home-slider3.png';
-export { default as Slider4 } from '../images/home-img/home-slider-4.jpeg';
+export { default as LandingPageImg } from '../images/landing.png'; 
 
 export { default as CriminalLaw } from '../images/serviceIcons/criminal law1.svg';
 export { default as RealEstate } from '../images/serviceIcons/real-estate1.svg';

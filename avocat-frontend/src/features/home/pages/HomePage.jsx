@@ -87,12 +87,7 @@ const HomePage = () => {
     <div className="min-h-screen flex flex-col">
       <HomeHeader />
       <main className="flex-1">
-        <img
-          className={`absolute z-10 top-0 max-w-[877px] ${isRTL ? "-right-20" : "-left-20"}`}
-          src={BackgroundSvg}
-          alt="background pattern"
-        />
-
+ 
         <section className="relative min-h-screen flex items-center overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div

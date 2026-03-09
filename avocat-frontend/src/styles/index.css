@@ -229,7 +229,7 @@
   }
 
   .hero-overlay-light {
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.8) 0%, hsl(0 0% 100% / 0.92) 100%);
+    background: linear-gradient(-280deg, hsla(0, 0%, 100%, 0.027) 0%, hsl(0 0% 100% / 0.92) 100%);
   }
 
   .font-english {
@@ -315,29 +315,6 @@
     }
   }
 
-  @keyframes logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-      animation: logo-spin infinite 20s linear;
-    }
-  }
-  
-  .card {
-    padding: 2em;
-  }
-  
-  .read-the-docs {
-    color: #888;
-  }
-  
   @keyframes modalPop {
     from {
       opacity: 0;
