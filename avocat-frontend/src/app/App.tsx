@@ -65,6 +65,10 @@ const App = () => {
             <Route path="/insights/:id" element={<PublicContentPage pageKey="articleDetails" />} />
             <Route path="/contact" element={<PublicContentPage pageKey="contact" />} />
             <Route path="/book" element={<PublicContentPage pageKey="book" />} />
+            <Route path="/privacy" element={<PublicContentPage pageKey="privacy" />} />
+            <Route path="/terms" element={<PublicContentPage pageKey="terms" />} />
+            <Route path="/disclaimer" element={<PublicContentPage pageKey="disclaimer" />} />
+            <Route path="/client-portal" element={<PublicContentPage pageKey="clientPortal" />} />
             <Route
               path="/login"
               element={

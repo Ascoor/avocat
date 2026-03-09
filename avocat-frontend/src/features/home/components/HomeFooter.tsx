@@ -6,7 +6,7 @@ import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 
 const HomeFooter = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { theme } = useTheme();
   const logo = theme === 'dark' ? LogoPatren : LogoBlue;
 
@@ -16,6 +16,7 @@ const HomeFooter = () => {
     { label: t('publicSite.nav.team'), path: '/team' },
     { label: t('publicSite.nav.insights'), path: '/insights' },
     { label: t('publicSite.nav.contact'), path: '/contact' },
+    { label: t('publicSite.nav.clientLogin'), path: '/client-portal' },
   ];
 
   const serviceLinks = t('publicSite.footer.serviceLinks');
@@ -83,8 +84,9 @@ const HomeFooter = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <span>© {new Date().getFullYear()} {t('publicSite.footer.firmName')}. {t('publicSite.footer.rights')}</span>
             <div className="flex gap-4">
-              <Link to="#" className="hover:text-primary transition-colors">{t('publicSite.footer.privacy')}</Link>
-              <Link to="#" className="hover:text-primary transition-colors">{t('publicSite.footer.terms')}</Link>
+              <Link to="/privacy" className="hover:text-primary transition-colors">{t('publicSite.footer.privacy')}</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">{t('publicSite.footer.terms')}</Link>
+              <Link to="/disclaimer" className="hover:text-primary transition-colors">{language === 'en' ? 'Legal Disclaimer' : 'إخلاء المسؤولية'}</Link>
             </div>
           </div>
         </div>
