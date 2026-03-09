@@ -131,13 +131,13 @@ const Login = () => {
         type="button"
         variant="outline"
         size="sm"
-        className="hidden text-xs sm:flex"
+        className="hidden h-9 gap-2 rounded-xl border-border/70 bg-background/80 px-3 text-xs shadow-sm backdrop-blur sm:flex"
         onClick={() => setMirrored((prev) => !prev)}
         aria-pressed={mirrored}
         aria-label={t("auth.login.swap_layout_aria")}
       >
         <ArrowLeftRight className="h-4 w-4" />
-        <span className="ms-1">{t("auth.login.swap_layout")}</span>
+        <span>{t("auth.login.swap_layout")}</span>
       </Button>
 
       <ThemeToggle tone="light" />
@@ -173,8 +173,8 @@ const Login = () => {
       }}
       card={{
         icon: (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--color-primary))]/10">
-            <UserCheck className="h-6 w-6 text-[hsl(var(--color-primary))]" />
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 shadow-lg shadow-primary/20">
+            <UserCheck className="h-7 w-7 text-primary" />
           </div>
         ),
         title: t("auth.login.title"),
@@ -185,7 +185,7 @@ const Login = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 rounded-lg border border-[hsl(var(--color-danger))]/30 bg-[hsl(var(--color-danger))]/10 px-3 py-2 text-sm text-[hsl(var(--color-danger))]"
+                className="flex items-center gap-2 rounded-xl border border-[hsl(var(--color-danger))]/30 bg-[hsl(var(--color-danger))]/10 px-3 py-2.5 text-sm text-[hsl(var(--color-danger))]"
               >
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 <span>{formError}</span>
@@ -194,19 +194,19 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground/90">
                   {t("auth.login.email")}
                 </Label>
 
                 <div className="relative">
-                  <Mail className="absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     placeholder={t("auth.login.email_placeholder")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-11 ps-10"
+                    className="h-11 rounded-xl border-border/80 bg-background/60 ps-10 shadow-sm transition-all focus-visible:border-primary/50 focus-visible:ring-primary/25"
                     required
                     autoComplete="email"
                   />
@@ -215,17 +215,17 @@ const Login = () => {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-medium">
+                  <Label htmlFor="password" className="text-sm font-medium text-foreground/90">
                     {t("auth.login.password")}
                   </Label>
 
-                  <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                  <Link to="/forgot-password" className="text-xs font-medium text-primary/90 transition-colors hover:text-primary hover:underline">
                     {t("auth.login.forgot_password")}
                   </Link>
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 
                   <Input
                     id="password"
@@ -233,7 +233,7 @@ const Login = () => {
                     placeholder={t("auth.login.password_placeholder")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 ps-10 pe-12"
+                    className="h-11 rounded-xl border-border/80 bg-background/60 ps-10 pe-12 shadow-sm transition-all focus-visible:border-primary/50 focus-visible:ring-primary/25"
                     required
                     autoComplete="current-password"
                   />
@@ -242,10 +242,7 @@ const Login = () => {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className={cn(
-                      "absolute top-1/2 -translate-y-1/2 h-8 w-8",
-                      "end-1",
-                    )}
+                    className={cn("absolute top-1/2 h-8 w-8 -translate-y-1/2 rounded-lg", "end-1")}
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? t("auth.login.hide_password") : t("auth.login.show_password")}
                   >
@@ -258,14 +255,17 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(checked === true)} />
-                <Label htmlFor="remember" className="cursor-pointer text-sm text-muted-foreground">
-                  {t("auth.login.remember")}
-                </Label>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(checked === true)} />
+                  <Label htmlFor="remember" className="cursor-pointer text-sm text-muted-foreground">
+                    {t("auth.login.remember")}
+                  </Label>
+                </div>
+                <span className="hidden text-xs text-muted-foreground/80 sm:inline">{t("auth.securePortal")}</span>
               </div>
 
-              <Button type="submit" className="h-11 w-full font-semibold" disabled={loading}>
+              <Button type="submit" className="h-11 w-full rounded-xl font-semibold shadow-lg shadow-primary/30" disabled={loading}>
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
@@ -282,23 +282,20 @@ const Login = () => {
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border" />
+                <div className="w-full border-t border-border/70" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[hsl(var(--color-surface))] px-2 text-muted-foreground">{t("common.or")}</span>
+                <span className="rounded-full bg-[hsl(var(--card))] px-3 text-muted-foreground">{t("common.or")}</span>
               </div>
             </div>
 
             <div className="space-y-3 text-center text-sm">
               <p className="text-muted-foreground">
-                {t("auth.login.no_account")} {" "}
-                <Link to="/signup" className="font-medium text-primary hover:underline">
-                  {t("auth.signup.submit")}
-                </Link>
+                {t("auth.login.no_account")} <Link to="/signup" className="font-semibold text-primary transition-opacity hover:opacity-80">{t("auth.signup.submit")}</Link>
               </p>
 
               <p>
-                <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/" className="inline-flex items-center text-muted-foreground transition-colors hover:text-foreground">
                   {isRTL ? `← ${t("common.backToHome")}` : `← ${t("common.backToHome")}`}
                 </Link>
               </p>
@@ -306,12 +303,12 @@ const Login = () => {
 
             <div
               className={cn(
-                "mt-4 flex items-center gap-3 rounded-xl border border-dashed border-[hsl(var(--color-primary))]/30 bg-[hsl(var(--color-primary))]/5 p-3 text-start",
-                isRTL ? "flex-row-reverse" : "",
+                "mt-4 flex items-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-3 text-start",
+                isRTL && "flex-row-reverse",
               )}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[hsl(var(--color-primary))]/10">
-                <ShieldCheck className="h-5 w-5 text-[hsl(var(--color-primary))]" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
 
               <div className="space-y-0.5 text-xs">
@@ -320,15 +317,15 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="mt-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs">
+            <div className="mt-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs shadow-inner">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-semibold text-foreground">{t("auth.login.demo_title")}</p>
-                <Button type="button" size="sm" variant="outline" onClick={fillDemoCredentials}>
+                <Button type="button" size="sm" variant="outline" className="h-8 rounded-lg border-primary/30 bg-background/80" onClick={fillDemoCredentials}>
                   {t("auth.login.use_demo")}
                 </Button>
               </div>
               <p className="mt-2 text-muted-foreground">{t("auth.login.demo_hint")}</p>
-              <p className="mt-1 text-foreground/90">{demoEmail} / {demoPassword}</p>
+              <p className="mt-1 font-medium text-foreground/90">{demoEmail} / {demoPassword}</p>
             </div>
           </div>
         ),
