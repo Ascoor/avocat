@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   RefreshCw,
   Target,
+  ArrowUp,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@shared/contexts/LanguageContext';
@@ -47,6 +48,7 @@ const HomePage = () => {
   const { t, isRTL } = useLanguage();
   const { theme } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const PrevIcon = isRTL ? ChevronRight : ChevronLeft;
   const NextIcon = isRTL ? ChevronLeft : ChevronRight;
@@ -58,6 +60,56 @@ const HomePage = () => {
     const timer = setInterval(nextSlide, 6000);
     return () => clearInterval(timer);
   }, [nextSlide]);
+
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 560);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const smoothScrollTo = useCallback((targetY) => {
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 4) return;
+
+    const duration = Math.min(1800, Math.max(900, Math.abs(distance) * 0.7));
+    let startTs = null;
+
+    const easeSlowFastSlow = (t) => {
+      if (t < 0.5) {
+        return 4 * t * t * t;
+      }
+      return 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    const step = (ts) => {
+      if (!startTs) startTs = ts;
+      const progress = Math.min((ts - startTs) / duration, 1);
+      const eased = easeSlowFastSlow(progress);
+      window.scrollTo({ top: startY + distance * eased, behavior: 'auto' });
+      if (progress < 1) requestAnimationFrame(step);
+    };
+
+    requestAnimationFrame(step);
+  }, []);
+
+  const scrollToSection = useCallback((id) => {
+    const node = document.getElementById(id);
+    if (!node) return;
+    const offset = 84;
+    const targetY = Math.max(0, node.getBoundingClientRect().top + window.scrollY - offset);
+    smoothScrollTo(targetY);
+  }, [smoothScrollTo]);
+
+  const sectionNav = useMemo(() => [
+    { id: 'why', label: t('publicSite.sectionNav.why') },
+    { id: 'services', label: t('publicSite.sectionNav.services') },
+    { id: 'industries', label: t('publicSite.sectionNav.industries') },
+    { id: 'process', label: t('publicSite.sectionNav.process') },
+    { id: 'team', label: t('publicSite.sectionNav.team') },
+    { id: 'insights', label: t('publicSite.sectionNav.insights') },
+    { id: 'faq', label: t('publicSite.sectionNav.faq') },
+  ], [t]);
 
   const trustItems = [
     { icon: Scale, key: 'consultation' },
@@ -183,7 +235,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding">
+        <section id="why" className="section-padding">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.why.subtitle')} title={t('publicSite.why.title')} description={t('publicSite.why.desc')} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -207,7 +259,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding bg-surface">
+        <section id="services" className="section-padding bg-surface">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.services.subtitle')} title={t('publicSite.services.title')} description={t('publicSite.services.desc')} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -224,7 +276,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding">
+        <section id="industries" className="section-padding">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.industries.subtitle')} title={t('publicSite.industries.title')} description={t('publicSite.industries.desc')} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -235,7 +287,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding bg-surface">
+        <section id="process" className="section-padding bg-surface">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.process.subtitle')} title={t('publicSite.process.title')} description={t('publicSite.process.desc')} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -261,7 +313,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding">
+        <section id="team" className="section-padding">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.team.subtitle')} title={t('publicSite.team.title')} description={t('publicSite.team.desc')} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -278,7 +330,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding bg-surface">
+        <section id="insights" className="section-padding bg-surface">
           <div className="container">
             <SectionHeading subtitle={t('publicSite.insights.subtitle')} title={t('publicSite.insights.title')} description={t('publicSite.insights.desc')} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -295,7 +347,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="section-padding">
+        <section id="faq" className="section-padding">
           <div className="container max-w-3xl">
             <SectionHeading subtitle={t('publicSite.faq.subtitle')} title={t('publicSite.faq.title')} />
             <Accordion type="single" collapsible className="space-y-3">
@@ -315,6 +367,28 @@ const HomePage = () => {
 
         <CTABlock title={t('publicSite.cta.title')} description={t('publicSite.cta.desc')} />
       </main>
+      <div className={`fixed top-1/2 z-30 hidden xl:flex -translate-y-1/2 flex-col gap-2 ${isRTL ? 'right-4' : 'left-4'}`}>
+        {sectionNav.map((section) => (
+          <button
+            key={section.id}
+            onClick={() => scrollToSection(section.id)}
+            className="rounded-full border border-border/70 bg-background/90 px-3 py-1.5 text-xs text-foreground/75 shadow-sm backdrop-blur transition hover:text-foreground hover:border-primary/60"
+          >
+            {section.label}
+          </button>
+        ))}
+      </div>
+
+      {showScrollTop && (
+        <button
+          onClick={() => smoothScrollTo(0)}
+          className={`fixed bottom-6 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition hover:brightness-110 ${isRTL ? 'right-6' : 'left-6'}`}
+          aria-label={t('publicSite.sectionNav.top')}
+          title={t('publicSite.sectionNav.top')}
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
+      )}
       <HomeFooter />
     </div>
   );

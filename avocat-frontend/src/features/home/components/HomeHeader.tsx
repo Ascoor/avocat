@@ -43,7 +43,7 @@ const HomeHeader = () => {
       <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${headerBg}`}>
         <div className="container flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="shrink-0">
-            <img src={logo} alt="أفوكات" className="h-10 md:h-12 w-auto" />
+            <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
@@ -67,7 +67,7 @@ const HomeHeader = () => {
             <button
               onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
               className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-surface-elevated transition-colors"
-              title={language === "ar" ? "Switch to English" : "التبديل للعربية"}
+              title={language === 'ar' ? t('language.english') : t('language.arabic')}
             >
               <Globe className="h-4 w-4" />
               <span className="hidden sm:inline text-xs">{language === "ar" ? "EN" : "عربي"}</span>
@@ -77,7 +77,7 @@ const HomeHeader = () => {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-surface-elevated transition-colors"
-              title={theme === "dark" ? "Light mode" : "Dark mode"}
+              title={theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')}
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
@@ -101,7 +101,7 @@ const HomeHeader = () => {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 text-foreground"
-              aria-label="Menu"
+              aria-label={t('common.menu')}
             >
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
