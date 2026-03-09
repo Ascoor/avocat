@@ -41,15 +41,23 @@ import SectionHeading from '../components/SectionHeading';
 import HomeHeader from '../components/HomeHeader';
 import { services, industries, teamMembers, articles } from '../content/siteData';
 import { scrollToSection, smoothScrollTo } from '../utils/smoothScroll';
+import { usePageMeta } from '../hooks/usePageMeta';
+import { pageMetaContent, officeInfo } from '../content/publicPages';
+import SchemaMarkup from '../components/seo/SchemaMarkup';
 
 const heroImages = [hero1, hero2, hero3, hero4];
 
 const HomePage = () => {
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, language } = useLanguage();
   const { theme } = useTheme();
   const location = useLocation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
+
+  const isEnglish = language === 'en';
+  const homeMeta = pageMetaContent.home[isEnglish ? 'en' : 'ar'];
+  const contactMeta = officeInfo[isEnglish ? 'en' : 'ar'];
+  usePageMeta({ title: homeMeta.title, description: homeMeta.description });
 
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const PrevIcon = isRTL ? ChevronRight : ChevronLeft;
@@ -109,8 +117,18 @@ const HomePage = () => {
     return () => clearTimeout(timeout);
   }, [location.hash]);
 
+  const localBusinessSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LegalService',
+    name: isEnglish ? 'Avocat Law Firm' : 'مكتب أفوكات للمحاماة',
+    telephone: contactMeta.phone,
+    email: contactMeta.email,
+    address: contactMeta.address,
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SchemaMarkup data={localBusinessSchema} />
       <HomeHeader />
       <main className="flex-1">
         <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
