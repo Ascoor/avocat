@@ -1,4 +1,5 @@
 import React from 'react';
+import DashboardPage from '@features/dashboard/pages/DashboardPage';
 import DashboardHome from '@features/dashboard/components/dashboard/Dashboard';
 import ClientUnClientList from '@features/clients/pages/ClientUnClientList';
 import LegalServicList from '@features/legal-services/pages/LegalServicList';
@@ -28,6 +29,7 @@ import DocumentsHubPage from '@features/documents/pages/DocumentsHubPage';
 import PowerOfAttorneyPage from '@features/power-of-attorneys/pages/PowerOfAttorneyPage';
 
 export const DashboardHomeRoutePage = () => <DashboardHome />;
+export const DashboardShellRoutePage = () => <DashboardPage />;
 export const CustomerServiceRoutePage = () => <ClientUnClientList />;
 export const LegalServicesRoutePage = () => <LegalServicList />;
 export const CourtSearchRoutePage = () => <SearchCourt />;
