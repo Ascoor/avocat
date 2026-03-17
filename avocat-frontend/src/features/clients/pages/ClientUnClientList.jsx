@@ -45,13 +45,11 @@ const ClientUnclientList = () => {
     <div className="w-full">
       <div className="p-6">
         <SectionHeader
-
-          listName={t("navigation.customerService")}
+          sectionKey="customerService"
+          title={t("navigation.customerService")}
           subtitle={t("customerService.subtitle")}
-          showBack
+          showBack={false}
           icon={<LexicraftIcon name="client" size={20} />}
-
-          sticky={false}
         />
 
         <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-2 shadow-sm backdrop-blur">

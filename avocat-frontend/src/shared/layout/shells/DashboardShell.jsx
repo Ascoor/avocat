@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,6 +10,14 @@ import { cn } from "@shared/lib/utils";
 const DashboardShell = ({ children, title, className, showSidebarToggle = false }) => {
   const { direction } = useLanguage();
   const location = useLocation();
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  }, [location.pathname, location.search]);
 
   return (
     <div dir={direction} className={cn("dashboard-shell", className)}>
@@ -17,7 +25,7 @@ const DashboardShell = ({ children, title, className, showSidebarToggle = false 
 
       <div className="dashboard-layout">
         <div className="dashboard-content">
-          <main className="dashboard-scroll">
+          <main ref={scrollRef} className="dashboard-scroll">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${location.pathname}${location.search}`}

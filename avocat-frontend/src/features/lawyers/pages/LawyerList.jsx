@@ -7,8 +7,8 @@ import {
 } from '@shared/services/api/lawyers';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import SectionHeader from '@shared/components/common/SectionHeader';
-import { LawyerIcon } from '@assets/icons';
 import TableComponent from '@shared/components/common/TableComponent';
+import GlobalModal from '@shared/components/common/GlobalModal';
 
 const LawyerAddEdit = lazy(() => import('../components/Lawyers/lawyerAddEdit'));
 
@@ -87,21 +87,16 @@ const Lawyers = () => {
     ),
   };
 
-  const renderAddButton = () => (
-    <button
-      onClick={() => {
-        setEditingLawyer(null);
-        setShowModal(true);
-      }}
-      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md transition-all duration-300"
-    >
-      ➕ إضافة محامي
-    </button>
-  );
-
   return (
     <div className="p-6 mt-12 xl:max-w-7xl xl:mx-auto w-full">
-      <SectionHeader listName="المحامون" icon={LawyerIcon} />
+      <SectionHeader
+        sectionKey="lawyers"
+        showBack={false}
+        onPrimaryAction={() => {
+          setEditingLawyer(null);
+          setShowModal(true);
+        }}
+      />
 
       <TableComponent
         data={lawyers}
@@ -110,12 +105,16 @@ const Lawyers = () => {
         onEdit={handleShowEditModal}
         onDelete={handleDeleteLawyer}
         sectionName="lawyers"
-        renderAddButton={renderAddButton}
+        onAdd={() => {
+          setEditingLawyer(null);
+          setShowModal(true);
+        }}
+        addLabel="إضافة محامي"
       />
 
       {}
       {showModal && (
-        <LawyerModal
+        <GlobalModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           title={editingLawyer ? 'تعديل محامي' : 'إضافة محامي'}
@@ -126,7 +125,7 @@ const Lawyers = () => {
               initialValues={editingLawyer}
             />
           </Suspense>
-        </LawyerModal>
+        </GlobalModal>
       )}
     </div>
   );

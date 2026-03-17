@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
+import AddActionButton from "@shared/components/common/AddActionButton";
 
 /**
  * Header:
@@ -356,15 +357,7 @@ export default function TableComponent({
     if (typeof renderAddButton === "function") return renderAddButton();
     if (!onAdd || !canCreate) return null;
 
-    return (
-      <button
-        type="button"
-        onClick={onAdd}
-        className="rounded-xl bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))] shadow-sm transition hover:opacity-90 active:scale-[0.98]"
-      >
-        {addLabel}
-      </button>
-    );
+    return <AddActionButton onClick={onAdd} label={addLabel} />;
   };
 
   const ActionBtn = ({ onClick, title: tt, children, tone = "neutral", disabled = false }) => {
