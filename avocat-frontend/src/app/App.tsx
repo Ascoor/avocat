@@ -1,7 +1,5 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { SidebarProvider } from "@shared/contexts/SidebarContext";
-import { ThemeProvider } from "@shared/contexts/ThemeContext";
 import {
   HomeRoutePage,
   LoginRoutePage,
@@ -14,7 +12,7 @@ import { DashboardShellRoutePage } from '@pages/dashboard/DashboardRoutePages';
 import AuthRoutes from "@app/routes/AuthRoutes";
 import { useAuth } from "@shared/contexts/AuthContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
-import { SpinnerProvider } from "@shared/contexts/SpinnerContext";
+import { RouteProviders } from '@providers';
 
 const RequireAuth = ({ children }) => {
   const { isAuthenticated, isInitializing } = useAuth();
@@ -55,49 +53,45 @@ const RedirectIfAuth = ({ children }) => {
 
 const App = () => {
   return (
-    <ThemeProvider>
-      <SpinnerProvider>
-        <SidebarProvider>
-          <Routes>
-            <Route path={appRoutes.home} element={<HomeRoutePage />} />
-            {publicContentRouteMap.map(({ path, pageKey }) => (
-              <Route
-                key={path}
-                path={path}
-                element={<PublicContentRoutePage pageKey={pageKey} />}
-              />
-            ))}
-            <Route
-              path={appRoutes.login}
-              element={
-                <RedirectIfAuth>
-                  <LoginRoutePage />
-                </RedirectIfAuth>
-              }
-            />
-            <Route
-              path={appRoutes.signup}
-              element={
-                <RedirectIfAuth>
-                  <SignupRoutePage />
-                </RedirectIfAuth>
-              }
-            />
-            <Route
-              path={appRoutes.dashboardWildcard}
-              element={
-                <RequireAuth>
-                  <DashboardShellRoutePage />
-                </RequireAuth>
-              }
-            >
-              <Route path="*" element={<AuthRoutes />} />
-            </Route>
-            <Route path="*" element={<Navigate to={appRoutes.home} replace />} />
-          </Routes>
-        </SidebarProvider>
-      </SpinnerProvider>
-    </ThemeProvider>
+    <RouteProviders>
+      <Routes>
+        <Route path={appRoutes.home} element={<HomeRoutePage />} />
+        {publicContentRouteMap.map(({ path, pageKey }) => (
+          <Route
+            key={path}
+            path={path}
+            element={<PublicContentRoutePage pageKey={pageKey} />}
+          />
+        ))}
+        <Route
+          path={appRoutes.login}
+          element={
+            <RedirectIfAuth>
+              <LoginRoutePage />
+            </RedirectIfAuth>
+          }
+        />
+        <Route
+          path={appRoutes.signup}
+          element={
+            <RedirectIfAuth>
+              <SignupRoutePage />
+            </RedirectIfAuth>
+          }
+        />
+        <Route
+          path={appRoutes.dashboardWildcard}
+          element={
+            <RequireAuth>
+              <DashboardShellRoutePage />
+            </RequireAuth>
+          }
+        >
+          <Route path="*" element={<AuthRoutes />} />
+        </Route>
+        <Route path="*" element={<Navigate to={appRoutes.home} replace />} />
+      </Routes>
+    </RouteProviders>
   );
 };
 
