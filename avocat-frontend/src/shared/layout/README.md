@@ -24,3 +24,8 @@
 - Adding feature/business widgets under `shared/layout/**`.
 - Duplicating shell-like headers/sidebars inside `features/**`.
 - Building route-specific wrappers that re-implement `DashboardShell` or `AuthShell`.
+
+
+## Visual system ownership
+- Cross-app visual tokens and global style layers live in `docs/visual-system-ownership.md` (`src/theme/**` + `src/styles/**`).
+- Keep `shared/layout/**` limited to layout structure and layout-specific style hooks/classes.
