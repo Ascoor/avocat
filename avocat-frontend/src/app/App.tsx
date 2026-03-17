@@ -9,7 +9,8 @@ import {
   SignupRoutePage,
 } from '@pages/public/PublicRoutePages';
 import { publicContentRouteMap } from '@routes/publicRoutes';
-import DashboardPage from "@features/dashboard/pages/DashboardPage";
+import { appRoutes } from '@routes/appRoutes';
+import { DashboardShellRoutePage } from '@pages/dashboard/DashboardRoutePages';
 import AuthRoutes from "@app/routes/AuthRoutes";
 import { useAuth } from "@shared/contexts/AuthContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
@@ -30,7 +31,7 @@ const RequireAuth = ({ children }) => {
 
   if (!isAuthenticated) {
     const nextPath = `${location.pathname}${location.search}`;
-    return <Navigate to={`/login?next=${encodeURIComponent(nextPath)}`} replace />;
+    return <Navigate to={`${appRoutes.login}?next=${encodeURIComponent(nextPath)}`} replace />;
   }
 
   return children;
@@ -45,7 +46,7 @@ const RedirectIfAuth = ({ children }) => {
   }
 
   if (isAuthenticated) {
-    const nextUrl = new URLSearchParams(location.search).get("next") || "/dashboard";
+    const nextUrl = new URLSearchParams(location.search).get("next") || appRoutes.dashboardBase;
     return <Navigate to={nextUrl} replace />;
   }
 
@@ -58,7 +59,7 @@ const App = () => {
       <SpinnerProvider>
         <SidebarProvider>
           <Routes>
-            <Route path="/" element={<HomeRoutePage />} />
+            <Route path={appRoutes.home} element={<HomeRoutePage />} />
             {publicContentRouteMap.map(({ path, pageKey }) => (
               <Route
                 key={path}
@@ -67,7 +68,7 @@ const App = () => {
               />
             ))}
             <Route
-              path="/login"
+              path={appRoutes.login}
               element={
                 <RedirectIfAuth>
                   <LoginRoutePage />
@@ -75,7 +76,7 @@ const App = () => {
               }
             />
             <Route
-              path="/signup"
+              path={appRoutes.signup}
               element={
                 <RedirectIfAuth>
                   <SignupRoutePage />
@@ -83,16 +84,16 @@ const App = () => {
               }
             />
             <Route
-              path="/dashboard/*"
+              path={appRoutes.dashboardWildcard}
               element={
                 <RequireAuth>
-                  <DashboardPage />
+                  <DashboardShellRoutePage />
                 </RequireAuth>
               }
             >
               <Route path="*" element={<AuthRoutes />} />
             </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to={appRoutes.home} replace />} />
           </Routes>
         </SidebarProvider>
       </SpinnerProvider>

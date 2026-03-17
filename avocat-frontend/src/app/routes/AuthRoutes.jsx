@@ -4,6 +4,8 @@ import { useSpinner } from '@shared/contexts/SpinnerContext';
 import GlobalSpinner from '@shared/components/common/Spinners/GlobalSpinner';
 import PermissionGuard from '@shared/security/PermissionGuard';
 import { permissionMap } from '@shared/security/permission-map';
+import { dashboardRoutes } from '@routes/dashboardRoutes';
+import { appRoutes } from '@routes/appRoutes';
 import {
   AdminAccessRoutePage,
   CaseFinanceSummaryRoutePage,
@@ -69,7 +71,7 @@ const AuthRoutes = () => {
         <Route index element={<DashboardHomeRoutePage />} />
 
         <Route
-          path="customer-service"
+          path={dashboardRoutes.customerService}
           element={
             <Guarded
               require={permissionMap.clients.list}
@@ -81,23 +83,23 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="clients"
+          path={dashboardRoutes.clientsLegacy}
           element={
-            <Navigate to="/dashboard/customer-service?tab=clients" replace />
+            <Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.customerService}?tab=clients`} replace />
           }
         />
         <Route
-          path="unclients"
+          path={dashboardRoutes.unclientsLegacy}
           element={
             <Navigate
-              to="/dashboard/customer-service?tab=unclients"
+              to={`${appRoutes.dashboardBase}/${dashboardRoutes.customerService}?tab=unclients`}
               replace
             />
           }
         />
 
         <Route
-          path="legcase-services"
+          path={dashboardRoutes.legalServices}
           element={
             <Guarded
               require={permissionMap.services.list}
@@ -108,7 +110,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="court-search"
+          path={dashboardRoutes.courtSearch}
           element={
             <Guarded
               require={permissionMap.reports.view}
@@ -119,7 +121,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="office-settings"
+          path={dashboardRoutes.officeSettings}
           element={
             <Guarded
               require={permissionMap.settings.manage}
@@ -131,7 +133,7 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="cases_setting"
+          path={dashboardRoutes.caseSettings}
           element={
             <Guarded
               require={permissionMap.courts.list}
@@ -142,7 +144,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="lawyers"
+          path={dashboardRoutes.lawyers}
           element={
             <Guarded
               require={permissionMap.lawyers.list}
@@ -153,7 +155,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="legcases/show/:id"
+          path={dashboardRoutes.legalCaseDetails}
           element={
             <Guarded
               require={permissionMap.legalCases.view}
@@ -164,10 +166,10 @@ const AuthRoutes = () => {
           }
         />
 
-        <Route path="profile/:userId" element={<ProfileRoutePage />} />
+        <Route path={dashboardRoutes.profile} element={<ProfileRoutePage />} />
 
         <Route
-          path="legcases"
+          path={dashboardRoutes.legalCases}
           element={
             <Guarded
               require={permissionMap.legalCases.list}
@@ -179,7 +181,7 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="search-courts-api"
+          path={dashboardRoutes.searchCourtsApi}
           element={
             <Guarded
               require={permissionMap.courts.search}
@@ -191,7 +193,7 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="power-of-attorneys"
+          path={dashboardRoutes.powerOfAttorneys}
           element={
             <Guarded
               require={permissionMap.legalCases.list}
@@ -203,7 +205,7 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="documents"
+          path={dashboardRoutes.documents}
           element={
             <Guarded
               require={permissionMap.reports.view}
@@ -215,7 +217,7 @@ const AuthRoutes = () => {
         />
 
         <Route
-          path="reports"
+          path={dashboardRoutes.reports}
           element={
             <Guarded
               require={permissionMap.reports.view}
@@ -226,28 +228,28 @@ const AuthRoutes = () => {
           }
         >
           <Route index element={<ReportsOverviewRoutePage />} />
-          <Route path="sessions" element={<SessionsReportRoutePage />} />
-          <Route path="procedures" element={<ProceduresReportRoutePage />} />
-          <Route path="clients" element={<ClientsReportRoutePage />} />
-          <Route path="cases" element={<CasesReportRoutePage />} />
-          <Route path="services" element={<ServicesReportRoutePage />} />
+          <Route path={dashboardRoutes.reportsSessions} element={<SessionsReportRoutePage />} />
+          <Route path={dashboardRoutes.reportsProcedures} element={<ProceduresReportRoutePage />} />
+          <Route path={dashboardRoutes.reportsClients} element={<ClientsReportRoutePage />} />
+          <Route path={dashboardRoutes.reportsCases} element={<CasesReportRoutePage />} />
+          <Route path={dashboardRoutes.reportsServices} element={<ServicesReportRoutePage />} />
         </Route>
 
         <Route
-          path="legal-sessions"
-          element={<Navigate to="/dashboard/reports/sessions" replace />}
+          path={dashboardRoutes.legalSessionsLegacy}
+          element={<Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.reports}/${dashboardRoutes.reportsSessions}`} replace />}
         />
         <Route
-          path="procedures"
-          element={<Navigate to="/dashboard/reports/procedures" replace />}
+          path={dashboardRoutes.proceduresLegacy}
+          element={<Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.reports}/${dashboardRoutes.reportsProcedures}`} replace />}
         />
 
-        <Route path="tools/icons" element={<IconsGalleryRoutePage />} />
-        <Route path="tools/qa" element={<UiQaRoutePage />} />
-        <Route path="tools/qa-rbac" element={<QaRbacRoutePage />} />
+        <Route path={dashboardRoutes.toolsIcons} element={<IconsGalleryRoutePage />} />
+        <Route path={dashboardRoutes.toolsQa} element={<UiQaRoutePage />} />
+        <Route path={dashboardRoutes.toolsQaRbac} element={<QaRbacRoutePage />} />
 
         <Route
-          path="admin/access"
+          path={dashboardRoutes.adminAccess}
           element={
             <Guarded
               require={[
@@ -263,26 +265,26 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="admin/users"
+          path={dashboardRoutes.adminUsersLegacy}
           element={
-            <Navigate to="/dashboard/admin/access?tab=users" replace />
+            <Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.adminAccess}?tab=users`} replace />
           }
         />
         <Route
-          path="admin/roles"
+          path={dashboardRoutes.adminRolesLegacy}
           element={
-            <Navigate to="/dashboard/admin/access?tab=roles" replace />
+            <Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.adminAccess}?tab=roles`} replace />
           }
         />
         <Route
-          path="admin/permissions"
+          path={dashboardRoutes.adminPermissionsLegacy}
           element={
-            <Navigate to="/dashboard/admin/access?tab=permissions" replace />
+            <Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.adminAccess}?tab=permissions`} replace />
           }
         />
 
         <Route
-          path="finance/ledger"
+          path={dashboardRoutes.financeLedger}
           element={
             <Guarded require={permissionMap.expenses.view} moduleLabel="Finance Ledger">
               <FinanceLedgerRoutePage />
@@ -290,7 +292,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="finance/case-summary"
+          path={dashboardRoutes.financeCaseSummary}
           element={
             <Guarded require={permissionMap.expenses.view} moduleLabel="Case Finance Summary">
               <CaseFinanceSummaryRoutePage />
@@ -298,7 +300,7 @@ const AuthRoutes = () => {
           }
         />
         <Route
-          path="finance/create-transaction"
+          path={dashboardRoutes.financeCreateTransaction}
           element={
             <Guarded require={permissionMap.expenses.create} moduleLabel="Create Finance Transaction">
               <CreateTransactionRoutePage />
@@ -306,7 +308,7 @@ const AuthRoutes = () => {
           }
         />
 
-        <Route path="financial-dashboard" element={<Navigate to="/dashboard/finance/ledger" replace />} />
+        <Route path={dashboardRoutes.financialDashboardLegacy} element={<Navigate to={`${appRoutes.dashboardBase}/${dashboardRoutes.financeLedger}`} replace />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
