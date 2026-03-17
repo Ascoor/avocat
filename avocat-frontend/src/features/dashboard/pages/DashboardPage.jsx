@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AppShell from "@shared/layout/AppShell";
+import DashboardShell from "@shared/layout/shells/DashboardShell";
 
-const Dashboard = () => {
+const DashboardShellPage = () => {
   return (
-    <AppShell>
+    <DashboardShell>
       <Outlet />
-    </AppShell>
+    </DashboardShell>
   );
 };
 
-export default Dashboard;
+export default DashboardShellPage;

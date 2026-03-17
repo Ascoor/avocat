@@ -12,7 +12,7 @@ import { cn } from "@shared/lib/utils";
 import useAuth from "@features/auth/components/AuthUser";
 import { useAlert } from "@shared/contexts/AlertContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
-import AuthLayout from "@shared/layout/AuthLayout";
+import AuthShell from "@shared/layout/shells/AuthShell";
 
 const Signup = () => {
   const { register, isAuthenticated } = useAuth();
@@ -67,7 +67,7 @@ const Signup = () => {
   );
 
   return (
-    <AuthLayout
+    <AuthShell
       heroSide="right"
       toolbar={toolbar}
       hero={{

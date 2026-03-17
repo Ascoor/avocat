@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-import { NavLink } from './NavLink';
+import { AppNavLink } from './AppNavLink';
 import { sidebarGroups } from '@config/sidebar';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import { cn } from '@shared/lib/utils';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { hasAny, hasPermission } from '@shared/security/permissions';
-import { sortItemsByTopNavOrder } from './nav-order';
+import { sortItemsByTopNavOrder } from './navOrder';
 
 import {
   DropdownMenu,
@@ -17,14 +17,14 @@ import {
 } from '@shared/ui/dropdown-menu';
 
 const PillLink = ({ to, icon: Icon, label }) => (
-  <NavLink
+  <AppNavLink
     to={to}
     className={cn('tab-pill', 'shrink-0')}
     activeClassName="is-active"
   >
     {Icon && <Icon className="tab-pill-icon" />}
     <span className="truncate">{label}</span>
-  </NavLink>
+  </AppNavLink>
 );
 
 const HeaderTabs = ({ className }) => {
@@ -89,7 +89,7 @@ const HeaderTabs = ({ className }) => {
                   const ChildIcon = child.icon;
                   return (
                     <DropdownMenuItem key={child.key} asChild>
-                      <NavLink
+                      <AppNavLink
                         to={child.path}
                         className={cn(
                           'flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm',
@@ -99,7 +99,7 @@ const HeaderTabs = ({ className }) => {
                       >
                         {ChildIcon && <ChildIcon className="h-4 w-4" />}
                         <span className="truncate">{t(child.labelKey)}</span>
-                      </NavLink>
+                      </AppNavLink>
                     </DropdownMenuItem>
                   );
                 })}

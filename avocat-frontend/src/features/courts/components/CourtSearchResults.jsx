@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@shared/lib/utils';
 
-const SearchResults = ({ data }) => {
+const CourtSearchResults = ({ data }) => {
   if (!data) return null;
 
   return (
@@ -75,4 +75,4 @@ const SearchResults = ({ data }) => {
   );
 };
 
-export default SearchResults;
+export default CourtSearchResults;

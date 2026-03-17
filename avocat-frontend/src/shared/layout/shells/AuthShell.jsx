@@ -4,7 +4,7 @@ import { Scale, Lock } from "lucide-react";
 import { cn } from "@shared/lib/utils";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 
-const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
+const AuthShell = ({ heroSide = "left", toolbar, hero, card }) => {
   const { direction, isRTL, t } = useLanguage();
   const shouldReverse = isRTL ? heroSide === "right" : heroSide === "left";
 
@@ -168,4 +168,4 @@ const AuthLayout = ({ heroSide = "left", toolbar, hero, card }) => {
   );
 };
 
-export default AuthLayout;
+export default AuthShell;
