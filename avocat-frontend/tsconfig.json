@@ -31,6 +31,12 @@
       "@pages/*": [
         "./src/pages/*"
       ],
+      "@providers": [
+        "./src/providers/index.js"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
+      ],
       "@routes/*": [
         "./src/routes/*"
       ],

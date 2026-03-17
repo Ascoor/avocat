@@ -2,7 +2,7 @@
 # تقرير دقيق للبنية الأمامية (Frontend) — Avocat
 
 ## 1) ملخص تنفيذي
-الواجهة الأمامية في مشروع **Avocat** مبنية على **React + Vite**، مع توجيه عبر `react-router-dom`، وإدارة حالة هجينة بين **Context PI** و **Redux Toolkit**، مع تنظيم قائم على الوحدات (Features) لتسهيل التوسع والصيانة. نقطة الدخول تقوم بتركيب مزودي السياق لرئيسيين (اللغة، التنبيهات، المصادقة، الأمن) قبل تحميل التطبيق.  
+الواجهة الأمامية في مشروع **Avocat** مبنية على **React + Vite**، مع توجيه عبر `react-router-dom`، وإدارة حالة هجينة بين **Context PI** و **Redux Toolkit**، مع تنظيم قائم على الوحدات (Features) لتسهيل التوسع والصيانة. نقطة الدخول تعتمد الآن على طبقة `providers/` موحدة لتركيب المزودات العامة ومسارات التطبيق، مما يلغي تشتت الـ wiring بين نقاط متعددة.  
 
 البنية الحالية مناسبة للبدء فوراً بتطوير الواجهة الأمامية، لأنها تحتوي بالفعل على:
 - قشرة تطبيق واضحة (App Shell + Dashboard).
@@ -15,7 +15,7 @@
 ## 2) نقطة الدخول وسلسلة التهيئة
 **نقطة الدخول:** `src/main.tsx`
 
-عند الإقلاع، يتم إنشاء `createBrowserRouter` بمسار جذري، ثم لف التطبيق بعدة Providers بالترتيب التالي:
+عند الإقلاع، يتم إنشاء `createBrowserRouter` بمسار جذري، ثم يتم تطبيق شجرة مزودات موحدة عبر `src/providers/AppProviders.jsx` بالترتيب:
 1. `LanguageProvider`
 2. `AlertProvider`
 3. Redux `Provider`
@@ -23,7 +23,9 @@
 5. `SecurityProvider`
 6. `RouterProvider` داخل `Suspense`
 
-هذا التسلسل يعطي أفضلية للوظائف المشتركة (اللغة/التنبيه/المصادقة/الأمن) قبل تحميل الشاشات، ويضمن أن الحراسة الأمنية تعمل مبكراً.
+أما المزودات المعتمدة على سياق الراوتر (`ThemeProvider`, `SpinnerProvider`, `SidebarProvider`) فتم تجميعها داخل `src/providers/RouteProviders.jsx` واستهلاكها من `App.tsx` كمصدر تركيب وحيد للمستوى المساري.
+
+> خريطة الملكية الكاملة (Context Definition vs Provider Composition vs Consumers) موثقة في `docs/frontend-provider-context-map.md`.
 
 ---
 
@@ -35,7 +37,7 @@
 - `/dashboard/*` مسارات داخلية محمية عبر `RequireAuth`.
 - مسار fallback يعيد إلى الصفحة الرئيسية.
 
-كما يتم تغليف المسارات الداخلية بمزودي الثيم، السايدبار، والـ Spinner.
+تغليف المسارات الداخلية يتم عبر `RouteProviders` القادم من `src/providers/**`، بينما تعريف السياقات نفسها بقي في `src/shared/contexts/**`.
 
 ### 3.2 مسارات لوحة التحكم — `src/app/routes/AuthRoutes.jsx`
 داخل `/dashboard/*` يتم تحميل الشاشات بطريقة **Lazy Loading** لتقليل حجم الحزمة الابتدائية وتحسين الأداء.  
