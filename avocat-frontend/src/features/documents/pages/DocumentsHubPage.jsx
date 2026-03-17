@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Upload, FolderOpen, Search, Plus, Eye, Download } from "lucide-react";
 import SectionHeader from "@shared/components/common/SectionHeader";
+import AddActionButton from "@shared/components/common/AddActionButton";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { cn } from "@shared/lib/utils";
 
@@ -38,17 +39,12 @@ const DocumentsHubPage = () => {
   return (
     <div className="p-6 mt-12 w-full">
       <SectionHeader
-        listName={t("documents.title")}
+        sectionKey="documents"
+        title={t("documents.title")}
         subtitle={t("documents.subtitle")}
         icon={<FileText className="h-6 w-6 text-[hsl(var(--accent))]" />}
-        showBack
-        actions={
-          // Ensure `t()` returns a string or JSX, not an object.
-          <button className="action-btn-primary">
-            <Upload className="h-4 w-4" />
-            {t("documents.upload.action")}
-          </button>
-        }
+        showBack={false}
+        primaryAction={<AddActionButton icon={Upload} label={t("documents.upload.action")} />}
       />
 
       {/* Toolbar */}
