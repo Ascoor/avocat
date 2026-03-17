@@ -1,0 +1,190 @@
+/* ============================
+   Base
+   ============================ */
+@layer base {
+  :root {
+    --font-display: 'Playfair Display', 'Cairo', 'Inter', serif;
+  }
+
+  html,
+  body {
+    @apply min-h-screen antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+
+  html[lang='ar'] body {
+    font-family: var(--font-ar);
+  }
+
+  html[lang='ar'] .font-display {
+    font-family: var(--font-ar);
+  }
+
+  html[lang='en'] .font-display {
+    font-family: 'Playfair Display', 'Inter', serif;
+  }
+
+  #root {
+    @apply flex min-h-screen flex-col;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  /* Scrollbars */
+  :root,
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--color-primary) / 0.35) transparent;
+  }
+
+  body::-webkit-scrollbar {
+    width: 0.6rem;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--color-accent) / 0.55),
+      hsl(var(--color-primary) / 0.7)
+    );
+  }
+
+  html[data-theme='dark'] body::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--color-accent) / 0.35),
+      hsl(var(--color-primary) / 0.6)
+    );
+  }
+}
+
+/* ============================
+   Components
+   ============================ */
+@layer components {
+  .section-title {
+    font-family: var(--font-display);
+    letter-spacing: 0.08em;
+    color: hsl(var(--foreground));
+  }
+
+  .chip-soft {
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .card-legal {
+    border-radius: var(--radius-2xl);
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-lg);
+    transition: all 0.2s ease-out;
+  }
+
+  .card-legal:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-2xl);
+  }
+
+  /* react-datepicker token styling */
+  .react-datepicker {
+    border: 1px solid hsl(var(--border)) !important;
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--foreground)) !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+  }
+
+  .react-datepicker__header {
+    background: hsl(var(--muted)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+  }
+
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .react-datepicker__day:hover {
+    background: hsl(var(--accent) / 0.14) !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    border-radius: 0.75rem !important;
+  }
+
+    .kpi-card {
+      @apply bg-card rounded-xl border border-border p-5 transition-all duration-200;
+      box-shadow: var(--shadow-card);
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-elevated);
+      @apply -translate-y-0.5;
+    }
+  
+    .legal-header {
+      background: var(--gradient-hero);
+      @apply text-primary-foreground;
+    }
+  
+    .tab-trigger {
+      @apply relative px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors;
+    }
+    .tab-trigger[data-state="active"] {
+      @apply text-foreground;
+    }
+    .tab-trigger[data-state="active"]::after {
+      content: '';
+      @apply absolute bottom-0 left-0 right-0 h-0.5 rounded-full;
+      background: hsl(var(--accent));
+    }
+  
+    .status-badge {
+      @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+    }
+    .status-open { @apply bg-green-50 text-green-700 ring-1 ring-green-200; }
+    .status-closed { @apply bg-gray-100 text-gray-600 ring-1 ring-gray-200; }
+    .status-pending { @apply bg-amber-50 text-amber-700 ring-1 ring-amber-200; }
+    .status-in-progress { @apply bg-blue-50 text-blue-700 ring-1 ring-blue-200; }
+  
+    .action-btn {
+      @apply inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200;
+    }
+    .action-btn-primary {
+      @apply action-btn bg-primary text-primary-foreground hover:opacity-90;
+    }
+    .action-btn-outline {
+      @apply action-btn border border-border bg-card text-foreground hover:bg-secondary;
+    }
+    .action-btn-destructive {
+      @apply action-btn bg-destructive text-destructive-foreground hover:opacity-90;
+    }
+    .action-btn-accent {
+      @apply action-btn;
+      background: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+    .action-btn-accent:hover {
+      opacity: 0.9;
+    }
+  }

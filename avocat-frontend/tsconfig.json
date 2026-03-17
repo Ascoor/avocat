@@ -60,6 +60,9 @@
       ],
       "recharts": [
         "./src/types/stubs/recharts.d.ts"
+      ],
+      "@theme/*": [
+        "./src/theme/*"
       ]
     },
     "resolveJsonModule": true,
