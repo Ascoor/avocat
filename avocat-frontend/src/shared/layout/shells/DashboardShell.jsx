@@ -2,18 +2,18 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
-import MobileDrawer from "./MobileDrawer";
-import Header from "./Header";
+import MobileNavigationDrawer from "../navigation/MobileNavigationDrawer";
+import AppHeader from "../navigation/AppHeader";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { cn } from "@shared/lib/utils";
 
-const AppShell = ({ children, title, className, showSidebarToggle = false }) => {
+const DashboardShell = ({ children, title, className, showSidebarToggle = false }) => {
   const { direction } = useLanguage();
   const location = useLocation();
 
   return (
     <div dir={direction} className={cn("dashboard-shell", className)}>
-      <Header title={title} showSidebarToggle={showSidebarToggle} />
+      <AppHeader title={title} showSidebarToggle={showSidebarToggle} />
 
       <div className="dashboard-layout">
         <div className="dashboard-content">
@@ -34,9 +34,9 @@ const AppShell = ({ children, title, className, showSidebarToggle = false }) => 
         </div>
       </div>
 
-      <MobileDrawer />
+      <MobileNavigationDrawer />
     </div>
   );
 };
 
-export default AppShell;
+export default DashboardShell;

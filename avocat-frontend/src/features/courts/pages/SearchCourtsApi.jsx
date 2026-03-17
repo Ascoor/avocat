@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import SearchResults from '@shared/layout/SearchResults';
+import CourtSearchResults from '@features/courts/components/CourtSearchResults';
+import PageContainer from '@shared/components/layout/PageContainer';
 import api from '@shared/services/api/axiosConfig';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
@@ -96,7 +97,7 @@ const SearchCourtsApi = () => {
   if (!acl.view) return <ForbiddenState moduleLabel="Courts" />;
 
   return (
-    <div className="container mx-auto p-6">
+    <PageContainer className="p-6">
       <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg p-8">
         <h2 className="text-2xl font-bold text-center text-purple-600 dark:text-yellow-400 mb-6">
           🔍 البحث عن دعوى
@@ -211,8 +212,8 @@ const SearchCourtsApi = () => {
         )}
       </div>
 
-      {searchResults && <SearchResults data={searchResults} />}
-    </div>
+      {searchResults && <CourtSearchResults data={searchResults} />}
+    </PageContainer>
   );
 };
 

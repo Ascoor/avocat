@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@shared/ui/button";
@@ -11,7 +10,8 @@ import { useSecurity } from "@shared/security/SecurityContext";
 import { hasAny, hasPermission } from "@shared/security/permissions";
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
-import { getTopNavOrderIndex, sortItemsByTopNavOrder } from "./nav-order";
+import { getTopNavOrderIndex, sortItemsByTopNavOrder } from "./navOrder";
+import { AppNavLink } from "./AppNavLink";
 
 const drawerVariants = {
   open: () => ({
@@ -24,7 +24,7 @@ const drawerVariants = {
   }),
 };
 
-const MobileDrawer = () => {
+const MobileNavigationDrawer = () => {
   const { t, isRTL } = useLanguage();
   const { permissions } = useSecurity();
   const { isMobileOpen, closeMobile } = useSidebar();
@@ -119,7 +119,7 @@ const MobileDrawer = () => {
                             {item.children.map((child) => {
                               const Icon = child.icon;
                               return (
-                                <NavLink
+                                <AppNavLink
                                   key={child.key}
                                   to={child.path}
                                   onClick={closeMobile}
@@ -134,7 +134,7 @@ const MobileDrawer = () => {
                                 >
                                   <Icon className="h-4 w-4" />
                                   <span>{t(child.labelKey)}</span>
-                                </NavLink>
+                                </AppNavLink>
                               );
                             })}
                           </div>
@@ -143,7 +143,7 @@ const MobileDrawer = () => {
 
                       const Icon = item.icon;
                       return (
-                        <NavLink
+                        <AppNavLink
                           key={item.key}
                           to={item.path}
                           onClick={closeMobile}
@@ -158,7 +158,7 @@ const MobileDrawer = () => {
                         >
                           <Icon className="h-4 w-4" />
                           <span>{t(item.labelKey)}</span>
-                        </NavLink>
+                        </AppNavLink>
                       );
                     })}
                   </div>
@@ -178,4 +178,4 @@ const MobileDrawer = () => {
   );
 };
 
-export default MobileDrawer;
+export default MobileNavigationDrawer;

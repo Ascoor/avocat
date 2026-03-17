@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { cn } from '@shared/lib/utils';
 
-const NavLink = forwardRef(({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
+const AppNavLink = forwardRef(({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
   return (
     <RouterNavLink
       ref={ref}
@@ -15,6 +15,6 @@ const NavLink = forwardRef(({ className, activeClassName, pendingClassName, to, 
   );
 });
 
-NavLink.displayName = "NavLink";
+AppNavLink.displayName = "AppNavLink";
 
-export { NavLink };
+export { AppNavLink };

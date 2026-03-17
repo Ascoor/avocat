@@ -12,14 +12,14 @@ import {
 
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
-import HeaderTabs from "@shared/layout/HeaderTabs";
+import HeaderTabs from "./HeaderTabs";
 
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { useAuth } from "@shared/contexts/AuthContext";
 import { useSidebar } from "@shared/contexts/SidebarContext";
 import { cn } from "@shared/lib/utils";
 
-const Header = ({ title, className, showSidebarToggle = false }) => {
+const AppHeader = ({ title, className, showSidebarToggle = false }) => {
   const { t, isRTL } = useLanguage();
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
@@ -126,4 +126,4 @@ const Header = ({ title, className, showSidebarToggle = false }) => {
   );
 };
 
-export default Header;
+export default AppHeader;

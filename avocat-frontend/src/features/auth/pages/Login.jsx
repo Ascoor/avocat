@@ -16,7 +16,7 @@ import {
   Users,
 } from "lucide-react";
 
-import AuthLayout from "@shared/layout/AuthLayout";
+import AuthShell from "@shared/layout/shells/AuthShell";
 import LanguageToggle from "@shared/ui/language-toggle";
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import { Button } from "@shared/ui/button";
@@ -156,7 +156,7 @@ const Login = () => {
   if (isAuthenticated) return null;
 
   return (
-    <AuthLayout
+    <AuthShell
       heroSide={shouldReverse ? "left" : "right"}
       toolbar={toolbar}
       hero={{
