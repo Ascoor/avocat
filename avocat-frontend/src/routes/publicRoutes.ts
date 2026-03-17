@@ -1,0 +1,15 @@
+export const publicContentRouteMap = [
+  { path: '/about', pageKey: 'about' },
+  { path: '/services', pageKey: 'services' },
+  { path: '/services/:id', pageKey: 'serviceDetails' },
+  { path: '/industries', pageKey: 'industries' },
+  { path: '/team', pageKey: 'team' },
+  { path: '/insights', pageKey: 'insights' },
+  { path: '/insights/:id', pageKey: 'articleDetails' },
+  { path: '/contact', pageKey: 'contact' },
+  { path: '/book', pageKey: 'book' },
+  { path: '/privacy', pageKey: 'privacy' },
+  { path: '/terms', pageKey: 'terms' },
+  { path: '/disclaimer', pageKey: 'disclaimer' },
+  { path: '/client-portal', pageKey: 'clientPortal' },
+];

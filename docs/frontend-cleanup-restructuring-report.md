@@ -88,3 +88,16 @@ Decisions linked to current tree:
 3. Resolve auth duplication (page-first flow only).
 4. Enforce folder boundaries + naming convention.
 5. Add CI static checks for unused files/exports/dependencies.
+
+# 11. Phase 2: Route Ownership Consolidation
+- Added explicit route-container layer under `avocat-frontend/src/pages/**`.
+- Public route paths are now declared from a single map: `avocat-frontend/src/routes/publicRoutes.ts`.
+- `app/App.tsx` and `app/routes/AuthRoutes.jsx` now depend on `pages/**` entries instead of importing feature screens directly.
+- Full route ownership matrix documented in `docs/frontend-route-ownership-map.md`.
+
+Adopted convention in code:
+- `app/` = wiring and route mounting
+- `routes/` = route path maps/config
+- `pages/` = route container entries
+- `features/` = feature implementation
+- `shared/` = reusable shared building blocks only
