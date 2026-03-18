@@ -1,4 +1,5 @@
 export const topNavPreferredOrder = [
+  'dashboard',
   'customer_service',
   'cases',
   'services',
@@ -7,7 +8,6 @@ export const topNavPreferredOrder = [
   'reports',
   'finance',
   'settings',
-  'dashboard',
   'follow_work',
   'admin_access',
 ];
