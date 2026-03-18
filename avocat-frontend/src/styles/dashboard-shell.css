@@ -212,15 +212,16 @@
   }
 
   .header-action-btn {
-    border-color: hsl(var(--border) / 0.9);
-    background: hsl(var(--background) / 0.72);
-    box-shadow: 0 10px 24px -18px hsl(var(--foreground) / 0.42);
-    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    border-color: hsl(var(--border) / 0.78);
+    background: linear-gradient(180deg, hsl(var(--surface-raised) / 0.88), hsl(var(--surface) / 0.82));
+    box-shadow: var(--shadow-primary-glow);
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
   }
 
   .header-action-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 14px 24px -16px hsl(var(--foreground) / 0.38);
+    border-color: hsl(var(--accent) / 0.26);
+    box-shadow: var(--shadow-elevated);
   }
 
   .lang-toggle {
@@ -462,11 +463,13 @@
      6) App Panel (glass card)
      ============================ */
   .app-panel {
-    background: hsl(var(--card) / 0.85);
-    border: 1px solid hsl(var(--border) / 0.6);
+    background:
+      linear-gradient(180deg, hsl(var(--card) / 0.96), hsl(var(--surface-elevated) / 0.92)),
+      radial-gradient(circle at top, hsl(var(--surface-glow)) 0%, transparent 48%);
+    border: 1px solid hsl(var(--border) / 0.66);
     border-radius: var(--radius-lg);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-card);
   }
   
   /* ============================

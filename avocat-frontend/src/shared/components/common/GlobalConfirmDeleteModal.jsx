@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Button } from '@shared/ui/button';
 
 const GlobalConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
   return (
@@ -14,7 +16,7 @@ const GlobalConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-[hsl(var(--overlay))] backdrop-blur-md" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -28,29 +30,31 @@ const GlobalConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center shadow-2xl transition-all dark:bg-gray-800">
-                <Dialog.Title className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                  تأكيد الحذف
-                </Dialog.Title>
-                <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                  هل أنت متأكد أنك تريد حذف{' '}
-                  <span className="font-bold text-red-500">{itemName}</span>؟
-                </p>
-                <div className="mt-6 flex justify-center gap-4">
-                  <button
-                    type="button"
-                    onClick={onConfirm}
-                    className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
-                  >
-                    تأكيد
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
-                  >
+              <Dialog.Panel className="modal-surface modal-motion w-full max-w-md overflow-hidden rounded-[1.75rem] p-6 text-start sm:p-7">
+                <div className="flex items-start gap-4">
+                  <div className="premium-icon-shell h-12 w-12 shrink-0 !border-[hsl(var(--destructive)/0.28)] !bg-[linear-gradient(180deg,hsl(var(--destructive)/0.18),hsl(var(--destructive)/0.08))] !text-destructive !shadow-[var(--shadow-danger-glow)]">
+                    <AlertTriangle className="h-5 w-5" />
+                  </div>
+
+                  <div className="space-y-3">
+                    <Dialog.Title className="text-lg font-bold text-foreground sm:text-xl">
+                      تأكيد الحذف
+                    </Dialog.Title>
+                    <p className="text-sm leading-6 text-muted-foreground">
+                      هل أنت متأكد أنك تريد حذف{' '}
+                      <span className="font-semibold text-destructive">{itemName}</span>
+                      ؟ هذا الإجراء يُبرز الهوية الحمراء الحرجة ولا يمكن التراجع عنه بسهولة.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  <Button type="button" variant="secondary" onClick={onClose} className="rounded-xl">
                     إلغاء
-                  </button>
+                  </Button>
+                  <Button type="button" variant="destructive" onClick={onConfirm} className="rounded-xl">
+                    تأكيد الحذف
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
