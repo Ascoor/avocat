@@ -5,6 +5,7 @@
 - `src/styles/**`: app-wide style layers only (global base/components/utilities + framework integration + shell CSS).
 - `src/shared/layout/utils/**`: layout-only class helpers (if/when consumed by shells/primitives).
 - `src/features/**` and `src/shared/components/**`: component-local styling only.
+- `docs/premium-visual-identity-system.md`: visual identity audit, semantic token intent, button rules, glow rules, and anti-pattern guidance.
 
 ## Ownership matrix
 | File | Type | Primary consumers | Notes |

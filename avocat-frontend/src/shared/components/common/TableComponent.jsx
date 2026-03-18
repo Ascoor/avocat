@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
 import AddActionButton from "@shared/components/common/AddActionButton";
+import { Button } from "@shared/ui/button";
 
 /**
  * Header:
@@ -80,7 +81,7 @@ const cx = (...parts) => parts.filter(Boolean).join(" ");
 
 function EmptyState({ label }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] p-6 text-sm text-muted-foreground shadow-sm backdrop-blur">
+    <div className="table-shell rounded-2xl p-6 text-sm text-muted-foreground">
       {label}
     </div>
   );
@@ -92,10 +93,12 @@ function ErrorState({ label, onRetry, retryLabel, isRTL }) {
       <div className="space-y-3 text-center">
         <div className="font-semibold">{label}</div>
         {onRetry && (
-          <button
+          <Button
             type="button"
+            variant="dangerOutline"
+            size="sm"
             onClick={onRetry}
-            className="pressable inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-2 text-xs font-semibold text-destructive transition hover:opacity-90"
+            className="pressable rounded-full"
           >
             <LexicraftIcon
               name="arrow-forward"
@@ -104,7 +107,7 @@ function ErrorState({ label, onRetry, retryLabel, isRTL }) {
               dir={isRTL ? "rtl" : "ltr"}
             />
             {retryLabel}
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -137,27 +140,31 @@ function Pagination({
 }) {
   return (
     <div className="mt-4 flex items-center justify-between gap-3">
-      <button
+      <Button
         type="button"
+        variant="secondary"
+        size="sm"
         onClick={onPrev}
         disabled={currentPage <= 1}
-        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
+        className="rounded-full px-4"
       >
         {prevLabel}
-      </button>
+      </Button>
 
       <span className="text-sm text-muted-foreground">
         {pageLabel} {currentPage} / {totalPages}
       </span>
 
-      <button
+      <Button
         type="button"
+        variant="secondary"
+        size="sm"
         onClick={onNext}
         disabled={currentPage >= totalPages}
-        className="rounded-full border border-border bg-[hsl(var(--muted))] px-4 py-2 text-sm font-semibold text-foreground transition disabled:opacity-50 hover:opacity-90"
+        className="rounded-full px-4"
       >
         {nextLabel}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -361,29 +368,26 @@ export default function TableComponent({
   };
 
   const ActionBtn = ({ onClick, title: tt, children, tone = "neutral", disabled = false }) => {
-    const toneClass =
-      tone === "danger"
-        ? "text-[hsl(var(--destructive))]"
-        : tone === "primary"
-        ? "text-[hsl(var(--primary))]"
-        : "text-foreground";
+    const variant =
+      tone === "danger" ? "dangerOutline" : tone === "primary" ? "outline" : "ghost";
 
     return (
-      <button
+      <Button
         type="button"
+        size="icon-sm"
+        variant={variant}
         onClick={onClick}
         title={tt}
         disabled={disabled}
         className={cx(
-          "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70",
-          "bg-[hsl(var(--background)/0.55)] shadow-sm transition",
-          "hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98]",
-          disabled ? "cursor-not-allowed opacity-50 hover:translate-y-0 hover:shadow-sm" : "",
-          toneClass
+          "rounded-xl border-[hsl(var(--border)/0.78)] bg-[hsl(var(--surface-raised)/0.7)]",
+          tone === "primary" ? "text-primary hover:border-[hsl(var(--accent)/0.3)]" : "",
+          tone === "danger" ? "text-destructive" : "",
+          disabled ? "cursor-not-allowed" : ""
         )}
       >
         {children}
-      </button>
+      </Button>
     );
   };
 
@@ -537,8 +541,7 @@ export default function TableComponent({
               placeholder={searchPlaceholder}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cx(
-                "w-full rounded-xl border border-border bg-[hsl(var(--background)/0.55)] py-2 text-sm text-foreground outline-none transition",
-                "focus:ring-2 focus:ring-[hsl(var(--ring))]",
+                "field-shell w-full py-2 text-sm text-foreground outline-none transition",
                 isRTL ? "pr-10 pl-3 text-right" : "pl-10 pr-3 text-left"
               )}
             />
@@ -551,9 +554,9 @@ export default function TableComponent({
       ) : (
         <>
           {/* Desktop table */}
-          <div className="hidden w-full overflow-x-auto rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.65)] shadow-sm backdrop-blur md:block">
+          <div className="table-shell hidden w-full overflow-x-auto md:block">
             <table className="w-full table-auto table-soft-shadow" dir={dir}>
-              <thead className="border-b border-border/70 bg-[hsl(var(--muted))]">
+              <thead className="border-b border-border/70 bg-[linear-gradient(180deg,hsl(var(--muted)),hsl(var(--surface-raised)))]">
                 <tr>
                   {renderHeadActions("start")}
 
@@ -618,7 +621,7 @@ export default function TableComponent({
                         key={id}
                         className={cx(
                           "border-b border-border/50 transition",
-                          "hover:bg-[hsl(var(--muted)/0.45)]",
+                          "hover:bg-[hsl(var(--surface-highlight))]",
                           "animate-in fade-in duration-200"
                         )}
                       >
@@ -685,10 +688,7 @@ export default function TableComponent({
                 return (
                   <div
                     key={id}
-                    className={cx(
-                      "rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur",
-                      "animate-in fade-in duration-200"
-                    )}
+                    className={cx("table-shell rounded-2xl p-4", "animate-in fade-in duration-200")}
                   >
                     <div className={cx("flex items-start justify-between gap-3", isRTL ? "flex-row-reverse" : "")}>
                       <div className="min-w-0">

@@ -8,9 +8,9 @@ const useIconCardAnimation = () => {
 
   const animationStyles = useSpring({
     transform: isInteracting
-      ? 'perspective(900px) scale(1.03) translateY(-6px) rotateX(1deg)'
+      ? 'perspective(900px) scale(1.02) translateY(-5px) rotateX(1deg)'
       : 'perspective(900px) scale(1) translateY(0) rotateX(0deg)',
-    config: { mass: 1, tension: 350, friction: 25 },
+    config: { mass: 1, tension: 320, friction: 24 },
   });
 
   return { animationStyles, setIsInteracting };
@@ -29,23 +29,21 @@ const MainCard = ({ count, icon, label, route }) => {
       onTouchEnd={() => setIsInteracting(false)}
       onClick={() => route && navigate(route)}
       className={cn(
-        "card-premium cursor-pointer p-5 sm:p-6 flex items-center justify-between w-full transition-all duration-300",
-        route && "hover:border-[hsl(var(--accent)/0.4)]"
+        'card-premium cursor-pointer p-5 sm:p-6 flex w-full items-center justify-between overflow-hidden',
+        route && 'hover:border-[hsl(var(--accent)/0.36)] hover:shadow-[var(--shadow-primary-glow)]'
       )}
     >
-      {/* Text */}
-      <div className="flex flex-col items-start gap-1.5">
-        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">
+      <div className="relative flex flex-col items-start gap-2">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           {label}
         </span>
-        <span className="text-3xl font-extrabold text-foreground tracking-tight">
+        <span className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           {count}
         </span>
       </div>
 
-      {/* Icon */}
-      <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl bg-primary/8 dark:bg-primary/12 border border-border/50 shadow-sm transition-all duration-300">
-        <img src={icon} alt={label} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+      <div className="premium-icon-shell h-16 w-16 sm:h-20 sm:w-20">
+        <img src={icon} alt={label} className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
       </div>
     </animated.div>
   );
