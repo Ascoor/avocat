@@ -23,7 +23,7 @@ import { useSidebar } from "@shared/contexts/SidebarContext";
 import { cn } from "@shared/lib/utils";
 
 const AppHeader = ({ title, className, showSidebarToggle = false }) => {
-  const { t, isRTL } = useLanguage();
+  const { t } = useLanguage();
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
@@ -35,7 +35,7 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
       <Link to="/" className="shrink-0">
             <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
           </Link>
-  <div className={cn("flex items-center gap-2 sm:gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
+  <div className="flex min-w-0 flex-row-reverse items-center gap-2 sm:gap-3">
 
           <Button
             variant="outline"
@@ -55,7 +55,7 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
               className="header-action-btn hidden md:flex shrink-0"
               aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
             >
-              <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && (isRTL ? "-rotate-180" : "rotate-180"))} />
+              <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && "-rotate-180")} />
             </Button>
           )}
 
@@ -68,10 +68,10 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
         </div>
 
         <div className="hidden lg:flex flex-1 px-4 overflow-hidden">
-          <HeaderTabs className={cn("w-full", isRTL ? "justify-end" : "justify-start")} />
+          <HeaderTabs className="w-full justify-end" />
         </div>
 
-        <div className={cn("flex items-center gap-1.5 sm:gap-2", isRTL && "flex-row-reverse")}>
+        <div className="flex flex-row-reverse items-center gap-1.5 sm:gap-2">
           <ThemeToggle size="sm" className="header-action-btn shrink-0" />
           <LanguageToggle size="sm" className="shrink-0" />
 

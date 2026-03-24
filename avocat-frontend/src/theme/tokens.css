@@ -1,8 +1,8 @@
 /* =========================================
    AVOCAT Design Tokens (HSL only)
-   Brand identity: luxury blue-black control room
-   Primary accent: midnight blue / electric blue
-   Signature destructive accent: bloody red
+   Brand identity: legal navy + calm gold
+   Primary accent: restrained gold for CTAs
+   Secondary accent: confident navy for structure
    ========================================= */
 
 @layer base {
@@ -26,7 +26,7 @@
     --glow-500: 201 89% 58%;
     --glow-600: 205 84% 49%;
 
-    /* Primitive palette: bloody red */
+    /* Primitive palette: semantic red (errors only) */
     --blood-50: 353 72% 94%;
     --blood-100: 353 74% 87%;
     --blood-200: 353 72% 76%;
@@ -52,30 +52,31 @@
     --neutral-900: 230 42% 7%;
 
     /* Primitive states */
-    --state-success: 158 56% 46%;
-    --state-warning: 38 84% 60%;
+    --state-success: 142 70% 45%;
+    --state-warning: 38 92% 50%;
     --state-danger: var(--blood-500);
-    --state-info: var(--glow-500);
+    --state-info: 213 90% 68%;
 
     /* Core semantic */
-    --background: 228 43% 8%;
-    --foreground: 216 27% 95%;
-    --card: 228 37% 11%;
-    --card-foreground: 216 27% 95%;
-    --popover: 229 35% 12%;
-    --popover-foreground: 216 27% 95%;
+    --background: 225 48% 8%;
+    --foreground: 217 33% 97%;
+    --card: 224 40% 12%;
+    --card-foreground: 217 33% 97%;
+    --popover: 224 38% 14%;
+    --popover-foreground: 217 33% 97%;
 
-    --primary: var(--blood-500);
+    --primary: 39 45% 60%;
+    --primary-hover: 39 52% 66%;
     --primary-foreground: var(--neutral-0);
-    --primary-glow: var(--glow-400);
+    --primary-glow: 39 52% 66%;
 
-    --secondary: 227 29% 18%;
-    --secondary-foreground: 216 27% 95%;
-    --muted: 227 25% 16%;
-    --muted-foreground: 219 14% 72%;
+    --secondary: 223 30% 18%;
+    --secondary-foreground: 217 33% 97%;
+    --muted: 223 24% 16%;
+    --muted-foreground: 219 18% 74%;
 
-    --accent: var(--glow-500);
-    --accent-foreground: 226 55% 10%;
+    --accent: 219 62% 62%;
+    --accent-foreground: 222 48% 11%;
 
     --destructive: var(--blood-500);
     --destructive-foreground: var(--neutral-0);
@@ -87,9 +88,9 @@
     --info: var(--state-info);
     --info-foreground: 226 55% 10%;
 
-    --border: 223 26% 24%;
-    --input: 223 26% 24%;
-    --ring: var(--glow-400);
+    --border: 222 27% 26%;
+    --input: 222 27% 26%;
+    --ring: var(--primary);
 
     /* Radius and spacing */
     --radius: 0.875rem;
@@ -108,14 +109,14 @@
     --spacing-3xl: 3rem;
 
     /* Surfaces */
-    --surface: 228 35% 10%;
-    --surface-elevated: 228 32% 13%;
-    --surface-raised: 227 31% 16%;
-    --surface-overlay: 228 30% 14%;
+    --surface: 224 36% 11%;
+    --surface-elevated: 223 33% 15%;
+    --surface-raised: 223 31% 18%;
+    --surface-overlay: 223 30% 16%;
     --overlay: 229 45% 6% / 0.76;
     --card-elevated: 228 34% 14%;
-    --surface-highlight: 221 76% 52% / 0.12;
-    --surface-glow: 199 94% 67% / 0.16;
+    --surface-highlight: 39 52% 66% / 0.12;
+    --surface-glow: 219 62% 62% / 0.11;
     --surface-danger-glow: 356 77% 44% / 0.16;
 
     /* Brand + compatibility helpers */
@@ -339,28 +340,29 @@
     --neutral-800: 228 28% 16%;
     --neutral-900: 229 34% 12%;
 
-    --state-success: 158 55% 40%;
-    --state-warning: 38 80% 50%;
+    --state-success: 142 72% 38%;
+    --state-warning: 38 90% 44%;
     --state-danger: var(--blood-500);
-    --state-info: var(--glow-500);
+    --state-info: 213 82% 58%;
 
-    --background: 214 45% 97%;
-    --foreground: 229 34% 12%;
+    --background: 218 45% 97%;
+    --foreground: 224 39% 13%;
     --card: 0 0% 100%;
     --card-foreground: 229 34% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 229 34% 12%;
 
-    --primary: var(--midnight-800);
+    --primary: 37 43% 46%;
+    --primary-hover: 37 46% 40%;
     --primary-foreground: var(--neutral-0);
-    --primary-glow: var(--glow-400);
+    --primary-glow: 38 52% 62%;
 
-    --secondary: 214 31% 95%;
-    --secondary-foreground: 229 34% 12%;
-    --muted: 214 31% 94%;
+    --secondary: 214 28% 94%;
+    --secondary-foreground: 224 39% 13%;
+    --muted: 214 30% 93%;
     --muted-foreground: 221 14% 43%;
 
-    --accent: var(--glow-500);
+    --accent: 216 72% 46%;
     --accent-foreground: 228 48% 12%;
 
     --destructive: var(--blood-500);
@@ -373,18 +375,18 @@
     --info: var(--state-info);
     --info-foreground: 228 48% 12%;
 
-    --border: 216 24% 88%;
+    --border: 216 24% 86%;
     --input: 216 24% 84%;
-    --ring: var(--midnight-400);
+    --ring: var(--primary);
 
-    --surface: 214 31% 95%;
+    --surface: 214 30% 95%;
     --surface-elevated: 0 0% 100%;
     --surface-raised: 212 42% 99%;
     --surface-overlay: 214 36% 96%;
     --overlay: 229 34% 12% / 0.28;
     --card-elevated: 0 0% 100%;
-    --surface-highlight: 220 71% 49% / 0.08;
-    --surface-glow: 200 88% 54% / 0.1;
+    --surface-highlight: 37 43% 46% / 0.09;
+    --surface-glow: 216 72% 46% / 0.08;
     --surface-danger-glow: 356 74% 46% / 0.1;
 
     --brand-primary: var(--primary);

@@ -5,8 +5,8 @@ import { cn } from "@shared/lib/utils";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 
 const AuthShell = ({ heroSide = "left", toolbar, hero, card }) => {
-  const { direction, isRTL, t } = useLanguage();
-  const shouldReverse = isRTL ? heroSide === "right" : heroSide === "left";
+  const { isRTL, t } = useLanguage();
+  const shouldReverse = heroSide === "right";
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 12 },
@@ -18,10 +18,10 @@ const AuthShell = ({ heroSide = "left", toolbar, hero, card }) => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background" dir={direction}>
+    <div className="relative min-h-screen overflow-hidden bg-background" dir="rtl">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 start-[8%] h-72 w-72 rounded-full bg-[hsl(var(--gold))]/10 blur-[140px]" />
-        <div className="absolute bottom-0 end-[6%] h-72 w-72 rounded-full bg-[hsl(var(--primary))]/10 blur-[150px]" />
+        <div className="absolute -top-32 start-[8%] h-72 w-72 rounded-full bg-[hsl(var(--gold))]/8 blur-[140px]" />
+        <div className="absolute bottom-0 end-[6%] h-72 w-72 rounded-full bg-[hsl(var(--primary))]/8 blur-[150px]" />
       </div>
 
       {toolbar && (

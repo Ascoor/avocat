@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
-  ArrowLeftRight,
   ArrowRight,
   CheckCircle,
   Eye,
@@ -36,7 +35,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [mirrored, setMirrored] = useState(false);
   const [formError, setFormError] = useState(null);
 
   const { login, isAuthenticated, isInitializing } = useAuth();
@@ -68,8 +66,6 @@ const Login = () => {
   }, [searchParams, t]);
 
   const heroCopy = useMemo(() => t("auth.login.hero"), [t]);
-
-  const shouldReverse = useMemo(() => mirrored, [mirrored]);
 
   const fillDemoCredentials = () => {
     setEmail(demoEmail);
@@ -127,19 +123,6 @@ const Login = () => {
 
   const toolbar = (
     <>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="hidden h-9 gap-2 rounded-xl border-border/70 bg-background/80 px-3 text-xs shadow-sm backdrop-blur sm:flex"
-        onClick={() => setMirrored((prev) => !prev)}
-        aria-pressed={mirrored}
-        aria-label={t("auth.login.swap_layout_aria")}
-      >
-        <ArrowLeftRight className="h-4 w-4" />
-        <span>{t("auth.login.swap_layout")}</span>
-      </Button>
-
       <ThemeToggle tone="light" />
       <LanguageToggle />
     </>
@@ -157,7 +140,7 @@ const Login = () => {
 
   return (
     <AuthShell
-      heroSide={shouldReverse ? "left" : "right"}
+      heroSide="right"
       toolbar={toolbar}
       hero={{
         badge: heroCopy?.badge ? (
@@ -296,7 +279,7 @@ const Login = () => {
 
               <p>
                 <Link to="/" className="inline-flex items-center text-muted-foreground transition-colors hover:text-foreground">
-                  {isRTL ? `← ${t("common.backToHome")}` : `← ${t("common.backToHome")}`}
+                  {`← ${t("common.backToHome")}`}
                 </Link>
               </p>
             </div>
