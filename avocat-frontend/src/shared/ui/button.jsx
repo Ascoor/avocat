@@ -17,6 +17,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: [
+          "border-[hsl(var(--primary)/0.42)] text-[hsl(var(--primary-foreground))] shadow-primary-glow",
+          "bg-[linear-gradient(135deg,hsl(var(--primary))_0%,hsl(var(--primary-hover,var(--gold-light)))_100%)] hover:-translate-y-0.5 hover:border-[hsl(var(--primary)/0.62)] hover:shadow-custom-xl",
+          "before:bg-[linear-gradient(180deg,hsl(var(--foreground)/0.14),transparent_55%)] before:opacity-100",
+        ].join(" "),
+        primary: [
           "border-[hsl(var(--primary)/0.38)] text-[hsl(var(--primary-foreground))] shadow-primary-glow",
           "bg-[var(--gradient-cta)] hover:-translate-y-0.5 hover:border-[hsl(var(--accent)/0.4)] hover:shadow-custom-xl",
           "before:bg-[linear-gradient(180deg,hsl(var(--foreground)/0.14),transparent_55%)] before:opacity-100",
@@ -39,6 +44,11 @@ const buttonVariants = cva(
           "shadow-custom-md hover:-translate-y-0.5 hover:border-[hsl(var(--accent)/0.24)] hover:bg-[hsl(var(--card)/0.72)] hover:shadow-custom-lg",
         ].join(" "),
         destructive: [
+          "border-[hsl(var(--destructive)/0.32)] text-[hsl(var(--destructive-foreground))] shadow-danger-glow",
+          "bg-[linear-gradient(135deg,hsl(var(--destructive))_0%,hsl(var(--destructive)/0.82)_100%)] hover:-translate-y-0.5 hover:border-[hsl(var(--destructive)/0.45)] hover:shadow-custom-xl",
+          "before:bg-[linear-gradient(180deg,hsl(var(--foreground)/0.12),transparent_55%)] before:opacity-100",
+        ].join(" "),
+        danger: [
           "border-[hsl(var(--destructive)/0.32)] text-[hsl(var(--destructive-foreground))] shadow-danger-glow",
           "bg-[var(--gradient-danger)] hover:-translate-y-0.5 hover:border-[hsl(var(--blood-300)/0.4)] hover:shadow-custom-xl",
           "before:bg-[linear-gradient(180deg,hsl(var(--foreground)/0.12),transparent_55%)] before:opacity-100",

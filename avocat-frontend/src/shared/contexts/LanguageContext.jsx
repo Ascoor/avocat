@@ -22,13 +22,13 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     if (typeof document === 'undefined') return;
     document.documentElement.lang = language;
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dataset.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = 'rtl';
+    document.documentElement.dataset.dir = 'rtl';
     setStoredLanguage(language);
   }, [language]);
 
-  const direction = language === 'ar' ? 'rtl' : 'ltr';
-  const isRTL = direction === 'rtl';
+  const direction = 'rtl';
+  const isRTL = true;
 
   const value = useMemo(() => {
     const t = (key, options = {}) => {

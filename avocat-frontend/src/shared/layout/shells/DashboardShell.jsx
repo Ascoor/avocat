@@ -4,11 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import MobileNavigationDrawer from "../navigation/MobileNavigationDrawer";
 import AppHeader from "../navigation/AppHeader";
-import { useLanguage } from "@shared/contexts/LanguageContext";
 import { cn } from "@shared/lib/utils";
 
 const DashboardShell = ({ children, title, className, showSidebarToggle = false }) => {
-  const { direction } = useLanguage();
   const location = useLocation();
   const scrollRef = useRef(null);
 
@@ -20,7 +18,7 @@ const DashboardShell = ({ children, title, className, showSidebarToggle = false 
   }, [location.pathname, location.search]);
 
   return (
-    <div dir={direction} className={cn("dashboard-shell", className)}>
+    <div dir="rtl" className={cn("dashboard-shell", className)}>
       <AppHeader title={title} showSidebarToggle={showSidebarToggle} />
 
       <div className="dashboard-layout">
