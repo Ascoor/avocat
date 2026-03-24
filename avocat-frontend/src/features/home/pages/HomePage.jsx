@@ -220,22 +220,110 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section id="why" className="section-padding">
+        <section className="py-16">
           <div className="container">
-            <SectionHeading subtitle={t('publicSite.why.subtitle')} title={t('publicSite.why.title')} description={t('publicSite.why.desc')} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {whyCards.map((card, i) => (
-                <motion.div key={card.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-xl border border-border bg-card p-6 md:p-8 transition-all duration-300 hover:border-primary/30">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <card.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">{t(`publicSite.why.items.${card.key}.title`)}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{t(`publicSite.why.items.${card.key}.desc`)}</p>
+            <SectionHeading
+              subtitle="من نحن"
+              title="مكتب أفوكات للمحاماة"
+              description="مكتب محاماة مصري يجمع بين الخبرة القانونية العميقة والنهج العصري في تقديم الخدمات القانونية للأفراد والشركات."
+            />
+          </div>
+        </section>
+
+        {/* Story */}
+        <section className="py-16 bg-card/30">
+          <div className="container">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h3 className="text-2xl font-bold text-foreground mb-4">قصتنا</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  تأسس مكتب أفوكات للمحاماة بهدف تقديم خدمات قانونية متميزة تلبي احتياجات السوق المصري المتطور. نؤمن بأن الخدمة القانونية يجب أن تكون متاحة وواضحة ومبنية على الثقة المتبادلة.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  يجمع فريقنا بين الخبرة القانونية الراسخة والفهم العميق لاحتياجات العملاء في بيئة أعمال سريعة التغير، مما يمكننا من تقديم حلول قانونية عملية وفعالة.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="aspect-video bg-secondary rounded-xl flex items-center justify-center"
+              >
+                <span className="text-muted-foreground/30">صورة المكتب</span>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Vision & Mission */}
+        <section className="py-16">
+          <div className="container">
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                { icon: Eye, title: "رؤيتنا", text: "أن نكون المكتب القانوني الأكثر ثقة وابتكاراً في مصر، مع تقديم تجربة عملاء استثنائية تجمع بين الخبرة القانونية والتكنولوجيا الحديثة." },
+                { icon: Target, title: "رسالتنا", text: "تقديم خدمات قانونية متميزة بأعلى معايير الجودة والاحترافية، مع التركيز على بناء علاقات طويلة الأمد مع عملائنا قائمة على الثقة والشفافية." },
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.15 }}
+                  className="p-8 rounded-xl bg-card border border-border/50"
+                >
+                  <item.icon className="w-10 h-10 text-primary mb-4" />
+                  <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{item.text}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* Stats */}
+        <section className="py-16 bg-card/30">
+          <div className="container">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> 
+            </div>
+          </div>
+        </section>
+
+        {/* Values */}
+        <section className="py-16">
+          <div className="container">
+            <SectionHeading subtitle="قيمنا" title="المبادئ التي توجهنا" />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { title: "النزاهة", desc: "نلتزم بأعلى معايير الأخلاق المهنية في جميع تعاملاتنا." },
+                { title: "التميز", desc: "نسعى دائماً لتقديم أفضل خدمة قانونية ممكنة لعملائنا." },
+                { title: "السرية", desc: "نحافظ على سرية جميع المعلومات والبيانات المتعلقة بعملائنا." },
+                { title: "الابتكار", desc: "نتبنى أحدث الأساليب والتقنيات في تقديم خدماتنا القانونية." },
+              ].map((card, i) => (
+                <motion.div
+                  key={card.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="text-center p-6"
+                >
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <span className="text-primary font-bold">{i + 1}</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-foreground mb-2">{card.title}</h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{card.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
 
         <section id="services" className="section-padding bg-surface">
           <div className="container">

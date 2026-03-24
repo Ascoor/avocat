@@ -38,6 +38,9 @@ services:
       retries: 2
 
   api:
+    build:
+      context: ./avocat-backend
+      dockerfile: Dockerfile
     image: avocat-backend:latest
     container_name: avc-api
     restart: unless-stopped
@@ -61,11 +64,6 @@ services:
     networks:
       - backend
       - database
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: "1.0"
 
   web:
     image: node:20-alpine

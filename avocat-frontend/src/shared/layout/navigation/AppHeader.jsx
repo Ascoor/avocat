@@ -10,6 +10,9 @@ import {
   DropdownMenuLabel,
 } from "@shared/ui/dropdown-menu";
 
+import { Link  } from 'react-router-dom';
+import { useTheme } from '@/shared/contexts/ThemeContext';
+import { LogoPatren, LogoBlue } from '@/assets/images';
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
 import HeaderTabs from "./HeaderTabs";
@@ -24,10 +27,16 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
+  const { theme, toggleTheme } = useTheme();
+  const logo = theme === 'dark' ? LogoPatren : LogoBlue;
   return (
     <header className={cn("header-shell sticky top-0 z-40", className)}>
       <div className="mx-auto flex min-h-16 w-full items-center justify-between gap-2 px-3 py-2 sm:px-6 lg:px-8">
-        <div className={cn("flex items-center gap-2 sm:gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
+      <Link to="/" className="shrink-0">
+            <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
+          </Link>
+  <div className={cn("flex items-center gap-2 sm:gap-3 min-w-0", isRTL ? "flex-row-reverse" : "flex-row")}>
+
           <Button
             variant="outline"
             size="icon"

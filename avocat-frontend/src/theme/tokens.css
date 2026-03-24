@@ -65,7 +65,7 @@
     --popover: 229 35% 12%;
     --popover-foreground: 216 27% 95%;
 
-    --primary: var(--midnight-500);
+    --primary: var(--blood-500);
     --primary-foreground: var(--neutral-0);
     --primary-glow: var(--glow-400);
 
@@ -351,7 +351,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 229 34% 12%;
 
-    --primary: var(--midnight-500);
+    --primary: var(--midnight-800);
     --primary-foreground: var(--neutral-0);
     --primary-glow: var(--glow-400);
 
