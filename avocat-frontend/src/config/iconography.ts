@@ -1,25 +1,20 @@
 import type { ComponentType, SVGProps } from "react";
 import {
-  Archive,
-  BarChart3,
-  Bell,
-  BookOpen,
-  Briefcase,
-  CalendarClock,
-  Database,
-  FileText,
-  Scale,
-  Search,
-  UserCheck,
-  Users,
-  UserX,
-} from "lucide-react";
-
-import {
+  ArchiveIcon,
+  BarChartIcon,
+  BellIcon,
+  BookOpenIcon,
+  BriefcaseIcon,
+  BooksIcon,
+  CalendarIcon,
   CourthouseIcon,
+  DatabaseIcon,
   GavelIcon,
   LegalDocumentIcon,
+  ScaleIcon,
+  SearchFileIcon,
   ShieldIcon,
+  UsersIcon,
 } from "@shared/icons/legal/LegalIcons";
 
 export type IconKey =
@@ -86,7 +81,7 @@ const ICON_DESIGNS: Record<IconKey, IconDesign> = {
     "0 16px 32px rgba(255, 123, 77, 0.35)",
   ),
   legalProcedures: createDesign(
-    FileText,
+    LegalDocumentIcon,
     "linear-gradient(145deg, #C7A4FF 0%, #8F6BFF 100%)",
     "0 14px 30px rgba(143, 107, 255, 0.32)",
   ),
@@ -96,42 +91,42 @@ const ICON_DESIGNS: Record<IconKey, IconDesign> = {
     "0 14px 30px rgba(40, 180, 135, 0.32)",
   ),
   workTracking: createDesign(
-    Briefcase,
+    BriefcaseIcon,
     "linear-gradient(145deg, #7DE2FF 0%, #3087FF 100%)",
     "0 14px 30px rgba(48, 135, 255, 0.35)",
   ),
   sessions: createDesign(
-    CalendarClock,
+    CalendarIcon,
     "linear-gradient(145deg, #74C4FF 0%, #4D6CFF 100%)",
     "0 14px 30px rgba(77, 108, 255, 0.35)",
   ),
   procedures: createDesign(
-    FileText,
+    LegalDocumentIcon,
     "linear-gradient(145deg, #BFA7FF 0%, #7C5BFF 100%)",
     "0 14px 30px rgba(124, 91, 255, 0.32)",
   ),
   customerService: createDesign(
-    Users,
+    UsersIcon,
     "linear-gradient(145deg, #FF9A9E 0%, #FECFEF 100%)",
     "0 14px 30px rgba(255, 154, 158, 0.32)",
   ),
   clients: createDesign(
-    UserCheck,
+    UsersIcon,
     "linear-gradient(145deg, #7DFCCB 0%, #27B28A 100%)",
     "0 14px 30px rgba(39, 178, 138, 0.32)",
   ),
   prospects: createDesign(
-    UserX,
+    UsersIcon,
     "linear-gradient(145deg, #FFAEA5 0%, #FF6F91 100%)",
     "0 14px 30px rgba(255, 111, 145, 0.32)",
   ),
   lawyers: createDesign(
-    Scale,
+    ScaleIcon,
     "linear-gradient(145deg, #9AA7FF 0%, #5F6FFF 100%)",
     "0 14px 30px rgba(95, 111, 255, 0.32)",
   ),
   reports: createDesign(
-    BarChart3,
+    BarChartIcon,
     "linear-gradient(145deg, #FFD282 0%, #FF8A5B 100%)",
     "0 14px 30px rgba(255, 138, 91, 0.32)",
   ),
@@ -141,13 +136,13 @@ const ICON_DESIGNS: Record<IconKey, IconDesign> = {
     "0 14px 30px rgba(134, 107, 255, 0.32)",
   ),
   archive: createDesign(
-    Archive,
+    ArchiveIcon,
     "linear-gradient(145deg, #D5DFEA 0%, #9BA8BF 100%)",
     "0 14px 30px rgba(155, 168, 191, 0.3)",
     "text-slate-700",
   ),
   courtsSearch: createDesign(
-    Search,
+    SearchFileIcon,
     "linear-gradient(145deg, #B49CFF 0%, #6C5BFF 100%)",
     "0 14px 30px rgba(108, 91, 255, 0.32)",
   ),
@@ -157,7 +152,7 @@ const ICON_DESIGNS: Record<IconKey, IconDesign> = {
     "0 14px 30px rgba(110, 122, 255, 0.32)",
   ),
   officeSettings: createDesign(
-    CourthouseIcon,
+    BooksIcon,
     "linear-gradient(145deg, #6FD1FF 0%, #2B74FF 100%)",
     "0 14px 30px rgba(43, 116, 255, 0.32)",
   ),
@@ -172,23 +167,23 @@ const ICON_DESIGNS: Record<IconKey, IconDesign> = {
     "0 14px 30px rgba(255, 95, 158, 0.32)",
   ),
   database: createDesign(
-    Database,
+    DatabaseIcon,
     "linear-gradient(145deg, #79DFFF 0%, #3D9EFF 100%)",
     "0 14px 30px rgba(61, 158, 255, 0.32)",
   ),
   notifications: createDesign(
-    Bell,
+    BellIcon,
     "linear-gradient(145deg, #FFE29D 0%, #FF9F4D 100%)",
     "0 14px 30px rgba(255, 159, 77, 0.32)",
     "text-amber-900",
   ),
   knowledge: createDesign(
-    BookOpen,
+    BookOpenIcon,
     "linear-gradient(145deg, #9EFFDA 0%, #5BC8F7 100%)",
     "0 14px 30px rgba(91, 200, 247, 0.32)",
   ),
   chart: createDesign(
-    BarChart3,
+    BarChartIcon,
     "linear-gradient(145deg, #8FA9FF 0%, #4A6BFF 100%)",
     "0 14px 30px rgba(74, 107, 255, 0.32)",
   ),
