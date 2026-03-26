@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { REPORT_TABS } from '@features/reports/hooks/useReportsQuery';
 import { fetchReportsOverview } from '@features/reports/services/reportsApi';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const getItemLabel = (tabKey, row) => {
   if (tabKey === 'cases') return row?.title || row?.slug || '-';
@@ -15,6 +16,7 @@ const ReportsOverview = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { direction } = useLanguage();
 
   useEffect(() => {
     let mounted = true;
@@ -46,7 +48,7 @@ const ReportsOverview = () => {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" dir="rtl">
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" dir={direction}>
       {REPORT_TABS.map((tab) => {
         const rows = data?.[tab.key] || [];
         return (

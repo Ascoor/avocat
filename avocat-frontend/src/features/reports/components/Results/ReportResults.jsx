@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import ReportStatusBadge from '@features/reports/components/Reports/ReportStatusBadge';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 // Function to get the detail link for the corresponding report section (cases, clients, etc.)
 const getDetailLink = (tabKey, row) => {
@@ -82,6 +83,7 @@ const REPORT_COLUMNS = {
 
 // Main component for displaying report results
 const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
+  const { direction } = useLanguage();
   const columns = REPORT_COLUMNS[tabKey] || [];
 
   // Handle loading state
@@ -92,7 +94,7 @@ const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
   // Handle error state
   if (error) {
     return (
-      <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-4 text-sm" dir="rtl">
+      <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-4 text-sm" dir={direction}>
         <p className="mb-3">{error}</p>
         <button type="button" onClick={onRetry} className="rounded-lg border border-border/70 px-3 py-1.5">
           إعادة المحاولة
@@ -109,9 +111,9 @@ const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
   // Render report results table
   return (
     <div className="overflow-x-auto rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)]">
-      <table className="min-w-full text-sm" dir="rtl">
+      <table className="min-w-full text-sm" dir={direction}>
         <thead>
-          <tr className="border-b border-border/70 bg-[hsl(var(--muted)/0.4)] text-right">
+          <tr className="border-b border-border/70 bg-[hsl(var(--muted)/0.4)] text-start">
             {columns.map((column) => (
               <th key={column.key} className="px-3 py-2 font-semibold">
                 {column.label}
@@ -124,7 +126,7 @@ const ReportResults = ({ tabKey, rows, loading, error, onRetry }) => {
           {rows.map((row) => (
             <tr key={row?.id || JSON.stringify(row)} className="border-b border-border/50 last:border-b-0">
               {columns.map((column) => (
-                <td key={column.key} className="px-3 py-2 text-right">
+                <td key={column.key} className="px-3 py-2 text-start">
                   {column.key === 'status' ? <ReportStatusBadge status={column.value(row)} /> : column.value(row)}
                 </td>
               ))}

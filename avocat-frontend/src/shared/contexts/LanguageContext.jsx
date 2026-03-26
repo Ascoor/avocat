@@ -4,6 +4,7 @@ import {
   setLanguage as setStoredLanguage,
   t as translate,
 } from '@shared/i18n';
+import { getTextDirection, isRTLLanguage } from '@shared/i18n/localeDirection';
 
 const LanguageContext = createContext(null);
 
@@ -22,13 +23,14 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     if (typeof document === 'undefined') return;
     document.documentElement.lang = language;
-    document.documentElement.dir = 'rtl';
-    document.documentElement.dataset.dir = 'rtl';
+    const dir = getTextDirection(language);
+    document.documentElement.dir = dir;
+    document.documentElement.dataset.dir = dir;
     setStoredLanguage(language);
   }, [language]);
 
-  const direction = 'rtl';
-  const isRTL = true;
+  const direction = useMemo(() => getTextDirection(language), [language]);
+  const isRTL = useMemo(() => isRTLLanguage(language), [language]);
 
   const value = useMemo(() => {
     const t = (key, options = {}) => {
@@ -60,7 +62,7 @@ export const LanguageProvider = ({ children }) => {
       isRTL,
       t,
     };
-  }, [language]);
+  }, [language, direction, isRTL]);
 
   return (
     <LanguageContext.Provider value={value}>

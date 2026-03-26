@@ -3,13 +3,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ReportPageHeader from '@features/reports/components/Reports/ReportPageHeader';
 import ReportsTabs from '@features/reports/components/Tabs/ReportsTabs';
 import { REPORT_TABS } from '@features/reports/hooks/useReportsQuery';
+import { useLanguage } from '@shared/contexts/LanguageContext';
 
 const ReportsIndex = () => {
   const location = useLocation();
-
+  const { direction } = useLanguage();
 
   return (
-    <section className="space-y-4" dir="rtl">
+    <section className="space-y-4" dir={direction}>
       <ReportPageHeader icon="reports" title="التقارير" />
       <ReportsTabs tabs={REPORT_TABS} />
 

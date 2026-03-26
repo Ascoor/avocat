@@ -28,7 +28,7 @@ const PillLink = ({ to, icon: Icon, label }) => (
 );
 
 const HeaderTabs = ({ className }) => {
-  const { t } = useLanguage();
+  const { t, direction, isRTL } = useLanguage();
   const { permissions } = useSecurity();
 
   const items = useMemo(() => {
@@ -56,7 +56,7 @@ const HeaderTabs = ({ className }) => {
 
   return (
     <div className={cn('header-tabs-wrap', className)}>
-      <div className="header-tabs" dir="rtl">
+      <div className="header-tabs" dir={direction}>
         {orderedItems.map((item) => {
           const Icon = item.icon;
           const label = t(item.labelKey);
@@ -82,7 +82,8 @@ const HeaderTabs = ({ className }) => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent
-                align="start"
+                align={isRTL ? 'end' : 'start'}
+                dir={direction}
                 className="min-w-56"
               >
                 {item.children.map((child) => {
@@ -93,7 +94,6 @@ const HeaderTabs = ({ className }) => {
                         to={child.path}
                         className={cn(
                           'flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm',
-                          'flex-row-reverse',
                         )}
                         activeClassName="bg-muted"
                       >

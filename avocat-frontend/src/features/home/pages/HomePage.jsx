@@ -250,19 +250,19 @@ const HomePage = () => {
                 </p>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="aspect-video bg-secondary rounded-xl overflow-hidden"
-              >
-                <img
-                  src={OfficeBuild}
-                  alt={isEnglish ? 'Avocat office building' : 'مبنى مكتب أفوكات'}
-                  className="h-full w-full object-center"
-                  loading="lazy"
-                />
-              </motion.div>
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true, amount: 0.2 }}
+  transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
+  className="aspect-video overflow-hidden rounded-xl bg-secondary"
+>
+  <img
+    src={OfficeBuild}
+    alt={isEnglish ? 'Avocat office building' : 'مبنى مكتب أفوكات'}
+    className="h-full w-full object-cover"
+    loading="lazy"
+  />
+</motion.div>
             </div>
           </div>
         </section>

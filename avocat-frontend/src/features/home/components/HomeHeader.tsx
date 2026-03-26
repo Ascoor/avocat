@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, type MouseEvent } from 'react';
+import { useState, useEffect, type MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Sun, Moon, Globe, LogIn, LayoutDashboard } from 'lucide-react';
 
@@ -24,7 +24,7 @@ const HomeHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
-  const { language, setLanguage, t, direction, isRTL } = useLanguage();
+  const { language, setLanguage, t, direction } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated } = useAuth();
 
@@ -40,10 +40,6 @@ const HomeHeader = () => {
     ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-sm'
     : 'bg-transparent';
 
-  const orderedNavItems = useMemo(
-    () => (isRTL ? [...navItems].reverse() : navItems),
-    [isRTL],
-  );
   const authActionPath = isAuthenticated ? '/dashboard' : '/login';
   const authActionKey = isAuthenticated ? 'common.dashboard' : 'publicSite.nav.clientLogin';
   const AuthActionIcon = isAuthenticated ? LayoutDashboard : LogIn;
@@ -65,19 +61,22 @@ const HomeHeader = () => {
 
   return (
     <>
-      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${headerBg}`}>
-        <div className="container flex items-center justify-between h-16 md:h-20">
+      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${headerBg}`} dir={direction}>
+        <div className="container flex items-center justify-between gap-3 min-w-0 h-16 md:h-20">
           <Link to="/" className="shrink-0">
             <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
           </Link>
 
-          <nav dir={direction} className={`hidden lg:flex items-center gap-1 ${isRTL ? 'justify-end' : 'justify-start'}`}>
-            {orderedNavItems.map((item) => (
+          <nav
+            dir={direction}
+            className="hidden lg:flex flex-1 min-w-0 items-center justify-start gap-1 overflow-x-auto overflow-y-visible py-1 [scrollbar-width:thin] scroll-smooth touch-pan-x"
+          >
+            {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={(event) => handleNavClick(event, item)}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`shrink-0 px-3 py-2.5 text-sm font-medium rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   location.pathname === item.path
                     ? 'text-primary'
                     : 'text-foreground/80 hover:text-foreground hover:bg-surface-elevated'
@@ -110,11 +109,11 @@ const HomeHeader = () => {
 
             <Link
               to={authActionPath}
-              className="hidden md:flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-colors"
+              className="hidden md:inline-flex items-center gap-2 rounded-lg border border-border/70 bg-muted/35 px-3 py-2 text-sm font-medium text-foreground shadow-sm transition-all hover:bg-muted/55 hover:border-border hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]"
               title={t(authActionKey)}
             >
-              <AuthActionIcon className="h-4 w-4" />
-              <span>{t(authActionKey)}</span>
+              <AuthActionIcon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+              <span className="whitespace-nowrap">{t(authActionKey)}</span>
             </Link>
 
             <Link to="/book" className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold transition-all hover:brightness-110 glow-red">
@@ -130,13 +129,16 @@ const HomeHeader = () => {
 
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-background/98 backdrop-blur-lg pt-20 lg:hidden">
-          <nav dir={direction} className={`container flex flex-col gap-1 py-6 ${isRTL ? 'items-end text-right' : 'items-start text-left'}`}>
-            {orderedNavItems.map((item) => (
+          <nav
+            dir={direction}
+            className="container flex flex-col gap-1 py-6 items-stretch text-start"
+          >
+            {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={(event) => handleNavClick(event, item)}
-                className={`px-4 py-3 text-lg font-medium rounded-lg transition-colors ${
+                className={`px-4 py-3 text-lg font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   location.pathname === item.path
                     ? 'text-primary bg-primary/10'
                     : 'text-foreground hover:bg-surface-elevated'
@@ -145,8 +147,11 @@ const HomeHeader = () => {
                 {t(item.key)}
               </Link>
             ))}
-            <Link to={authActionPath} className="mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-semibold">
-              <AuthActionIcon className="h-4 w-4" />
+            <Link
+              to={authActionPath}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg border border-border/80 bg-muted/40 px-6 py-3 text-foreground font-semibold shadow-sm transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]"
+            >
+              <AuthActionIcon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
               {t(authActionKey)}
             </Link>
             <Link to="/book" className="flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold">
