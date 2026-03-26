@@ -21,6 +21,10 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        tharwat: ['TharwatOmaraa', 'sans-serif'],
+      },
+    
       colors: {
         /* BASE SEMANTIC TOKENS */
         border: "hsl(var(--border))",

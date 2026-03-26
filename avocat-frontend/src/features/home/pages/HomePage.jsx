@@ -36,6 +36,7 @@ import hero1 from '@/assets/images/hero-1.png';
 import hero2 from '@/assets/images/hero-2.png';
 import hero3 from '@/assets/images/hero-3.png';
 import hero4 from '@/assets/images/hero-4.png';
+import {OfficeBuild} from '@/assets/images';
 import { useTheme } from '@/shared/contexts/ThemeContext';
 import SectionHeading from '../components/SectionHeading';
 import HomeHeader from '../components/HomeHeader';
@@ -224,7 +225,7 @@ const HomePage = () => {
           <div className="container">
             <SectionHeading
               subtitle="من نحن"
-              title="مكتب أفوكات للمحاماة"
+              title="أفوكات"
               description="مكتب محاماة مصري يجمع بين الخبرة القانونية العميقة والنهج العصري في تقديم الخدمات القانونية للأفراد والشركات."
             />
           </div>
@@ -253,9 +254,14 @@ const HomePage = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="aspect-video bg-secondary rounded-xl flex items-center justify-center"
+                className="aspect-video bg-secondary rounded-xl overflow-hidden"
               >
-                <span className="text-muted-foreground/30">صورة المكتب</span>
+                <img
+                  src={OfficeBuild}
+                  alt={isEnglish ? 'Avocat office building' : 'مبنى مكتب أفوكات'}
+                  className="h-full w-full object-center"
+                  loading="lazy"
+                />
               </motion.div>
             </div>
           </div>
@@ -306,7 +312,7 @@ const HomePage = () => {
                 { title: "الابتكار", desc: "نتبنى أحدث الأساليب والتقنيات في تقديم خدماتنا القانونية." },
               ].map((card, i) => (
                 <motion.div
-                  key={card.key}
+                  key={card.title}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

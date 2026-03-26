@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# تثبيت curl
+RUN apk add --no-cache curl
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./

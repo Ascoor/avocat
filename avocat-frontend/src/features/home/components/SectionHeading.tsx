@@ -23,7 +23,7 @@ const SectionHeading = ({ subtitle, title, description, align = "center" }: Sect
           {subtitle}
         </span>
       )}
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-4">
+      <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold text-foreground font-tharwat leading-tight mb-4">
         {title}
       </h2>
       {description && (

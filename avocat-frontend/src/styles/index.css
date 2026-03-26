@@ -10,3 +10,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'TharwatOmaraa';
+    src: url('./assets/fonts/TharwatOmaraa.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  

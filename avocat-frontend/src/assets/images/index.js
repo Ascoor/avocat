@@ -12,6 +12,7 @@ export { default as WelcomeBackground } from '../images/welcome.webp';
 export { default as WelcomePatren } from '../images/logo512.png';
 export { default as WelcomeLogo } from '../images/logo512.png';
 export { default as LandingPageImg } from '../images/landing.png'; 
+export { default as OfficeBuild } from '../images/office-build.webp'; 
 
 export { default as CriminalLaw } from '../images/serviceIcons/criminal law1.svg';
 export { default as RealEstate } from '../images/serviceIcons/real-estate1.svg';
