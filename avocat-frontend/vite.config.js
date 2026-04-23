@@ -75,7 +75,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: '../dist', 
+    outDir: 'dist', 
     emptyOutDir: false, 
     minify: 'esbuild',
     sourcemap: false, 
