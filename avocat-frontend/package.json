@@ -9,18 +9,12 @@
   "author": "Askar <mr.askar1984@gmail.com>",
   "private": true,
   "scripts": {
-    "start": "vite",
+  "start": "vite",
     "dev": "vite",
-    "build": "tailwindcss -o ./dist/output.css --content './src/**/*.{html,js,jsx,ts,tsx}'",
-    "build:dev": "vite build --mode development",
-    "copy-dist": "cp -R dist/* /var/www/html/avocat.live/public",
+    "build": "vite build",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
-    "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx}\"",
-    "check:security": "node scripts/security-sanity.mjs",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run"
   },
   "keywords": [
     "react",
