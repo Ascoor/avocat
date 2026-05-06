@@ -54,6 +54,13 @@ QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
 if [ "$QUEUE_CONNECTION" != "sync" ]; then
   php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
 fi
+# استخراج الأرقام فقط من متغير المنفذ لضمان عدم وجود نصوص
+CLEAN_PORT=$(echo $PORT | grep -o '[0-9]\+')
 
-# --- Serve ---
-php artisan serve --host=0.0.0.0 --port="${APP_PORT:-8000}"
+# تعيين قيمة افتراضية في حال فشل الاستخراج (اختياري)
+CLEAN_PORT=${CLEAN_PORT:-8000}
+
+echo "🌐 Starting Laravel Server for Avocat on Port: $CLEAN_PORT"
+
+# تشغيل السيرفر مع تمرير المنفذ "النظيف"
+exec php artisan serve --host=0.0.0.0 --port=$CLEAN_PORT
