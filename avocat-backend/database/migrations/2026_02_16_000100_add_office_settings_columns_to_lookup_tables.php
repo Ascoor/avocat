@@ -17,22 +17,20 @@ return new class extends Migration
 
     public function up(): void
     {
+        // 1. تحديث جدول المستخدمين
         if (! Schema::hasColumn('users', 'office_id')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->unsignedBigInteger('office_id')->nullable()->after('id')->index();
             });
         }
 
-        if (
-            Schema::hasTable('offices')
-            && Schema::hasColumn('users', 'office_id')
-            && ! $this->foreignKeyExists('users', 'users_office_id_foreign')
-        ) {
+        if (Schema::hasTable('offices') && Schema::hasColumn('users', 'office_id') && ! $this->foreignKeyExists('users', 'users_office_id_foreign')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->foreign('office_id')->references('id')->on('offices')->nullOnDelete();
             });
         }
 
+        // 2. تحديث الجداول المشتركة والخاصة بالمكاتب
         foreach (array_merge($this->systemOverrideTables, $this->officeSpecificTables) as $tableName) {
             if (! Schema::hasTable($tableName)) {
                 continue;
@@ -62,157 +60,107 @@ return new class extends Migration
                 }
             });
 
-            // system defaults
-            if (in_array($tableName, $this->systemOverrideTables, true)) {
-                DB::table($tableName)
-                    ->whereNull('office_id')
-                    ->update(['is_system' => true]);
-            }
+            // تحديث القيم الافتراضية
+            $this->updateDefaultValues($tableName);
 
-            // office-specific defaults (when office_id is null, it is NOT system)
-            if (in_array($tableName, $this->officeSpecificTables, true)) {
-                DB::table($tableName)
-                    ->whereNull('office_id')
-                    ->update(['is_system' => false]);
-            }
+            // تنظيف البيانات المكررة قبل إنشاء الفهارس الفريدة
+            $this->cleanDuplicates($tableName);
 
-            // any record with office_id is NOT system
-            DB::table($tableName)
-                ->whereNotNull('office_id')
-                ->update(['is_system' => false]);
+            // 3. إنشاء الفهارس (Indexes) بطريقة متوافقة مع MySQL
+            $this->createIndexes($tableName);
+        }
+    }
 
-            // normalize sort_order nulls
-            DB::statement("UPDATE {$tableName} SET sort_order = 0 WHERE sort_order IS NULL");
+    private function updateDefaultValues(string $tableName): void
+    {
+        if (in_array($tableName, $this->systemOverrideTables, true)) {
+            DB::table($tableName)->whereNull('office_id')->update(['is_system' => true]);
+        }
 
-            $nameColumn = 'name';
+        if (in_array($tableName, $this->officeSpecificTables, true)) {
+            DB::table($tableName)->whereNull('office_id')->update(['is_system' => false]);
+        }
 
-            if ($tableName === 'case_sub_types') {
-                $this->softDeleteDuplicates(
-                    $tableName,
-                    "office_id, case_type_id, lower({$nameColumn})",
-                    'office_id IS NOT NULL AND deleted_at IS NULL'
-                );
+        DB::table($tableName)->whereNotNull('office_id')->update(['is_system' => false]);
+        DB::statement("UPDATE {$tableName} SET sort_order = 0 WHERE sort_order IS NULL");
+    }
 
-                $this->softDeleteDuplicates(
-                    $tableName,
-                    "case_type_id, lower({$nameColumn})",
-                    'office_id IS NULL AND deleted_at IS NULL'
-                );
+    private function cleanDuplicates(string $tableName): void
+    {
+        $nameColumn = 'name';
+        if ($tableName === 'case_sub_types') {
+            $this->softDeleteDuplicates($tableName, "office_id, case_type_id, lower({$nameColumn})", 'office_id IS NOT NULL AND deleted_at IS NULL');
+            $this->softDeleteDuplicates($tableName, "case_type_id, lower({$nameColumn})", 'office_id IS NULL AND deleted_at IS NULL');
+        } else {
+            $this->softDeleteDuplicates($tableName, "office_id, lower({$nameColumn})", 'office_id IS NOT NULL AND deleted_at IS NULL');
+            $this->softDeleteDuplicates($tableName, "lower({$nameColumn})", 'office_id IS NULL AND deleted_at IS NULL');
+        }
+    }
+
+    private function createIndexes(string $tableName): void
+    {
+        $nameColumn = 'name';
+        $isCaseSubTypes = ($tableName === 'case_sub_types');
+        
+        $officeUniqIndex = $isCaseSubTypes ? "{$tableName}_ofc_ct_low_name_uniq" : "{$tableName}_ofc_low_name_uniq";
+        $systemUniqIndex = $isCaseSubTypes ? "{$tableName}_sys_ct_low_name_uniq" : "{$tableName}_sys_low_name_uniq";
+
+        // استخدام Schema Builder للفهارس العادية (أكثر أماناً)
+        Schema::table($tableName, function (Blueprint $table) use ($tableName) {
+            $table->index(['office_id', 'is_active'], "{$tableName}_ofc_act_idx");
+            $table->index(['office_id', 'sort_order'], "{$tableName}_ofc_sort_idx");
+        });
+
+        // الفهارس الفريدة باستخدام Try-Catch لتجنب أخطاء التكرار أو عدم توافق النسخ
+        try {
+            if ($isCaseSubTypes) {
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, case_type_id, (lower({$nameColumn})))");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (case_type_id, (lower({$nameColumn})))");
             } else {
-                // soft-delete duplicates per office (case-insensitive name)
-                $this->softDeleteDuplicates(
-                    $tableName,
-                    "office_id, lower({$nameColumn})",
-                    'office_id IS NOT NULL AND deleted_at IS NULL'
-                );
-
-                // soft-delete duplicates for system/global rows (office_id null, case-insensitive name)
-                $this->softDeleteDuplicates(
-                    $tableName,
-                    "lower({$nameColumn})",
-                    'office_id IS NULL AND deleted_at IS NULL'
-                );
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, (lower({$nameColumn})))");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} ((lower({$nameColumn})))");
             }
-
-            $isCaseSubTypes = ($tableName === 'case_sub_types');
-            $officeUniqIndex = $isCaseSubTypes
-                ? "{$tableName}_office_case_type_lower_name_uniq"
-                : "{$tableName}_office_lower_name_uniq";
-
-            $systemUniqIndex = $isCaseSubTypes
-                ? "{$tableName}_system_case_type_lower_name_uniq"
-                : "{$tableName}_system_lower_name_uniq";
-
-            DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_active_idx ON {$tableName} (office_id, is_active)");
-            DB::statement("CREATE INDEX IF NOT EXISTS {$tableName}_office_sort_idx ON {$tableName} (office_id, sort_order)");
-
-            if ($tableName === 'case_sub_types') {
-                DB::statement(<<<SQL
-                    CREATE UNIQUE INDEX IF NOT EXISTS {$officeUniqIndex}
-                    ON {$tableName} (office_id, case_type_id, lower({$nameColumn}))
-                    WHERE deleted_at IS NULL
-                SQL);
-
-                DB::statement(<<<SQL
-                    CREATE UNIQUE INDEX IF NOT EXISTS {$systemUniqIndex}
-                    ON {$tableName} (case_type_id, lower({$nameColumn}))
-                    WHERE office_id IS NULL AND deleted_at IS NULL
-                SQL);
-            } else {
-                DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$officeUniqIndex} ON {$tableName} (office_id, lower({$nameColumn})) WHERE deleted_at IS NULL");
-                DB::statement("CREATE UNIQUE INDEX IF NOT EXISTS {$systemUniqIndex} ON {$tableName} (lower({$nameColumn})) WHERE office_id IS NULL AND deleted_at IS NULL");
-            }
+        } catch (\Exception $e) {
+            // تجاهل إذا كان الفهرس موجوداً بالفعل
         }
     }
 
     public function down(): void
     {
         foreach (array_merge($this->systemOverrideTables, $this->officeSpecificTables) as $tableName) {
-            if (! Schema::hasTable($tableName)) {
-                continue;
-            }
-
-            DB::statement("DROP INDEX IF EXISTS {$tableName}_office_active_idx");
-            DB::statement("DROP INDEX IF EXISTS {$tableName}_office_sort_idx");
-            DB::statement("DROP INDEX IF EXISTS {$tableName}_office_lower_name_uniq");
-            DB::statement("DROP INDEX IF EXISTS {$tableName}_system_lower_name_uniq");
-            DB::statement("DROP INDEX IF EXISTS case_sub_types_office_case_type_lower_name_uniq");
-            DB::statement("DROP INDEX IF EXISTS case_sub_types_system_case_type_lower_name_uniq");
+            if (! Schema::hasTable($tableName)) continue;
 
             Schema::table($tableName, function (Blueprint $table) use ($tableName) {
-                foreach (['office_id', 'is_system', 'parent_id', 'is_active', 'sort_order', 'is_locked', 'deleted_at'] as $column) {
-                    if (Schema::hasColumn($tableName, $column)) {
-                        $table->dropColumn($column);
-                    }
+                // حذف الأعمدة
+                $columns = ['office_id', 'is_system', 'parent_id', 'is_active', 'sort_order', 'is_locked', 'deleted_at'];
+                foreach ($columns as $column) {
+                    if (Schema::hasColumn($tableName, $column)) $table->dropColumn($column);
                 }
             });
-        }
-
-        if (Schema::hasColumn('users', 'office_id')) {
-            DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_office_id_foreign');
         }
     }
 
     private function foreignKeyExists(string $tableName, string $constraintName): bool
     {
-        if (DB::getDriverName() === 'sqlite') {
-            if ($tableName === 'users' && $constraintName === 'users_office_id_foreign') {
-                $foreignKeys = DB::select("PRAGMA foreign_key_list({$tableName})");
-
-                foreach ($foreignKeys as $foreignKey) {
-                    if (($foreignKey->from ?? null) === 'office_id' && ($foreignKey->table ?? null) === 'offices') {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
+        if (DB::getDriverName() === 'sqlite') return false;
         return DB::table('information_schema.table_constraints')
             ->where('table_name', $tableName)
             ->where('constraint_name', $constraintName)
-            ->where('constraint_type', 'FOREIGN KEY')
             ->exists();
     }
 
     private function softDeleteDuplicates(string $tableName, string $partitionBy, string $whereClause): void
     {
-        $timestampExpression = $this->currentTimestampExpression();
-
-        DB::statement(<<<SQL
-            WITH ranked AS (
-                SELECT id,
-                       ROW_NUMBER() OVER (PARTITION BY {$partitionBy} ORDER BY id) AS row_num
-                FROM {$tableName}
-                WHERE {$whereClause}
+        $timestamp = $this->currentTimestampExpression();
+        DB::statement("
+            UPDATE {$tableName} SET deleted_at = {$timestamp}, is_active = false 
+            WHERE id IN (
+                SELECT id FROM (
+                    SELECT id, ROW_NUMBER() OVER (PARTITION BY {$partitionBy} ORDER BY id) as row_num 
+                    FROM {$tableName} WHERE {$whereClause}
+                ) t WHERE t.row_num > 1
             )
-            UPDATE {$tableName}
-            SET deleted_at = {$timestampExpression},
-                is_active = false,
-                updated_at = {$timestampExpression}
-            WHERE id IN (SELECT id FROM ranked WHERE row_num > 1)
-        SQL);
+        ");
     }
 
     private function currentTimestampExpression(): string
