@@ -37,5 +37,6 @@ php artisan migrate --force
 # 6. تشغيل السيرفر
 echo "🌐 Starting Laravel Server on port $PORT..."
 # ملاحظة: في بيئة الإنتاج يفضل عدم عمل config:cache إذا كانت ملفاتك تحتوي على Closures
-# لذا سنكتفي بالتشغيل المباشر
+# استبدل السطر الأخير بهذا:
+PORT=${PORT:-8000}
 php artisan serve --host=0.0.0.0 --port=$PORT

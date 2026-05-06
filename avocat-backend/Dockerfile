@@ -62,7 +62,6 @@ RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cac
 
 ENV PORT=8000
 EXPOSE 8000
-
 RUN chmod +x docker-entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "./docker-entrypoint.sh"]
