@@ -17,7 +17,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # حل مشكلة الفشل في تثبيت الملحقات: إضافة --ignore-platform-reqs
-RUN composer install --no-interaction --no-dev --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --no-interaction --no-dev --no-scripts --ignore-platform-reqs
 
 # =========================
 # 2) App stage
