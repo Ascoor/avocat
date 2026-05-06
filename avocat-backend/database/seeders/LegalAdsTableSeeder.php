@@ -13,7 +13,7 @@ class LegalAdsTableSeeder extends Seeder
         // Safer than truncate when FK exists
         DB::table('legal_ads')->delete();
 
-        $faker = Faker::create('ar_JO');
+    $faker = fake('ar_JO');
 
         $legCaseIds = DB::table('leg_cases')->pluck('id')->all();
         if (empty($legCaseIds)) {
