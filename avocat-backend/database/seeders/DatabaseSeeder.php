@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             LegCaseCourtTableSeeder::class,
             ProceduresTableSeeder::class,
             LegalSessionsTableSeeder::class,
-            LegalAdsTableSeeder::class,
+      //      LegalAdsTableSeeder::class,
             ServiceProceduresTableSeeder::class,
             RevenueSeeder::class,
             ExpensesSeeder::class,
