@@ -54,14 +54,10 @@ QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
 if [ "$QUEUE_CONNECTION" != "sync" ]; then
   php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
 fi 
-
-# Force the port to be digits only and remove any hidden whitespace/carriage returns
+# تنظيف المنفذ من أي رموز مخفية
 CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
 
-# If for some reason CLEAN_PORT is empty, default to 8080
-export PORT=${CLEAN_PORT:-8080}
+echo "🌐 Starting Production Server on Port: $CLEAN_PORT"
 
-echo "Starting server on port $PORT"
-
-# Use the "exec" form to replace the shell process with the PHP process
-exec php -S 0.0.0.0:$PORT -t public
+# تشغيل السيرفر باستخدام PHP مباشرة بدلاً من artisan serve
+exec php -S 0.0.0.0:$CLEAN_PORT -t public
