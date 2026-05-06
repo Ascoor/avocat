@@ -33,10 +33,11 @@ php artisan view:clear
 # 5. تنفيذ المهاجرة (Migrations)
 echo "📂 Running Database Migrations..."
 php artisan migrate --force
-
 # 6. تشغيل السيرفر
-echo "🌐 Starting Laravel Server on port $PORT..."
-# ملاحظة: في بيئة الإنتاج يفضل عدم عمل config:cache إذا كانت ملفاتك تحتوي على Closures
-# استبدل السطر الأخير بهذا:
-PORT=${PORT:-8000}
-php artisan serve --host=0.0.0.0 --port=$PORT
+echo "🌐 Starting Laravel Server for Avocat System..."
+
+# تحويل المنفذ لرقم صحيح يدوياً لتجنب خطأ string + int
+EXPORT_PORT=$(echo $PORT | grep -o '[0-9]\+')
+
+# استخدام 0.0.0.0 للسماح بالوصول الخارجي من Railway
+exec php artisan serve --host=0.0.0.0 --port=$EXPORT_PORT
