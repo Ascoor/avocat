@@ -53,19 +53,15 @@ php artisan migrate:fresh --seed
 QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
 if [ "$QUEUE_CONNECTION" != "sync" ]; then
   php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
-fi
-# استخراج الأرقام فقط من متغير المنفذ لضمان عدم وجود نصوص
-CLEAN_PORT=$(echo $PORT | grep -o '[0-9]\+')
+fi 
 
-# 1. Strip ALL non-numeric characters (including spaces, tabs, and \r)
+# Force the port to be digits only and remove any hidden whitespace/carriage returns
 CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
 
-# 2. Provide a fallback if the variable is empty
-if [ -z "$CLEAN_PORT" ]; then
-  CLEAN_PORT=8080
-fi
+# If for some reason CLEAN_PORT is empty, default to 8080
+export PORT=${CLEAN_PORT:-8080}
 
-echo "🌐 Starting Laravel Server on Port: $CLEAN_PORT"
+echo "Starting server on port $PORT"
 
-# 3. Use the clean port
-exec php artisan serve --host=0.0.0.0 --port="$CLEAN_PORT"
+# Use the "exec" form to replace the shell process with the PHP process
+exec php -S 0.0.0.0:$PORT -t public
