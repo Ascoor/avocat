@@ -57,10 +57,15 @@ fi
 # استخراج الأرقام فقط من متغير المنفذ لضمان عدم وجود نصوص
 CLEAN_PORT=$(echo $PORT | grep -o '[0-9]\+')
 
-# # تعيين قيمة افتراضية في حال فشل الاستخراج (اختياري)
-# CLEAN_PORT=${CLEAN_PORT:-8000}
+# 1. Strip ALL non-numeric characters (including spaces, tabs, and \r)
+CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
 
-# echo "🌐 Starting Laravel Server for Avocat on Port: $CLEAN_PORT"
+# 2. Provide a fallback if the variable is empty
+if [ -z "$CLEAN_PORT" ]; then
+  CLEAN_PORT=8080
+fi
 
-# # تشغيل السيرفر مع تمرير المنفذ "النظيف"
-# exec php artisan serve --host=0.0.0.0 --port=$CLEAN_PORT
+echo "🌐 Starting Laravel Server on Port: $CLEAN_PORT"
+
+# 3. Use the clean port
+exec php artisan serve --host=0.0.0.0 --port="$CLEAN_PORT"
