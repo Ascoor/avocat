@@ -1,43 +1,59 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "🚀 Starting Deployment Script..."
+cd /var/www/html
 
-# 1. التحقق من وجود ملف .env
-if [ ! -f .env ]; then
-    echo "📄 Creating .env file from .env.example..."
-    cp .env.example .env
+# --- ENV ---
+rm -f .env
+if [ -f .env.docker ]; then
+  echo "Creating fresh .env from .env.docker"
+  cp .env.docker .env
+elif [ -f .env.example ]; then
+  echo "Creating .env from .env.example"
+  cp .env.example .env
 fi
 
-# 2. توليد APP_KEY إذا كان مفقوداً
-if ! grep -q "APP_KEY=base64" .env; then
-    echo "🔑 Generating Application Key..."
-    php artisan key:generate --force
+# --- Composer settings (important with volumes) ---
+export COMPOSER_ALLOW_SUPERUSER=${COMPOSER_ALLOW_SUPERUSER:-1}
+export COMPOSER_CACHE_DIR=${COMPOSER_CACHE_DIR:-/tmp/composer-cache}
+mkdir -p "$COMPOSER_CACHE_DIR"
+
+# --- Install Composer if not installed ---
+if ! command -v composer &> /dev/null; then
+  echo "Composer not found, installing..."
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 fi
 
-# 3. انتظر قاعدة البيانات حتى تعمل
-echo "⏳ Waiting for MySQL to be ready..."
-until nc -z -v -w30 $DB_HOST $DB_PORT; do
-  echo "Waiting for database connection ($DB_HOST:$DB_PORT)..."
-  sleep 5
-done
-echo "✅ Database is up!"
+# --- Install vendor if missing (vendor is a volume) ---
+if [ ! -f vendor/autoload.php ]; then
+  echo "📦 Installing composer dependencies..."
+  composer install --no-interaction --prefer-dist --no-progress
+fi
 
-# 4. تنظيف الكاش القديم (حل مشكلة Closure)
-# نستخدم clear بدلاً من cache لتجنب خطأ Serialization
-echo "🧹 Clearing old cache..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# --- Clear caches BEFORE any artisan that boots the app ---
+php artisan optimize:clear || true
 
-# 5. تنفيذ المهاجرة (Migrations)
-echo "📂 Running Database Migrations..."
-php artisan migrate --force
-# 6. تشغيل السيرفر
-echo "🌐 Starting Laravel Server for Avocat System..."
+# --- Wait for DB ---
+if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ]; then
+  echo "⏳ Waiting for database ${DB_HOST}:${DB_PORT}..."
+  until nc -z "$DB_HOST" "$DB_PORT"; do sleep 1; done
+fi
 
-# تحويل المنفذ لرقم صحيح يدوياً لتجنب خطأ string + int
-EXPORT_PORT=$(echo $PORT | grep -o '[0-9]\+')
+# --- APP_KEY ---
+if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)" ]; then
+  php artisan key:generate --force --ansi
+fi
 
-# استخدام 0.0.0.0 للسماح بالوصول الخارجي من Railway
-exec php artisan serve --host=0.0.0.0 --port=$EXPORT_PORT
+# --- Migrate & Seed (seed only once using marker) ---
+echo "⏳ Running migrations..."
+php artisan db:wipe
+php artisan migrate:fresh --seed 
+
+# --- Queue (optional) ---
+QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
+if [ "$QUEUE_CONNECTION" != "sync" ]; then
+  php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
+fi
+
+# --- Serve ---
+php artisan serve --host=0.0.0.0 --port="${APP_PORT:-8000}"
