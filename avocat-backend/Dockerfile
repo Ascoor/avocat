@@ -67,5 +67,6 @@ RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cac
 
 ENV APP_PORT=8000
 EXPOSE 8000
-
-CMD ["bash", "docker-entrypoint.sh"]
+# تأكد من حذف أي سطر ENTRYPOINT قديم
+# استبدله بهذا السطر فقط:
+CMD ["php", "-S", "0.0.0.0:${PORT:-8000}", "-t", "public"]
