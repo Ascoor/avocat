@@ -17,9 +17,8 @@ until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
 done
 
 # المهاجرة
-echo "📂 Running Migrations..."
-php artisan migrate --force
-
+echo "📂 Running Fresh Migrations & Seeding (No-Interaction)..."
+php artisan migrate:fresh --seed --force --no-interaction
 # تشغيل السيرفر
 echo "🌐 Starting Server..."
 CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
