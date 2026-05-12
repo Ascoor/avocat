@@ -1,21 +1,32 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Production Boot Sequence..."
+echo "🚀 Starting Deployment Script..."
 
-# 1. تنظيف أي كاش قديم قد يكون مدمجاً في الحاوية
+# 1. تنظيف الكاش لضمان قراءة المتغيرات الجديدة من Railway
+echo "🧹 Clearing Cache..."
 php artisan config:clear
-php artisan view:clear
-php artisan route:clear
+php artisan cache:clear
 
-# 2. المهاجرة (تأكد أن DB_HOST و DB_PORT صحيحة في Railway)
-echo "📂 Checking Database Migrations..."
+# 2. التأكد من وجود مفتاح التطبيق (اختياري لو أضفته يدويًا في Railway)
+if [ -z "$APP_KEY" ]; then
+    echo "🔑 APP_KEY is missing, generating one..."
+    php artisan key:generate --force
+fi
+
+# 3. انتظر قاعدة البيانات
+echo "⏳ Waiting for Database..."
+CLEAN_DB_HOST=$(echo "$DB_HOST" | tr -d '\r')
+until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
+  echo "Waiting for database connection..."
+  sleep 5
+done
+
+# 4. المهاجرة (Migrations)
+echo "📂 Running Migrations..."
 php artisan migrate --force
 
-# 3. إصلاح الأذونات لضمان عمل الجلسات (Sessions) والملفات
-chmod -R 775 storage bootstrap/cache
-
-# 4. تشغيل السيرفر
-# ملاحظة: نستخدم $PORT (متغير Railway) لضمان الربط الصحيح
-echo "🌐 App is live on port $PORT"
-exec php -S 0.0.0.0:$PORT -t public
+# 5. تشغيل السيرفر (الحل الذي يتجنب خطأ string+int)
+echo "🌐 Starting Server on port $PORT..."
+CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
+exec php -S 0.0.0.0:$CLEAN_PORT -t public
