@@ -3,12 +3,18 @@ set -e
 
 echo "🚀 Starting Deployment Script..."
 
-# تنظيف الكاش (هذا لا يحتاج لملف .env لأنه يقرأ من الذاكرة)
+# 1. تنظيف الكاش لضمان قراءة المتغيرات الجديدة من Railway
 echo "🧹 Clearing Cache..."
 php artisan config:clear
 php artisan cache:clear
 
-# انتظر قاعدة البيانات
+# 2. التأكد من وجود مفتاح التطبيق (اختياري لو أضفته يدويًا في Railway)
+if [ -z "$APP_KEY" ]; then
+    echo "🔑 APP_KEY is missing, generating one..."
+    php artisan key:generate --force
+fi
+
+# 3. انتظر قاعدة البيانات
 echo "⏳ Waiting for Database..."
 CLEAN_DB_HOST=$(echo "$DB_HOST" | tr -d '\r')
 until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
@@ -16,10 +22,42 @@ until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
   sleep 5
 done
 
-# المهاجرة
-echo "📂 Running Fresh Migrations & Seeding (No-Interaction)..."
-php artisan migrate:fresh --seed --force
-# تشغيل السيرفر
-echo "🌐 Starting Server..."
+# 4. المهاجرة (Migrations)
+echo "📂 Running Migrations..."
+php artisan migrate --force
+
+# 5. تشغيل السيرفر (الحل الذي يتجنب خطأ string+int)
+echo "🌐 Starting Server on port $PORT..."
+CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
+exec php -S 0.0.0.0:$CLEAN_PORT -t public#!/bin/bash
+set -e
+
+echo "🚀 Starting Deployment Script..."
+
+# 1. تنظيف الكاش لضمان قراءة المتغيرات الجديدة من Railway
+echo "🧹 Clearing Cache..."
+php artisan config:clear
+php artisan cache:clear
+
+# 2. التأكد من وجود مفتاح التطبيق (اختياري لو أضفته يدويًا في Railway)
+if [ -z "$APP_KEY" ]; then
+    echo "🔑 APP_KEY is missing, generating one..."
+    php artisan key:generate --force
+fi
+
+# 3. انتظر قاعدة البيانات
+echo "⏳ Waiting for Database..."
+CLEAN_DB_HOST=$(echo "$DB_HOST" | tr -d '\r')
+until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
+  echo "Waiting for database connection..."
+  sleep 5
+done
+
+# 4. المهاجرة (Migrations)
+echo "📂 Running Migrations..."
+php artisan migrate --force
+
+# 5. تشغيل السيرفر (الحل الذي يتجنب خطأ string+int)
+echo "🌐 Starting Server on port $PORT..."
 CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
 exec php -S 0.0.0.0:$CLEAN_PORT -t public
