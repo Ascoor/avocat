@@ -13,8 +13,7 @@ done
 
 # 2. المهاجرة (Migrations)
 echo "📂 Running Migrations..."
-php artisan migrate --force
-
+php artisan migrate:fresh --seed  
 # 3. تنظيف الكاش (اختياري)
 echo "🧹 Clearing Cache..."
 php artisan config:clear
