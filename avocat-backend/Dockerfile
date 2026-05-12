@@ -64,6 +64,8 @@ RUN php artisan package:discover --ansi || true
 # Permissions
 RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache \
   && chown -R www-data:www-data storage bootstrap/cache
-# لا تحدد رقم المنفذ هنا بشكل ثابت، Railway سيوفر متغير $PORT
-EXPOSE 8080 
-CMD ["bash", "docker-entrypoint.sh"] 
+
+ENV APP_PORT=8000
+EXPOSE 8000
+
+CMD ["bash", "docker-entrypoint.sh"]
