@@ -18,7 +18,7 @@ done
 
 # المهاجرة
 echo "📂 Running Fresh Migrations & Seeding (No-Interaction)..."
-php artisan migrate:fresh --seed --force --no-interaction
+php artisan migrate:fresh --seed --force
 # تشغيل السيرفر
 echo "🌐 Starting Server..."
 CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
