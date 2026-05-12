@@ -1,59 +1,66 @@
 #!/bin/bash
-# تم إضافة -e للتوقف عند الخطأ و -u للتوقف عند وجود متغير غير معرف
 set -euo pipefail
 
 cd /var/www/html
 
-# --- 1. إعداد ملف الـ ENV ---
-# في Railway لا نفضل استخدام ملف .env، لكن السكربت سيقوم بإنشائه إذا لم يوجد لتجنب أخطاء Laravel
-if [ ! -f .env ]; then
-    if [ -f .env.docker ]; then
-        echo "Creating .env from .env.docker"
-        cp .env.docker .env
-    elif [ -f .env.example ]; then
-        echo "Creating .env from .env.example"
-        cp .env.example .env
-    else
-        echo "Warning: No .env template found, creating empty .env"
-        touch .env
-    fi
+# --- ENV ---
+rm -f .env
+if [ -f .env.docker ]; then
+  echo "Creating fresh .env from .env.docker"
+  cp .env.docker .env
+elif [ -f .env.example ]; then
+  echo "Creating .env from .env.example"
+  cp .env.example .env
 fi
 
-# --- 2. إعدادات Composer ---
-export COMPOSER_ALLOW_SUPERUSER=1
+# --- Composer settings (important with volumes) ---
+export COMPOSER_ALLOW_SUPERUSER=${COMPOSER_ALLOW_SUPERUSER:-1}
+export COMPOSER_CACHE_DIR=${COMPOSER_CACHE_DIR:-/tmp/composer-cache}
+mkdir -p "$COMPOSER_CACHE_DIR"
+
+# --- Install Composer if not installed ---
+if ! command -v composer &> /dev/null; then
+  echo "Composer not found, installing..."
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+fi
+
+# --- Install vendor if missing (vendor is a volume) ---
 if [ ! -f vendor/autoload.php ]; then
-    echo "📦 Installing composer dependencies..."
-    # --no-interaction تمنع أي أسئلة أثناء التثبيت
-    composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
+  echo "📦 Installing composer dependencies..."
+  composer install --no-interaction --prefer-dist --no-progress
 fi
 
-# --- 3. انتظار قاعدة البيانات ---
+# --- Clear caches BEFORE any artisan that boots the app ---
+php artisan optimize:clear || true
+
+# --- Wait for DB ---
 if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ]; then
-    echo "⏳ Waiting for database ${DB_HOST}:${DB_PORT}..."
-    until nc -z "$DB_HOST" "$DB_PORT"; do sleep 1; done
-    echo "✅ Database is up!"
+  echo "⏳ Waiting for database ${DB_HOST}:${DB_PORT}..."
+  until nc -z "$DB_HOST" "$DB_PORT"; do sleep 1; done
 fi
 
-# --- 4. توليد المفتاح (فقط إذا لم يكن موجوداً في البيئة) ---
-if [ -z "${APP_KEY:-}" ]; then
-    echo "🔑 Generating APP_KEY..."
-    php artisan key:generate --force --ansi
+# --- APP_KEY ---
+if ! grep -q "^APP_KEY=" .env || [ -z "$(grep '^APP_KEY=' .env | cut -d'=' -f2)" ]; then
+  php artisan key:generate --force --ansi
 fi
 
-# --- 5. تنظيف الكاش ---
-echo "🧹 Clearing Cache..."
-php artisan optimize:clear --no-interaction
+# --- Migrate & Seed (seed only once using marker) ---
+echo "⏳ Running migrations..."
+php artisan db:wipe
+php artisan migrate:fresh --seed 
 
-# --- 6. المهاجرة والترحيل (Migrations & Seeding) ---
-# --force هنا هي الأهم لإلغاء رسالة التحذير في وضع الإنتاج (Production)
-echo "📂 Wiping DB, Migrating and Seeding..."
-php artisan migrate:fresh --seed --force
+# --- Queue (optional) ---
+QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
+if [ "$QUEUE_CONNECTION" != "sync" ]; then
+  php artisan queue:work --queue=default,notifications --sleep=1 --tries=3 --max-jobs=0 --backoff=3 &
+fi
+# استخراج الأرقام فقط من متغير المنفذ لضمان عدم وجود نصوص
+CLEAN_PORT=$(echo $PORT | grep -o '[0-9]\+')
 
-# --- 7. إعداد المنفذ وتشغيل السيرفر ---
-# تنظيف متغير PORT من أي رموز غير رقمية
-CLEAN_PORT=$(echo "${PORT:-8000}" | tr -dc '0-9')
+# تعيين قيمة افتراضية في حال فشل الاستخراج (اختياري)
+CLEAN_PORT=${CLEAN_PORT:-8000}
 
-echo "🌐 Starting Laravel Server on Port: $CLEAN_PORT"
+echo "🌐 Starting Laravel Server for Avocat on Port: $CLEAN_PORT"
 
-# تنفيذ السيرفر (exec تجعل السيرفر هو العملية الأساسية للحاوية)
-exec php artisan serve --host=0.0.0.0 --port="$CLEAN_PORT"
+# تشغيل السيرفر مع تمرير المنفذ "النظيف"
+exec php artisan serve --host=0.0.0.0 --port=$CLEAN_PORT
