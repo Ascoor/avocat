@@ -1,32 +1,21 @@
 #!/bin/bash
 set -e
-echo "🚀 Starting Deployment Script..."
 
-# 1. التحقق من وجود ملف .env
-if [ ! -f .env ]; then
-    echo "📄 Creating .env file from .env.example..."
-    cp .env.example .env
-fi
+echo "🚀 Starting Production Boot Sequence..."
 
-# 2. توليد APP_KEY إذا كان مفقوداً
-if ! grep -q "APP_KEY=base64" .env; then
-    echo "🔑 Generating Application Key..."
-    php artisan key:generate --force
-fi
-
-# 1. تنظيف الكاش لضمان قراءة المتغيرات من Railway وليس من ملفات قديمة
+# 1. تنظيف أي كاش قديم قد يكون مدمجاً في الحاوية
 php artisan config:clear
 php artisan view:clear
 php artisan route:clear
 
-# 2. تنفيذ المهاجرة بدون مسح البيانات (Migrate وليس Migrate:fresh)
-# ملاحظة: السجلات أظهرت أن الجداول موجودة بالفعل، لذا سنقوم بالميجريشن العادي فقط
+# 2. المهاجرة (تأكد أن DB_HOST و DB_PORT صحيحة في Railway)
 echo "📂 Checking Database Migrations..."
 php artisan migrate --force
 
-# 3. التأكد من أن المجلدات قابلة للكتابة (هام جداً للـ Session و الـ Logs)
+# 3. إصلاح الأذونات لضمان عمل الجلسات (Sessions) والملفات
 chmod -R 775 storage bootstrap/cache
 
-# 4. تشغيل السيرفر باستخدام PHP مدمج (أكثر استقراراً في Railway)
+# 4. تشغيل السيرفر
+# ملاحظة: نستخدم $PORT (متغير Railway) لضمان الربط الصحيح
 echo "🌐 App is live on port $PORT"
 exec php -S 0.0.0.0:$PORT -t public
