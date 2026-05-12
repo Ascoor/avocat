@@ -1,7 +1,18 @@
 #!/bin/bash
 set -e
+echo "🚀 Starting Deployment Script..."
 
-echo "🚀 Starting Production Boot Sequence..."
+# 1. التحقق من وجود ملف .env
+if [ ! -f .env ]; then
+    echo "📄 Creating .env file from .env.example..."
+    cp .env.example .env
+fi
+
+# 2. توليد APP_KEY إذا كان مفقوداً
+if ! grep -q "APP_KEY=base64" .env; then
+    echo "🔑 Generating Application Key..."
+    php artisan key:generate --force
+fi
 
 # 1. تنظيف الكاش لضمان قراءة المتغيرات من Railway وليس من ملفات قديمة
 php artisan config:clear
