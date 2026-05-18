@@ -9,6 +9,7 @@ return [
         'FRONTEND_URLS',
 
         'https://avocat-frontend-bhbi-production.up.railway.app',
+        'https://ask-ar.net',
         'http://localhost:8080,http://localhost:5173,http://localhost:3000'
     )),
 
