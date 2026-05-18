@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
-
 import compression from 'vite-plugin-compression';
 import path from 'path';
 
 export default defineConfig({
+  // 1. إضافة logLevel لإخفاء رسائل [inf] و [war] المزعجة في السجلات
+  logLevel: 'error', 
+
   plugins: [
     react(),
     VitePWA({
@@ -30,13 +32,13 @@ export default defineConfig({
           },
           {
             src: 'splash-image.jpg',
-            type: 'image/png',
-            sizes: '192x192'
+            sizes: '192x192',
+            type: 'image/png'
           },
           {
             src: 'splash-image.png',
-            type: 'image/png',
-            sizes: '512x512'
+            sizes: '512x512',
+            type: 'image/png'
           }
         ],
         start_url: '.',
@@ -44,13 +46,6 @@ export default defineConfig({
         orientation: 'portrait',
         theme_color: '#0d3346',
         background_color: '#0d3346',
-        splash_pages: [
-          {
-            src: 'splash-image.png',
-            sizes: '1280x720',
-            type: 'image/jpeg'
-          }
-        ],
       },  
     }), 
     compression({
@@ -67,11 +62,12 @@ export default defineConfig({
   },
 
   server: {
-    host: "0.0.0.0",
-    port: 8080,
-    open: false,
-    cors: true,
-    historyApiFallback: true, 
+    host: '0.0.0.0', // يفضل كتابتها كنص لضمان الربط الصحيح
+    port: process.env.PORT ? parseInt(process.env.PORT) : 8080,
+    strictPort: true, // تغيير لـ true يضمن استقرار الربط مع Railway       
+    hmr: {
+      overlay: false, // 2. إخفاء رسالة الخطأ التي تظهر فوق الموقع في المتصفح
+    },
   },
 
   build: {

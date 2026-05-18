@@ -10,9 +10,9 @@ import {
   DropdownMenuLabel,
 } from "@shared/ui/dropdown-menu";
 
-import { Link  } from 'react-router-dom';
-import { useTheme } from '@/shared/contexts/ThemeContext';
-import { LogoPatren, LogoBlue } from '@/assets/images';
+import { Link } from "react-router-dom";
+import { useTheme } from "@/shared/contexts/ThemeContext";
+import { LogoPatren, LogoBlue } from "@/assets/images";
 import ThemeToggle from "@shared/ui/ThemeToggle";
 import LanguageToggle from "@shared/ui/language-toggle";
 import HeaderTabs from "./HeaderTabs";
@@ -27,24 +27,39 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
   const { user, logout } = useAuth();
   const { isMobileOpen, toggleMobile, isCollapsed, toggleCollapsed } = useSidebar();
 
-  const { theme, toggleTheme } = useTheme();
-  const logo = theme === 'dark' ? LogoPatren : LogoBlue;
+  const { theme } = useTheme();
+  const logo = theme === "dark" ? LogoPatren : LogoBlue;
   return (
     <header className={cn("header-shell sticky top-0 z-40", className)}>
-      <div className="mx-auto flex min-h-16 w-full items-center justify-between gap-2 px-3 py-2 sm:px-6 lg:px-8">
-      <Link to="/" className="shrink-0">
-            <img src={logo} alt={t('publicSite.footer.firmName')} className="h-10 md:h-12 w-auto" />
+      <div className="header-toolbar-row mx-auto flex min-h-16 w-full max-w-[100vw] flex-wrap items-center gap-2 px-3 py-2 sm:gap-3 sm:px-6 lg:flex-nowrap lg:px-8">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:max-w-[min(420px,40vw)]">
+          <Link to="/" className="shrink-0 transition-opacity hover:opacity-90">
+            <img src={logo} alt={t("publicSite.footer.firmName")} className="h-9 w-auto md:h-11" />
           </Link>
-  <div className="flex min-w-0 flex-row-reverse items-center gap-2 sm:gap-3">
 
+          {title && (
+            <div className="hidden min-w-0 sm:block">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                {t("common.workspace")}
+              </p>
+              <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">{title}</h1>
+            </div>
+          )}
+        </div>
+
+        <div className="order-last hidden min-w-0 w-full lg:order-none lg:flex lg:max-w-none lg:flex-1 lg:justify-center">
+          <HeaderTabs className="max-w-full" justify="center" />
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <Button
             variant="outline"
             size="icon"
             onClick={toggleMobile}
-            className="header-action-btn md:hidden shrink-0"
+            className="header-action-btn h-8 w-8 shrink-0 sm:h-9 sm:w-9 md:hidden"
             aria-label={isMobileOpen ? t("common.close") : t("common.menu")}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
 
           {showSidebarToggle && (
@@ -52,40 +67,33 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
               variant="outline"
               size="icon"
               onClick={toggleCollapsed}
-              className="header-action-btn hidden md:flex shrink-0"
+              className="header-action-btn hidden h-8 w-8 shrink-0 md:flex sm:h-9 sm:w-9"
               aria-label={isCollapsed ? t("common.expand") : t("common.collapse")}
             >
               <PanelLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && "-rotate-180")} />
             </Button>
           )}
 
-          {title && (
-            <div className="hidden sm:block min-w-0 text-start">
-              <p className="text-xs text-muted-foreground">{t("common.workspace")}</p>
-              <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate">{title}</h1>
-            </div>
-          )}
-        </div>
-
-        <div className="hidden lg:flex flex-1 px-4 overflow-hidden">
-          <HeaderTabs className="w-full justify-end" />
-        </div>
-
-        <div className="flex flex-row-reverse items-center gap-1.5 sm:gap-2">
-          <ThemeToggle size="sm" className="header-action-btn shrink-0" />
-          <LanguageToggle size="sm" className="shrink-0" />
+          <ThemeToggle surface="header" size="sm" className="header-action-btn shrink-0" />
+          <LanguageToggle surface="header" size="sm" className="shrink-0" />
 
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 rounded-full">
-                  <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-semibold shrink-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="header-user-trigger flex items-center gap-1.5 rounded-full px-1.5 sm:gap-2 sm:px-2"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/12 text-xs font-semibold text-primary sm:h-9 sm:w-9 sm:text-sm">
                     {user.name?.slice(0, 1) || "A"}
                   </span>
 
-                  <span className="hidden md:flex flex-col items-start text-start">
-                    <span className="text-sm font-semibold text-foreground">{user.name || t("common.demoUser")}</span>
-                    <span className="text-xs text-muted-foreground">
+                  <span className="hidden min-w-0 flex-col items-start text-start md:flex">
+                    <span className="truncate text-sm font-semibold text-foreground">
+                      {user.name || t("common.demoUser")}
+                    </span>
+                    <span className="truncate text-xs text-muted-foreground">
                       {user?.role
                         ? t(`roles.${user.role}`, {
                             fallback: user.role.charAt(0).toUpperCase() + user.role.slice(1),
@@ -128,7 +136,7 @@ const AppHeader = ({ title, className, showSidebarToggle = false }) => {
         </div>
       </div>
 
-      <div className="hidden md:block lg:hidden px-4 sm:px-6 pb-2 overflow-x-auto">
+      <div className="header-tabs-secondary hidden border-t border-border/40 px-3 py-2 md:block md:px-6 lg:hidden">
         <HeaderTabs />
       </div>
     </header>

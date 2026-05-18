@@ -1,6 +1,7 @@
 import axios from 'axios';
 import API_CONFIG from '@config/config'; 
 import { clearStoredAuth, getStoredToken, isDemoToken } from '../auth/authStorage';
+import { applyDemoApiMock } from './demoApiMock';
 
 
 const api = axios.create({
@@ -19,6 +20,8 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+applyDemoApiMock(api);
 
 api.interceptors.response.use(
   (response) => response,

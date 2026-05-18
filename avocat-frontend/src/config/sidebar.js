@@ -51,15 +51,33 @@ export const sidebarGroups = [
         key: "documents",
         labelKey: "navigation.documents",
         icon: LegalDocumentIcon,
-        path: "/dashboard/documents",
-        requiredPermission: permissionMap.reports.view,
-      },
-      {
-        key: "power_of_attorney",
-        labelKey: "navigation.powerOfAttorney",
-        icon: StampSealIcon,
-        path: "/dashboard/power-of-attorneys",
-        requiredPermission: permissionMap.legalCases.list,
+        requiredPermission: [
+          permissionMap.reports.view,
+          permissionMap.legalCases.list,
+        ],
+        children: [
+          {
+            key: "documents_internal",
+            labelKey: "documents.tabs.internal",
+            icon: FolderIcon,
+            path: "/dashboard/documents?tab=internal",
+            requiredPermission: permissionMap.reports.view,
+          },
+          {
+            key: "documents_power_of_attorney",
+            labelKey: "navigation.powerOfAttorney",
+            icon: StampSealIcon,
+            path: "/dashboard/documents?tab=power_of_attorney",
+            requiredPermission: permissionMap.legalCases.list,
+          },
+          {
+            key: "documents_court_inquiry",
+            labelKey: "documents.tabs.courtInquiry",
+            icon: CourthouseIcon,
+            path: "/dashboard/documents?tab=court_inquiry",
+            requiredPermission: permissionMap.reports.view,
+          },
+        ],
       },
       {
         key: "finance",
@@ -123,13 +141,6 @@ export const sidebarGroups = [
         icon: FolderIcon,
         requiredPermission: permissionMap.followWork.view,
         children: [
-          {
-            key: "court_search",
-            labelKey: "navigation.courtSearch",
-            icon: CourthouseIcon,
-            path: "/dashboard/court-search",
-            requiredPermission: permissionMap.reports.view,
-          },
           {
             key: "archive",
             labelKey: "navigation.archive",

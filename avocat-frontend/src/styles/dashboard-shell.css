@@ -224,6 +224,44 @@
     box-shadow: var(--shadow-elevated);
   }
 
+  .header-toolbar-row {
+    align-items: center;
+  }
+
+  .header-lang-btn {
+    border-color: hsl(var(--border) / 0.78);
+    background: linear-gradient(180deg, hsl(var(--surface-raised) / 0.9), hsl(var(--surface) / 0.84));
+    color: hsl(var(--foreground));
+    box-shadow: var(--shadow-primary-glow);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  }
+
+  .header-lang-btn:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--primary) / 0.32);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .dark .header-lang-btn {
+    background: linear-gradient(180deg, hsl(var(--surface-raised) / 0.55), hsl(var(--surface) / 0.42));
+    box-shadow: 0 10px 28px -18px hsl(var(--primary) / 0.35);
+  }
+
+  .header-user-trigger {
+    border: 1px solid transparent;
+    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .header-user-trigger:hover {
+    background: hsl(var(--muted) / 0.35);
+    border-color: hsl(var(--border) / 0.55);
+  }
+
+  .dark .header-user-trigger:hover {
+    background: hsl(var(--muted) / 0.22);
+    border-color: hsl(var(--border) / 0.4);
+  }
+
   .lang-toggle {
     border-color: hsl(var(--border) / 0.9);
     color: hsl(var(--foreground));
@@ -311,7 +349,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    border-radius: 0.625rem;
+    border-radius: 0.75rem;
     padding: 0.45rem 0.8rem;
     border: 1px solid hsl(var(--tabs-pill-border));
     background: hsl(var(--tabs-pill-bg));
@@ -368,7 +406,20 @@
   .tab-pill-icon {
     width: 16px;
     height: 16px;
-    opacity: 0.85;
+    flex-shrink: 0;
+    opacity: 0.88;
+    color: hsl(var(--muted-foreground));
+    transition: color 180ms ease, opacity 180ms ease;
+  }
+
+  .tab-pill:hover .tab-pill-icon {
+    opacity: 1;
+    color: hsl(var(--foreground));
+  }
+
+  .tab-pill.is-active .tab-pill-icon {
+    opacity: 1;
+    color: hsl(var(--tabs-active-text));
   }
   
   /* ── Tab Separator ── */
@@ -391,6 +442,25 @@
     .tab-separator {
       display: none;
     }
+  }
+
+  /* In-page tabs (e.g. clients / un-clients) aligned with header tab-pill tokens */
+  .page-subtabs-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem;
+    border-radius: 0.75rem;
+    border: 1px solid hsl(var(--border) / 0.72);
+    background: linear-gradient(180deg, hsl(var(--card) / 0.82), hsl(var(--surface) / 0.65));
+    box-shadow: var(--tabs-shadow);
+    backdrop-filter: blur(12px);
+  }
+
+  .dark .page-subtabs-strip {
+    border-color: hsl(var(--border) / 0.5);
+    background: linear-gradient(180deg, hsl(var(--card) / 0.55), hsl(var(--surface) / 0.38));
   }
   
   /* ============================

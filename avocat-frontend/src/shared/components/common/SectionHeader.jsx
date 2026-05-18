@@ -1,4 +1,4 @@
-import React from "react";
+import React, { isValidElement } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -34,8 +34,13 @@ const SectionHeader = ({
   const dynamicBackLabel = isRTL ? "رجوع" : "Back";
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
   const IconComponent = icon || config?.icon;
-  const renderedIcon =
-    typeof IconComponent === "function" ? <IconComponent className="h-5 w-5 text-accent" /> : IconComponent;
+  const renderedIcon = (() => {
+    if (!IconComponent) return null;
+    if (typeof IconComponent === "string") return IconComponent;
+    if (isValidElement(IconComponent)) return IconComponent;
+    // Lucide (and other) icons are often forwardRef objects, not plain functions
+    return <IconComponent className="h-5 w-5 text-primary" />;
+  })();
 
   const renderPrimaryAction =
     primaryAction ||
@@ -55,7 +60,7 @@ const SectionHeader = ({
               {typeof renderedIcon === "string" ? (
                 <img src={renderedIcon} alt="" className="h-7 w-7 object-contain sm:h-8 sm:w-8" />
               ) : (
-                <div className="text-accent">{renderedIcon}</div>
+                <div className="text-primary">{renderedIcon}</div>
               )}
             </div>
           )}

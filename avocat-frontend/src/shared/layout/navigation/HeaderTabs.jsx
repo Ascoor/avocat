@@ -27,7 +27,7 @@ const PillLink = ({ to, icon: Icon, label }) => (
   </AppNavLink>
 );
 
-const HeaderTabs = ({ className }) => {
+const HeaderTabs = ({ className, justify = 'start' }) => {
   const { t, direction, isRTL } = useLanguage();
   const { permissions } = useSecurity();
 
@@ -55,7 +55,13 @@ const HeaderTabs = ({ className }) => {
   }, [items]);
 
   return (
-    <div className={cn('header-tabs-wrap', className)}>
+    <div
+      className={cn(
+        'header-tabs-wrap w-full',
+        justify === 'center' && 'flex justify-center',
+        className,
+      )}
+    >
       <div className="header-tabs" dir={direction}>
         {orderedItems.map((item) => {
           const Icon = item.icon;
