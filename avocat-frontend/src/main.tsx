@@ -2,8 +2,11 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import '@styles/index.css';
+import { registerStaleBuildRecovery } from '@app/registerStaleBuildRecovery';
 import App from '@app/App';
 import { AppProviders } from '@providers';
+
+registerStaleBuildRecovery();
 
 const router = createBrowserRouter([
   {

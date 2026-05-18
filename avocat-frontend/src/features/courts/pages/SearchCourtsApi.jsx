@@ -79,7 +79,7 @@ const SearchCourtsApi = () => {
 
     try {
       const response = await axios.post(
-        'https://search-api.ask-ar.net/search',
+        'https://search-api-production-6209.up.railway.app/search',
         { degree, court, caseType, caseYear, caseNumber },
         { headers: { 'x-request-source': 'React' } },
       );

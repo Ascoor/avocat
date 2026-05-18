@@ -332,6 +332,8 @@ const ar = {publicSite: {
     logout: "تسجيل الخروج",
     applyFilters: "تطبيق",
     reset: "إعادة تعيين",
+    demoModeBanner:
+      "وضع تجريبي: تُعرض بيانات افتراضية لاستكشاف كل أقسام النظام دون اتصال بالخادم الحقيقي.",
   },
   language: {
     switchToEnglish: "EN",
@@ -340,6 +342,7 @@ const ar = {publicSite: {
     arabic: "العربية",
   },
   roles: {
+    super_admin: "مدير عام",
     admin: "مدير",
     lawyer: "محامٍ",
     client: "عميل",
@@ -1339,6 +1342,17 @@ const ar = {publicSite: {
     subtitle: "استعرض المستندات حسب التصنيف وابحث بسرعة وارفع الملفات.",
     searchPlaceholder: "ابحث باسم المستند أو المسار...",
     empty: "لا توجد مستندات مطابقة.",
+    view: "عرض",
+    download: "تنزيل",
+    tabs: {
+      internal: "الوثائق الداخلية",
+      courtInquiry: "استعلام القضايا من المحاكم",
+    },
+    tabSubtitles: {
+      internal: "تصفح الملفات الداخلية والتصنيفات والرفع من شاشة واحدة.",
+      power_of_attorney: "سجّل وتابع التوكيلات ضمن نفس مسار الوثائق الداخلية.",
+      court_inquiry: "الاستعلام عن بيانات القضايا المنشورة عبر الدرجة والمحكمة وبيانات الدعوى.",
+    },
     categories: {
       all: "كل التصنيفات",
       power_of_attorney: "التوكيلات",
@@ -1346,6 +1360,11 @@ const ar = {publicSite: {
       service: "الخدمات",
       client: "العملاء",
       general: "عام"
+    },
+    classification: {
+      confidential: "سري",
+      internal: "داخلي",
+      "client-ready": "جاهز للعميل"
     },
     upload: {
       title: "منطقة الرفع",
@@ -1358,7 +1377,59 @@ const ar = {publicSite: {
       loadTabsError: "تعذر تحميل التصنيفات.",
       loadDocumentsError: "تعذر تحميل المستندات.",
       uploadError: "فشل رفع الملف."
-    }
+    },
+    courtSearch: {
+      heading: "بحث القضية في المحكمة",
+      degree: "الدرجة",
+      court: "المحكمة",
+      caseType: "نوع القضية",
+      caseYear: "سنة القضية",
+      caseNumber: "رقم القضية",
+      search: "بحث",
+      selectDegree: "اختر الدرجة",
+      selectCourt: "اختر المحكمة",
+      selectCaseType: "اختر نوع القضية",
+    },
+  },
+
+  powerOfAttorneyPage: {
+    title: "إدارة التوكيلات",
+    subtitle: "تنظيم التوكيلات القانونية في لوحة حديثة ومنسقة.",
+    loadError: "تعذر تحميل البيانات.",
+    saveError: "تعذر حفظ التوكيل.",
+    deleteError: "تعذر حذف التوكيل.",
+    addButton: "إضافة توكيل جديد",
+    editTitle: "تعديل التوكيل",
+    addTitle: "إضافة توكيل",
+    filterTitle: "فلاتر البحث",
+    clientName: "اسم العميل",
+    lawyerName: "اسم المحامي",
+    allStatuses: "كل الحالات",
+    statusActive: "ساري",
+    statusExpired: "منتهي",
+    applyFilter: "تطبيق الفلتر",
+    loading: "جاري التحميل…",
+    poaNumber: "رقم التوكيل",
+    client: "العميل",
+    lawyer: "المحامي",
+    date: "التاريخ",
+    status: "الحالة",
+    actions: "إجراءات",
+    edit: "تعديل",
+    delete: "حذف",
+    total: "الإجمالي",
+    previous: "السابق",
+    next: "التالي",
+    chartNumber: "رقم الشهر",
+    place: "مكان التوثيق",
+    titleField: "العنوان",
+    manualLawyer: "محامي مدخل يدويًا",
+    selectClient: "اختر موكلًا",
+    selectLawyer: "اختر محاميًا",
+    attorneyType: "نوع التوكيل",
+    description: "الوصف",
+    cancel: "إلغاء",
+    save: "حفظ",
   },
 
   finance: {

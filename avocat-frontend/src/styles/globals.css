@@ -193,6 +193,11 @@
     opacity: 0.7;
   }
 
+  .dark .section-chrome::after {
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent);
+    opacity: 0.85;
+  }
+
   /* react-datepicker token styling */
   .react-datepicker {
     border: 1px solid hsl(var(--border)) !important;
@@ -324,4 +329,162 @@
   .action-btn-accent:hover {
     transform: translateY(-1px);
   }
+}
+
+/* ============================
+   Theme transition + unified iconography (added)
+   ============================ */
+@layer base {
+  /* Smooth, flicker-free transition between light/dark */
+  html.theme-ready *,
+  html.theme-ready *::before,
+  html.theme-ready *::after {
+    transition:
+      background-color 280ms ease,
+      border-color 280ms ease,
+      color 220ms ease,
+      fill 220ms ease,
+      stroke 220ms ease,
+      box-shadow 280ms ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.theme-ready *,
+    html.theme-ready *::before,
+    html.theme-ready *::after { transition: none !important; }
+  }
+
+  /* Unified icon system — size & stroke discipline */
+  .icon,
+  [data-icon] {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 1.75;
+    color: hsl(var(--muted-foreground));
+    flex-shrink: 0;
+    transition: color 200ms ease, transform 200ms ease;
+  }
+  .icon-sm { width: 1rem; height: 1rem; stroke-width: 1.75; }
+  .icon-md { width: 1.25rem; height: 1.25rem; stroke-width: 1.75; }
+  .icon-lg { width: 1.5rem; height: 1.5rem; stroke-width: 1.6; }
+  .icon-xl { width: 2rem; height: 2rem; stroke-width: 1.5; }
+  .icon-on-surface { color: hsl(var(--foreground)); }
+  .icon-primary { color: hsl(var(--primary)); }
+  .icon-danger { color: hsl(var(--destructive)); }
+  a:hover .icon, button:hover .icon { color: hsl(var(--primary)); }
+}
+
+@layer components {
+  /* ===== Premium Button Identity ===== */
+  .btn-pro {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap;
+    @apply h-10 px-4 rounded-lg text-sm font-semibold;
+    @apply transition-all duration-200 ease-out select-none;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: hsl(var(--primary) / 0.5);
+    --tw-ring-offset-color: hsl(var(--background));
+  }
+  .btn-pro:disabled { opacity: .5; pointer-events: none; }
+
+  .btn-primary-pro {
+    @apply btn-pro text-white;
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.12) inset,
+      0 8px 20px -10px hsl(var(--primary) / 0.55);
+  }
+  .btn-primary-pro:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.18) inset,
+      0 14px 32px -12px hsl(var(--primary) / 0.7),
+      0 0 0 1px hsl(var(--primary-glow) / 0.35);
+  }
+  .btn-primary-pro:active { transform: translateY(0); }
+
+  .btn-secondary-pro {
+    @apply btn-pro;
+    background: hsl(var(--surface-raised));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04);
+  }
+  .btn-secondary-pro:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--primary) / 0.45);
+    box-shadow: 0 8px 18px -10px hsl(var(--foreground) / 0.18);
+  }
+
+  .btn-ghost-pro {
+    @apply btn-pro;
+    color: hsl(var(--muted-foreground));
+    background: transparent;
+  }
+  .btn-ghost-pro:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--surface-raised) / 0.7);
+  }
+
+  .btn-danger-pro {
+    @apply btn-pro text-white;
+    background: linear-gradient(135deg, hsl(var(--destructive)) 0%, hsl(var(--destructive) / 0.78) 100%);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.12) inset,
+      0 8px 20px -10px hsl(var(--destructive) / 0.5);
+  }
+  .btn-danger-pro:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.18) inset,
+      0 14px 32px -12px hsl(var(--destructive) / 0.65);
+  }
+
+  .btn-icon-pro {
+    @apply inline-flex items-center justify-center;
+    width: 2rem; height: 2rem;
+    border-radius: 0.5rem;
+    color: hsl(var(--muted-foreground));
+    background: transparent;
+    transition: all 180ms ease;
+  }
+  .btn-icon-pro:hover {
+    color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.1);
+  }
+  .btn-icon-pro.is-danger:hover {
+    color: hsl(var(--destructive));
+    background: hsl(var(--destructive) / 0.1);
+  }
+
+  /* ===== Premium Data Table ===== */
+  .table-pro-wrap {
+    @apply rounded-xl overflow-hidden;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-md);
+  }
+  .table-pro { @apply w-full text-sm border-collapse; }
+  .table-pro thead th {
+    @apply px-4 py-3 text-start font-semibold uppercase tracking-wider text-xs;
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--surface) / 0.6);
+    border-bottom: 1px solid hsl(var(--border));
+    position: sticky; top: 0; z-index: 1;
+  }
+  .table-pro tbody td {
+    @apply px-4 py-3.5;
+    color: hsl(var(--foreground));
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+    transition: background-color 160ms ease;
+  }
+  .table-pro tbody tr:nth-child(even) td {
+    background: hsl(var(--surface) / 0.25);
+  }
+  .table-pro tbody tr:hover td {
+    background: hsl(var(--primary) / 0.06);
+  }
+  .table-pro tbody tr:last-child td { border-bottom: 0; }
+  .table-pro .row-actions {
+    @apply inline-flex items-center gap-1 opacity-70 transition-opacity;
+  }
+  .table-pro tbody tr:hover .row-actions { opacity: 1; }
 }

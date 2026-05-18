@@ -18,7 +18,7 @@ const buildDemoUser = (email) => ({
   id: 0,
   name: 'Demo User',
   email,
-  role: 'admin',
+  role: 'super_admin',
 });
 
 const isDemoLogin = (email, password) =>
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
   const [isInitializing, setIsInitializing] = useState(true);
 
   const isAuthenticated = Boolean(token);
+  const isDemoSession = isDemoToken(token);
   const role = user?.role ?? null;
   const getUser = useCallback(() => user, [user]);
   const getToken = useCallback(() => token, [token]);
@@ -120,15 +121,16 @@ export const AuthProvider = ({ children }) => {
   );
 
   const logout = useCallback(async () => {
-    try {
-      await api.post('/logout');
-    } catch (error) {
-      console.warn('Logout request failed:', error);
-    } finally {
-      clearStoredAuth();
-      setToken(null);
-      setUser(null);
+    if (!isDemoToken(getStoredToken())) {
+      try {
+        await api.post('/logout');
+      } catch (error) {
+        console.warn('Logout request failed:', error);
+      }
     }
+    clearStoredAuth();
+    setToken(null);
+    setUser(null);
   }, []);
 
   useEffect(() => {
@@ -161,6 +163,7 @@ export const AuthProvider = ({ children }) => {
       user,
       role,
       isAuthenticated,
+      isDemoSession,
       isInitializing,
       getUser,
       getToken,
@@ -175,6 +178,7 @@ export const AuthProvider = ({ children }) => {
       user,
       role,
       isAuthenticated,
+      isDemoSession,
       isInitializing,
       getUser,
       getToken,

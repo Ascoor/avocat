@@ -4,8 +4,9 @@ import { FaUserTie, FaUserAltSlash } from "react-icons/fa";
 import { LexicraftIcon } from "@shared/icons/lexicraft";
 
 import GlobalSpinner from "@shared/components/common/Spinners/GlobalSpinner";
-import SectionHeader from "@shared/components/common/SectionHeader"; 
+import SectionHeader from "@shared/components/common/SectionHeader";
 import { useLanguage } from "@shared/contexts/LanguageContext";
+import { cn } from "@shared/lib/utils";
 
 const ClientList = lazy(() => import("../components/ClientsAndUnClients/clients/index.jsx"));
 const UnClientList = lazy(() => import("../components/ClientsAndUnClients/unclients/index.jsx"));
@@ -52,20 +53,17 @@ const ClientUnclientList = () => {
           icon={<LexicraftIcon name="client" size={20} />}
         />
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.75)] p-2 shadow-sm backdrop-blur">
+        <div className="page-subtabs-strip mt-4">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => handleTabChange(tab.key)}
-              className={[
-                "inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition",
-                activeTab === tab.key
-                  ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
-                  : "border-border/70 bg-background text-foreground hover:bg-muted",
-              ].join(" ")}
+              className={cn("tab-pill", activeTab === tab.key && "is-active")}
             >
-              {tab.icon}
+              <span className="inline-flex shrink-0 text-[15px] leading-none opacity-90 [&>svg]:block">
+                {tab.icon}
+              </span>
               <span>{tab.label}</span>
             </button>
           ))}
@@ -78,7 +76,7 @@ const ClientUnclientList = () => {
             </div>
           }
         >
-          <div className="mt-6 rounded-2xl border border-border/70 bg-[hsl(var(--card)/0.7)] p-4 shadow-sm backdrop-blur sm:p-6">
+          <div className="app-panel mt-6 p-4 sm:p-6">
             {activeTab === "clients" ? <ClientList /> : <UnClientList />}
           </div>
         </Suspense>

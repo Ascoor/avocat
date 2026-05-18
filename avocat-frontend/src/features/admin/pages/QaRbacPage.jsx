@@ -33,7 +33,7 @@ const QaRbacPage = () => {
         ['/dashboard/clients', 'clients'],
         ['/dashboard/legal-sessions', 'sessions'],
         ['/dashboard/managment-settings/procedures', 'procedures'],
-        ['/dashboard/court-search', 'courts'],
+        ['/dashboard/documents?tab=court_inquiry', 'courts'],
       ].map(([path, label]) => <Link key={path} className="rounded border px-3 py-1" to={path}>{label}</Link>)}</div>
     </div>
   );

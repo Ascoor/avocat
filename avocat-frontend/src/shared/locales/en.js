@@ -35,6 +35,8 @@ const en = {
     logout: "Logout",
     applyFilters: "Apply filters",
     reset: "Reset",
+    demoModeBanner:
+      "Demo mode: sample data is shown so you can explore every workspace area without a live API.",
   },
   language: {
     switchToEnglish: "EN",
@@ -43,6 +45,7 @@ const en = {
     arabic: "العربية",
   },
   roles: {
+    super_admin: "Super admin",
     admin: "Admin",
     lawyer: "Lawyer",
     client: "Client",
@@ -1037,6 +1040,17 @@ const en = {
     subtitle: "Browse documents by category, search quickly, and upload files.",
     searchPlaceholder: "Search by document name or path...",
     empty: "No matching documents found.",
+    view: "View",
+    download: "Download",
+    tabs: {
+      internal: "Internal documents",
+      courtInquiry: "Court case status inquiry",
+    },
+    tabSubtitles: {
+      internal: "Browse internal files, categories, and uploads in one workspace.",
+      power_of_attorney: "Register and track powers of attorney alongside your internal records.",
+      court_inquiry: "Look up published case information from courts using degree, court, and case data.",
+    },
     categories: {
       all: "All categories",
       power_of_attorney: "Power of attorney",
@@ -1044,6 +1058,11 @@ const en = {
       service: "Services",
       client: "Clients",
       general: "General"
+    },
+    classification: {
+      confidential: "Confidential",
+      internal: "Internal use",
+      "client-ready": "Client ready"
     },
     upload: {
       title: "Upload zone",
@@ -1056,7 +1075,59 @@ const en = {
       loadTabsError: "Failed to load categories.",
       loadDocumentsError: "Failed to load documents.",
       uploadError: "Upload failed."
-    }
+    },
+    courtSearch: {
+      heading: "Court case search",
+      degree: "Degree",
+      court: "Court",
+      caseType: "Case type",
+      caseYear: "Case year",
+      caseNumber: "Case number",
+      search: "Search",
+      selectDegree: "Select degree",
+      selectCourt: "Select court",
+      selectCaseType: "Select case type",
+    },
+  },
+
+  powerOfAttorneyPage: {
+    title: "Power of Attorneys Management",
+    subtitle: "Manage legal powers of attorney in a modern organized workspace.",
+    loadError: "Failed to load data.",
+    saveError: "Failed to save record.",
+    deleteError: "Failed to delete record.",
+    addButton: "Add new POA",
+    editTitle: "Edit POA",
+    addTitle: "Add POA",
+    filterTitle: "Search filters",
+    clientName: "Client name",
+    lawyerName: "Lawyer name",
+    allStatuses: "All statuses",
+    statusActive: "Active",
+    statusExpired: "Expired",
+    applyFilter: "Apply",
+    loading: "Loading…",
+    poaNumber: "POA number",
+    client: "Client",
+    lawyer: "Lawyer",
+    date: "Date",
+    status: "Status",
+    actions: "Actions",
+    edit: "Edit",
+    delete: "Delete",
+    total: "Total",
+    previous: "Previous",
+    next: "Next",
+    chartNumber: "Chart number",
+    place: "Place of notarization",
+    titleField: "Title",
+    manualLawyer: "Manual lawyer entry",
+    selectClient: "Select client",
+    selectLawyer: "Select lawyer",
+    attorneyType: "Attorney type",
+    description: "Description",
+    cancel: "Cancel",
+    save: "Save",
   },
 
   finance: {

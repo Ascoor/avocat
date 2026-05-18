@@ -12,7 +12,6 @@ import {
   CasesReportRoutePage,
   CaseSettingsRoutePage,
   ClientsReportRoutePage,
-  CourtSearchRoutePage,
   CreateTransactionRoutePage,
   CustomerServiceRoutePage,
   DashboardHomeRoutePage,
@@ -24,7 +23,6 @@ import {
   LegalCasesRoutePage,
   LegalServicesRoutePage,
   OfficeSettingsRoutePage,
-  PowerOfAttorneysRoutePage,
   ProceduresReportRoutePage,
   ProfileRoutePage,
   QaRbacRoutePage,
@@ -112,11 +110,11 @@ const AuthRoutes = () => {
         <Route
           path={dashboardRoutes.courtSearch}
           element={
-            <Guarded
-              require={permissionMap.reports.view}
-              moduleLabel="Court Search"
-            >
-              <CourtSearchRoutePage />
+            <Guarded require={permissionMap.reports.view} moduleLabel="Court Search">
+              <Navigate
+                to={`${appRoutes.dashboardBase}/${dashboardRoutes.documents}?tab=court_inquiry`}
+                replace
+              />
             </Guarded>
           }
         />
@@ -195,11 +193,11 @@ const AuthRoutes = () => {
         <Route
           path={dashboardRoutes.powerOfAttorneys}
           element={
-            <Guarded
-              require={permissionMap.legalCases.list}
-              moduleLabel="Power of Attorneys"
-            >
-              <PowerOfAttorneysRoutePage />
+            <Guarded require={permissionMap.legalCases.list} moduleLabel="Power of Attorneys">
+              <Navigate
+                to={`${appRoutes.dashboardBase}/${dashboardRoutes.documents}?tab=power_of_attorney`}
+                replace
+              />
             </Guarded>
           }
         />
@@ -208,7 +206,8 @@ const AuthRoutes = () => {
           path={dashboardRoutes.documents}
           element={
             <Guarded
-              require={permissionMap.reports.view}
+              require={[permissionMap.reports.view, permissionMap.legalCases.list]}
+              match="any"
               moduleLabel="Documents Center"
             >
               <DocumentsRoutePage />

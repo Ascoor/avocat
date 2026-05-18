@@ -1,5 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+/**
+ * Theme persistence: localStorage keys `theme` and legacy `avocat_theme`.
+ * Initial HTML paint must mirror this logic — see inline script in index.html.
+ */
 const STORAGE_KEY = "theme";
 const LEGACY_STORAGE_KEY = "avocat_theme";
 
@@ -39,6 +43,10 @@ export const ThemeProvider = ({ children }) => {
     root.classList.add(state.theme);
     root.dataset.theme = state.theme;
     root.style.colorScheme = state.theme;
+    // Enable smooth color transitions only AFTER first paint to avoid flicker
+    if (!root.classList.contains("theme-ready")) {
+      requestAnimationFrame(() => root.classList.add("theme-ready"));
+    }
 
     if (state.manual) {
       window.localStorage.setItem(STORAGE_KEY, state.theme);

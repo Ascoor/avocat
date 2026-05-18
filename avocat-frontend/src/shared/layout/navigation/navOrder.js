@@ -3,7 +3,6 @@ export const topNavPreferredOrder = [
   'customer_service',
   'cases',
   'services',
-  'power_of_attorney',
   'documents',
   'reports',
   'finance',

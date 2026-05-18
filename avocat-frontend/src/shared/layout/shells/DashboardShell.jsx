@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 import MobileNavigationDrawer from "../navigation/MobileNavigationDrawer";
 import AppHeader from "../navigation/AppHeader";
 import { cn } from "@shared/lib/utils";
 import { useLanguage } from "@shared/contexts/LanguageContext";
+import { useAuth } from "@shared/contexts/AuthContext";
 
 const DashboardShell = ({ children, title, className, showSidebarToggle = false }) => {
-  const { direction } = useLanguage();
+  const { direction, t } = useLanguage();
+  const { isDemoSession } = useAuth();
   const location = useLocation();
   const scrollRef = useRef(null);
 
@@ -22,6 +25,15 @@ const DashboardShell = ({ children, title, className, showSidebarToggle = false 
   return (
     <div dir={direction} className={cn("dashboard-shell", className)}>
       <AppHeader title={title} showSidebarToggle={showSidebarToggle} />
+
+      {isDemoSession && (
+        <div className="border-b border-primary/25 bg-primary/10 px-3 py-2 text-center text-xs text-foreground sm:text-sm">
+          <span className="inline-flex items-center gap-1.5 font-medium">
+            <Sparkles className="h-3.5 w-3.5 shrink-0 text-primary sm:h-4 sm:w-4" aria-hidden />
+            {t("common.demoModeBanner")}
+          </span>
+        </div>
+      )}
 
       <div className="dashboard-layout">
         <div className="dashboard-content">

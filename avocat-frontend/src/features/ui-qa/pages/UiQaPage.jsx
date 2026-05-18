@@ -206,12 +206,12 @@ const UiQaPage = () => {
     () => [
       { label: t('uiQa.sections.legalCases'), path: '/dashboard/legcases' },
       { label: t('uiQa.sections.clients'), path: '/dashboard/clients' },
-      { label: t('uiQa.sections.courts'), path: '/dashboard/court-search' },
+      { label: t('uiQa.sections.courts'), path: '/dashboard/documents?tab=court_inquiry' },
       { label: t('uiQa.sections.procedures'), path: '/dashboard/managment-settings/procedures' },
       { label: t('uiQa.sections.sessions'), path: '/dashboard/legal-sessions' },
       { label: t('uiQa.sections.settings'), path: '/dashboard/office-settings' },
       { label: t('uiQa.sections.finance'), path: '/dashboard/financial-dashboard' },
-      { label: t('uiQa.sections.reports'), path: '/dashboard/court-search' },
+      { label: t('uiQa.sections.reports'), path: '/dashboard/documents?tab=court_inquiry' },
     ],
     [t],
   );

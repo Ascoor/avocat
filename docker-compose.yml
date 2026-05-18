@@ -1,6 +1,7 @@
-name: "3.9"  # يمكن إزالته في حال كنت تستخدم Docker Compose v2.x
+name: "avocat-project"
 
 services:
+  # 1. قاعدة البيانات
   pg:
     image: postgres:16-alpine
     container_name: avc-pg
@@ -12,31 +13,14 @@ services:
     ports:
       - "55432:5432"
     networks:
-      - database
+      - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 30
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: "1.0"
+      retries: 5
 
-  cache:
-    image: redis:7-alpine
-    container_name: avc-cache
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 15s
-      retries: 2
-
+  # 2. الخلفية (Laravel/PHP)
   api:
     build:
       context: ./avocat-backend
@@ -47,24 +31,18 @@ services:
     entrypoint: ["bash", "/var/www/html/docker-entrypoint.sh"]
     env_file:
       - ./backend.env
-    environment:
-      COMPOSER_CACHE_DIR: /tmp/composer-cache
-      COMPOSER_ALLOW_SUPERUSER: "1"
     volumes:
       - ./avocat-backend:/var/www/html
       - ./backend.env:/var/www/html/.env.docker:ro
-      - avc-composer-cache:/tmp/composer-cache
     depends_on:
       pg:
         condition: service_healthy
-      cache:
-        condition: service_started
     ports:
       - "8000:8000"
     networks:
-      - backend
-      - database
+      - app-network
 
+  # 3. الواجهة (React/Node)
   web:
     image: node:20-alpine
     container_name: avc-web
@@ -81,25 +59,14 @@ services:
     depends_on:
       - api
     networks:
-      - frontend
-      - backend
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"] 
-      interval: 30s
-      retries: 3
+      - app-network
 
 volumes:
   avc-pg-data:
-    driver: local
-  avc-composer-cache:
     driver: local
   avc-web-node-modules:
     driver: local
 
 networks:
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge
-  database:
+  app-network:
     driver: bridge

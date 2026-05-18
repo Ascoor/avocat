@@ -1,18 +1,42 @@
 <!doctype html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
 
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Avoid flash of wrong theme: align with ThemeContext (theme / avocat_theme keys) -->
+    <script>
+      (function () {
+        try {
+          var k = 'theme';
+          var legacy = 'avocat_theme';
+          var t = localStorage.getItem(k) || localStorage.getItem(legacy);
+          var root = document.documentElement;
+          root.classList.remove('light', 'dark');
+          if (t === 'light' || t === 'dark') {
+            root.classList.add(t);
+            root.dataset.theme = t;
+            root.style.colorScheme = t;
+            return;
+          }
+          var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var mode = dark ? 'dark' : 'light';
+          root.classList.add(mode);
+          root.dataset.theme = mode;
+          root.style.colorScheme = mode;
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.dataset.theme = 'dark';
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
+    </script>
 
     <!-- Meta Tags -->
 
-    <meta name="theme-color" content="#ffffff" />
-    <meta
-      name="description"
-      content="Avocat System For Lawyers Offices - مكتب محاماة أغوكات: تعد أفوكات أول منظومة تغير قواعد العمل في مجال المحاماة، حيث تساهم أدواتها التكنولوجية المتقدمة في تبسيط سير العمل وإدارة القضايا بكفاءة وتقديم خدمات استثنائية للعملاء. اكتشف مستقبل ممارسة المحاماة مع الحل الرقمي الشامل المقدم من أفوكات."
-    />
+    <meta name="theme-color" content="#0d3346" />
+    <meta name="description" content="Avocat System For Lawyers Offices - مكتب محاماة أغوكات: تعد أفوكات أول منظومة تغير قواعد العمل في مجال المحاماة، حيث تساهم أدواتها التكنولوجية المتقدمة في تبسيط سير العمل وإدارة القضايا بكفاءة وتقديم خدمات استثنائية للعملاء. اكتشف مستقبل ممارسة المحاماة مع الحل الرقمي الشامل المقدم من أفوكات.">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta
       name="keywords"
@@ -21,14 +45,22 @@
     <meta name="author" content="Your Name or Your Company Name" />
 
     <!-- Favicon and Apple Touch Icon -->
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/logo512.png" />
 
     <!-- Manifest for Progressive Web App -->
     <link rel="manifest" href="/manifest.json" />
 
     <title>Avocat - أفوكات</title>
-  </head>
+    <meta property="og:title" content="Avocat - أفوكات">
+  <meta name="twitter:title" content="Avocat - أفوكات">
+  <meta property="og:description" content="Avocat System For Lawyers Offices - مكتب محاماة أغوكات: تعد أفوكات أول منظومة تغير قواعد العمل في مجال المحاماة، حيث تساهم أدواتها التكنولوجية المتقدمة في تبسيط سير العمل وإدارة القضايا بكفاءة وتقديم خدمات استثنائية للعملاء. اكتشف مستقبل ممارسة المحاماة مع الحل الرقمي الشامل المقدم من أفوكات.">
+  <meta name="twitter:description" content="Avocat System For Lawyers Offices - مكتب محاماة أغوكات: تعد أفوكات أول منظومة تغير قواعد العمل في مجال المحاماة، حيث تساهم أدواتها التكنولوجية المتقدمة في تبسيط سير العمل وإدارة القضايا بكفاءة وتقديم خدمات استثنائية للعملاء. اكتشف مستقبل ممارسة المحاماة مع الحل الرقمي الشامل المقدم من أفوكات.">
+  <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/28fddd11-a6dc-4c3e-abef-4eb1acef1b01/id-preview-80b9e376--cdc4776f-832b-4379-8de6-34f057945851.lovable.app-1778938164377.png">
+  <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/28fddd11-a6dc-4c3e-abef-4eb1acef1b01/id-preview-80b9e376--cdc4776f-832b-4379-8de6-34f057945851.lovable.app-1778938164377.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+</head>
 
   <body>
     <div  class="min-h-screen" id="root"></div>
