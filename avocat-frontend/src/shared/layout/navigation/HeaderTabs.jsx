@@ -31,28 +31,38 @@ const HeaderTabs = ({ className, justify = 'start' }) => {
   const { t, direction, isRTL } = useLanguage();
   const { permissions } = useSecurity();
 
-  const items = useMemo(() => {
+  const groupedItems = useMemo(() => {
     const isAllowed = (item) => {
       if (!item.requiredPermission) return true;
       return Array.isArray(item.requiredPermission)
         ? hasAny(permissions, item.requiredPermission)
         : hasPermission(permissions, item.requiredPermission);
     };
-    const flat = [];
+    const groupMeta = {
+      main: { label: isRTL ? 'الاقسام الرئيسية' : 'Main sections' },
+      reports: { label: isRTL ? 'الفروع والتقارير' : 'Branches & reports' },
+      system: { label: isRTL ? 'الإعدادات والإدارة' : 'Settings & admin' },
+    };
+
+    const groups = [];
     for (const group of sidebarGroups) {
+      const visibleItems = [];
       for (const item of group.items) {
         const children = item.children?.filter((child) => isAllowed(child));
         if (isAllowed(item) && (!children || children.length > 0)) {
-          flat.push({ ...item, children });
+          visibleItems.push({ ...item, children });
         }
       }
+      if (visibleItems.length > 0) {
+        groups.push({
+          key: group.key,
+          label: groupMeta[group.key]?.label ?? group.key,
+          items: sortItemsByTopNavOrder(visibleItems),
+        });
+      }
     }
-    return flat;
-  }, [permissions]);
-
-  const orderedItems = useMemo(() => {
-    return sortItemsByTopNavOrder(items);
-  }, [items]);
+    return groups;
+  }, [permissions, isRTL]);
 
   return (
     <div
@@ -63,56 +73,54 @@ const HeaderTabs = ({ className, justify = 'start' }) => {
       )}
     >
       <div className="header-tabs" dir={direction}>
-        {orderedItems.map((item) => {
-          const Icon = item.icon;
-          const label = t(item.labelKey);
-          if (item.path) {
-            return (
-              <PillLink
-                key={item.key}
-                to={item.path}
-                icon={Icon}
-                label={label}
-              />
-            );
-          }
+        {groupedItems.map((group) => (
+          <div key={group.key} className="header-tab-group">
+            <span className="header-tab-group-label">{group.label}</span>
+            <div className="header-tab-group-items">
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const label = t(item.labelKey);
+                if (item.path) {
+                  return <PillLink key={item.key} to={item.path} icon={Icon} label={label} />;
+                }
 
-          return (
-            <DropdownMenu key={item.key}>
-              <DropdownMenuTrigger asChild>
-                <button type="button" className={cn('tab-pill', 'shrink-0')}>
-                  {Icon && <Icon className="tab-pill-icon" />}
-                  <span className="truncate">{label}</span>
-                  <ChevronDown className="ms-1 h-4 w-4 opacity-80" />
-                </button>
-              </DropdownMenuTrigger>
+                return (
+                  <DropdownMenu key={item.key}>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className={cn('tab-pill', 'shrink-0')}>
+                        {Icon && <Icon className="tab-pill-icon" />}
+                        <span className="truncate">{label}</span>
+                        <ChevronDown className="ms-1 h-4 w-4 opacity-80" />
+                      </button>
+                    </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align={isRTL ? 'end' : 'start'}
-                dir={direction}
-                className="min-w-56"
-              >
-                {item.children.map((child) => {
-                  const ChildIcon = child.icon;
-                  return (
-                    <DropdownMenuItem key={child.key} asChild>
-                      <AppNavLink
-                        to={child.path}
-                        className={cn(
-                          'flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm',
-                        )}
-                        activeClassName="bg-muted"
-                      >
-                        {ChildIcon && <ChildIcon className="h-4 w-4" />}
-                        <span className="truncate">{t(child.labelKey)}</span>
-                      </AppNavLink>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        })}
+                    <DropdownMenuContent
+                      align={isRTL ? 'end' : 'start'}
+                      dir={direction}
+                      className="min-w-56"
+                    >
+                      {item.children.map((child) => {
+                        const ChildIcon = child.icon;
+                        return (
+                          <DropdownMenuItem key={child.key} asChild>
+                            <AppNavLink
+                              to={child.path}
+                              className={cn('flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm')}
+                              activeClassName="bg-muted"
+                            >
+                              {ChildIcon && <ChildIcon className="h-4 w-4" />}
+                              <span className="truncate">{t(child.labelKey)}</span>
+                            </AppNavLink>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
