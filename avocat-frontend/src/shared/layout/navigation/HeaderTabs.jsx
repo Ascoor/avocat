@@ -39,9 +39,9 @@ const HeaderTabs = ({ className, justify = 'start' }) => {
         : hasPermission(permissions, item.requiredPermission);
     };
     const groupMeta = {
-      main: { labelKey: 'navigationGroups.main' },
-      reports: { labelKey: 'navigationGroups.reports' },
-      system: { labelKey: 'navigationGroups.system' },
+      main: { label: isRTL ? 'الاقسام الرئيسية' : 'Main sections' },
+      reports: { label: isRTL ? 'الفروع والتقارير' : 'Branches & reports' },
+      system: { label: isRTL ? 'الإعدادات والإدارة' : 'Settings & admin' },
     };
 
     const groups = [];
@@ -56,13 +56,13 @@ const HeaderTabs = ({ className, justify = 'start' }) => {
       if (visibleItems.length > 0) {
         groups.push({
           key: group.key,
-          label: t(groupMeta[group.key]?.labelKey, { fallback: group.key }),
+          label: groupMeta[group.key]?.label ?? group.key,
           items: sortItemsByTopNavOrder(visibleItems),
         });
       }
     }
     return groups;
-  }, [permissions, t]);
+  }, [permissions, isRTL]);
 
   return (
     <div
