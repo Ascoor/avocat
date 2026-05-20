@@ -79,6 +79,11 @@ const en = {
     uiQa: "UI QA",
     qaRbac: "RBAC QA",
   },
+  navigationGroups: {
+    main: "Main sections",
+    reports: "Branches & reports",
+    system: "Settings & admin",
+  },
   reports: {
     title: "Reports",
     subtitle: "Unified reporting across sessions, procedures, clients, cases, and services.",
