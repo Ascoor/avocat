@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
 import MobileNavigationDrawer from "../navigation/MobileNavigationDrawer";
+import DesktopSidebar from "../navigation/DesktopSidebar";
 import AppHeader from "../navigation/AppHeader";
 import { cn } from "@shared/lib/utils";
 import { useLanguage } from "@shared/contexts/LanguageContext";
@@ -36,6 +37,7 @@ const DashboardShell = ({ children, title, className, showSidebarToggle = false 
       )}
 
       <div className="dashboard-layout">
+        <DesktopSidebar />
         <div className="dashboard-content">
           <main ref={scrollRef} className="dashboard-scroll">
             <AnimatePresence mode="wait">
