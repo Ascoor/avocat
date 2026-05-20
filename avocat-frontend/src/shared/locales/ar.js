@@ -376,6 +376,11 @@ const ar = {publicSite: {
     uiQa: "اختبار الواجهة",
     qaRbac: "اختبار RBAC",
   },
+  navigationGroups: {
+    main: "الأقسام الرئيسية",
+    reports: "الفروع والتقارير",
+    system: "الإعدادات والإدارة",
+  },
   reports: {
     title: "التقارير",
     subtitle: "متابعة شاملة للجلسات والإجراءات والعملاء والقضايا والخدمات.",

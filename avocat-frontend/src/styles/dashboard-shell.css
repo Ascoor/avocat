@@ -291,12 +291,57 @@
   .header-tabs {
     display: flex;
     align-items: center;
-    gap: 0.375rem;
+    justify-content: center;
+    gap: 0.75rem;
     overflow-x: auto;
     white-space: nowrap;
-    padding: 0.25rem 0.25rem;
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--border) / 0.5);
+    background: linear-gradient(180deg, hsl(var(--background) / 0.82), hsl(var(--muted) / 0.36));
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 35px -28px hsl(var(--foreground) / 0.55), inset 0 1px 0 hsl(var(--background) / 0.8);
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
+    scroll-snap-type: inline proximity;
+  }
+
+  .header-tab-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--border) / 0.55);
+    background: linear-gradient(145deg, hsl(var(--background) / 0.75), hsl(var(--muted) / 0.32));
+    backdrop-filter: blur(10px);
+    scroll-snap-align: center;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    box-shadow: inset 0 1px 0 hsl(var(--background) / 0.7);
+  }
+
+  .header-tab-group:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--primary) / 0.35);
+    box-shadow: 0 10px 22px -16px hsl(var(--primary) / 0.6), inset 0 1px 0 hsl(var(--background) / 0.75);
+  }
+
+  .header-tab-group-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    padding-inline: 0.3rem;
+  }
+
+  .header-tab-group-items {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
   }
   
   .header-tabs::-webkit-scrollbar {
@@ -346,6 +391,8 @@
   
   /* ── Tab Pill ── */
   .tab-pill {
+    position: relative;
+    isolation: isolate;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -366,12 +413,28 @@
       box-shadow 180ms ease;
     cursor: pointer;
   }
+
+  .tab-pill::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: linear-gradient(130deg, hsl(var(--primary) / 0.2), transparent 56%);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: -1;
+  }
   
   .tab-pill:hover {
     background: hsl(var(--tabs-pill-hover));
     color: hsl(var(--tabs-hover-text));
     transform: translateY(-1px);
     box-shadow: 0 4px 12px -6px hsl(var(--foreground) / 0.12);
+  }
+
+  .tab-pill:hover::before,
+  .tab-pill.is-active::before {
+    opacity: 1;
   }
   
   .tab-pill:focus-visible {
@@ -435,6 +498,15 @@
   }
   
   @media (max-width: 768px) {
+    .header-tab-group {
+      gap: 0.35rem;
+      padding: 0.2rem 0.35rem;
+    }
+
+    .header-tab-group-label {
+      font-size: 0.62rem;
+    }
+
     .tab-pill {
       padding: 0.4rem 0.65rem;
       font-size: 0.75rem;
