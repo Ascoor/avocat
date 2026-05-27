@@ -1,32 +1,42 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "🚀 Starting Deployment Script..."
 
-# 1. تنظيف الكاش لضمان قراءة المتغيرات الجديدة من Railway
-echo "🧹 Clearing Cache..."
-php artisan config:clear
-php artisan cache:clear
-
-# 2. التأكد من وجود مفتاح التطبيق (اختياري لو أضفته يدويًا في Railway)
-if [ -z "$APP_KEY" ]; then
-    echo "🔑 APP_KEY is missing, generating one..."
-    php artisan key:generate --force
+PORT_VALUE="${PORT:-${APP_PORT:-8000}}"
+CLEAN_PORT="$(echo "$PORT_VALUE" | tr -dc '0-9')"
+if [ -z "$CLEAN_PORT" ]; then
+  CLEAN_PORT="8000"
 fi
 
-# 3. انتظر قاعدة البيانات
-echo "⏳ Waiting for Database..."
-CLEAN_DB_HOST=$(echo "$DB_HOST" | tr -d '\r')
-until nc -z -v -w30 $CLEAN_DB_HOST $DB_PORT; do
-  echo "Waiting for database connection..."
-  sleep 5
-done
+# 1) Clear only config cache first (safe without DB)
+echo "🧹 Clearing config cache..."
+php artisan config:clear || true
 
-# 4. المهاجرة (Migrations)
-echo "📂 Running Migrations..."
-php artisan migrate --force
+# 2) Ensure APP_KEY exists
+if [ -z "${APP_KEY:-}" ]; then
+  echo "🔑 APP_KEY is missing, generating one..."
+  php artisan key:generate --force || true
+fi
 
-# 5. تشغيل السيرفر (الحل الذي يتجنب خطأ string+int)
-echo "🌐 Starting Server on port $PORT..."
-CLEAN_PORT=$(echo "$PORT" | tr -dc '0-9')
-exec php -S 0.0.0.0:$CLEAN_PORT -t public
+# 3) Wait for DB only when host/port are provided
+if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ]; then
+  echo "⏳ Waiting for Database at ${DB_HOST}:${DB_PORT}..."
+  CLEAN_DB_HOST="$(echo "$DB_HOST" | tr -d '\r')"
+  until nc -z -w 5 "$CLEAN_DB_HOST" "$DB_PORT"; do
+    echo "Waiting for database connection..."
+    sleep 3
+  done
+
+  echo "🧹 Clearing application cache..."
+  php artisan cache:clear || true
+
+  echo "📂 Running Migrations..."
+  php artisan migrate --force || true
+else
+  echo "⚠️ DB_HOST/DB_PORT not set; skipping DB wait, cache:clear, and migrations."
+fi
+
+# 4) Start server
+echo "🌐 Starting Server on port ${CLEAN_PORT}..."
+exec php -S "0.0.0.0:${CLEAN_PORT}" -t public
