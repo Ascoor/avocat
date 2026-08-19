@@ -9,6 +9,7 @@
 *.pem
 secrets.*
 !.env.docker.example
+!.env.production.example
 
 # Logs
 *.log
@@ -50,17 +51,18 @@ avocat-frontend/.idea/
 avocat-frontend/config.js
 
 ########################################
-# Backend: avocatapp (Laravel/PHP)
+# Backend: avocat-backend (Laravel/PHP)
 ########################################
-avocatapp/node_modules/
-avocatapp/vendor/
-avocatapp/**/vendor/
-avocatapp/public/hot
-avocatapp/public/storage
-avocatapp/storage/*.key
-avocatapp/.phpunit.result.cache
-avocatapp/Homestead.json
-avocatapp/Homestead.yaml
+avocat-backend/node_modules/
+avocat-backend/vendor/
+avocat-backend/**/vendor/
+avocat-backend/public/hot
+avocat-backend/public/storage
+avocat-backend/storage/*.key
+avocat-backend/.phpunit.result.cache
+avocat-backend/Homestead.json
+avocat-backend/Homestead.yaml
+avocat-backend/bootstrap/cache/*.php
 
 ########################################
 # Search API: search-api (Python)
@@ -79,25 +81,7 @@ search-api/venv/
 search-api/.venv/
 search-api/env/
 
-
-data/__pycache__/
-data/**/__pycache__/
-data/*.pyc
-data/*.pyo
-data/*.pyd
-data/*.db
-data/*.sqlite
-data/.pytest_cache/
-data/.mypy_cache/
-data/myenv/
-data/venv/
-data/.venv/
-data/env/
-
 ########################################
-# Production output (if you don't want it on GitHub)
+# Production output
 ########################################
 public_html/
-
-# Laravel cache
-avocatapp/bootstrap/cache/*.php

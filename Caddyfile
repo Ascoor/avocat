@@ -1,0 +1,14 @@
+{$APP_DOMAIN} {
+  encode zstd gzip
+  reverse_proxy web:8080
+}
+
+{$API_DOMAIN} {
+  encode zstd gzip
+  reverse_proxy api:8000
+}
+
+{$SEARCH_DOMAIN} {
+  encode zstd gzip
+  reverse_proxy search:9100
+}
