@@ -1,0 +1,119 @@
+services:
+  pg:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./avocat-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: https://${API_DOMAIN}
+      DB_CONNECTION: pgsql
+      DB_HOST: pg
+      DB_PORT: 5432
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+    depends_on:
+      pg:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    expose:
+      - "8000"
+    networks:
+      - internal
+
+  search:
+    build:
+      context: ./search-api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 9100
+      FASTAPI_ALLOWED_ORIGINS: https://${APP_DOMAIN}
+    expose:
+      - "9100"
+    networks:
+      - internal
+
+  web:
+    build:
+      context: ./avocat-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://${API_DOMAIN}
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+    expose:
+      - "8080"
+    depends_on:
+      - api
+    networks:
+      - internal
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - web
+      - api
+      - search
+    networks:
+      - internal
+
+volumes:
+  pg-data:
+  redis-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  internal:
+    driver: bridge
