@@ -60,7 +60,7 @@
       };
 
       axios
-        .post('https://search-api-production-6209.up.railway.app/search', formData)
+        .post(import.meta.env.VITE_SEARCH_API_URL ?? '/search-api/search', formData)
         .then((response) => {
           setSearchResults(response.data);
         })

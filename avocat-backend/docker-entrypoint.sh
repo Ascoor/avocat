@@ -32,11 +32,14 @@ if [ -n "${DB_HOST:-}" ] && [ -n "${DB_PORT:-}" ]; then
   php artisan cache:clear || true
 
   echo "📂 Running Migrations..."
-  php artisan migrate --force || true
+  php artisan migrate --force
 else
   echo "⚠️ DB_HOST/DB_PORT not set; skipping DB wait, cache:clear, and migrations."
 fi
 
 # 4) Start server
 echo "🌐 Starting Server on port ${CLEAN_PORT}..."
+php artisan config:cache
+php artisan route:cache || true
+php artisan view:cache || true
 exec php -S "0.0.0.0:${CLEAN_PORT}" -t public
