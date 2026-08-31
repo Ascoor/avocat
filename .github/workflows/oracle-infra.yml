@@ -14,9 +14,15 @@ jobs:
         working-directory: infra/oracle
     env:
       TF_IN_AUTOMATION: "true"
-      TF_VAR_tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
-      TF_VAR_user_ocid: ${{ secrets.OCI_USER_OCID }}
-      TF_VAR_fingerprint: ${{ secrets.OCI_FINGERPRINT }}
+
+      # OCI API-key authentication for the GitHub-hosted Terraform plan.
+      OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
+      OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+      OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+      OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+      OCI_REGION: ${{ secrets.OCI_REGION }}
+
+      # Terraform configuration inputs.
       TF_VAR_region: ${{ secrets.OCI_REGION }}
       TF_VAR_compartment_ocid: ${{ secrets.OCI_COMPARTMENT_OCID }}
       TF_VAR_ssh_public_key: ${{ secrets.OCI_SSH_PUBLIC_KEY }}
@@ -28,16 +34,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.8
-
-      - name: Configure OCI API key
-        shell: bash
-        env:
-          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.oci
-          printf '%s' "$OCI_PRIVATE_KEY" > ~/.oci/oci_api_key.pem
-          chmod 600 ~/.oci/oci_api_key.pem
-          echo 'TF_VAR_private_key_path='"$HOME/.oci/oci_api_key.pem" >> "$GITHUB_ENV"
 
       - name: Terraform init
         run: terraform init
