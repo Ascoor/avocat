@@ -12,6 +12,17 @@ secrets.*
 !.env.oracle.example
 !*.env.example
 
+# Terraform local state / credentials
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!.tfvars.example
+
 # Logs
 *.log
 logs/
