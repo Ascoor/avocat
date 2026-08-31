@@ -1,16 +1,7 @@
-name: Oracle Infrastructure
+name: Oracle Infrastructure Check
 
 on:
   workflow_dispatch:
-    inputs:
-      action:
-        description: Terraform action
-        required: true
-        default: plan
-        type: choice
-        options:
-          - plan
-          - apply
 
 permissions:
   contents: read
@@ -51,12 +42,15 @@ jobs:
       - name: Terraform init
         run: terraform init
 
+      - name: Terraform format check
+        run: terraform fmt -check
+
       - name: Terraform validate
         run: terraform validate
 
       - name: Terraform plan
-        run: terraform plan -out=tfplan
+        run: terraform plan
 
-      - name: Terraform apply
-        if: ${{ inputs.action == 'apply' }}
-        run: terraform apply -auto-approve tfplan
+# Apply is intentionally handled by OCI Resource Manager, which persists
+# Terraform state safely. Do not run repeated local/ephemeral applies without
+# configuring a durable remote backend first.
