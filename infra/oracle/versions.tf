@@ -9,10 +9,10 @@ terraform {
   }
 }
 
+# Keep the provider free of API-key fields so the same configuration works in
+# both environments:
+# - GitHub Actions authenticates through OCI_* environment variables.
+# - OCI Resource Manager supplies its managed provider credentials.
 provider "oci" {
-  tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-  region           = var.region
+  region = var.region
 }
