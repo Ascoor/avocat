@@ -114,11 +114,11 @@ return new class extends Migration
         // الفهارس الفريدة باستخدام Try-Catch لتجنب أخطاء التكرار أو عدم توافق النسخ
         try {
             if ($isCaseSubTypes) {
-                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, case_type_id, (lower({$nameColumn})))");
-                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (case_type_id, (lower({$nameColumn})))");
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, case_type_id, lower({$nameColumn}))");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (case_type_id, lower({$nameColumn}))");
             } else {
-                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, (lower({$nameColumn})))");
-                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} ((lower({$nameColumn})))");
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, lower({$nameColumn}))");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (lower({$nameColumn}))");
             }
         } catch (\Exception $e) {
             // تجاهل إذا كان الفهرس موجوداً بالفعل
@@ -143,9 +143,11 @@ return new class extends Migration
     private function foreignKeyExists(string $tableName, string $constraintName): bool
     {
         if (DB::getDriverName() === 'sqlite') return false;
+
         return DB::table('information_schema.table_constraints')
             ->where('table_name', $tableName)
             ->where('constraint_name', $constraintName)
+            ->where('constraint_type', 'FOREIGN KEY')
             ->exists();
     }
 
