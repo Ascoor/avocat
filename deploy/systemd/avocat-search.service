@@ -11,6 +11,10 @@ EnvironmentFile=-/etc/avocat/search-api.env
 ExecStart=/var/www/avocat/search-api/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 9100 --workers 1 --proxy-headers
 Restart=on-failure
 RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target

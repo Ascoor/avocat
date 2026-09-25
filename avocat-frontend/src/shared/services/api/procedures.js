@@ -19,7 +19,7 @@ export const createProcedureType = (data) =>
 export const updateProcedureType = (id, data) =>
   api.put(`/procedure_types/${id}`, data);
 export const deleteProcedureType = (id) =>
-  api.delete(`/procedure_t ypes/${id}`);
+  api.delete(`/procedure_types/${id}`);
 
 export const getProcedurePlaceTypes = () =>
   api.get('/procedure_place_types');
