@@ -17,9 +17,8 @@ class LegalSessionTypesTableSeeder extends Seeder
     {
         
 
-        DB::table('legal_session_types')->delete();
         
-        DB::table('legal_session_types')->insert(array (
+        SeedData::upsert('legal_session_types', array (
             0 => 
             array (
                 'id' => 1,

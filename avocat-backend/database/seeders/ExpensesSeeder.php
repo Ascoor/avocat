@@ -11,9 +11,6 @@ class ExpensesSeeder extends Seeder
     {
         $now = now();
 
-        // Safe with FK constraints
-        DB::table('expenses')->delete();
-
         $serviceId = DB::table('services')->value('id');
         $caseId = DB::table('leg_cases')->value('id');
         $userId = DB::table('users')->value('id');
@@ -26,7 +23,7 @@ class ExpensesSeeder extends Seeder
             return;
         }
 
-        DB::table('expenses')->insert([
+        $rows = [
             [
                 'service_id' => $serviceId,
                 'leg_case_id' => $caseId,
@@ -46,6 +43,17 @@ class ExpensesSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ];
+
+        foreach ($rows as $row) {
+            $identity = collect($row)->only([
+                'service_id', 'leg_case_id', 'legal_session_id', 'expense_category_id',
+                'client_id', 'description', 'amount',
+            ])->all();
+
+            if (! DB::table('expenses')->where($identity)->exists()) {
+                DB::table('expenses')->insert($row);
+            }
+        }
     }
 }

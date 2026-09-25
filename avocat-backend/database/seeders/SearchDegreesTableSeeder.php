@@ -16,9 +16,8 @@ class SearchDegreesTableSeeder extends Seeder
     {
         
 
-        \DB::table('search_degrees')->delete();
         
-        \DB::table('search_degrees')->insert(array (
+        \SeedData::upsert('search_degrees', array (
             0 => 
             array (
                 'id' => 1,

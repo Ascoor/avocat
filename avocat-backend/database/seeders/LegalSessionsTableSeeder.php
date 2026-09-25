@@ -17,9 +17,8 @@ class LegalSessionsTableSeeder extends Seeder
     {
         
 
-        DB::table('legal_sessions')->delete();
         
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 23810,
@@ -11522,7 +11521,7 @@ class LegalSessionsTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 24311,
@@ -23025,7 +23024,7 @@ class LegalSessionsTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 24811,
@@ -34527,7 +34526,7 @@ class LegalSessionsTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 25316,
@@ -46029,7 +46028,7 @@ class LegalSessionsTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 25816,
@@ -57531,7 +57530,7 @@ class LegalSessionsTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 26317,
@@ -69033,7 +69032,7 @@ class LegalSessionsTableSeeder extends Seeder
             'updated_at' => NULL,
         ),
     ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 27918,
@@ -80535,7 +80534,7 @@ class LegalSessionsTableSeeder extends Seeder
             'updated_at' => NULL,
         ),
     ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 28419,
@@ -92037,7 +92036,7 @@ class LegalSessionsTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 29799,
@@ -103539,7 +103538,7 @@ class LegalSessionsTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 30299,
@@ -115041,7 +115040,7 @@ class LegalSessionsTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('legal_sessions')->insert(array (
+        SeedData::upsert('legal_sessions', array (
             0 => 
             array (
                 'id' => 31635,

@@ -10,10 +10,13 @@ class LegalAdsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        // Safer than truncate when FK exists
-        DB::table('legal_ads')->delete();
+        // This legacy export has no stable identifiers and generated random values.
+        // Once its intended rows exist, never regenerate or replace them.
+        if (DB::table('legal_ads')->exists()) {
+            return;
+        }
 
-    $faker = fake('ar_JO');
+        $faker = fake('ar_JO');
 
         $legCaseIds = DB::table('leg_cases')->pluck('id')->all();
         if (empty($legCaseIds)) {

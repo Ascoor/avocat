@@ -18,9 +18,8 @@ class LegCaseClientTableSeeder extends Seeder
     {
         
 
-       DB::table('leg_case_client')->delete();
         
-       DB::table('leg_case_client')->insert(array (
+       SeedData::upsert('leg_case_client', array (
             0 => 
             array (
                 'id' => 1,
@@ -3022,7 +3021,7 @@ class LegCaseClientTableSeeder extends Seeder
                 'client_id' => 291,
             ),
         ));
-       DB::table('leg_case_client')->insert(array (
+       SeedData::upsert('leg_case_client', array (
             0 => 
             array (
                 'id' => 501,
@@ -6024,7 +6023,7 @@ class LegCaseClientTableSeeder extends Seeder
                 'client_id' => 526,
             ),
         ));
-       DB::table('leg_case_client')->insert(array (
+       SeedData::upsert('leg_case_client', array (
             0 => 
             array (
                 'id' => 1001,
@@ -9026,7 +9025,7 @@ class LegCaseClientTableSeeder extends Seeder
                 'client_id' => 615,
             ),
         ));
-       DB::table('leg_case_client')->insert(array (
+       SeedData::upsert('leg_case_client', array (
             0 => 
             array (
                 'id' => 1501,
