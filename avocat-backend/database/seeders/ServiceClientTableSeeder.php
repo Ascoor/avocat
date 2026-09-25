@@ -17,9 +17,8 @@ class ServiceClientTableSeeder extends Seeder
     {
         
 
-        DB::table('service_client')->delete();
         
-        DB::table('service_client')->insert(array (
+        SeedData::upsert('service_client', array (
             0 => 
             array (
                 'id' => 1,

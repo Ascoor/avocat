@@ -20,9 +20,8 @@ class CourtsTableSeeder extends Seeder
                 
      
        
-                DB::table('courts')->delete();
                 
-                DB::table('courts')->insert(array (
+                SeedData::upsert('courts', array (
                     0 => 
                     array (
                         'id' => 1,
@@ -4524,7 +4523,7 @@ class CourtsTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-                DB::table('courts')->insert(array (
+                SeedData::upsert('courts', array (
                     0 => 
                     array (
                         'id' => 608,

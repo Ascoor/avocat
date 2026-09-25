@@ -17,9 +17,8 @@ class ServiceProceduresTableSeeder extends Seeder
     {
         
 
-        DB::table('service_procedures')->delete();
         
-        DB::table('service_procedures')->insert(array (
+        SeedData::upsert('service_procedures', array (
             0 => 
             array (
                 'id' => 1,

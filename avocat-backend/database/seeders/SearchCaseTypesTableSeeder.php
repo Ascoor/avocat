@@ -16,9 +16,8 @@ class SearchCaseTypesTableSeeder extends Seeder
     {
         
 
-        \DB::table('search_case_types')->delete();
         
-        \DB::table('search_case_types')->insert(array (
+        \SeedData::upsert('search_case_types', array (
             0 => 
             array (
                 'id' => 182,
@@ -5020,7 +5019,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \DB::table('search_case_types')->insert(array (
+        \SeedData::upsert('search_case_types', array (
             0 => 
             array (
                 'id' => 821,
@@ -10022,7 +10021,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \DB::table('search_case_types')->insert(array (
+        \SeedData::upsert('search_case_types', array (
             0 => 
             array (
                 'id' => 1321,
@@ -15024,7 +15023,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \DB::table('search_case_types')->insert(array (
+        \SeedData::upsert('search_case_types', array (
             0 => 
             array (
                 'id' => 1821,

@@ -16,9 +16,8 @@ class ProcedurePlaceTypesTableSeeder extends Seeder
     {
         
 
-        \DB::table('procedure_place_types')->delete();
         
-        \DB::table('procedure_place_types')->insert(array (
+        \SeedData::upsert('procedure_place_types', array (
             0 => 
             array (
                 'id' => 1,
