@@ -1,11 +1,12 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash; 
-use Illuminate\Support\Facades\DB;
+
 use App\Models\Lawyer;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class LawyerSeeder extends Seeder
 {
@@ -164,11 +165,13 @@ class LawyerSeeder extends Seeder
             DB::transaction(function () use ($lawyerData) {
 
                 // 1) User: نفس المستخدم لو موجود (بالـ email)
-                $user = User::updateOrCreate(
+                // Seeded lawyer profiles are preserved, but their accounts have no
+                // shared/default credential. New accounts must use password reset.
+                $user = User::firstOrCreate(
                     ['email' => $lawyerData['email']],
                     [
                         'name' => $lawyerData['name'],
-                        'password' => Hash::make('Ask@12345'),
+                        'password' => Str::random(64),
                         'role' => '2', // lawyer
                     ]
                 );
