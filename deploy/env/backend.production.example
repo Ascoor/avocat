@@ -23,6 +23,7 @@ DB_DATABASE=avocat
 DB_USERNAME=avocat
 DB_PASSWORD=CHANGE_ME_STRONG_PASSWORD
 
+# The frontend currently authenticates with Sanctum bearer tokens, not SPA cookies.
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_ENCRYPT=false
@@ -35,7 +36,8 @@ QUEUE_CONNECTION=database
 CACHE_STORE=database
 CACHE_PREFIX=avocat_
 
-REDIS_CLIENT=phpredis
+# Predis is installed by Composer; no public Redis endpoint is required.
+REDIS_CLIENT=predis
 REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
