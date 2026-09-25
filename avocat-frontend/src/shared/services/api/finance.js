@@ -31,7 +31,4 @@ export const getCaseFinanceSummary = async (caseId) => {
 };
 
 export const createFinanceTransaction = (payload) =>
-  withFallback(
-    () => api.post('/finance/transactions', payload),
-    () => api.post('/expenses', payload),
-  );
+  api.post('/finance/ledger', payload);

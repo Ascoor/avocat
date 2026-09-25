@@ -13,7 +13,7 @@ $configuredAllowedOrigins = explode(',', env('FRONTEND_URLS', implode(',', $defa
 
 $allowedOrigins = array_values(array_unique(array_filter(array_map(
     static fn ($origin) => trim($origin),
-    array_merge($configuredAllowedOrigins, $defaultAllowedOrigins)
+    $configuredAllowedOrigins
 ))));
 
 return [

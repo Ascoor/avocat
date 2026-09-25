@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt, ValidationError
 import httpx
 import os
 import uvicorn
@@ -16,7 +16,18 @@ load_dotenv()
 app = FastAPI(title="Court Case Search API - Modernized")
 
 # إعداد CORS للسماح بالمجالات المحددة
-allowed_origins = os.environ.get("FASTAPI_ALLOWED_ORIGINS", "*").split(',')
+allowed_origins = [
+    origin.strip()
+    for origin in os.environ.get(
+        "FASTAPI_ALLOWED_ORIGINS",
+        "http://localhost:5173,http://localhost:8080",
+    ).split(",")
+    if origin.strip()
+]
+if "*" in allowed_origins:
+    raise RuntimeError(
+        "FASTAPI_ALLOWED_ORIGINS must list explicit origins when credentials are enabled"
+    )
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
@@ -38,11 +49,11 @@ async def home(request: Request):
 
 # نموذج الطلب الجديد (مع توافق للأسماء القديمة)
 class SearchRequest(BaseModel):
-    degreeId: int
-    courtId: int
-    caseTypeId: int
-    caseYear: int
-    caseNumber: int
+    degreeId: PositiveInt
+    courtId: PositiveInt
+    caseTypeId: PositiveInt
+    caseYear: PositiveInt
+    caseNumber: PositiveInt
 
     @classmethod
     def from_legacy(cls, data: dict):
@@ -66,8 +77,8 @@ async def fetch_case_status(data: SearchRequest):
         "Referer": "https://moj.gov.eg/services/courts/10050004",
     }
 
-    async with httpx.AsyncClient(verify=False, timeout=30) as client:
-        response = await client.post(url, headers=headers, json=data.dict())
+    async with httpx.AsyncClient(timeout=30) as client:
+        response = await client.post(url, headers=headers, json=data.model_dump())
         response.raise_for_status()
         return response.json()
 
@@ -93,18 +104,29 @@ async def search_case(request: Request, x_request_source: str = Header(None)):
             content={"message": "لم يتم العثور على تفاصيل هذه الدعوى"},
         )
 
-    except httpx.HTTPStatusError as e:
+    except httpx.HTTPStatusError:
         return JSONResponse(
-            status_code=e.response.status_code,
-            content={"error": f"فشل الاتصال بخدمة وزارة العدل: {str(e)}"},
+            status_code=502,
+            content={"error": "فشل الاتصال بخدمة وزارة العدل"},
         )
-    except Exception as e:
+    except (ValidationError, ValueError, TypeError):
+        return JSONResponse(
+            status_code=422,
+            content={"error": "بيانات البحث غير صالحة"},
+        )
+    except httpx.RequestError:
+        return JSONResponse(
+            status_code=502,
+            content={"error": "تعذر الاتصال بخدمة وزارة العدل"},
+        )
+    except Exception:
         return JSONResponse(
             status_code=500,
-            content={"error": f"حدث خطأ داخلي: {str(e)}"},
+            content={"error": "حدث خطأ داخلي"},
         )
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 9100))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, proxy_headers=True)
+    host = os.environ.get("HOST", "127.0.0.1")
+    uvicorn.run("main:app", host=host, port=port, proxy_headers=True)

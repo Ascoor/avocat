@@ -111,18 +111,33 @@ return new class extends Migration
             $table->index(['office_id', 'sort_order'], "{$tableName}_ofc_sort_idx");
         });
 
-        // الفهارس الفريدة باستخدام Try-Catch لتجنب أخطاء التكرار أو عدم توافق النسخ
-        try {
+        $driver = DB::getDriverName();
+
+        // PostgreSQL and SQLite support the partial expression indexes needed
+        // to keep active system and office values unique independently.
+        if (in_array($driver, ['pgsql', 'sqlite'], true)) {
             if ($isCaseSubTypes) {
-                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, case_type_id, lower({$nameColumn}))");
-                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (case_type_id, lower({$nameColumn}))");
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, case_type_id, lower({$nameColumn})) WHERE office_id IS NOT NULL AND deleted_at IS NULL");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (case_type_id, lower({$nameColumn})) WHERE office_id IS NULL AND deleted_at IS NULL");
             } else {
-                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, lower({$nameColumn}))");
-                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (lower({$nameColumn}))");
+                DB::statement("CREATE UNIQUE INDEX {$officeUniqIndex} ON {$tableName} (office_id, lower({$nameColumn})) WHERE office_id IS NOT NULL AND deleted_at IS NULL");
+                DB::statement("CREATE UNIQUE INDEX {$systemUniqIndex} ON {$tableName} (lower({$nameColumn})) WHERE office_id IS NULL AND deleted_at IS NULL");
             }
-        } catch (\Exception $e) {
-            // تجاهل إذا كان الفهرس موجوداً بالفعل
+
+            return;
         }
+
+        // MySQL has no partial indexes. Preserve its historical composite
+        // constraints rather than silently swallowing migration failures.
+        Schema::table($tableName, function (Blueprint $table) use ($isCaseSubTypes, $officeUniqIndex, $systemUniqIndex) {
+            if ($isCaseSubTypes) {
+                $table->unique(['office_id', 'case_type_id', 'name'], $officeUniqIndex);
+                $table->unique(['case_type_id', 'name'], $systemUniqIndex);
+            } else {
+                $table->unique(['office_id', 'name'], $officeUniqIndex);
+                $table->unique('name', $systemUniqIndex);
+            }
+        });
     }
 
     public function down(): void
