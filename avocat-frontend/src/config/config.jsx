@@ -1,6 +1,9 @@
+const normalizeBaseUrl = (value) => String(value || '').trim().replace(/\/+$/, '');
+
 const API_CONFIG = {
-   //baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
-  baseURL: 'https://avocat-backend-production.up.railway.app',
+  // Empty means same-origin. In production Nginx serves the SPA and proxies /api.
+  baseURL: normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL),
+  searchApiURL: normalizeBaseUrl(import.meta.env.VITE_SEARCH_API_URL || '/search-api'),
 };
 
 export default API_CONFIG;
