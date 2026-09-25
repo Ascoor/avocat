@@ -23,6 +23,14 @@ DB_DATABASE=avocat
 DB_USERNAME=avocat
 DB_PASSWORD=CHANGE_ME_STRONG_PASSWORD
 
+# Required only to bootstrap accounts during the initial production seed.
+# Set these secrets directly on the server; never commit populated values.
+PRIMARY_USER_NAME=
+PRIMARY_USER_EMAIL=
+PRIMARY_USER_PASSWORD=
+SUPER_ADMIN_EMAIL=
+ADMIN_SEED_PASSWORD=
+
 # The frontend currently authenticates with Sanctum bearer tokens, not SPA cookies.
 SESSION_DRIVER=database
 SESSION_LIFETIME=120

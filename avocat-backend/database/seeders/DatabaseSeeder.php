@@ -11,6 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Validate every required production credential before any seeder writes data.
+        UsersTableSeeder::validateConfiguration();
+        SuperAdminUserSeeder::validateConfiguration();
+
         $this->call([
             OfficesTableSeeder::class,
             UsersTableSeeder::class,
