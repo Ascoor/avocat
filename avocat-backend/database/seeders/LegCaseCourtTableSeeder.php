@@ -18,9 +18,8 @@ class LegCaseCourtTableSeeder extends Seeder
     {
         
 
-       DB::table('leg_case_court')->delete();
         
-       DB::table('leg_case_court')->insert(array (
+       SeedData::upsert('leg_case_court', array (
             0 => 
             array (
                 'leg_case_id' => 410,
@@ -3522,7 +3521,7 @@ class LegCaseCourtTableSeeder extends Seeder
                 'case_year' => '2022',
             ),
         ));
-       DB::table('leg_case_court')->insert(array (
+       SeedData::upsert('leg_case_court', array (
             0 => 
             array (
                 'leg_case_id' => 1827,
@@ -7024,7 +7023,7 @@ class LegCaseCourtTableSeeder extends Seeder
                 'case_year' => '2020',
             ),
         ));
-       DB::table('leg_case_court')->insert(array (
+       SeedData::upsert('leg_case_court', array (
             0 => 
             array (
                 'leg_case_id' => 1078,

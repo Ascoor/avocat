@@ -26,7 +26,8 @@ class AppealSubTypesSeeder extends Seeder
               ['appeal_type_id' => 2, 'appeal_sub_type' => 'الهيئة العامة للمواد الجنائية'],
         ];
 
-        // دمج القوائم وإدخالها في قاعدة البيانات
-        DB::table('appeal_sub_types')->insert(array_merge($civilSubTypes, $criminalSubTypes));
+        foreach (array_merge($civilSubTypes, $criminalSubTypes) as $subType) {
+            DB::table('appeal_sub_types')->updateOrInsert($subType, $subType);
+        }
     }
 }

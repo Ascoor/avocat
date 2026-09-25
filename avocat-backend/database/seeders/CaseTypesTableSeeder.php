@@ -17,9 +17,8 @@ class CaseTypesTableSeeder extends Seeder
     {
         
 
-        DB::table('case_types')->delete();
         
-        DB::table('case_types')->insert(array (
+        SeedData::upsert('case_types', array (
             0 => 
             array (
                 'id' => 1,

@@ -22,9 +22,8 @@ class LegCasesTableSeeder extends Seeder
             CaseSubTypesTableSeeder::class,
         ]);
 
-        DB::table('leg_cases')->where('is_deleted', false)->delete();
         
-        DB::table('leg_cases')->insertOrIgnore(array (
+        SeedData::upsert('leg_cases', array (
             0 => 
             array (
                 'id' => 2,
@@ -12044,7 +12043,7 @@ class LegCasesTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('leg_cases')->insert(array (
+        SeedData::upsert('leg_cases', array (
             0 => 
             array (
                 'id' => 824,
@@ -24046,7 +24045,7 @@ class LegCasesTableSeeder extends Seeder
         'updated_at' => NULL,
     ),
 ));
-        DB::table('leg_cases')->insert(array (
+        SeedData::upsert('leg_cases', array (
             0 => 
             array (
                 'id' => 1500,
@@ -36050,7 +36049,7 @@ class LegCasesTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        DB::table('leg_cases')->insert(array (
+        SeedData::upsert('leg_cases', array (
             0 => 
             array (
                 'id' => 2536,

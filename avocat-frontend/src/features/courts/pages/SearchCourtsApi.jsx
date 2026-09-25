@@ -6,6 +6,7 @@ import api from '@shared/services/api/axiosConfig';
 import { useSecurity } from '@shared/security/SecurityContext';
 import { canCrud } from '@shared/security/permissions';
 import ForbiddenState from '@shared/security/ForbiddenState';
+import API_CONFIG from '@config/config';
 
 const SearchCourtsApi = () => {
   const { permissions } = useSecurity();
@@ -79,7 +80,7 @@ const SearchCourtsApi = () => {
 
     try {
       const response = await axios.post(
-        'https://search-api-production-6209.up.railway.app/search',
+        `${API_CONFIG.searchApiURL}/search`,
         { degree, court, caseType, caseYear, caseNumber },
         { headers: { 'x-request-source': 'React' } },
       );

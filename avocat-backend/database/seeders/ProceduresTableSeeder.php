@@ -18,9 +18,8 @@ class ProceduresTableSeeder extends Seeder
     {
         
 
-       DB::table('procedures')->delete();
         
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 1,
@@ -11526,7 +11525,7 @@ class ProceduresTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 501,
@@ -23030,7 +23029,7 @@ class ProceduresTableSeeder extends Seeder
                         'updated_at' => NULL,
                     ),
                 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 1001,
@@ -34535,7 +34534,7 @@ class ProceduresTableSeeder extends Seeder
                             'updated_at' => NULL,
                         ),
                     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 1501,
@@ -46037,7 +46036,7 @@ class ProceduresTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 2001,
@@ -57549,7 +57548,7 @@ class ProceduresTableSeeder extends Seeder
                             'updated_at' => NULL,
                         ),
                     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 2501,
@@ -69053,7 +69052,7 @@ class ProceduresTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 3001,
@@ -80555,7 +80554,7 @@ class ProceduresTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 3501,
@@ -92057,7 +92056,7 @@ class ProceduresTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 4001,
@@ -103559,7 +103558,7 @@ class ProceduresTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 4501,
@@ -115062,7 +115061,7 @@ class ProceduresTableSeeder extends Seeder
                                         'updated_at' => NULL,
                                     ),
                                 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 5001,
@@ -126564,7 +126563,7 @@ class ProceduresTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 5501,
@@ -138066,7 +138065,7 @@ class ProceduresTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 6001,
@@ -149568,7 +149567,7 @@ class ProceduresTableSeeder extends Seeder
                                 'updated_at' => NULL,
                             ),
                         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 6501,
@@ -161071,7 +161070,7 @@ class ProceduresTableSeeder extends Seeder
         'updated_at' => NULL,
     ),
 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 7001,
@@ -172573,7 +172572,7 @@ class ProceduresTableSeeder extends Seeder
                             'updated_at' => NULL,
                         ),
                     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 7501,
@@ -184075,7 +184074,7 @@ class ProceduresTableSeeder extends Seeder
                         'updated_at' => NULL,
                     ),
                 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 8001,
@@ -195577,7 +195576,7 @@ class ProceduresTableSeeder extends Seeder
             'updated_at' => NULL,
         ),
     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 8501,
@@ -207079,7 +207078,7 @@ class ProceduresTableSeeder extends Seeder
             'updated_at' => NULL,
         ),
     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 9001,
@@ -218581,7 +218580,7 @@ array (
         'updated_at' => NULL,
     ),
 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 9501,
@@ -230083,7 +230082,7 @@ array (
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 10001,
@@ -241585,7 +241584,7 @@ array (
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 10501,
@@ -253087,7 +253086,7 @@ array (
                         'updated_at' => NULL,
                     ),
                 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 11001,
@@ -264590,7 +264589,7 @@ array (
             'updated_at' => NULL,
         ),
     ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 11501,
@@ -276092,7 +276091,7 @@ array (
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 12001,
@@ -287594,7 +287593,7 @@ array (
                 'updated_at' => NULL,
             ),
         ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 12501,
@@ -299096,7 +299095,7 @@ array (
         'updated_at' => NULL,
     ),
 ));
-       DB::table('procedures')->insert(array (
+       SeedData::upsert('procedures', array (
             0 => 
             array (
                 'id' => 13001,

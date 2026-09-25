@@ -4,6 +4,7 @@
   import { useLanguage } from '@shared/contexts/LanguageContext';
   import { Button } from '@shared/ui/button';
   import CourtSearchResults from '@features/courts/components/CourtSearchResults';
+import API_CONFIG from '@config/config';
 
   const SearchCourt = () => {
     const { t, isRTL } = useLanguage();
@@ -60,7 +61,7 @@
       };
 
       axios
-        .post('https://search-api-production-6209.up.railway.app/search', formData)
+        .post(`${API_CONFIG.searchApiURL}/search`, formData)
         .then((response) => {
           setSearchResults(response.data);
         })

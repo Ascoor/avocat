@@ -7,21 +7,24 @@ use Illuminate\Support\Facades\DB;
 
 class AttorneyTypesTableSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $types = [
-            [
-                'name' => 'التفويض العام',
-            ],
-            [
-                'name' => 'التفويض الخاص',
-            ],
-            [
-                'name' => 'التفويض للإجراءات القضائية',
-            ],
-            // add more data here
+            'التفويض العام',
+            'التفويض الخاص',
+            'التفويض للإجراءات القضائية',
         ];
 
-        DB::table('attorney_types')->insert($types);
+        foreach ($types as $name) {
+            $existingId = DB::table('attorney_types')
+                ->whereRaw('LOWER(name) = LOWER(?)', [$name])
+                ->value('id');
+
+            if ($existingId === null) {
+                DB::table('attorney_types')->insert(['name' => $name]);
+            } else {
+                DB::table('attorney_types')->where('id', $existingId)->update(['name' => $name]);
+            }
+        }
     }
 }

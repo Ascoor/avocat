@@ -16,9 +16,8 @@ class SearchCourtsTableSeeder extends Seeder
     {
         
 
-        \DB::table('search_courts')->delete();
         
-        \DB::table('search_courts')->insert(array (
+        \SeedData::upsert('search_courts', array (
             0 => 
             array (
                 'id' => 1,

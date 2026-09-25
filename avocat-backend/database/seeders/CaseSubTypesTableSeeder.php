@@ -17,7 +17,6 @@ class CaseSubTypesTableSeeder extends Seeder
     {
         
 
-        DB::table('case_sub_types')->delete();
         
         $caseSubTypes = array (
             0 => 
@@ -502,6 +501,6 @@ class CaseSubTypesTableSeeder extends Seeder
             ),
         );
 
-        DB::table('case_sub_types')->insert($caseSubTypes);
+        SeedData::upsert('case_sub_types', $caseSubTypes);
     }
 }

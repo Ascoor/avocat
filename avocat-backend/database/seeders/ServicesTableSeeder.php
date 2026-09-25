@@ -17,9 +17,8 @@ class ServicesTableSeeder extends Seeder
     {
         
 
-        DB::table('services')->delete();
         
-        DB::table('services')->insert(array (
+        SeedData::upsert('services', array (
             0 => 
             array (
                 'id' => 1,
