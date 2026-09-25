@@ -1,5 +1,9 @@
-# Vite values are embedded into the browser bundle. Never put secrets here.
-VITE_API_URL=http://YOUR_DOMAIN_OR_IP/api
+# Vite values are embedded into browser JavaScript. Never put secrets here.
+# Keep API base empty for same-origin requests: /api/v1/*
+VITE_API_BASE_URL=
+# Nginx proxies this prefix to FastAPI on 127.0.0.1:9100
+VITE_SEARCH_API_URL=/search-api
+
 VITE_APP_NAME="Legal Vista Suite"
 VITE_APP_VERSION="2.0.0"
 VITE_ENABLE_SSO=false
