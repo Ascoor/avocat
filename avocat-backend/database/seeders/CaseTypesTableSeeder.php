@@ -18,7 +18,7 @@ class CaseTypesTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('case_types', array (
+        SeedData::insertMissingById('case_types', array (
             0 => 
             array (
                 'id' => 1,

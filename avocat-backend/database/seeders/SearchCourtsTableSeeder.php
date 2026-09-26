@@ -17,7 +17,7 @@ class SearchCourtsTableSeeder extends Seeder
         
 
         
-        \SeedData::upsert('search_courts', array (
+        SeedData::insertMissingById('search_courts', array (
             0 => 
             array (
                 'id' => 1,

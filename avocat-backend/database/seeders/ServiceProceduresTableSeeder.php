@@ -18,7 +18,7 @@ class ServiceProceduresTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('service_procedures', array (
+        SeedData::insertMissingById('service_procedures', array (
             0 => 
             array (
                 'id' => 1,

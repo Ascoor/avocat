@@ -17,7 +17,7 @@ class ServiceTypesTableSeeder extends Seeder
         
 
         
-        \SeedData::upsert('service_types', array (
+        SeedData::insertMissingById('service_types', array (
             0 => 
             array (
                 'id' => 60,

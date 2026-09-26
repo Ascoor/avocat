@@ -17,7 +17,7 @@ class SearchDegreesTableSeeder extends Seeder
         
 
         
-        \SeedData::upsert('search_degrees', array (
+        SeedData::insertMissingById('search_degrees', array (
             0 => 
             array (
                 'id' => 1,

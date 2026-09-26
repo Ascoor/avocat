@@ -21,7 +21,7 @@ class CourtsTableSeeder extends Seeder
      
        
                 
-                SeedData::upsert('courts', array (
+                SeedData::insertMissingById('courts', array (
                     0 => 
                     array (
                         'id' => 1,
@@ -4523,7 +4523,7 @@ class CourtsTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-                SeedData::upsert('courts', array (
+                SeedData::insertMissingById('courts', array (
                     0 => 
                     array (
                         'id' => 608,

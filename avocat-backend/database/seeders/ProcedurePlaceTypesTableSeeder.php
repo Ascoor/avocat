@@ -17,7 +17,7 @@ class ProcedurePlaceTypesTableSeeder extends Seeder
         
 
         
-        \SeedData::upsert('procedure_place_types', array (
+        SeedData::insertMissingById('procedure_place_types', array (
             0 => 
             array (
                 'id' => 1,
