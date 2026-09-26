@@ -12,6 +12,7 @@ import {
 
 const AuthContext = createContext(null);
 
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
 const DEMO_EMAIL = import.meta.env.VITE_DEMO_LOGIN_EMAIL ?? 'demo@avocat.app';
 const DEMO_PASSWORD = import.meta.env.VITE_DEMO_LOGIN_PASSWORD ?? 'demo12345';
 const buildDemoUser = (email) => ({
@@ -22,7 +23,7 @@ const buildDemoUser = (email) => ({
 });
 
 const isDemoLogin = (email, password) =>
-  email.trim().toLowerCase() === DEMO_EMAIL.toLowerCase() && password === DEMO_PASSWORD;
+  DEMO_MODE && email.trim().toLowerCase() === DEMO_EMAIL.toLowerCase() && password === DEMO_PASSWORD;
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getStoredToken());
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchMe = useCallback(async () => {
     const currentToken = getStoredToken();
-    if (isDemoToken(currentToken)) {
+    if (DEMO_MODE && isDemoToken(currentToken)) {
       const storedUser = getStoredUser() ?? buildDemoUser(DEMO_EMAIL);
       setStoredAuth(storedUser, currentToken);
       setUser(storedUser);
@@ -121,7 +122,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   const logout = useCallback(async () => {
-    if (!isDemoToken(getStoredToken())) {
+    if (!(DEMO_MODE && isDemoToken(getStoredToken()))) {
       try {
         await api.post('/logout');
       } catch (error) {

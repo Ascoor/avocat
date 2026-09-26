@@ -26,8 +26,10 @@ import { useAuth } from "@shared/contexts/AuthContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { toast } from "@shared/hooks/use-toast";
 import { cn } from "@shared/lib/utils";
+import { getSafeReturnPath } from "@shared/utils/safeRedirect";
 
 const Login = () => {
+  const demoMode = import.meta.env.VITE_DEMO_MODE === "true";
   const demoEmail = import.meta.env.VITE_DEMO_LOGIN_EMAIL ?? "demo@avocat.app";
   const demoPassword = import.meta.env.VITE_DEMO_LOGIN_PASSWORD ?? "demo12345";
   const [email, setEmail] = useState("");
@@ -45,7 +47,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!isInitializing && isAuthenticated) {
-      const nextUrl = searchParams.get("next") || "/dashboard";
+      const nextUrl = getSafeReturnPath(searchParams.get("next"));
       navigate(nextUrl, { replace: true });
     }
   }, [isAuthenticated, isInitializing, navigate, searchParams]);
@@ -106,7 +108,7 @@ const Login = () => {
         description: t("auth.login.success"),
       });
 
-      const nextUrl = searchParams.get("next") || "/dashboard";
+      const nextUrl = getSafeReturnPath(searchParams.get("next"));
       navigate(nextUrl, { replace: true });
     } catch (error) {
       const message = error?.message || t("auth.login.error");
@@ -300,7 +302,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="mt-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs shadow-inner">
+            {demoMode && <div className="mt-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs shadow-inner">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-semibold text-foreground">{t("auth.login.demo_title")}</p>
                 <Button type="button" size="sm" variant="outline" className="h-8 rounded-lg border-primary/30 bg-background/80" onClick={fillDemoCredentials}>
@@ -309,7 +311,7 @@ const Login = () => {
               </div>
               <p className="mt-2 text-muted-foreground">{t("auth.login.demo_hint")}</p>
               <p className="mt-1 font-medium text-foreground/90">{demoEmail} / {demoPassword}</p>
-            </div>
+            </div>}
           </div>
         ),
       }}

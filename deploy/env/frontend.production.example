@@ -11,3 +11,5 @@ VITE_ENABLE_MAGIC_LINK=false
 VITE_ENABLE_CAPTCHA=false
 VITE_DEV_MODE=false
 VITE_ENABLE_LOGGING=false
+# Demo authentication and mock API responses must never be enabled in production.
+VITE_DEMO_MODE=false

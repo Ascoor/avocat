@@ -21,7 +21,9 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-applyDemoApiMock(api);
+if (import.meta.env.VITE_DEMO_MODE === 'true') {
+  applyDemoApiMock(api);
+}
 
 api.interceptors.response.use(
   (response) => response,
@@ -31,7 +33,7 @@ api.interceptors.response.use(
       const activeToken = getStoredToken();
 
       // Keep frontend demo sessions alive even if backend rejects demo tokens.
-      if (isDemoToken(activeToken)) {
+      if (import.meta.env.VITE_DEMO_MODE === 'true' && isDemoToken(activeToken)) {
         return Promise.reject(error);
       }
 
