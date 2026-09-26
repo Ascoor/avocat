@@ -1092,6 +1092,8 @@ const en = {
       selectDegree: "Select degree",
       selectCourt: "Select court",
       selectCaseType: "Select case type",
+      loadError: "Unable to load court search options.",
+      searchError: "Unable to complete the search. Please try again.",
     },
   },
 

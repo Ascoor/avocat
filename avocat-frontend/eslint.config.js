@@ -1,8 +1,7 @@
-import { defineConfig } from 'eslint-define-config';
 import eslintPluginReact from 'eslint-plugin-react';
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
 
-export default defineConfig({
+export default {
   languageOptions: {
     parserOptions: {
       ecmaVersion: 2021, // استخدام النسخة الأخيرة من ECMAScript
@@ -34,4 +33,4 @@ export default defineConfig({
     'react-hooks/rules-of-hooks': 'error', // فحص قواعد الـ Hooks
     'react-hooks/exhaustive-deps': 'warn', // تحذير إذا كانت dependencies غير مكتملة في الـ Hooks
   },
-});
+};

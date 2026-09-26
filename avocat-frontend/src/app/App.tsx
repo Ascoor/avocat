@@ -13,6 +13,7 @@ import AuthRoutes from "@app/routes/AuthRoutes";
 import { useAuth } from "@shared/contexts/AuthContext";
 import { useLanguage } from "@shared/contexts/LanguageContext";
 import { RouteProviders } from '@providers';
+import { getSafeReturnPath } from '@shared/utils/safeRedirect';
 
 const RequireAuth = ({ children }) => {
   const { isAuthenticated, isInitializing } = useAuth();
@@ -44,7 +45,10 @@ const RedirectIfAuth = ({ children }) => {
   }
 
   if (isAuthenticated) {
-    const nextUrl = new URLSearchParams(location.search).get("next") || appRoutes.dashboardBase;
+    const nextUrl = getSafeReturnPath(
+      new URLSearchParams(location.search).get("next"),
+      appRoutes.dashboardBase,
+    );
     return <Navigate to={nextUrl} replace />;
   }
 
