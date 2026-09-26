@@ -23,7 +23,7 @@ class LegCasesTableSeeder extends Seeder
         ]);
 
         
-        SeedData::upsert('leg_cases', array (
+        SeedData::insertMissingById('leg_cases', array (
             0 => 
             array (
                 'id' => 2,
@@ -12043,7 +12043,7 @@ class LegCasesTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        SeedData::upsert('leg_cases', array (
+        SeedData::insertMissingById('leg_cases', array (
             0 => 
             array (
                 'id' => 824,
@@ -24045,7 +24045,7 @@ class LegCasesTableSeeder extends Seeder
         'updated_at' => NULL,
     ),
 ));
-        SeedData::upsert('leg_cases', array (
+        SeedData::insertMissingById('leg_cases', array (
             0 => 
             array (
                 'id' => 1500,
@@ -36049,7 +36049,7 @@ class LegCasesTableSeeder extends Seeder
                     'updated_at' => NULL,
                 ),
             ));
-        SeedData::upsert('leg_cases', array (
+        SeedData::insertMissingById('leg_cases', array (
             0 => 
             array (
                 'id' => 2536,

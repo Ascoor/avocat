@@ -177,7 +177,10 @@ class LawyerSeeder extends Seeder
                 );
 
                 // 2) Lawyer: نفس المحامي لو موجود (بالـ identity_number)
-                Lawyer::updateOrCreate(
+                // Lawyer profiles are production business records. Seed a missing
+                // deterministic profile, but never restore stale exported details
+                // over edits made by the office after deployment.
+                Lawyer::firstOrCreate(
                     ['identity_number' => $lawyerData['identity_number']],
                     [
                         'name' => $lawyerData['name'],

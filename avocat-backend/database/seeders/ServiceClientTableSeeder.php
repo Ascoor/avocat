@@ -18,7 +18,7 @@ class ServiceClientTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('service_client', array (
+        SeedData::insertMissingById('service_client', array (
             0 => 
             array (
                 'id' => 1,

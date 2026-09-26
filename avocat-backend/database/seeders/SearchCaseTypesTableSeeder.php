@@ -17,7 +17,7 @@ class SearchCaseTypesTableSeeder extends Seeder
         
 
         
-        \SeedData::upsert('search_case_types', array (
+        SeedData::insertMissingById('search_case_types', array (
             0 => 
             array (
                 'id' => 182,
@@ -5019,7 +5019,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \SeedData::upsert('search_case_types', array (
+        SeedData::insertMissingById('search_case_types', array (
             0 => 
             array (
                 'id' => 821,
@@ -10021,7 +10021,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \SeedData::upsert('search_case_types', array (
+        SeedData::insertMissingById('search_case_types', array (
             0 => 
             array (
                 'id' => 1321,
@@ -15023,7 +15023,7 @@ class SearchCaseTypesTableSeeder extends Seeder
                 'updated_at' => NULL,
             ),
         ));
-        \SeedData::upsert('search_case_types', array (
+        SeedData::insertMissingById('search_case_types', array (
             0 => 
             array (
                 'id' => 1821,

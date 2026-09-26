@@ -18,7 +18,7 @@ class ServicesTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('services', array (
+        SeedData::insertMissingById('services', array (
             0 => 
             array (
                 'id' => 1,

@@ -18,7 +18,7 @@ class LegalSessionTypesTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('legal_session_types', array (
+        SeedData::insertMissingById('legal_session_types', array (
             0 => 
             array (
                 'id' => 1,

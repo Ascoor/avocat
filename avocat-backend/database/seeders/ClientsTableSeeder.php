@@ -18,7 +18,7 @@ class ClientsTableSeeder extends Seeder
         
 
         
-        SeedData::upsert('clients', array (
+        SeedData::insertMissingById('clients', array (
             0 => 
             array (
                 'id' => 1,
@@ -9520,7 +9520,7 @@ class ClientsTableSeeder extends Seeder
                 'updated_at' => '2023-11-15 04:24:30',
             ),
         ));
-        SeedData::upsert('clients', array (
+        SeedData::insertMissingById('clients', array (
             0 => 
             array (
                 'id' => 501,

@@ -501,6 +501,6 @@ class CaseSubTypesTableSeeder extends Seeder
             ),
         );
 
-        SeedData::upsert('case_sub_types', $caseSubTypes);
+        SeedData::insertMissingById('case_sub_types', $caseSubTypes);
     }
 }
