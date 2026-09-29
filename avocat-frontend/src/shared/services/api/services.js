@@ -12,7 +12,7 @@ export const getServiceProceduresByServiceId = (serviceId) =>
 export const createServiceProcedure = (data) =>
   api.post('/service-procedures', data);
 export const updateServiceProcedure = (id, data) =>
-  api.put(`/service-procedures/${id}`, data);
+  api.put(`/service-procedure/${id}`, data);
 
 //deleteServiceProcedure
 export const deleteServiceProcedure = (procedureId) =>

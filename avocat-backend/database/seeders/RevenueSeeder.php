@@ -9,9 +9,6 @@ class RevenueSeeder extends Seeder
 {
     public function run(): void
     {
-        // Safe for SQLite + FK
-        DB::table('revenues')->delete();
-
         $now = now();
 
         $userId = DB::table('users')->value('id');
@@ -29,7 +26,7 @@ class RevenueSeeder extends Seeder
         $cat1 = $catIds[0];
         $cat2 = $catIds[min(1, count($catIds) - 1)];
 
-        DB::table('revenues')->insert([
+        $rows = [
             [
                 'leg_case_id' => $case1,
                 'revenue_category_id' => $cat1,
@@ -63,6 +60,16 @@ class RevenueSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ];
+
+        foreach ($rows as $row) {
+            $identity = collect($row)->only([
+                'leg_case_id', 'revenue_category_id', 'related_from', 'amount', 'description',
+            ])->all();
+
+            if (! DB::table('revenues')->where($identity)->exists()) {
+                DB::table('revenues')->insert($row);
+            }
+        }
     }
 }

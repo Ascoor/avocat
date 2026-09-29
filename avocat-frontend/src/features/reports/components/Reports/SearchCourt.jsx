@@ -4,6 +4,7 @@
   import { useLanguage } from '@shared/contexts/LanguageContext';
   import { Button } from '@shared/ui/button';
   import CourtSearchResults from '@features/courts/components/CourtSearchResults';
+import API_CONFIG from '@config/config';
 
   const SearchCourt = () => {
     const { t, isRTL } = useLanguage();
@@ -20,6 +21,8 @@
     const [selectedCaseYear, setSelectedCaseYear] = useState('');
     const [selectedCaseNumber, setSelectedCaseNumber] = useState('');
     const [searchResults, setSearchResults] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
       api
@@ -27,7 +30,7 @@
         .then((response) => {
           setAllData(response.data);
         })
-        .catch((error) => console.log(error));
+        .catch(() => setErrorMessage(ct('loadError')));
     }, []);
 
     const handleDegreeChange = (event) => {
@@ -48,8 +51,11 @@
       setSelectedCaseType(caseTypeValue);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
+      if (isSearching) return;
+      setErrorMessage('');
+      setSearchResults(null);
 
       const formData = {
         degree: selectedDegree,
@@ -59,14 +65,17 @@
         caseNumber: selectedCaseNumber,
       };
 
-      axios
-        .post('https://search-api-production-6209.up.railway.app/search', formData)
-        .then((response) => {
-          setSearchResults(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setIsSearching(true);
+      try {
+        const response = await axios.post(`${API_CONFIG.searchApiURL}/search`, formData);
+        setSearchResults(response.data);
+      } catch (error) {
+        setErrorMessage(
+          error?.response?.data?.message || error?.response?.data?.error || ct('searchError'),
+        );
+      } finally {
+        setIsSearching(false);
+      }
     };
 
     const fieldClass =
@@ -155,20 +164,24 @@
               </div>
 
               <div className="flex flex-wrap gap-3 pt-1">
-                <Button type="submit" className="min-w-[8rem]">
+                <Button type="submit" className="min-w-[8rem]" disabled={isSearching}>
                   {ct('search')}
                 </Button>
               </div>
             </form>
           </div>
 
+          {errorMessage && (
+            <div role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+              {errorMessage}
+            </div>
+          )}
+
           {searchResults && (() => {
             if (typeof searchResults === 'string') {
               return (
                 <div className="rounded-2xl border border-border bg-card p-4 text-sm text-foreground shadow-sm sm:p-6">
-                  <div className="court-search-results prose prose-sm max-w-none dark:prose-invert">
-                    <div dangerouslySetInnerHTML={{ __html: searchResults }} />
-                  </div>
+                  <p className="whitespace-pre-wrap">{searchResults}</p>
                 </div>
               );
             }

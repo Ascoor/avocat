@@ -11,15 +11,12 @@ class PaymentsSeeder extends Seeder
     {
         $now = now();
 
-        // Safe with FK
-        DB::table('payments')->delete();
-
         $invoiceId = DB::table('invoices')->value('id');
         if (!$invoiceId) {
             return;
         }
 
-        DB::table('payments')->insert([
+        $rows = [
             [
                 'invoice_id' => $invoiceId,
                 'payment_date' => $now->toDateString(),
@@ -28,6 +25,14 @@ class PaymentsSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ];
+
+        foreach ($rows as $row) {
+            $identity = collect($row)->only(['invoice_id', 'payment_method', 'amount'])->all();
+
+            if (! DB::table('payments')->where($identity)->exists()) {
+                DB::table('payments')->insert($row);
+            }
+        }
     }
 }

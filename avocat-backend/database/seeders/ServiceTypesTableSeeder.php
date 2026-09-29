@@ -16,9 +16,8 @@ class ServiceTypesTableSeeder extends Seeder
     {
         
 
-        \DB::table('service_types')->delete();
         
-        \DB::table('service_types')->insert(array (
+        SeedData::insertMissingById('service_types', array (
             0 => 
             array (
                 'id' => 60,

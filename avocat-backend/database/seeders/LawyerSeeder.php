@@ -1,11 +1,12 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash; 
-use Illuminate\Support\Facades\DB;
+
 use App\Models\Lawyer;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class LawyerSeeder extends Seeder
 {
@@ -164,17 +165,22 @@ class LawyerSeeder extends Seeder
             DB::transaction(function () use ($lawyerData) {
 
                 // 1) User: نفس المستخدم لو موجود (بالـ email)
-                $user = User::updateOrCreate(
+                // Seeded lawyer profiles are preserved, but their accounts have no
+                // shared/default credential. New accounts must use password reset.
+                $user = User::firstOrCreate(
                     ['email' => $lawyerData['email']],
                     [
                         'name' => $lawyerData['name'],
-                        'password' => Hash::make('Ask@12345'),
+                        'password' => Str::random(64),
                         'role' => '2', // lawyer
                     ]
                 );
 
                 // 2) Lawyer: نفس المحامي لو موجود (بالـ identity_number)
-                Lawyer::updateOrCreate(
+                // Lawyer profiles are production business records. Seed a missing
+                // deterministic profile, but never restore stale exported details
+                // over edits made by the office after deployment.
+                Lawyer::firstOrCreate(
                     ['identity_number' => $lawyerData['identity_number']],
                     [
                         'name' => $lawyerData['name'],

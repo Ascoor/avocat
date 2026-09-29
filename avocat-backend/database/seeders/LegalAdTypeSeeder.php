@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class LegalAdTypeSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $types = [
             'انذار على يد محضر',
@@ -17,13 +17,10 @@ class LegalAdTypeSeeder extends Seeder
             'اعلان بالتدخل هجومي',
             'اعلان بالتدخل إنضمامى',
             'إنذار بالطرد',
-            // يمكنك إضافة المزيد من الأمثلة هنا
         ];
 
         foreach ($types as $type) {
-            LegalAdType::create([
-                'name' => $type,
-            ]);
+            LegalAdType::firstOrCreate(['name' => $type]);
         }
     }
 }

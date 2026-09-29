@@ -1,14 +1,14 @@
 # config.py
 
-from pydantic import BaseSettings
+import os
 
-class Settings(BaseSettings):
+from pydantic import BaseModel
+
+class Settings(BaseModel):
     app_name: str = "Search API"
     debug: bool = False
-    database_url: str = "sqlite:///:memory:"
-    api_key: str = "your_api_key_here"
 
-    class Config:
-        env_file = ".env"
-
-settings = Settings()
+settings = Settings(
+    app_name=os.environ.get("APP_NAME", "Search API"),
+    debug=os.environ.get("APP_DEBUG", "false").lower() in {"1", "true", "yes"},
+)

@@ -52,15 +52,15 @@ avocat-frontend/config.js
 ########################################
 # Backend: avocatapp (Laravel/PHP)
 ########################################
-avocatapp/node_modules/
-avocatapp/vendor/
-avocatapp/**/vendor/
-avocatapp/public/hot
-avocatapp/public/storage
-avocatapp/storage/*.key
-avocatapp/.phpunit.result.cache
-avocatapp/Homestead.json
-avocatapp/Homestead.yaml
+avocat-backend/node_modules/
+avocat-backend/vendor/
+avocat-backend/**/vendor/
+avocat-backend/public/hot
+avocat-backend/public/storage
+avocat-backend/storage/*.key
+avocat-backend/.phpunit.result.cache
+avocat-backend/Homestead.json
+avocat-backend/Homestead.yaml
 
 ########################################
 # Search API: search-api (Python)

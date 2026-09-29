@@ -11,9 +11,6 @@ class InvoicesSeeder extends Seeder
     {
         $now = now();
 
-        // Safe with FK
-        DB::table('invoices')->delete();
-
         $caseId = DB::table('leg_cases')->value('id');
         $serviceId = DB::table('services')->value('id'); // لازم خدمة موجودة لو العمود مش nullable
 
@@ -21,7 +18,7 @@ class InvoicesSeeder extends Seeder
             return;
         }
 
-        DB::table('invoices')->insert([
+        $rows = [
             [
                 'leg_case_id' => $caseId,
                 'service_id' => $serviceId,
@@ -33,6 +30,12 @@ class InvoicesSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ];
+
+        foreach ($rows as $row) {
+            if (! DB::table('invoices')->where('invoice_number', $row['invoice_number'])->exists()) {
+                DB::table('invoices')->insert($row);
+            }
+        }
     }
 }

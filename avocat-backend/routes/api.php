@@ -95,6 +95,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('lawyers', LawyerController::class);
         Route::apiResource('courts', CourtController::class);
         Route::apiResource('court_types', CourtTypeController::class);
+        Route::apiResource('case_sub_types', CaseSubTypeController::class);
+        Route::apiResource('procedure_place_types', ProcedurePlaceTypeController::class);
+        Route::apiResource('legal_ad_types', LegalAdTypeController::class);
         
         Route::apiResource('case_types', CaseTypeController::class);
         Route::apiResource('procedure_types', ProcedureTypeController::class);
@@ -139,7 +142,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('legal-ads/{legalAdId}', [LegalAdController::class, 'destroy']);
 
         Route::get('legal_sessions', [LegalSessionController::class, 'index']);
-        Route::get('legal_session_types', [LegalSessionTypeController::class, 'index']);
+        Route::apiResource('legal_session_types', LegalSessionTypeController::class);
         Route::get('case-status/fetch', [CaseStatusController::class, 'fetchCaseStatus']);
         Route::get('legal_sessions/leg-case/{legCaseId}', [LegalSessionController::class, 'getSessionsByLegCaseId']);
         Route::get('legal_sessions/court/{courtId}', [LegalSessionController::class, 'getByCourtId']);

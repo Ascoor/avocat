@@ -77,7 +77,7 @@
 
         async function fetchData() {
             try {
-                const response = await axios.get('https://avocat.ask-ar.net/avocatapp/api/search-court');
+                const response = await axios.get('/api/v1/search-court');
                 allData = response.data;
                 setDropdownOptions();
             } catch (error) {

@@ -18,11 +18,10 @@ class RevenueCategories extends Seeder
         $defaultCategories = ['أتعاب', 'غرامة', 'كفالة','أمانات'];
 
         foreach ($defaultCategories as $category) {
-            DB::table('revenue_categories')->insert([
-                'name' => $category,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            DB::table('revenue_categories')->updateOrInsert(
+                ['name' => $category],
+                ['updated_at' => now()]
+            );
         }
     }
 }

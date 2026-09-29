@@ -17,11 +17,10 @@ class ExpenseCategories extends Seeder
             $defaultCategories = ['جلسة', 'إجراء', 'إعلان'];
 
             foreach ($defaultCategories as $category) {
-                DB::table('expense_categories')->insert([
-                    'name' => $category,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+                DB::table('expense_categories')->updateOrInsert(
+                    ['name' => $category],
+                    ['updated_at' => now()]
+                );
             }
         }
     }

@@ -1394,6 +1394,8 @@ const ar = {publicSite: {
       selectDegree: "اختر الدرجة",
       selectCourt: "اختر المحكمة",
       selectCaseType: "اختر نوع القضية",
+      loadError: "تعذر تحميل خيارات البحث بالمحكمة.",
+      searchError: "تعذر إتمام البحث، يرجى المحاولة مرة أخرى.",
     },
   },
 
