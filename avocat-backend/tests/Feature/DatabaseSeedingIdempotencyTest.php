@@ -78,6 +78,12 @@ class DatabaseSeedingIdempotencyTest extends TestCase
             fn (string $table): array => [$table => DB::table($table)->count()]
         )->all();
         $passwords = User::query()->pluck('password', 'email')->all();
+        $expense = DB::table('expenses')->where('description', 'مصروفات جلسة')->first();
+        $this->assertNotNull($expense);
+        DB::table('expenses')->where('id', $expense->id)->update([
+            'note' => 'Production-maintained note',
+            'amount' => '{"value": 150.000}',
+        ]);
         $financialTotals = [
             'revenues' => DB::table('revenues')->sum('amount'),
             'invoices' => DB::table('invoices')->sum('total_amount'),
@@ -107,6 +113,12 @@ class DatabaseSeedingIdempotencyTest extends TestCase
 
         $this->assertSame('Production-maintained name', DB::table('clients')->where('id', $clientId)->value('name'));
         $this->assertSame('Production-maintained lawyer', DB::table('lawyers')->where('id', $lawyerId)->value('name'));
+        $this->assertSame(1, DB::table('expenses')->where('description', 'مصروفات جلسة')->count());
+        $this->assertSame('Production-maintained note', DB::table('expenses')->where('id', $expense->id)->value('note'));
+        $this->assertEquals(
+            ['value' => 150.0],
+            json_decode(DB::table('expenses')->where('id', $expense->id)->value('amount'), true)
+        );
         $this->assertSame(1335, DB::table('leg_case_court')->count());
         $distinctCourtRows = DB::query()->fromSub(
             DB::table('leg_case_court')
